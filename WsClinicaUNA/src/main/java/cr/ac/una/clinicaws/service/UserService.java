@@ -48,22 +48,4 @@ public class UserService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el empleado.", "getEmpleado " + ex.getMessage());
         }
     }
-/*
-        public Respuesta getUserByName(String usName) {
-        try {
-            Query qryActividad = em.createNamedQuery("Users.findByUsName", Users.class);
-            qryActividad.setParameter("usName", usName);
-
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "User", new UsersDto((Users) qryActividad.getSingleResult()));
-
-        } catch (NoResultException ex) {
-            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "There is no user with the credentials entered..", "validarUsuario NoResultException");
-        } catch (NonUniqueResultException ex) {
-            LOG.log(Level.SEVERE, " error occurred while querying the user.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "An error occurred while querying the user.", "validarUsuario NonUniqueResultException");
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, " error occurred while querying the user.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "An error occurred while querying the user.", "validarUsuario " + ex.getMessage());
-        }
-    }*/
 }
