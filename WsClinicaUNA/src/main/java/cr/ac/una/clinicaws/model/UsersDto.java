@@ -17,27 +17,20 @@ public class UsersDto {
     private String usSlastname;
     private String usIdentification;
     private String usType;
-
     private String usLenguage;
-
     private String usState;
-
     private String usUsername;
-
     private String usPassword;
-
     private String usEmail;
-
     private String usRecover;
-
     private String usTemppassword;
-
     private Integer usId;
-
     private List<Doctor> doctorList;
-
     private List<Appointment> appointmentList;
-
+    private String token;
+    private String usCode;
+    public UsersDto() {
+    }
     public UsersDto(Users user) {
         this.usName = user.getUsName();
         this.usPlastname = user.getUsPlastname();
@@ -52,6 +45,23 @@ public class UsersDto {
         this.usRecover = user.getUsRecover();
         this.usTemppassword = user.getUsTemppassword();
         this.usId = user.getUsId();
+        this.usCode = user.getUsCode();
+    }
+
+    public String getUsCode() {
+        return usCode;
+    }
+
+    public void setUsCode(String usCode) {
+        this.usCode = usCode;
+    }
+
+    public String getToken() {
+        return token;
+    }
+    
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getUsName() {

@@ -7,8 +7,8 @@
     "openAPI": {
         "info": {
             "version": "1.0.0",
-            "title": "UNA Planilla ES",
-            "description": "API REST UNAPlanillaWS",
+            "title": "UNA Clinica ES",
+            "description": "API REST UNAClinicaWS",
             "contact": {
                 "name": "Carlos Carranza",
                 "email": "corre@gmail.com"

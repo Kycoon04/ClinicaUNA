@@ -5,22 +5,19 @@
 package cr.ac.una.clinicaws.model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.QueryHint;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import java.util.List;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 /**
  *
- * @author dilan
+ * @author jomav
  */
 @Entity
 @Table(name = "CL_USERS")
@@ -38,7 +35,10 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Users.findByUsEmail", query = "SELECT u FROM Users u WHERE u.usEmail = :usEmail"),
     @NamedQuery(name = "Users.findByUsRecover", query = "SELECT u FROM Users u WHERE u.usRecover = :usRecover"),
     @NamedQuery(name = "Users.findByUsTemppassword", query = "SELECT u FROM Users u WHERE u.usTemppassword = :usTemppassword"),
-    @NamedQuery(name = "Users.findByUsId", query = "SELECT u FROM Users u WHERE u.usId = :usId")})
+    @NamedQuery(name = "Users.findByUsId", query = "SELECT u FROM Users u WHERE u.usId = :usId"),
+    @NamedQuery(name = "Users.findByUsCode", query = "SELECT u FROM Users u WHERE u.usCode = :usCode"),
+@NamedQuery(name = "Users.findByUsuClave", query = "SELECT e FROM Users e WHERE e.usUsername = :usuario and e.usPassword = :clave", hints = @QueryHint(name = "eclipselink.refresh", value = "true"))
+})
 public class Users implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -101,29 +101,31 @@ public class Users implements Serializable {
     @NotNull
     @Column(name = "US_ID")
     private Integer usId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "drUser")
-    private List<Doctor> doctorList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "atUserregister")
-    private List<Appointment> appointmentList;
+    @Size(max = 15)
+    @Column(name = "US_CODE")
+    private String usCode;
 
     public Users() {
     }
-
-    public Users(Integer usId) {
-        this.usId = usId;
+    
+    public Users(UsersDto usersDto) {
+        this.usId = usersDto.getUsId();
+        update(usersDto);
     }
-
-    public Users(Integer usId, String usName, String usPlastname, String usIdentification, String usType, String usLenguage, String usState, String usUsername, String usPassword, String usEmail) {
-        this.usId = usId;
-        this.usName = usName;
-        this.usPlastname = usPlastname;
-        this.usIdentification = usIdentification;
-        this.usType = usType;
-        this.usLenguage = usLenguage;
-        this.usState = usState;
-        this.usUsername = usUsername;
-        this.usPassword = usPassword;
-        this.usEmail = usEmail;
+    public void update(UsersDto usersDto) {
+        this.usName = usersDto.getUsName();
+        this.usPlastname = usersDto.getUsPlastname();
+        this.usSlastname = usersDto.getUsSlastname();
+        this.usIdentification = usersDto.getUsIdentification();
+        this.usEmail = usersDto.getUsEmail();
+        this.usType = usersDto.getUsType();
+        this.usUsername = usersDto.getUsUsername();
+        this.usPassword = usersDto.getUsPassword();
+        this.usRecover = usersDto.getUsRecover();
+        this.usState = usersDto.getUsState();
+        this.usLenguage = usersDto.getUsLenguage();
+        this.usTemppassword = usersDto.getUsTemppassword();
+        this.usCode = usersDto.getUsCode();
     }
 
     public String getUsName() {
@@ -230,20 +232,12 @@ public class Users implements Serializable {
         this.usId = usId;
     }
 
-    public List<Doctor> getDoctorList() {
-        return doctorList;
+    public String getUsCode() {
+        return usCode;
     }
 
-    public void setDoctorList(List<Doctor> doctorList) {
-        this.doctorList = doctorList;
-    }
-
-    public List<Appointment> getAppointmentList() {
-        return appointmentList;
-    }
-
-    public void setAppointmentList(List<Appointment> appointmentList) {
-        this.appointmentList = appointmentList;
+    public void setUsCode(String usCode) {
+        this.usCode = usCode;
     }
 
     @Override
