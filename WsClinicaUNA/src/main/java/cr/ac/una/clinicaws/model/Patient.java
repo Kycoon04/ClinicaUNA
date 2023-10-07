@@ -76,10 +76,6 @@ public class Patient implements Serializable {
     @NotNull
     @Column(name = "PT_ID")
     private Integer ptId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "atPatient")
-    private List<Appointment> appointmentList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "psPatient")
-    private List<Proceedings> proceedingsList;
 
     public Patient() {
     }
@@ -88,13 +84,19 @@ public class Patient implements Serializable {
         this.ptId = ptId;
     }
 
-    public Patient(Integer ptId, String ptName, String ptPlastname, String ptIdentification, String ptGender, String ptEmail) {
-        this.ptId = ptId;
-        this.ptName = ptName;
-        this.ptPlastname = ptPlastname;
-        this.ptIdentification = ptIdentification;
-        this.ptGender = ptGender;
-        this.ptEmail = ptEmail;
+    public Patient(PatientDto patientDto) {
+        this.ptId = patientDto.getPtId();
+        update(patientDto);
+    }
+    
+    public void update(PatientDto patientDto) {
+        ptName = patientDto.getPtName();
+        ptPlastname = patientDto.getPtPlastname();
+        ptSlastname = patientDto.getPtSlastname();
+        ptIdentification = patientDto.getPtIdentification();
+        ptGender = patientDto.getPtGender();
+        ptEmail = patientDto.getPtEmail();
+        ptBirthdate = patientDto.getPtBirthdate();
     }
 
     public String getPtName() {
@@ -159,22 +161,6 @@ public class Patient implements Serializable {
 
     public void setPtId(Integer ptId) {
         this.ptId = ptId;
-    }
-
-    public List<Appointment> getAppointmentList() {
-        return appointmentList;
-    }
-
-    public void setAppointmentList(List<Appointment> appointmentList) {
-        this.appointmentList = appointmentList;
-    }
-
-    public List<Proceedings> getProceedingsList() {
-        return proceedingsList;
-    }
-
-    public void setProceedingsList(List<Proceedings> proceedingsList) {
-        this.proceedingsList = proceedingsList;
     }
 
     @Override

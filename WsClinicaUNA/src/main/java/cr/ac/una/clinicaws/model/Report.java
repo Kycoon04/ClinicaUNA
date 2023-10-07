@@ -86,19 +86,24 @@ public class Report implements Serializable {
     public Report(Integer rtId) {
         this.rtId = rtId;
     }
-
-    public Report(Integer rtId, short rtPressure, short rtHeartRate, short rtWeight, short rtHeight, short rtTemperature, short rtBodyMass, String rtNotesNursing, String rtDoctorReason) {
-        this.rtId = rtId;
-        this.rtPressure = rtPressure;
-        this.rtHeartRate = rtHeartRate;
-        this.rtWeight = rtWeight;
-        this.rtHeight = rtHeight;
-        this.rtTemperature = rtTemperature;
-        this.rtBodyMass = rtBodyMass;
-        this.rtNotesNursing = rtNotesNursing;
-        this.rtDoctorReason = rtDoctorReason;
+    
+    public Report(ReportDto reportDto) {
+        this.rtId = reportDto.getRtId();
+        update(reportDto);
     }
-
+    
+    public void update(ReportDto report) {
+        this.rtPressure = report.getRtPressure();
+        this.rtHeartRate = report.getRtHeartRate();
+        this.rtWeight = report.getRtWeight();
+        this.rtHeight = report.getRtHeight();
+        this.rtTemperature = report.getRtTemperature();
+        this.rtBodyMass = report.getRtBodyMass();
+        this.rtNotesNursing = report.getRtNotesNursing();
+        this.rtDoctorReason = report.getRtDoctorReason();
+        this.rtAppointment = report.getRtAppointment();
+    }
+    
     public Integer getRtId() {
         return rtId;
     }

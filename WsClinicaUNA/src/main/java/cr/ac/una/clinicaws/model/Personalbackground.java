@@ -51,13 +51,16 @@ public class Personalbackground implements Serializable {
     public Personalbackground(Integer pbId) {
         this.pbId = pbId;
     }
-
-    public Personalbackground(Integer pbId, String pbType, String pbContext) {
-        this.pbId = pbId;
-        this.pbType = pbType;
-        this.pbContext = pbContext;
+    
+    public Personalbackground(PersonalbackgroundDto personalbackground) {
+        this.pbId = personalbackground.getPbId();
+        update(personalbackground);
     }
-
+    
+    public void update(PersonalbackgroundDto personalbackground) {
+        pbType = personalbackground.getPbType();
+        pbContext = personalbackground.getPbContext();
+    }
     public Integer getPbId() {
         return pbId;
     }

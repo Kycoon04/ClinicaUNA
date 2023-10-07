@@ -21,7 +21,7 @@ public class AppointmentDto {
     private List<Space> spaceList;
     private Patient atPatient;
     private Users atUserregister;
-    private List<Report> reportList;
+   // private List<Report> reportList;
 
     public AppointmentDto(Appointment appointment) {
         this.atId = appointment.getAtId();
@@ -31,8 +31,11 @@ public class AppointmentDto {
         this.atState = appointment.getAtState();
         
         this.atPatient = appointment.getAtPatient();
-        this.atUserregister = appointment.getAtUserregister();
-        this.reportList = appointment.getReportList();
+        //this.atUserregister = appointment.getAtUserregister();
+       // this.reportList = appointment.getReportList();
+    }
+
+    public AppointmentDto() {
     }
 
     public Integer getAtId() {
@@ -74,7 +77,7 @@ public class AppointmentDto {
     public void setAtState(String atState) {
         this.atState = atState;
     }
-
+/*
     public List<Space> getSpaceList() {
         return spaceList;
     }
@@ -82,7 +85,7 @@ public class AppointmentDto {
     public void setSpaceList(List<Space> spaceList) {
         this.spaceList = spaceList;
     }
-
+*/
     public Patient getAtPatient() {
         return atPatient;
     }
@@ -98,7 +101,7 @@ public class AppointmentDto {
     public void setAtUserregister(Users atUserregister) {
         this.atUserregister = atUserregister;
     }
-
+/*
     public List<Report> getReportList() {
         return reportList;
     }
@@ -108,7 +111,7 @@ public class AppointmentDto {
     }
     
     
-    
+    */
     
     
 }

@@ -29,6 +29,9 @@ public class ExamDto {
         this.emProceedings = exam.getEmProceedings();
     }
 
+    public ExamDto() {
+    }
+
     
     public Integer getEmId() {
         return emId;

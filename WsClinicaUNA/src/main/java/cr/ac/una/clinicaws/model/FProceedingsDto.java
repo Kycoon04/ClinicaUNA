@@ -10,4 +10,45 @@ package cr.ac.una.clinicaws.model;
  */
 public class FProceedingsDto {
     
+    private Integer fpId;
+ 
+    private Familybackground fpFamilyback;
+    
+    private Proceedings fpProceedings;
+
+    public FProceedingsDto() {
+    }
+
+    public FProceedingsDto(FProceedings fProceedings) {
+        this.fpId = fProceedings.getFpId();
+        this.fpFamilyback = fProceedings.getFpFamilyback();
+        this.fpProceedings = fProceedings.getFpProceedings();
+    }
+
+    public Integer getFpId() {
+        return fpId;
+    }
+
+    public void setFpId(Integer fpId) {
+        this.fpId = fpId;
+    }
+
+    public Familybackground getFpFamilyback() {
+        return fpFamilyback;
+    }
+
+    public void setFpFamilyback(Familybackground fpFamilyback) {
+        this.fpFamilyback = fpFamilyback;
+    }
+
+    public Proceedings getFpProceedings() {
+        return fpProceedings;
+    }
+
+    public void setFpProceedings(Proceedings fpProceedings) {
+        this.fpProceedings = fpProceedings;
+    }
+    
+    
+    
 }

@@ -112,6 +112,7 @@ public class Users implements Serializable {
         this.usId = usersDto.getUsId();
         update(usersDto);
     }
+    
     public void update(UsersDto usersDto) {
         this.usName = usersDto.getUsName();
         this.usPlastname = usersDto.getUsPlastname();

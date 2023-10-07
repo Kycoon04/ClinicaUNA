@@ -73,14 +73,29 @@ public class Doctor implements Serializable {
     @JoinColumn(name = "DR_USER", referencedColumnName = "US_ID")
     @ManyToOne(optional = false)
     private Users drUser;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "dyDoctor")
+  /* @OneToMany(cascade = CascadeType.ALL, mappedBy = "dyDoctor")
     private List<Diary> diaryList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "emDoctor")
-    private List<Exam> examList;
+    private List<Exam> examList;*/
 
     public Doctor() {
     }
 
+     public Doctor(DoctorDto doctorDto) {
+       this.drId = doctorDto.getDrId();
+        update(doctorDto);
+    }
+    public void update(DoctorDto doctorDto) {   
+      
+        this.drCode = doctorDto.getDrCode();
+        this.drLicense = doctorDto.getDrLicense();
+        this.drFol = doctorDto.getDrFol();
+        this.drIniworking = doctorDto.getDrIniworking();
+        this.drFinisworking = doctorDto.getDrFinisworking();
+        this.drBreak = doctorDto.getDrBreak();
+        this.drUser = doctorDto.getDrUser();
+    }
+    
     public Doctor(Integer drId) {
         this.drId = drId;
     }
@@ -158,7 +173,7 @@ public class Doctor implements Serializable {
     public void setDrUser(Users drUser) {
         this.drUser = drUser;
     }
-
+/*
     public List<Diary> getDiaryList() {
         return diaryList;
     }
@@ -173,7 +188,7 @@ public class Doctor implements Serializable {
 
     public void setExamList(List<Exam> examList) {
         this.examList = examList;
-    }
+    }*/
 
     @Override
     public int hashCode() {

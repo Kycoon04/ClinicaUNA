@@ -54,16 +54,18 @@ public class Appointment implements Serializable {
     @Size(min = 1, max = 15)
     @Column(name = "AT_STATE")
     private String atState;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "seAppointment")
+   /* @OneToMany(cascade = CascadeType.ALL, mappedBy = "seAppointment")
     private List<Space> spaceList;
+    */
     @JoinColumn(name = "AT_PATIENT", referencedColumnName = "PT_ID")
     @ManyToOne(optional = false)
     private Patient atPatient;
     @JoinColumn(name = "AT_USERREGISTER", referencedColumnName = "US_ID")
     @ManyToOne(optional = false)
     private Users atUserregister;
+    /*
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "rtAppointment")
-    private List<Report> reportList;
+    private List<Report> reportList;*/
 
     public Appointment() {
     }
@@ -71,7 +73,23 @@ public class Appointment implements Serializable {
     public Appointment(Integer atId) {
         this.atId = atId;
     }
-
+     public Appointment(AppointmentDto appointmentDto) {
+        this.atId = appointmentDto.getAtId();
+        update(appointmentDto);
+    }
+    public void update(AppointmentDto appointmentDto) {
+        this.atEmail = appointmentDto.getAtEmail();
+        this.atPatient = appointmentDto.getAtPatient();
+        this.atReason = appointmentDto.getAtReason();
+        this.atState = appointmentDto.getAtState();
+        this.atTelephone = appointmentDto.getAtTelephone();
+        //this.atUserregister = appointmentDto.getAtUserregister();
+      //  this.reportList = appointmentDto.getReportList();
+        //this.spaceList = appointmentDto.getSpaceList();
+    
+    }
+    
+    
     public Appointment(Integer atId, String atState) {
         this.atId = atId;
         this.atState = atState;
@@ -116,7 +134,7 @@ public class Appointment implements Serializable {
     public void setAtState(String atState) {
         this.atState = atState;
     }
-
+/*
     public List<Space> getSpaceList() {
         return spaceList;
     }
@@ -124,7 +142,7 @@ public class Appointment implements Serializable {
     public void setSpaceList(List<Space> spaceList) {
         this.spaceList = spaceList;
     }
-
+*/
     public Patient getAtPatient() {
         return atPatient;
     }
@@ -132,7 +150,7 @@ public class Appointment implements Serializable {
     public void setAtPatient(Patient atPatient) {
         this.atPatient = atPatient;
     }
-
+/*
     public Users getAtUserregister() {
         return atUserregister;
     }
@@ -147,7 +165,7 @@ public class Appointment implements Serializable {
 
     public void setReportList(List<Report> reportList) {
         this.reportList = reportList;
-    }
+    }*/
 
     @Override
     public int hashCode() {

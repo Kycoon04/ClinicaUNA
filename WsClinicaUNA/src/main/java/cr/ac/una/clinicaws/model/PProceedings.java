@@ -18,14 +18,13 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  *
- * @author dilan
+ * @author jomav
  */
 @Entity
 @Table(name = "CL_P_PROCEEDINGS")
 @NamedQueries({
     @NamedQuery(name = "PProceedings.findAll", query = "SELECT p FROM PProceedings p"),
-    @NamedQuery(name = "PProceedings.findByPpId", query = "SELECT p FROM PProceedings p WHERE p.ppId = :ppId"),
-    @NamedQuery(name = "PProceedings.findByPpPersonalback", query = "SELECT p FROM PProceedings p WHERE p.ppPersonalback = :ppPersonalback")})
+    @NamedQuery(name = "PProceedings.findByPpId", query = "SELECT p FROM PProceedings p WHERE p.ppId = :ppId")})
 public class PProceedings implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,10 +33,10 @@ public class PProceedings implements Serializable {
     @NotNull
     @Column(name = "PP_ID")
     private Integer ppId;
-    @Basic(optional = false)
     @NotNull
-    @Column(name = "PP_PERSONALBACK")
-    private int ppPersonalback;
+    @JoinColumn(name = "PP_PERSONALBACK", referencedColumnName = "PB_ID")
+    @ManyToOne(optional = false)
+    private Personalbackground ppPersonalback;
     @JoinColumn(name = "PP_PROCEEDINGS", referencedColumnName = "PS_ID")
     @ManyToOne(optional = false)
     private Proceedings ppProceedings;
@@ -49,9 +48,13 @@ public class PProceedings implements Serializable {
         this.ppId = ppId;
     }
 
-    public PProceedings(Integer ppId, int ppPersonalback) {
-        this.ppId = ppId;
-        this.ppPersonalback = ppPersonalback;
+    public PProceedings(PProceedingsDto PProceedings) {
+        this.ppId = PProceedings.getPpId();
+        update(PProceedings);
+    }
+    public void update(PProceedingsDto PProceedings) {
+        ppPersonalback = PProceedings.getPpPersonalback();
+        ppProceedings = PProceedings.getPpProceedings();
     }
 
     public Integer getPpId() {
@@ -62,11 +65,11 @@ public class PProceedings implements Serializable {
         this.ppId = ppId;
     }
 
-    public int getPpPersonalback() {
+    public Personalbackground getPpPersonalback() {
         return ppPersonalback;
     }
 
-    public void setPpPersonalback(int ppPersonalback) {
+    public void setPpPersonalback(Personalbackground ppPersonalback) {
         this.ppPersonalback = ppPersonalback;
     }
 
@@ -102,5 +105,5 @@ public class PProceedings implements Serializable {
     public String toString() {
         return "cr.ac.una.clinicaws.model.PProceedings[ ppId=" + ppId + " ]";
     }
-    
+
 }

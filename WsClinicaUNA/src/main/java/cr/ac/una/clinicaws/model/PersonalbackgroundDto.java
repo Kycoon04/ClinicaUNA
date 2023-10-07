@@ -9,5 +9,41 @@ package cr.ac.una.clinicaws.model;
  * @author dilan
  */
 public class PersonalbackgroundDto {
-    
+
+    private Integer pbId;
+    private String pbType;
+    private String pbContext;
+
+    public PersonalbackgroundDto() {
+    }
+
+    public PersonalbackgroundDto(Personalbackground personalbackground) {
+        pbId = personalbackground.getPbId();
+        pbType = personalbackground.getPbType();
+        pbContext = personalbackground.getPbContext();
+    }
+    public Integer getPbId() {
+        return pbId;
+    }
+
+    public void setPbId(Integer pbId) {
+        this.pbId = pbId;
+    }
+
+    public String getPbType() {
+        return pbType;
+    }
+
+    public void setPbType(String pbType) {
+        this.pbType = pbType;
+    }
+
+    public String getPbContext() {
+        return pbContext;
+    }
+
+    public void setPbContext(String pbContext) {
+        this.pbContext = pbContext;
+    }
+
 }

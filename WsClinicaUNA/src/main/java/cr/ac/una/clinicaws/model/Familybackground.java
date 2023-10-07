@@ -43,13 +43,23 @@ public class Familybackground implements Serializable {
     @Size(min = 1, max = 30)
     @Column(name = "FB_RELATIONSHIP")
     private String fbRelationship;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fpFamilyback")
-    private List<FProceedings> fProceedingsList;
+   /* @OneToMany(cascade = CascadeType.ALL, mappedBy = "fpFamilyback")
+    private List<FProceedings> fProceedingsList;*/
     @JoinColumn(name = "FB_DISEASE", referencedColumnName = "DS_ID")
     @ManyToOne(optional = false)
     private Disease fbDisease;
 
     public Familybackground() {
+    }
+    
+     public Familybackground(FamilybackgroundDto familybackgroundDto) {
+       this.fbId = familybackgroundDto.getFbId();
+        update(familybackgroundDto);
+    }
+    public void update(FamilybackgroundDto familybackgroundDto) {   
+      
+        this.fbDisease = familybackgroundDto.getFbDisease();
+        this.fbRelationship = familybackgroundDto.getFbRelationship();    
     }
 
     public Familybackground(Integer fbId) {
@@ -77,13 +87,13 @@ public class Familybackground implements Serializable {
         this.fbRelationship = fbRelationship;
     }
 
-    public List<FProceedings> getFProceedingsList() {
+  /*  public List<FProceedings> getFProceedingsList() {
         return fProceedingsList;
     }
 
     public void setFProceedingsList(List<FProceedings> fProceedingsList) {
         this.fProceedingsList = fProceedingsList;
-    }
+    }*/
 
     public Disease getFbDisease() {
         return fbDisease;

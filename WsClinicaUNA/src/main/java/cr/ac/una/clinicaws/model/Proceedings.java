@@ -5,7 +5,6 @@
 package cr.ac.una.clinicaws.model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,10 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import java.util.List;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -36,12 +33,6 @@ public class Proceedings implements Serializable {
     @NotNull
     @Column(name = "PS_ID")
     private Integer psId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fpProceedings")
-    private List<FProceedings> fProceedingsList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ppProceedings")
-    private List<PProceedings> pProceedingsList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "emProceedings")
-    private List<Exam> examList;
     @JoinColumn(name = "PS_PATIENT", referencedColumnName = "PT_ID")
     @ManyToOne(optional = false)
     private Patient psPatient;
@@ -52,37 +43,19 @@ public class Proceedings implements Serializable {
     public Proceedings(Integer psId) {
         this.psId = psId;
     }
-
+    
+    public Proceedings(ProceedingsDto proceedingsDto) {
+        this.psId = proceedingsDto.getPsId();
+    }
+    public void update(ProceedingsDto proceedings) {
+        this.psPatient = proceedings.getPsPatient();
+    }
     public Integer getPsId() {
         return psId;
     }
 
     public void setPsId(Integer psId) {
         this.psId = psId;
-    }
-
-    public List<FProceedings> getFProceedingsList() {
-        return fProceedingsList;
-    }
-
-    public void setFProceedingsList(List<FProceedings> fProceedingsList) {
-        this.fProceedingsList = fProceedingsList;
-    }
-
-    public List<PProceedings> getPProceedingsList() {
-        return pProceedingsList;
-    }
-
-    public void setPProceedingsList(List<PProceedings> pProceedingsList) {
-        this.pProceedingsList = pProceedingsList;
-    }
-
-    public List<Exam> getExamList() {
-        return examList;
-    }
-
-    public void setExamList(List<Exam> examList) {
-        this.examList = examList;
     }
 
     public Patient getPsPatient() {

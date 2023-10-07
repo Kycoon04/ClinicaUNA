@@ -41,12 +41,20 @@ public class Disease implements Serializable {
     @Size(min = 1, max = 30)
     @Column(name = "DS_NAME")
     private String dsName;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fbDisease")
+   /* @OneToMany(cascade = CascadeType.ALL, mappedBy = "fbDisease")
     private List<Familybackground> familybackgroundList;
-
+*/
     public Disease() {
     }
 
+     public Disease(DiseaseDto diseasedto) {
+       this.dsId = diseasedto.getDsId();
+        update(diseasedto);
+    }
+    public void update(DiseaseDto diseasedto) {   
+        this.dsName = diseasedto.getDsName();
+    }
+    
     public Disease(Integer dsId) {
         this.dsId = dsId;
     }
@@ -71,14 +79,14 @@ public class Disease implements Serializable {
     public void setDsName(String dsName) {
         this.dsName = dsName;
     }
-
+/*
     public List<Familybackground> getFamilybackgroundList() {
         return familybackgroundList;
     }
 
     public void setFamilybackgroundList(List<Familybackground> familybackgroundList) {
         this.familybackgroundList = familybackgroundList;
-    }
+    }*/
 
     @Override
     public int hashCode() {

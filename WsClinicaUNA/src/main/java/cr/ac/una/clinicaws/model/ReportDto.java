@@ -33,8 +33,7 @@ public class ReportDto {
         this.rtDoctorReason = report.getRtDoctorReason();
         this.rtAppointment = report.getRtAppointment();
     }
-    
-
+   
     public Integer getRtId() {
         return rtId;
     }

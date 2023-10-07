@@ -55,6 +55,16 @@ public class Diary implements Serializable {
     public Diary(Integer dyId) {
         this.dyId = dyId;
     }
+      public Diary(DiaryDto diaryDto) {
+        this.dyId = diaryDto.getDyId();
+        update(diaryDto);
+    }
+    public void update(DiaryDto diaryDto) {
+        this.dyDate = diaryDto.getDyDate();
+        this.dyDoctor = diaryDto.getDyDoctor();
+        this.dySpace = diaryDto.getDySpace();
+   
+    }
 
     public Diary(Integer dyId, Date dyDate) {
         this.dyId = dyId;

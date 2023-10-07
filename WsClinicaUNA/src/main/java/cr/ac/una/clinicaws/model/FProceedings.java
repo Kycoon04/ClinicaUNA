@@ -43,6 +43,18 @@ public class FProceedings implements Serializable {
     public FProceedings() {
     }
 
+    public FProceedings(FProceedingsDto fProceedingsDto) {
+        this.fpId = fProceedingsDto.getFpId();
+        update(fProceedingsDto);
+    }
+
+    public void update(FProceedingsDto fProceedingsDto) {
+
+        this.fpProceedings = fProceedingsDto.getFpProceedings();
+        this.fpFamilyback = fProceedingsDto.getFpFamilyback();
+        
+    }
+
     public FProceedings(Integer fpId) {
         this.fpId = fpId;
     }
@@ -95,5 +107,5 @@ public class FProceedings implements Serializable {
     public String toString() {
         return "cr.ac.una.clinicaws.model.FProceedings[ fpId=" + fpId + " ]";
     }
-    
+
 }

@@ -26,7 +26,9 @@ public class DiaryDto {
         this.dyDoctor = diary.getDyDoctor();
         this.dySpace = diary.getDySpace();
     }
-    
+    public DiaryDto(){
+        
+    }
     public Integer getDyId() {
         return dyId;
     }
