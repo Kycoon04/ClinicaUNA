@@ -21,8 +21,15 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 
 /**
  *
@@ -36,6 +43,34 @@ public class LoginViewController extends Controller implements Initializable {
     
     DoctorDto doctorDto;
     private List<DoctorDto> doctorList;
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private BorderPane RegisterView;
+    @FXML
+    private TextField userRegisField;
+    @FXML
+    private TextField surname1RegisField;
+    @FXML
+    private TextField surname2RegisField;
+    @FXML
+    private TextField usernameRegisField;
+    @FXML
+    private TextField emailRegisField;
+    @FXML
+    private TextField landlineRegisField;
+    @FXML
+    private TextField idRegisField;
+    @FXML
+    private TextField phoneNumberRegisField;
+    @FXML
+    private TextField passwordRegisField;
+    @FXML
+    private TextField password2RegisField;
+    @FXML
+    private BorderPane loginView;
     
     DiaryDto diaryDto;
     private List<DiaryDto> diaryList;
@@ -287,4 +322,30 @@ public class LoginViewController extends Controller implements Initializable {
        
        
      
+
+    @FXML
+    private void PasswordForget(MouseEvent event) {
+    }
+
+    @FXML
+    private void AcceptLogin(ActionEvent event) {
+    }
+
+    @FXML
+    private void Register(ActionEvent event) {
+        RegisterView.toFront();
+    }
+
+    @FXML
+    private void AcceptLoginEnter(KeyEvent event) {
+    }
+
+    @FXML
+    private void Back(ActionEvent event) {
+        loginView.toFront();
+    }
+
+    @FXML
+    private void ConfirmRegister(ActionEvent event) {
+    }
 }
