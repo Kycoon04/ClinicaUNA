@@ -8,6 +8,7 @@ import cr.ac.una.clinicaws.model.DiaryDto;
 import cr.ac.una.clinicaws.service.DiaryService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.Respuesta;
+import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 
@@ -35,7 +36,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Diary", description = "Operations on Diary")
-
+@Secure
 public class ModuleDiary {
     
     @EJB

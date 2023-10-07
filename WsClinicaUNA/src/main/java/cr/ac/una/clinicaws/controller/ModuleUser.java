@@ -5,6 +5,7 @@ import cr.ac.una.clinicaws.service.UserService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.JwTokenHelper;
 import cr.ac.una.clinicaws.util.Respuesta;
+import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Users", description = "Operations on employees")
 
-//@Secure
+@Secure
 public class ModuleUser {
 
     @EJB
@@ -37,7 +38,7 @@ public class ModuleUser {
 
     @GET
     @Path("/user/{id}")
-    public Response getUser(@PathParam("id") Long id) {
+    public Response getUser(@PathParam("id") Integer id) {
         try {
             Respuesta res = userService.getUser(id);
             if (!res.getEstado()) {//retorna el codigo de respuesta del server 

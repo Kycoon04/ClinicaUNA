@@ -8,6 +8,7 @@ import cr.ac.una.clinicaws.model.FProceedingsDto;
 import cr.ac.una.clinicaws.service.FProceedingsService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.Respuesta;
+import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Path;
@@ -36,6 +37,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "FProceedings", description = "Operations on FProceedings")
+@Secure
 public class ModuleFProceedings {
     
       @EJB

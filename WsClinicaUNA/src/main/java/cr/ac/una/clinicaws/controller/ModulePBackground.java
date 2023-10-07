@@ -11,6 +11,7 @@ import cr.ac.una.clinicaws.service.UserService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.JwTokenHelper;
 import cr.ac.una.clinicaws.util.Respuesta;
+import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;
@@ -36,7 +37,7 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Personal Background", description = "Operations on Personal Background")
 
-//@Secure
+@Secure
 public class ModulePBackground {
 
     @EJB

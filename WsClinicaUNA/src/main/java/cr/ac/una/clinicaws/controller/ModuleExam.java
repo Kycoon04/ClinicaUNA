@@ -8,6 +8,7 @@ import cr.ac.una.clinicaws.model.ExamDto;
 import cr.ac.una.clinicaws.service.ExamService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.Respuesta;
+import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.ejb.EJB;
@@ -32,6 +33,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Exam", description = "Operations on Exam")
+@Secure
 public class ModuleExam {
       @EJB
     ExamService examService;

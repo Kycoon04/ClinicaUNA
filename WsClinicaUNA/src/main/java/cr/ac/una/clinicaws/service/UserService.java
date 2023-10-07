@@ -35,7 +35,7 @@ public class UserService {
     @PersistenceContext(unitName = "my_persistence_unit")
     private EntityManager em;
 
-    public Respuesta getUser(Long usId) {
+    public Respuesta getUser(Integer usId) {
         try {
             Query qryusuario = em.createNamedQuery("Users.findByUsId", Users.class);
             qryusuario.setParameter("usId", usId);

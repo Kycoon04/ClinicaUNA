@@ -8,6 +8,7 @@ import cr.ac.una.clinicaws.model.DoctorDto;
 import cr.ac.una.clinicaws.service.DoctorService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.Respuesta;
+import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.ejb.EJB;
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Doctor", description = "Operations on Doctor")
-
+@Secure
 public class ModuleDoctor {
     @EJB
     DoctorService doctorService;

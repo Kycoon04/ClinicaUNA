@@ -8,6 +8,7 @@ import cr.ac.una.clinicaws.model.SpaceDto;
 import cr.ac.una.clinicaws.service.SpaceService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.Respuesta;
+import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;
@@ -32,6 +33,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Space", description = "Operations on Space")
+@Secure
 public class ModuleSpace {
     
     @EJB

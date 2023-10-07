@@ -4,8 +4,8 @@
  */
 package cr.ac.una.clinicauna.model;
 
-import java.util.List;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -15,21 +15,21 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class UserDto {
 
-    private  SimpleStringProperty usName;
-    private  SimpleStringProperty usPlastname;
-    private  SimpleStringProperty usSlastname;
-    private  SimpleStringProperty usIdentification;
-    private  ObjectProperty<String> usType;
-    private  ObjectProperty<String> usLenguage;
-    private  ObjectProperty<String> usState;
-    private  SimpleStringProperty usUsername;
-    private  SimpleStringProperty usPassword;
-    private  SimpleStringProperty usEmail;
-    private  ObjectProperty<String> usRecover;
-    private  SimpleStringProperty usTemppassword;
-    private  SimpleStringProperty usId;
-    private  SimpleStringProperty token;
-    private  SimpleStringProperty usCode;
+    public  SimpleStringProperty usName;
+    public  SimpleStringProperty usPlastname;
+    public  SimpleStringProperty usSlastname;
+    public  SimpleStringProperty usIdentification;
+    public  ObjectProperty<String> usType;
+    public  ObjectProperty<String> usLenguage;
+    public  ObjectProperty<String> usState;
+    public  SimpleStringProperty usUsername;
+    public  SimpleStringProperty usPassword;
+    public  SimpleStringProperty usEmail;
+    public  ObjectProperty<String> usRecover;
+    public  SimpleStringProperty usTemppassword;
+    public  SimpleIntegerProperty usId;
+    public  SimpleStringProperty token;
+    public  SimpleStringProperty usCode;
 
     public UserDto() {
         this.usName = new SimpleStringProperty();
@@ -44,7 +44,7 @@ public class UserDto {
         this.usEmail = new SimpleStringProperty();
         this.usRecover = new SimpleObjectProperty();
         this.usTemppassword = new SimpleStringProperty();
-        this.usId = new SimpleStringProperty();
+        this.usId = new SimpleIntegerProperty();
         this.token = new SimpleStringProperty();
         this.usCode = new SimpleStringProperty();
     }
@@ -146,11 +146,11 @@ public class UserDto {
         this.usTemppassword.set(usTemppassword);
     }
 
-    public String getUsId() {
+    public int getUsId() {
         return usId.get();
     }
 
-    public void setUsId(String usId) {
+    public void setUsId(int usId) {
         this.usId.set(usId);
     }
 

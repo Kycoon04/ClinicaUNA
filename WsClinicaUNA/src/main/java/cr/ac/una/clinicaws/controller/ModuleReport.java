@@ -5,12 +5,10 @@
 package cr.ac.una.clinicaws.controller;
 
 import cr.ac.una.clinicaws.model.ReportDto;
-import cr.ac.una.clinicaws.model.UsersDto;
 import cr.ac.una.clinicaws.service.ReportService;
-import cr.ac.una.clinicaws.service.UserService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
-import cr.ac.una.clinicaws.util.JwTokenHelper;
 import cr.ac.una.clinicaws.util.Respuesta;
+import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;
@@ -36,7 +34,7 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Report", description = "Operations on Report")
 
-//@Secure
+@Secure
 public class ModuleReport {
 
     @EJB

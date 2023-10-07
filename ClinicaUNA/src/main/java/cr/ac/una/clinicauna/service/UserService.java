@@ -8,7 +8,6 @@ import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.util.Request;
 import cr.ac.una.clinicauna.util.Respuesta;
 import jakarta.ws.rs.core.GenericType;
-import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,6 @@ import java.util.logging.Logger;
  * @author dilan
  */
 public class UserService {
- private List<UserDto> cuentas;
  
     public Respuesta getUser(String user, String password) {
         try {
@@ -74,7 +72,7 @@ public class UserService {
         }
     }
 
-    public Respuesta deleteUser(Long id) {
+    public Respuesta deleteUser(Integer id) {
         try {
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("id", id);
@@ -90,7 +88,7 @@ public class UserService {
         }
     }
 
-    public List<UserDto> getUsuarios() {
+    public List<UserDto> getUsers() {
         try {
             Map<String, Object> parametros = new HashMap<>();
             Request request = new Request("ModuleUser/users", "", parametros);
@@ -106,5 +104,4 @@ public class UserService {
             return null;
         }
     }
-
 }

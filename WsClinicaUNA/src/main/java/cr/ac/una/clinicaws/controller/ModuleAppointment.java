@@ -4,15 +4,12 @@
  */
 package cr.ac.una.clinicaws.controller;
 
-import cr.ac.una.clinicaws.model.Appointment;
 import cr.ac.una.clinicaws.model.AppointmentDto;
-
 import cr.ac.una.clinicaws.service.AppointmentService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
-import cr.ac.una.clinicaws.util.JwTokenHelper;
 import cr.ac.una.clinicaws.util.Respuesta;
+import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -36,7 +33,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Appointment", description = "Operations on Appointments")
-
+@Secure
 public class ModuleAppointment {
     
     @EJB
@@ -66,7 +63,7 @@ public class ModuleAppointment {
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
-            return Response.ok(res.getResultado("Users")).build();
+            return Response.ok(res.getResultado("Appointments")).build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando la cita").build();
