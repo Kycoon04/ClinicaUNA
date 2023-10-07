@@ -71,7 +71,7 @@ public class DiseaseService {
         }
     }
 
-    public List<DiseaseService> getDisease() {
+    public List<DiseaseDto> getDisease() {
         try {
             Map<String, Object> parametros = new HashMap<>();
             Request request = new Request("ModuleDiseases/disease", "", parametros);
@@ -80,7 +80,7 @@ public class DiseaseService {
                 System.out.println(request.getError());
                 return null;
             }
-            return (List<DiseaseService>) request.readEntity(new GenericType<List<DiseaseService>>() {
+            return (List<DiseaseDto>) request.readEntity(new GenericType<List<DiseaseDto>>() {
             });
         } catch (Exception e) {
             System.out.println(e.toString());

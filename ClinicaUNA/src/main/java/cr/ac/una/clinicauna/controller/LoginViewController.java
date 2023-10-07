@@ -4,12 +4,14 @@ import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiaryDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
+import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.model.SpaceDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.AppointmentService;
 import cr.ac.una.clinicauna.service.DiaryService;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
+import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.service.SpaceService;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
@@ -40,7 +42,7 @@ public class LoginViewController extends Controller implements Initializable {
 
     UserDto userDto;
     private List<UserDto> usersList;
-    
+
     DoctorDto doctorDto;
     private List<DoctorDto> doctorList;
     @FXML
@@ -71,21 +73,25 @@ public class LoginViewController extends Controller implements Initializable {
     private TextField password2RegisField;
     @FXML
     private BorderPane loginView;
-    
+
     DiaryDto diaryDto;
     private List<DiaryDto> diaryList;
-    
+
     DiseaseDto diseaseDto;
     private List<DiseaseDto> diseaseList;
+
+    
+    ProceedingsDto proceedingsDto;
+    private List<ProceedingsDto> ProceedingsList;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        login("dfg","12");  
+        login("dfg", "12");
     }
 
     @Override
     public void initialize() {
-      
+
     }
 
     private void saveUser(UserDto userDto) {
@@ -142,32 +148,25 @@ public class LoginViewController extends Controller implements Initializable {
     private void deleteUser(Integer id) {
         try {
             if (id != null && id > 0) {
-                 UserService service = new UserService();
+                UserService service = new UserService();
                 Respuesta respuesta = service.deleteUser(id);
                 if (!respuesta.getEstado()) {
                     new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar usuario", getStage(), respuesta.getMensaje());
                 } else {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar usuario", getStage(), "usuario eliminado correctamente.");
                 }
-                
+
             } else {
-               new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar usuario", getStage(), "Debe cargar el usuario que desea eliminar.");
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar usuario", getStage(), "Debe cargar el usuario que desea eliminar.");
             }
         } catch (Exception ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error eliminando el empleado.", ex);
             new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar empleado", getStage(), "Ocurrio un error eliminando el empleado.");
         }
     }
-    
-    
-    
-    
-    
+
     // doctor 
-    
-    
-    
-     private void saveDoctor(DoctorDto doctorDto) {
+    private void saveDoctor(DoctorDto doctorDto) {
         try {
             DoctorService service = new DoctorService();
             Respuesta respuesta = service.saveDoctor(doctorDto);
@@ -180,10 +179,10 @@ public class LoginViewController extends Controller implements Initializable {
 
     private void getDoctor(int id) {
         try {
-              DoctorService service = new DoctorService();
+            DoctorService service = new DoctorService();
             Respuesta respuesta = service.getDoctor(id);
             this.doctorDto = (DoctorDto) respuesta.getResultado("Doctor");
-        } catch (Exception ex) { 
+        } catch (Exception ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando el Doctor.", ex);
 
             new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar Doctor", getStage(), "Ocurrio un error consultando el Doctor.");
@@ -192,7 +191,7 @@ public class LoginViewController extends Controller implements Initializable {
 
     private void getDoctors() {
         try {
-         DoctorService service = new DoctorService();
+            DoctorService service = new DoctorService();
             doctorList = service.getDoctor();
         } catch (Exception ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando  Doctores.", ex);
@@ -204,14 +203,14 @@ public class LoginViewController extends Controller implements Initializable {
         System.out.println(id);
         try {
             if (id != null && id > 0) {
-                 DoctorService service = new DoctorService();
+                DoctorService service = new DoctorService();
                 Respuesta respuesta = service.deleteDoctor(id);
                 if (!respuesta.getEstado()) {
                     new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Doctor", getStage(), respuesta.getMensaje());
                 } else {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Doctor eliminado correctamente.");
                 }
-              
+
             } else {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Doctor", getStage(), "Debe cargar el Doctor que desea eliminar.");
             }
@@ -220,11 +219,9 @@ public class LoginViewController extends Controller implements Initializable {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Doctor", getStage(), "Ocurrio un error eliminando el Doctor.");
         }
     }
-    
-    
-    
+
     //agenda
-     private void saveDiary(DiaryDto diaryDto) {
+    private void saveDiary(DiaryDto diaryDto) {
         try {
             DiaryService service = new DiaryService();
             Respuesta respuesta = service.saveDiary(diaryDto);
@@ -234,32 +231,41 @@ public class LoginViewController extends Controller implements Initializable {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Agenda", getStage(), "Ocurrió un error al guardar Agenda.");
         }
     }
-    
-     
-     private void getDiary(int id) {
+
+    private void getDiary(int id) {
         try {
             DiaryService service = new DiaryService();
             Respuesta respuesta = service.getDiaryId(id);
             this.diaryDto = (DiaryDto) respuesta.getResultado("Diary");
-        } catch (Exception ex) { 
+        } catch (Exception ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando Agenda.", ex);
 
             new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar Agenda", getStage(), "Ocurrio un error consultandoAgenda.");
         }
     }
-     
-       private void deleteDiary(Integer id) {
+
+    private void getDiary() {
+        try {
+            DiaryService service = new DiaryService();
+            diaryList = service.getDiary();
+        } catch (Exception ex) {
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando  Agendas.", ex);
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar Agendas", getStage(), "Ocurrio un error consultando Agendas.");
+        }
+    }
+
+    private void deleteDiary(Integer id) {
         System.out.println(id);
         try {
             if (id != null && id > 0) {
-                  DiaryService service = new DiaryService();
+                DiaryService service = new DiaryService();
                 Respuesta respuesta = service.deleteDiary(id);
                 if (!respuesta.getEstado()) {
                     new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Agenda", getStage(), respuesta.getMensaje());
                 } else {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Agenda", getStage(), "Agenda eliminado correctamente.");
                 }
-              
+
             } else {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Agenda", getStage(), "Debe cargar la Agenda que desea eliminar.");
             }
@@ -268,12 +274,10 @@ public class LoginViewController extends Controller implements Initializable {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Agenda", getStage(), "Ocurrio un error eliminando  Agenda.");
         }
     }
+
     
-       
-       
-      //enfermedad
-       
-     private void saveDisease(DiseaseDto diseaseDto) {
+    //enfermedad
+    private void saveDisease(DiseaseDto diseaseDto) {
         try {
             DiseaseService service = new DiseaseService();
             Respuesta respuesta = service.saveDisease(diseaseDto);
@@ -283,45 +287,111 @@ public class LoginViewController extends Controller implements Initializable {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar enfermedad", getStage(), "Ocurrió un error al guardar enfermedad.");
         }
     }
-    
-     
-     private void getDisease(int id) {
+
+    private void getDisease(int id) {
         try {
             DiseaseService service = new DiseaseService();
             Respuesta respuesta = service.getDiseaseId(id);
             this.diseaseDto = (DiseaseDto) respuesta.getResultado("Disease");
             System.out.println(diseaseDto.getDsName());
-        } catch (Exception ex) { 
+        } catch (Exception ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando enfermedad.", ex);
 
             new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar enfermedad", getStage(), "Ocurrio un error consultandoe nfermedad.");
         }
     }
+
+     private void getDiseases() {
+        try {
+          DiseaseService service = new DiseaseService();
+            diseaseList = service.getDisease();
+        } catch (Exception ex) {
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando  enfermedades.", ex);
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar enfermedades", getStage(), "Ocurrio un error consultando enfermedades.");
+        }
+    }
      
-       private void deleteDisease(Integer id) {
+    private void deleteDisease(Integer id) {
         System.out.println(id);
         try {
             if (id != null && id > 0) {
-                  DiaryService service = new DiaryService();
+                DiaryService service = new DiaryService();
                 Respuesta respuesta = service.deleteDiary(id);
                 if (!respuesta.getEstado()) {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Agenda", getStage(), respuesta.getMensaje());
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar enfermedades", getStage(), respuesta.getMensaje());
                 } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Agenda", getStage(), "Agenda eliminado correctamente.");
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar enfermedades", getStage(), "Agenda enfermedades correctamente.");
                 }
-              
+
             } else {
-                new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Agenda", getStage(), "Debe cargar la Agenda que desea eliminar.");
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar enfermedades", getStage(), "Debe cargar la enfermedades que desea eliminar.");
             }
         } catch (Exception ex) {
-            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error eliminando la Agenda.", ex);
-            new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Agenda", getStage(), "Ocurrio un error eliminando  Agenda.");
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error eliminando la enfermedades.", ex);
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar enfermedades", getStage(), "Ocurrio un error eliminando  enfermedades.");
+        }
+    }
+
+    
+    //proceedings
+    private void saveProceedings(ProceedingsDto proceedingsDto) {
+        try {
+            ProceedingsService service = new ProceedingsService();
+            Respuesta respuesta = service.saveProcedings(proceedingsDto);
+            this.proceedingsDto = (ProceedingsDto) respuesta.getResultado("Proceedings");
+        } catch (Exception ex) {
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error guardando Acta.", ex);
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Acta", getStage(), "Ocurrió un error al guardar Acta.");
+        }
+    }
+
+    private void getProceedings(int id) {
+        try {
+         ProceedingsService service = new ProceedingsService();
+            Respuesta respuesta = service.getProcedingsId(id);
+            this.proceedingsDto = (ProceedingsDto) respuesta.getResultado("Proceedings");
+            System.out.println(proceedingsDto.getPsPatient().getPtName());
+        } catch (Exception ex) {
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando Acta.", ex);
+
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar Acta", getStage(), "Ocurrio un error consultando Acta.");
+        }
+    }
+
+    private void deleteProceedings(Integer id) {
+        System.out.println(id);
+        try {
+            if (id != null && id > 0) {
+               ProceedingsService service = new ProceedingsService();
+                Respuesta respuesta = service.deleteProcedings(id);
+                if (!respuesta.getEstado()) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Acta", getStage(), respuesta.getMensaje());
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Acta", getStage(), "Acta eliminado correctamente.");
+                }
+
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Acta", getStage(), "Debe cargar el Acta que desea eliminar.");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error eliminando el Acta.", ex);
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Acta", getStage(), "Ocurrio un error eliminando Acta.");
         }
     }
     
-       
-       
+    
+       private void getProceedings() {
+        try {
+         ProceedingsService service = new ProceedingsService();
+            ProceedingsList = service.getProcedings();
+        } catch (Exception ex) {
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando  Acta.", ex);
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar Acta", getStage(), "Ocurrio un error consultando Acta.");
+        }
+    }
      
+       
+       
 
     @FXML
     private void PasswordForget(MouseEvent event) {
