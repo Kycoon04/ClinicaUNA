@@ -60,7 +60,7 @@ public class ModuleUser {
             }
             UsersDto empleadoDto = (UsersDto) res.getResultado("Users");
             empleadoDto.setToken(JwTokenHelper.getInstance().generatePrivateKey(usuario));
-            return Response.ok(res.getResultado("Empleado")).build();
+            return Response.ok(res.getResultado("Users")).build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error al validar usuario").build();
