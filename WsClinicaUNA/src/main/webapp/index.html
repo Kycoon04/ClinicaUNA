@@ -1,10 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
     <head>
-        <title>Start Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Clinica UNA</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+
+            header {
+                background-color: #333;
+                color: #fff;
+                text-align: center;
+                padding: 1em;
+            }
+
+            nav {
+                background-color: #4CAF50;
+                overflow: hidden;
+            }
+
+            nav a {
+                float: left;
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+            nav a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+
+            section {
+                text-align: center;
+                padding: 20px;
+                margin: 20px;
+                background-color: #fff;
+            }
+
+            section img {
+                max-width: 100%;
+                height: auto;
+                margin: 10px;
+            }
+
+            footer {
+                background-color: #333;
+                color: #fff;
+                text-align: center;
+                padding: 1em;
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+            }
+        </style>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <header>
+            <h1>Clinica UNA</h1>
+        </header>
+
+        <nav>
+            <a href="#">Inicio</a>
+            <a href="#">Servicios</a>
+            <a href="#" onclick="activacion()">Activación</a>
+        </nav>
+
+        <section>
+            <h2>Bienvenido a nuestra clínica</h2>
+            <p>Ofrecemos una amplia gama de servicios médicos para cuidar de tu salud.</p>
+
+            <div id="servicios" style="display:none;">
+                <p>Citas</p>
+                <p>Revisión</p>
+                <p>Registro de Usuarios</p>
+            </div>
+
+            <img src="imagen1.jpg" alt="Imagen 1">
+            <img src="imagen2.jpg" alt="Imagen 2">
+            <img src="imagen3.jpg" alt="Imagen 3">
+            <img src="imagen4.jpg" alt="Imagen 4">
+
+            <script>
+                document.querySelector('nav a:nth-child(2)').addEventListener('click', function () {
+                    document.getElementById('servicios').style.display = 'block';
+                    document.querySelector('section img:nth-child(1)').style.display = 'none';
+                    document.querySelector('section img:nth-child(2)').style.display = 'none';
+                    document.querySelector('section img:nth-child(3)').style.display = 'none';
+                    document.querySelector('section img:nth-child(4)').style.display = 'none';
+                });
+
+                document.querySelector('nav a:nth-child(1)').addEventListener('click', function () {
+                    document.getElementById('servicios').style.display = 'none';
+                    document.querySelector('section img:nth-child(1)').style.display = 'block';
+                    document.querySelector('section img:nth-child(2)').style.display = 'block';
+                    document.querySelector('section img:nth-child(3)').style.display = 'block';
+                    document.querySelector('section img:nth-child(4)').style.display = 'block';
+                });
+
+                function getParameterByName(name, url) {
+                    if (!url)
+                        url = window.location.href;
+                    name = name.replace(/[\[\]]/g, "\\$&");
+                    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                            results = regex.exec(url);
+                    if (!results)
+                        return null;
+                    if (!results[2])
+                        return '';
+                    return decodeURIComponent(results[2].replace(/\+/g, " "));
+                }
+
+                function getUser() {
+                    var idParameter = getParameterByName('id');
+
+                    if (idParameter) {
+                        fetch('http://localhost:8080/WsClinicaUNA/ws/ModuleUser/user/' + idParameter)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Error en la solicitud');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    document.getElementById('userInfo').style.display = 'block';
+                                    // Aquí puedes manipular la información del usuario recibida en 'data'
+                                    document.getElementById('userInfo').innerHTML = JSON.stringify(data, null, 2);
+                                })
+                                .catch(error => {
+                                    alert('Error en la solicitud: ' + error.message);
+                                });
+                    } else {
+                        alert('No se encontró el parámetro "id" en la URL.');
+                    }
+                }
+            </script>
+        </section>
+
+        <footer>
+            <p>&copy; Dilan Sancho Lopez.</p>
+            <p>&copy; Jose Valverde Valverde.</p>
+            <p>&copy; Anderson Fernandez.</p>
+            <p>&copy; 2023 Clinica UNA. Todos los derechos reservados.</p>
+        </footer>
     </body>
 </html>

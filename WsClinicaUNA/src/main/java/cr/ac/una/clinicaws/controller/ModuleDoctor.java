@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Doctor", description = "Operations on Doctor")
-@Secure
+//@Secure
 public class ModuleDoctor {
     @EJB
     DoctorService doctorService;

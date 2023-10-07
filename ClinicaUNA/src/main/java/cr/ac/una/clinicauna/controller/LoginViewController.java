@@ -1,9 +1,11 @@
 package cr.ac.una.clinicauna.controller;
 
 import cr.ac.una.clinicauna.model.AppointmentDto;
+import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.SpaceDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.AppointmentService;
+import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.SpaceService;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
@@ -26,10 +28,16 @@ public class LoginViewController extends Controller implements Initializable {
 
     UserDto userDto;
     private List<UserDto> usersList;
-
+    DoctorDto doctorDto;
+    private List<DoctorDto> doctorList;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        login("Kycoon04","Valverdejo04");
+        //login("dfg","12");
+       // getDoctor(307);
+        
+        
+        
     }
 
     @Override
@@ -90,19 +98,82 @@ public class LoginViewController extends Controller implements Initializable {
     private void deleteUser(Integer id) {
         try {
             if (id != null && id > 0) {
-                new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar usuario", getStage(), "Debe cargar el usuario que desea eliminar.");
-            } else {
-                UserService service = new UserService();
+                 UserService service = new UserService();
                 Respuesta respuesta = service.deleteUser(id);
                 if (!respuesta.getEstado()) {
                     new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar usuario", getStage(), respuesta.getMensaje());
                 } else {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar usuario", getStage(), "usuario eliminado correctamente.");
                 }
+                
+            } else {
+               new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar usuario", getStage(), "Debe cargar el usuario que desea eliminar.");
             }
         } catch (Exception ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error eliminando el empleado.", ex);
             new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar empleado", getStage(), "Ocurrio un error eliminando el empleado.");
+        }
+    }
+    
+    
+    
+    
+    
+    // doctor 
+    
+    
+    
+     private void saveDoctor(DoctorDto doctorDto) {
+        try {
+            DoctorService service = new DoctorService();
+            Respuesta respuesta = service.saveDoctor(doctorDto);
+            this.userDto = (UserDto) respuesta.getResultado("Doctor");
+        } catch (Exception ex) {
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error guardando el Doctor.", ex);
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Doctor", getStage(), "Ocurrió un error al guardar el Doctor.");
+        }
+    }
+
+    private void getDoctor(int id) {
+        try {
+              DoctorService service = new DoctorService();
+            Respuesta respuesta = service.getDoctor(id);
+            this.doctorDto = (DoctorDto) respuesta.getResultado("Doctor");
+        } catch (Exception ex) { 
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando el Doctor.", ex);
+
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar Doctor", getStage(), "Ocurrio un error consultando el Doctor.");
+        }
+    }
+
+    private void getDoctors() {
+        try {
+         DoctorService service = new DoctorService();
+            doctorList = service.getDoctor();
+        } catch (Exception ex) {
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando  Doctores.", ex);
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar Doctores", getStage(), "Ocurrio un error consultando Doctores.");
+        }
+    }
+
+    private void deleteDoctor(Integer id) {
+        System.out.println(id);
+        try {
+            if (id != null && id > 0) {
+                 DoctorService service = new DoctorService();
+                Respuesta respuesta = service.deleteDoctor(id);
+                if (!respuesta.getEstado()) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Doctor", getStage(), respuesta.getMensaje());
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Doctor eliminado correctamente.");
+                }
+              
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Doctor", getStage(), "Debe cargar el Doctor que desea eliminar.");
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error eliminando el Doctor.", ex);
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Eliminar Doctor", getStage(), "Ocurrio un error eliminando el Doctor.");
         }
     }
 }

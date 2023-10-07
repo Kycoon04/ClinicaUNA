@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Users", description = "Operations on employees")
 
-@Secure
+//@Secure
 public class ModuleUser {
 
     @EJB
