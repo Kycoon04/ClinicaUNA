@@ -14,11 +14,19 @@ import javafx.beans.property.SimpleIntegerProperty;
 public class DiaryDto {
     
     
-    private SimpleIntegerProperty dyId;
-    private Date dyDate;
-    private DoctorDto dyDoctor;
-    private SpaceDto dySpace;
+    public SimpleIntegerProperty dyId;
+    public Date dyDate;
+    public DoctorDto dyDoctor;
+    public SpaceDto dySpace;
 
+    public DiaryDto() {
+        this.dyId = new SimpleIntegerProperty();
+        this.dyDate = new Date();
+        this.dyDoctor = new DoctorDto();
+        this.dySpace = new SpaceDto();
+    }
+
+    
     public int getDyId() {
         return dyId.get();
     }

@@ -11,8 +11,8 @@ package cr.ac.una.clinicaws.model;
 public class DiseaseDto {
  
     private Integer dsId;
-
     private String dsName;
+    
     public DiseaseDto(Disease disease) {
         this.dsId = disease.getDsId();
         this.dsName = disease.getDsName();
