@@ -57,3 +57,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 #idioms:hover {
     -fx-background-color:goldenrod;
 }
+.choice-box {
+    -fx-background-color:#CC9900;
+    -fx-padding: 5px; 
+    -fx-font-size: 15px; 
+    -fx-font-family: "Rockwell"; 
+    -fx-border-color:#CC9900; 
+    -fx-border-radius: 10px; 
+    -fx-border-with: 10px;
+}

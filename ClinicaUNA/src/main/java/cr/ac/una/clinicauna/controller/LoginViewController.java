@@ -29,6 +29,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -66,11 +67,7 @@ public class LoginViewController extends Controller implements Initializable {
     @FXML
     private TextField emailRegisField;
     @FXML
-    private TextField landlineRegisField;
-    @FXML
     private TextField idRegisField;
-    @FXML
-    private TextField phoneNumberRegisField;
     @FXML
     private TextField passwordRegisField;
     @FXML
@@ -89,10 +86,23 @@ public class LoginViewController extends Controller implements Initializable {
     private List<ProceedingsDto> ProceedingsList;
     @FXML
     private VBox VboxChangeIdioms;
-    
+    @FXML
+    private BorderPane RecoverView;
+    @FXML
+    private TextField emailRecoverField;
+    @FXML
+    private BorderPane RecoverFinalView;
+    @FXML
+    private TextField AceptRecoverField;
+    @FXML
+    private ChoiceBox<String> choiceBoxIdioms;
+    String[] Spanish = {"Español","Inglés","Francés","Japonés"};
+    String[] English = {"Spanish","English","France","Japonese"};
+    String[] French={"Espagnol", "Anglais", "Francais","Japonais"};
+            
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        login("dfg", "12");
+        choiceBoxIdioms.getItems().addAll(Spanish);
     }
 
     @Override
@@ -401,6 +411,7 @@ public class LoginViewController extends Controller implements Initializable {
 
     @FXML
     private void PasswordForget(MouseEvent event) {
+        RecoverView.toFront();
     }
 
     @FXML
@@ -427,18 +438,60 @@ public class LoginViewController extends Controller implements Initializable {
 
     @FXML
     private void changeIdiomSpanish(MouseEvent event) {
+        choiceBoxIdioms.getItems().clear();
+        choiceBoxIdioms.getItems().addAll(Spanish);
+        TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(VboxChangeIdioms);
+            slide.setToY(-176);
+            slide.play();
+            VboxChangeIdioms.setTranslateY(0);
+            slide.setOnFinished((ActionEvent e)->{
+                 VboxChangeIdioms.setVisible(false);
+            });
     }
 
     @FXML
     private void changeIdiomEnglish(MouseEvent event) {
+        choiceBoxIdioms.getItems().clear();
+        choiceBoxIdioms.getItems().addAll(English);
+        TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(VboxChangeIdioms);
+            slide.setToY(-176);
+            slide.play();
+            VboxChangeIdioms.setTranslateY(0);
+            slide.setOnFinished((ActionEvent e)->{
+                 VboxChangeIdioms.setVisible(false);
+            });
     }
 
     @FXML
     private void changeIdiomFrench(MouseEvent event) {
+        choiceBoxIdioms.getItems().clear();
+        choiceBoxIdioms.getItems().addAll(French);
+        TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(VboxChangeIdioms);
+            slide.setToY(-176);
+            slide.play();
+            VboxChangeIdioms.setTranslateY(0);
+            slide.setOnFinished((ActionEvent e)->{
+                 VboxChangeIdioms.setVisible(false);
+            });
     }
 
     @FXML
     private void changeIdiomJapanese(MouseEvent event) {
+        TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(VboxChangeIdioms);
+            slide.setToY(-176);
+            slide.play();
+            VboxChangeIdioms.setTranslateY(0);
+            slide.setOnFinished((ActionEvent e)->{
+                 VboxChangeIdioms.setVisible(false);
+            });
     }
 
     @FXML
@@ -464,6 +517,14 @@ public class LoginViewController extends Controller implements Initializable {
                  VboxChangeIdioms.setVisible(false);
             });
         }
+    }
+
+    @FXML
+    private void RecoverPassword(ActionEvent event) {
+    }
+
+    @FXML
+    private void AceptPassword(ActionEvent event) {
     }
 }
 
