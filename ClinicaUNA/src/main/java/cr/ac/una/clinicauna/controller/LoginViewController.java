@@ -23,7 +23,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -32,6 +34,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 /**
  *
@@ -83,6 +87,8 @@ public class LoginViewController extends Controller implements Initializable {
     
     ProceedingsDto proceedingsDto;
     private List<ProceedingsDto> ProceedingsList;
+    @FXML
+    private VBox VboxChangeIdioms;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -418,4 +424,47 @@ public class LoginViewController extends Controller implements Initializable {
     @FXML
     private void ConfirmRegister(ActionEvent event) {
     }
+
+    @FXML
+    private void changeIdiomSpanish(MouseEvent event) {
+    }
+
+    @FXML
+    private void changeIdiomEnglish(MouseEvent event) {
+    }
+
+    @FXML
+    private void changeIdiomFrench(MouseEvent event) {
+    }
+
+    @FXML
+    private void changeIdiomJapanese(MouseEvent event) {
+    }
+
+    @FXML
+    private void openChangeIdiom(MouseEvent event) {
+        if(!VboxChangeIdioms.isVisible()){
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.7));
+            slide.setNode(VboxChangeIdioms);
+            slide.setToY(0);
+            slide.play();
+            VboxChangeIdioms.setTranslateY(-176);
+            slide.setOnFinished((ActionEvent e) -> {
+                VboxChangeIdioms.setVisible(true);
+            });
+        }else{
+            TranslateTransition slide = new TranslateTransition();
+            slide.setDuration(Duration.seconds(0.4));
+            slide.setNode(VboxChangeIdioms);
+            slide.setToY(-176);
+            slide.play();
+            VboxChangeIdioms.setTranslateY(0);
+            slide.setOnFinished((ActionEvent e)->{
+                 VboxChangeIdioms.setVisible(false);
+            });
+        }
+    }
 }
+
+ 
