@@ -98,8 +98,8 @@ public class ModuleUser {
         }
     }
 
-    @POST
-    @Path("/user/{code}")
+    @GET
+    @Path("/userActive/{code}")
     public Response active(@PathParam("code") String code) {
         try {
             Respuesta res = userService.activebyCode(code);

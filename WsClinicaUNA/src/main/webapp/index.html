@@ -118,27 +118,41 @@
                     return decodeURIComponent(results[2].replace(/\+/g, " "));
                 }
 
-                function getUser() {
-                    var idParameter = getParameterByName('id');
+                async function getUser() {
+                    var idParameter = getParameterByName('Code'); // Asegurate que esta función esté definida en tu código
 
-                    if (idParameter) {
-                        fetch('http://localhost:8080/WsClinicaUNA/ws/ModuleUser/user/' + idParameter)
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Error en la solicitud');
-                                    }
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    document.getElementById('userInfo').style.display = 'block';
-                                    // Aquí puedes manipular la información del usuario recibida en 'data'
-                                    document.getElementById('userInfo').innerHTML = JSON.stringify(data, null, 2);
-                                })
-                                .catch(error => {
-                                    alert('Error en la solicitud: ' + error.message);
-                                });
-                    } else {
+                    if (!idParameter) {
                         alert('No se encontró el parámetro "id" en la URL.');
+                        return;
+                    }
+
+                    var requestBody = {
+                        // Aquí puedes agregar los datos que deseas enviar en la solicitud POST
+                        // Por ejemplo:
+                        // username: 'nombre_de_usuario',
+                        // password: 'contraseña'
+                          code:'idParameter'
+                    };
+
+                    try {
+                        const response = await fetch('http://localhost:8080/WsClinicaUNA/ws/ModuleUser/user/' + idParameter, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(requestBody)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Error en la solicitud');
+                        }
+
+                        const data = await response.json();
+                        document.getElementById('userInfo').style.display = 'block';
+                        // Aquí puedes manipular la información del usuario recibida en 'data'
+                        document.getElementById('userInfo').innerHTML = JSON.stringify(data, null, 2);
+                    } catch (error) {
+                        alert('Error en la solicitud: ' + error.message);
                     }
                 }
             </script>

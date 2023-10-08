@@ -15,6 +15,7 @@ import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.service.SpaceService;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
+
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
@@ -37,6 +38,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import utils.Email;
 
 /**
  *
@@ -187,8 +189,10 @@ public class LoginViewController extends Controller implements Initializable {
         //setear type default
         user.setUsType("Doctor");
         user.setUsRecover("N");
-        user.setUsCode("sdfsdfs");
-      
+        String code = CodeRamdon();
+        user.setUsCode(code);
+         Email enviarCl = new Email(emailRecoverField.getText(), "espanhol",code , "Activacion");
+                    enviarCl.envioDeCorreos("http://localhost:8080/WsClinicaUNA/ws/ModuleUser/userActive/"+code);
         //falta japones 
         if(choiceBoxIdioms.getValue().equals("Espagnol")||choiceBoxIdioms.getValue().equals("Spanish")||choiceBoxIdioms.getValue().equals("Español")){
             idiom="Spanish";
@@ -296,7 +300,10 @@ public class LoginViewController extends Controller implements Initializable {
     @FXML
     private void RecoverPassword(ActionEvent event) {
         UserService service = new UserService();
-        service.ResetTemp(emailRecoverField.getText(),PasswordRamdon());
+        String pass= PasswordRamdon();
+        service.ResetTemp(emailRecoverField.getText(),pass);
+           Email enviarCl = new Email(emailRecoverField.getText(), "espanhol",pass , "Cambio de Contraseña");
+                    enviarCl.envioCmbClave(emailRecoverField.getText(),pass);
         //email al usuario con la temporal
     }
 

@@ -10,6 +10,10 @@ module cr.ac.una.clinicauna {
     requires java.base;
     requires jakarta.json; 
     requires jakarta.mail;
+
+  
+    
+    
     
     opens cr.ac.una.clinicauna to javafx.fxml, javafx.graphics; 
     opens cr.ac.una.clinicauna.controller to javafx.fxml, javafx.controls, com.jfoenix; 
