@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * @author dilan
  */
 public class UserService {
- 
+
     public Respuesta getUser(String user, String password) {
         try {
             Map<String, Object> parametros = new HashMap<>();
@@ -35,6 +35,49 @@ public class UserService {
         } catch (Exception ex) {
             Logger.getLogger(UserService.class.getName()).log(Level.SEVERE, "Error obteniendo el usuario [" + user + "]", ex);
             return new Respuesta(false, "Error obteniendo el usuario.", "getUsuario " + ex.getMessage());
+        }
+    }
+
+    public boolean isActive(String user, String password) {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("user", user);
+            parametros.put("pass", password);
+            Request request = new Request("ModuleUser/userIsAct", "/{user}/{pass}", parametros);
+            request.get();
+            if (request.isError()) {
+                return false;
+            }
+            Respuesta res = (Respuesta) request.readEntity(Respuesta.class);
+            return res.getEstado();
+        } catch (Exception ex) {
+            Logger.getLogger(UserService.class.getName()).log(Level.SEVERE, "Error verificando la activación del usuario [" + user + "]", ex);
+            return false;
+        }
+    }
+
+    public boolean isTempPass(String user, String password) {
+        try {
+
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("user", user);
+            parametros.put("pass", password);
+
+            Request request = new Request("ModuleUser/userIsTemp", "/{user}/{pass}", parametros);
+
+            request.get();
+
+            if (request.isError()) {
+                return false;
+            }
+
+            return (boolean) request.readEntity(Boolean.class);
+
+        } catch (Exception ex) {
+            // Log an error if an exception occurs
+            Logger.getLogger(UserService.class.getName())
+                    .log(Level.SEVERE, "Error verificando si la contraseña es temporal para el usuario [" + user + "]", ex);
+            return false;
         }
     }
 
@@ -56,6 +99,43 @@ public class UserService {
         }
     }
 
+    public Respuesta resetAccontPassword(String email, String password) {
+        try {
+
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("Email", email);
+            parametros.put("Password", password);
+            Request request = new Request("ModuleUser/user", "/{Email}/{Password}", parametros);
+            request.post(email);
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            UserDto userDto = (UserDto) request.readEntity(UserDto.class);
+            return new Respuesta(true, "", "", "", userDto);
+        } catch (Exception ex) {
+            Logger.getLogger(UserService.class.getName()).log(Level.SEVERE, "Error obteniendo el usuario [" + email + "]", ex);
+            return new Respuesta(false, "Error obteniendo el usuario.", "getUsuario " + ex.getMessage());
+        }
+    }
+
+    public Respuesta ResetTemp(String email, String temPassword) {
+        try {
+
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("Email", email);
+            parametros.put("temPassword", temPassword);
+            Request request = new Request("ModuleUser/userTempPas", "/{Email}/{temPassword}", parametros);
+            request.post(email);
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            UserDto userDto = (UserDto) request.readEntity(UserDto.class);
+            return new Respuesta(true, "", "", "", userDto);
+        } catch (Exception ex) {
+            Logger.getLogger(UserService.class.getName()).log(Level.SEVERE, "Error obteniendo el usuario [" + email + "]", ex);
+            return new Respuesta(false, "Error obteniendo el usuario.", "getUsuario " + ex.getMessage());
+        }
+    }
 
     public Respuesta saveUser(UserDto userDto) {
         try {

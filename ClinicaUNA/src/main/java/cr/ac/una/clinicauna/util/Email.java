@@ -38,8 +38,6 @@ public class Email {
      *
      * @param link Enlace que se incluirá en el cuerpo del correo.
      */
-    
-    
     public Email(String sourceMail, String password, String name, String info, String destinationMail) {
         this.sourceMail = sourceMail;
         this.password = password;
@@ -49,7 +47,7 @@ public class Email {
     }
 
     public void enviarCorreoReporte(String enlace) {
-   
+
         sourceMail = "competencias360develop@gmail.com";
         name = "Competencias360";
         info = "la mejor empresa";
@@ -162,6 +160,55 @@ public class Email {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void enviarClave(String link) {
+   
+
+        try {
+            Properties p = new Properties();
+            p.put("mail.smtp.host", "smtp.gmail.com");
+            p.setProperty("mail.smtp.starttls.enable", "true");
+            p.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+            p.setProperty("mail.smtp.port", "587");
+            p.setProperty("mail.smtp.user", sourceMail);
+            p.setProperty("mail.smtp.auth", "true");
+            Session s = Session.getDefaultInstance(p);
+
+            String mensajeHTML = "<html>"
+                    + "<head>"
+                    + "<style>"
+                    + "body { font-family: Arial, sans-serif; background-color: #f2f2f2; }"
+                    + "h1 { color: #333; background-color: grey;  text-align: center; }"
+                    + "p { color: #666; }"
+                    + "</style>"
+                    + "</head>"
+                    + "<body>"
+                    + "<h1>Recuperación de Contraseña</h1>"
+                    + "<p>Se ha detectado un intento de recuperación de contraseña para la dirección de correo:</p>"
+                    + "<p><strong>" + destinationMail + "</strong></p>"
+                    + "<p>Aquí está su contraseña temporal:</p>"
+                    + "<p><strong>" + link + "</strong></p>"
+                    + "</body>"
+                    + "</html>";
+
+            MimeMessage mensaje = new MimeMessage(s);
+            mensaje.setFrom(new InternetAddress(sourceMail));
+            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinationMail));
+            mensaje.setSubject(info);
+
+            mensaje.setContent(mensajeHTML, "text/html");
+
+            Transport t = s.getTransport("smtp");
+            t.connect(sourceMail, password);
+            if (t.isConnected()) {
+                t.sendMessage(mensaje, mensaje.getAllRecipients());
+                t.close();
+            }
+            System.out.printf("Mensaje enviado");
+        } catch (Exception e) {
+            System.out.println(e.toString());
         }
     }
 }

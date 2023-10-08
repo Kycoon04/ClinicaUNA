@@ -115,7 +115,7 @@ public class UserService {
         }
     }
 
-    public Respuesta activebyCode(UsersDto usersDto,String code) {
+    public Respuesta activebyCode(String code) {
         Users users;
         try {
             if (code != null && !code.isEmpty()) {
@@ -123,6 +123,7 @@ public class UserService {
                 query.setParameter("usCode", code);
                 users = query.getSingleResult();
                 users.setUsState("A");
+                users.setUsCode("");
                 users = em.merge(users);
                 em.flush();
                 return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
@@ -134,8 +135,50 @@ public class UserService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el usuario.", "eliminarusuario " + ex.getMessage());
         }
     }
-    
-    public Respuesta updatebyEmail(UsersDto usersDto) {
+
+    public Respuesta isActive(String usuario, String clave) {
+        Users users;
+        try {
+            if (usuario != null && !clave.isEmpty()) {
+                TypedQuery<Users> query = em.createNamedQuery("Users.findByUsuClave", Users.class);
+                query.setParameter("usuario", usuario);
+                query.setParameter("clave", clave);
+                users = query.getSingleResult();
+                if (users.getUsState().equals("A")) {
+                    return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
+                }
+                return new Respuesta(false, CodigoRespuesta.CORRECTO, "", "");
+            } else {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "Debe cargar el usuario a eliminar.", "eliminarusuario NoResultException");
+            }
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al guardar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el usuario.", "eliminarusuario " + ex.getMessage());
+        }
+    }
+
+    public Respuesta isTempPas(String usuario, String clave) {
+        Users users;
+        try {
+            if (usuario != null && !clave.isEmpty()) {
+                TypedQuery<Users> query = em.createNamedQuery("Users.findByUsuClave", Users.class);
+                query.setParameter("usuario", usuario);
+                query.setParameter("clave", clave);
+                users = query.getSingleResult();
+                if (users.getUsRecover().equals("Y")) {
+                    return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
+                }
+                return new Respuesta(false, CodigoRespuesta.CORRECTO, "", "");
+            } else {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "Debe cargar el usuario a eliminar.", "eliminarusuario NoResultException");
+            }
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al guardar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el usuario.", "eliminarusuario " + ex.getMessage());
+        }
+    }
+
+   public Respuesta updatebyEmail(UsersDto usersDto) {
         Users user;
         try {
             if (usersDto.getUsEmail() != null || usersDto.getUsPassword() != null) {
@@ -143,6 +186,8 @@ public class UserService {
                 query.setParameter("usEmail", usersDto.getUsEmail());
                 user = query.getSingleResult();
                 user.setUsPassword(usersDto.getUsPassword());
+                user.setUsRecover(usersDto.getUsRecover());
+                user.setUsTemppassword("");
                 user = em.merge(user);
                 em.flush();
                 return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
@@ -154,12 +199,34 @@ public class UserService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el usuario.", "eliminarusuario " + ex.getMessage());
         }
     }
-    
+    // user.setUsRecover(usersDto.getUsRecover());
+    public Respuesta updaterecovery(UsersDto usersDto) {
+        Users user;
+        try {
+            if (usersDto.getUsEmail() != null || usersDto.getUsTemppassword() != null) {
+                TypedQuery<Users> query = em.createNamedQuery("Users.findByUsEmail", Users.class);
+                query.setParameter("usEmail", usersDto.getUsEmail());
+                user = query.getSingleResult();
+                user.setUsTemppassword(usersDto.getUsTemppassword());
+                user.setUsRecover(usersDto.getUsRecover());
+                user.setUsPassword(usersDto.getUsTemppassword());
+                user = em.merge(user);
+                em.flush();
+                return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
+            } else {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "Debe cargar el usuario a eliminar.", "eliminarusuario NoResultException");
+            }
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al guardar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el usuario.", "eliminarusuario " + ex.getMessage());
+        }
+    }
+
     public Respuesta getUsers() {
         try {
             Query qryUsers = em.createNamedQuery("Users.findAll", Users.class);
             List<Users> users = (List<Users>) qryUsers.getResultList();
-             List<UsersDto> ListUsersDto = new ArrayList<>();
+            List<UsersDto> ListUsersDto = new ArrayList<>();
             for (Users tipo : users) {
                 UsersDto usersDto = new UsersDto(tipo);
                 ListUsersDto.add(usersDto);

@@ -102,9 +102,7 @@ public class ModuleUser {
     @Path("/user/{code}")
     public Response active(@PathParam("code") String code) {
         try {
-            UsersDto usersDto = new UsersDto();
-            usersDto.setUsState("A");
-            Respuesta res = userService.activebyCode(usersDto, code);
+            Respuesta res = userService.activebyCode(code);
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
@@ -115,6 +113,30 @@ public class ModuleUser {
         }
     }
 
+    @GET
+    @Path("/userIsAct/{user}/{pass}")
+    public boolean isActive(@PathParam("user") String user, @PathParam("pass") String pass) {
+
+        Respuesta res = userService.isActive(user, pass);
+        if (!res.getEstado()) {
+            return false;
+        }
+        return true;
+    }
+    
+    
+    @GET
+    @Path("/userIsTemp/{user}/{pass}")
+    public boolean isTempPass(@PathParam("user") String user, @PathParam("pass") String pass) {
+
+        Respuesta res = userService.isTempPas(user, pass);
+        if (!res.getEstado()) {
+            return false;
+        }
+        return true;
+    }
+
+//voy a cambiar la contraseña
     @POST
     @Path("/user/{Email}/{Password}")
     public Response ResetAccontPassword(@PathParam("Email") String Email, @PathParam("Password") String Password) {
@@ -122,14 +144,38 @@ public class ModuleUser {
             UsersDto userDto = new UsersDto();
             userDto.setUsEmail(Email);
             userDto.setUsPassword(Password);
-            userDto.setUsRecover("Y");
+            userDto.setUsRecover("N");
             Respuesta res = userService.updatebyEmail(userDto);
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
             return Response.ok(res.getResultado("")).build();
+
         } catch (Exception ex) {
-            Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModuleUser.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el empleado").build();
+        }
+    }
+
+    @POST
+    @Path("/userTempPas/{Email}/{temPassword}")
+    public Response ResetTemp(@PathParam("Email") String Email, @PathParam("temPassword") String temPassword) {
+        try {
+            UsersDto userDto = new UsersDto();
+            userDto.setUsEmail(Email);
+            userDto.setUsTemppassword(temPassword);
+            userDto.setUsPassword(temPassword);
+            userDto.setUsRecover("Y");
+            Respuesta res = userService.updaterecovery(userDto);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(res.getResultado("")).build();
+
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleUser.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el empleado").build();
         }
     }
@@ -144,8 +190,10 @@ public class ModuleUser {
             }
             return Response.ok(new GenericEntity<List<UsersDto>>((List< UsersDto>) res.getResultado("Users")) {
             }).build();
+
         } catch (Exception ex) {
-            Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModuleUser.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo los usuarios").build();
         }
     }
