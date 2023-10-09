@@ -15,6 +15,7 @@ import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.service.SpaceService;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
+import cr.ac.una.clinicauna.util.Email;
 
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
@@ -38,7 +39,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-import utils.Email;
+
 
 /**
  *
@@ -104,12 +105,12 @@ public class LoginViewController extends Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         choiceBoxIdioms.getItems().addAll(Spanish);
-        
+
     }
 
     @Override
     public void initialize() {
-        
+
     }
 
     private void saveUser(UserDto userDto) {
@@ -131,11 +132,11 @@ public class LoginViewController extends Controller implements Initializable {
                 this.userDto = (UserDto) respuesta.getResultado("User");
                 AppContext.getInstance().set("Token", userDto.getToken());
                 AppContext.getInstance().set("Usuario", userDto);
-                
-                if(service.isTempPass(name, password)){
+
+                if (service.isTempPass(name, password)) {
                     RecoverFinalView.toFront();
                 }
-              
+
             } else {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "Validación Usuario", getStage(), respuesta.getMensaje());
             }
@@ -191,9 +192,8 @@ public class LoginViewController extends Controller implements Initializable {
         user.setUsRecover("N");
         String code = CodeRamdon();
         user.setUsCode(code);
-         Email enviarCl = new Email(emailRecoverField.getText(), "espanhol",code , "Activacion");
-                    enviarCl.envioDeCorreos("http://localhost:8080/WsClinicaUNA/ws/ModuleUser/userActive/"+code);
-        //falta japones 
+
+ 
         if(choiceBoxIdioms.getValue().equals("Espagnol")||choiceBoxIdioms.getValue().equals("Spanish")||choiceBoxIdioms.getValue().equals("Español")){
             idiom="Spanish";
             user.setUsLenguage(idiom);
@@ -211,6 +211,10 @@ public class LoginViewController extends Controller implements Initializable {
         }else{
             new Mensaje().showModal(Alert.AlertType.ERROR, "Contraseña", getStage(), "Contraseñas distintas");
         }
+          Email email;
+        email = new Email(emailRegisField.getText(), userRegisField.getText() + " " + surname1RegisField.getText(), "Activacion de usuario");
+        email.envioDeCorreos("http://localhost:8080/WsClinicaUNA/index.html?Code=" + code);
+
         return user; 
     }
 
@@ -300,21 +304,20 @@ public class LoginViewController extends Controller implements Initializable {
     @FXML
     private void RecoverPassword(ActionEvent event) {
         UserService service = new UserService();
-        String pass= PasswordRamdon();
-        service.ResetTemp(emailRecoverField.getText(),pass);
-           Email enviarCl = new Email(emailRecoverField.getText(), "espanhol",pass , "Cambio de Contraseña");
-                    enviarCl.envioCmbClave(emailRecoverField.getText(),pass);
-        //email al usuario con la temporal
+        String pass = PasswordRamdon();
+        service.ResetTemp(emailRecoverField.getText(), pass);
+         Email email;
+        email = new Email(emailRecoverField.getText(), userRegisField.getText() + " " + surname1RegisField.getText(), "Recuperar contrañesa");
+        email.envioCmbClave(pass);
     }
 
     @FXML
     private void AceptPassword(ActionEvent event) {
-      UserService service = new UserService();
-      service.resetAccontPassword(emailRegisField.getText(), AceptRecoverField.getText());
+        UserService service = new UserService();
+        service.resetAccontPassword(emailRegisField.getText(), AceptRecoverField.getText());
 
     }
-    
-    
+
     String CodeRamdon() {
         char c1;
         String s = "";
@@ -330,8 +333,7 @@ public class LoginViewController extends Controller implements Initializable {
         }
         return s;
     }
-    
-    
+
     String PasswordRamdon() {
         char c1;
         String s = "";
@@ -347,6 +349,5 @@ public class LoginViewController extends Controller implements Initializable {
         }
         return s;
     }
-    
-    
+
 }

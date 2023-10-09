@@ -1,9 +1,11 @@
-package utils;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package cr.ac.una.clinicauna.util;
 
-import jakarta.activation.DataHandler;
-import jakarta.activation.FileDataSource;
-import jakarta.mail.BodyPart;
 import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
 import jakarta.mail.Multipart;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
@@ -11,89 +13,66 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
+import java.util.List;
 import java.util.Properties;
 
-/**
- * @author BiblioPZ UNA
- */
 public class Email {
+ private String sourceMail;
+    private String destinationMail;
+    private String asunt;
+    private String archive;
+    private String link;
+    private String archiveName;
+    private String password;
+    private String name;
+    private String info;
 
-    private String correoDeOrigen;
-    private String correoDeDestino;
-    private String asunto;
-    private String lenguaje;
-    private String usuario;
-
-    public Email(String destino, String lenguaje, String usuario, String asunto) {
-        this.correoDeOrigen = "clinicauna10@gmail.com";
-        this.correoDeDestino = destino;
-        this.lenguaje = lenguaje;
-        this.usuario = usuario;
-        this.asunto = asunto;
+    /**
+     * Constructor de la clase Email.
+     *
+     * @param destino Dirección de correo electrónico del destinatario.
+     * @param usuario Dirección de correo electrónico del remitente.
+     * @param asunto Asunto del correo electrónico.
+     */
+    public Email(String destino, String usuario, String asunto) {
+        this.sourceMail = "clinicauna10@gmail.com";
+        this.destinationMail = destino;
+        this.asunt = asunto;
     }
 
+    /**
+     * Método para enviar correos electrónicos relacionados con informes.
+     *
+     * @param link Enlace que se incluirá en el cuerpo del correo.
+     */
     public void envioDeCorreos(String link) {
-        enviarCorreo(link);
+        enviarCorreoReporte(link);
     }
 
-    public void envioCmbClave(String correo, String link) {
-        enviarClave(correo, link);
+    /**
+     * Método para enviar correos electrónicos relacionados con informes.
+     *
+     * @param link Enlace que se incluirá en el cuerpo del correo.
+     */
+    public void envioCmbClave(String link) {
+        enviarClave(link);
     }
 
-    public void envioDeUser(String user) {
-        enviarUser(user);
-    }
-
-    public void enviarCorreoReporte(String archivo) {
+    public void enviarCorreoReporte(String enlace) {
+   
+            System.out.println("Vacia");
+            sourceMail = "clinicauna10@gmail.com";
+            name = "ClinicaUNA";
+            info = "La mejor en salud";
+            password = "xvezelgtwkeuhawv";
+  
         try {
-            Properties p = new Properties();
-            p.put("mail.smtp.host", "smtp.gmail.com");
-            p.setProperty("mail.smtp.starttls.enable", "true");
-            p.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-            p.setProperty("mail.smtp.port", "587");
-            p.setProperty("mail.smtp.user", correoDeOrigen);
-            p.setProperty("mail.smtp.auth", "true");
-            Session s = Session.getDefaultInstance(p);
-
-            BodyPart texto = new MimeBodyPart();
-            if (lenguaje.equals("espanhol")) {
-                texto.setText("Adjuntamos su reporte, gracias por utilizar CineUNA");
-            } else {
-                texto.setText("We attach your report, thanks for using CineUNA app");
-            }
-            texto.setDataHandler(new DataHandler(new FileDataSource(archivo + ".pdf")));
-            texto.setFileName("reporte.pdf");
-            MimeMultipart m = new MimeMultipart();
-            m.addBodyPart(texto);
-
-            MimeMessage mensaje = new MimeMessage(s);
-
-            mensaje.setFrom(new InternetAddress(correoDeOrigen));
-            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(correoDeDestino));
-            mensaje.setSubject(asunto);
-            mensaje.setContent(m);
-
-            Transport t = s.getTransport("smtp");
-            t.connect(correoDeOrigen, "xvezelgtwkeuhawv");
-            if (t.isConnected()) {
-                t.sendMessage(mensaje, mensaje.getAllRecipients());
-                t.close();
-            }
-        } catch (Exception e) {
-            System.out.println(e.toString());
-
-        }
-    }
-
-    private void enviarCorreo(String enlace) {
-        try {
-    
             Properties props = new Properties();
             props.put("mail.smtp.host", "smtp.gmail.com");
             props.put("mail.smtp.starttls.enable", "true");
             props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
             props.put("mail.smtp.port", "587");
-            props.put("mail.smtp.user", correoDeOrigen);
+            props.put("mail.smtp.user", sourceMail);
             props.put("mail.smtp.auth", "true");
 
             Session session = Session.getDefaultInstance(props);
@@ -163,9 +142,9 @@ public class Email {
                     + "</head>\n"
                     + "<body>\n"
                     + "<header>\n"
-                    + "<h1>" + asunto + "</h1>\n"
-                    + "<h2>Bienvenido al sistema de evaluaciones 360, para continuar con su proceso de activacion, da clic en el siguiente boton</h2>\n"
-                    + "<h2>" + asunto + "</h2>\n"
+                    + "<h1>Activacion de Cuentas " + name + "</h1>\n"
+                    + "<h2>Bienvenido al sistema de salud , para continuar con su proceso de activacion, da clic en el siguiente boton</h2>\n"
+                    + "<h2>" + info + "</h2>\n"
                     + "</header>\n"
                     + "<div class='container'>\n"
                     + "<p class='center'><a id='activeButton' href='" + enlace + "'>Continuar</a></p>\n"
@@ -180,13 +159,13 @@ public class Email {
             multipart.addBodyPart(htmlPart);
 
             MimeMessage mensaje = new MimeMessage(session);
-            mensaje.setFrom(new InternetAddress(correoDeOrigen));
-            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(correoDeDestino));
-            mensaje.setSubject(asunto);
+            mensaje.setFrom(new InternetAddress(sourceMail));
+            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinationMail));
+            mensaje.setSubject(asunt);
             mensaje.setContent(multipart);
 
             Transport transport = session.getTransport("smtp");
-            transport.connect(correoDeOrigen, "xvezelgtwkeuhawv");
+            transport.connect(sourceMail, password);
             if (transport.isConnected()) {
                 transport.sendMessage(mensaje, mensaje.getAllRecipients());
                 transport.close();
@@ -196,37 +175,51 @@ public class Email {
         }
     }
 
-    private void enviarClave(String correo, String link) {
+    private void enviarClave(String link) {
+
+      
+            sourceMail = "clinicauna10@gmail.com";
+            name = "ClinicaUNA";
+            info = "La mejor en salud";
+            password = "xvezelgtwkeuhawv";
+        
+
         try {
             Properties p = new Properties();
             p.put("mail.smtp.host", "smtp.gmail.com");
             p.setProperty("mail.smtp.starttls.enable", "true");
             p.put("mail.smtp.ssl.trust", "smtp.gmail.com");
             p.setProperty("mail.smtp.port", "587");
-            p.setProperty("mail.smtp.user", correoDeOrigen);
+            p.setProperty("mail.smtp.user", sourceMail);
             p.setProperty("mail.smtp.auth", "true");
             Session s = Session.getDefaultInstance(p);
 
-            BodyPart texto = new MimeBodyPart();
-            if (lenguaje.equals("espanhol")) {
-                texto.setText("nueva contraseña temporal : "
-                        + link);
-            } else {
-                texto.setText(" new temporal password : "
-                        + link);
-            }
-
-            MimeMultipart m = new MimeMultipart();
-            m.addBodyPart(texto);
+            String mensajeHTML = "<html>"
+                    + "<head>"
+                    + "<style>"
+                    + "body { font-family: Arial, sans-serif; background-color: #f2f2f2; }"
+                    + "h1 { color: #333; background-color: grey;  text-align: center; }"
+                    + "p { color: #666; }"
+                    + "</style>"
+                    + "</head>"
+                    + "<body>"
+                    + "<h1>Recuperación de Contraseña</h1>"
+                    + "<p>Se ha detectado un intento de recuperación de contraseña para la dirección de correo:</p>"
+                    + "<p><strong>" + destinationMail + "</strong></p>"
+                    + "<p>Aquí está su contraseña temporal:</p>"
+                    + "<p><strong>" + link + "</strong></p>"
+                    + "</body>"
+                    + "</html>";
 
             MimeMessage mensaje = new MimeMessage(s);
-            mensaje.setFrom(new InternetAddress(correoDeOrigen));
-            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(correoDeDestino));
-            mensaje.setSubject(asunto);
-            mensaje.setContent(m);
+            mensaje.setFrom(new InternetAddress(sourceMail));
+            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinationMail));
+            mensaje.setSubject(asunt);
+
+            mensaje.setContent(mensajeHTML, "text/html");
 
             Transport t = s.getTransport("smtp");
-            t.connect(correoDeOrigen, "xvezelgtwkeuhawv");
+            t.connect(sourceMail, password);
             if (t.isConnected()) {
                 t.sendMessage(mensaje, mensaje.getAllRecipients());
                 t.close();
@@ -234,50 +227,6 @@ public class Email {
             System.out.printf("Mensaje enviado");
         } catch (Exception e) {
             System.out.println(e.toString());
-
         }
     }
-
-    private void enviarUser(String user) {
-        try {
-            Properties p = new Properties();
-            p.put("mail.smtp.host", "smtp.gmail.com");
-            p.setProperty("mail.smtp.starttls.enable", "true");
-            p.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-            p.setProperty("mail.smtp.port", "587");
-            p.setProperty("mail.smtp.user", correoDeOrigen);
-            p.setProperty("mail.smtp.auth", "true");
-            Session s = Session.getDefaultInstance(p);
-
-            BodyPart texto = new MimeBodyPart();
-            if (lenguaje.equals("espanhol")) {
-                texto.setText("Su nombre de usuario es: "
-                        + user);
-            } else {
-                texto.setText("Your username is: "
-                        + user);
-            }
-
-            MimeMultipart m = new MimeMultipart();
-            m.addBodyPart(texto);
-
-            MimeMessage mensaje = new MimeMessage(s);
-            mensaje.setFrom(new InternetAddress(correoDeOrigen));
-            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(correoDeDestino));
-            mensaje.setSubject(asunto);
-            mensaje.setContent(m);
-
-            Transport t = s.getTransport("smtp");
-            t.connect(correoDeOrigen, "xvezelgtwkeuhawv");
-            if (t.isConnected()) {
-                t.sendMessage(mensaje, mensaje.getAllRecipients());
-                t.close();
-            }
-            System.out.printf("Mensaje enviado");
-        } catch (Exception e) {
-            System.out.println(e.toString());
-
-        }
-    }
-
 }
