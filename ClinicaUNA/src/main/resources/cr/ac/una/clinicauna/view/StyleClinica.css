@@ -66,3 +66,31 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-border-radius: 10px; 
     -fx-border-with: 10px;
 }
+
+
+.tab-pane {
+    -fx-tab-background-color:white;
+}
+.tab-pane .tab-header-background {
+    -fx-background-color: #000359; 
+}
+.tab-pane .tab .tab-label {
+    -fx-text-fill:white; 
+    -fx-font-family: "Rockwell";
+    -fx-font-style: italic;
+    -fx-font-size: 20px;
+}
+.tab-pane .tab {
+    -fx-background-color: #000359;
+}
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill:#000359;
+}
+.tab-pane .tab:selected {
+    -fx-background-color:white; 
+    -fx-text-fill:#000359;
+}
+.tab-pane .tab-content-area {
+    -fx-background-color: white;
+    -fx-background-radius:5px;
+}

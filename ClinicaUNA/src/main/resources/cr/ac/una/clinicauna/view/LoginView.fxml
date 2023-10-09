@@ -20,139 +20,6 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@StyleClinica.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.clinicauna.controller.LoginViewController">
    <children>
-      <BorderPane fx:id="loginView" prefHeight="672.0" prefWidth="1000.0" stylesheets="@StyleClinica.css">
-         <center>
-            <HBox maxHeight="600.0" maxWidth="1000.0" minHeight="600.0" minWidth="1000.0" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
-               <children>
-                  <VBox prefHeight="582.0" prefWidth="274.0">
-                     <children>
-                        <Label alignment="CENTER" onMouseClicked="#openChangeIdiom" prefHeight="37.0" prefWidth="278.0" text="%Idioms" textFill="#cc9900" />
-                        <VBox fx:id="VboxChangeIdioms" prefHeight="561.0" prefWidth="274.0" style="-fx-background-color: white;" visible="false">
-                           <children>
-                              <Separator prefHeight="18.0" prefWidth="274.0" visible="false" />
-                              <Button id="idioms" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#changeIdiomSpanish" prefHeight="30.0" prefWidth="238.0" text="%Espannol">
-                                 <VBox.margin>
-                                    <Insets left="4.0" />
-                                 </VBox.margin>
-                              </Button>
-                              <Separator prefHeight="15.0" prefWidth="274.0" />
-                              <Button id="idioms" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#changeIdiomEnglish" prefHeight="30.0" prefWidth="238.0" text="%Ingles">
-                                 <VBox.margin>
-                                    <Insets left="5.0" />
-                                 </VBox.margin>
-                              </Button>
-                              <Separator prefHeight="23.0" prefWidth="274.0" />
-                              <Button id="idioms" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#changeIdiomFrench" prefHeight="30.0" prefWidth="238.0" text="%Frances">
-                                 <VBox.margin>
-                                    <Insets left="5.0" />
-                                 </VBox.margin>
-                              </Button>
-                              <Separator prefHeight="17.0" prefWidth="274.0" />
-                              <Button id="idioms" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#changeIdiomJapanese" prefHeight="30.0" prefWidth="238.0" text="%Japones">
-                                 <VBox.margin>
-                                    <Insets left="5.0" />
-                                 </VBox.margin>
-                              </Button>
-                           </children>
-                        </VBox>
-                     </children>
-                  </VBox>
-                  <VBox alignment="CENTER" fillWidth="false" onKeyPressed="#AcceptLoginEnter" prefHeight="326.0" prefWidth="506.0" style="-fx-background-color: white; -fx-background-radius: 5px;">
-                     <children>
-                        <Separator prefHeight="10.0" prefWidth="214.0" visible="false" />
-                        <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%IniciarSesion">
-                           <font>
-                              <Font name="Rockwell" size="32.0" />
-                           </font>
-                        </Text>
-                        <Separator prefHeight="6.0" prefWidth="214.0" visible="false" />
-                        <Pane prefHeight="2.0" prefWidth="96.0" style="-fx-background-color: #CC9900; -fx-background-radius: 3px;" />
-                        <HBox alignment="CENTER_LEFT" prefHeight="74.0" prefWidth="278.0">
-                           <children>
-                              <ImageView fitHeight="41.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../resources/IconUser.png" />
-                                 </image>
-                              </ImageView>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Usuario" textAlignment="CENTER">
-                                 <font>
-                                    <Font name="Harrington" size="24.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </Text>
-                           </children>
-                        </HBox>
-                        <TextField fx:id="usernameField" prefHeight="26.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0; -fx-border-radius: 4px;" />
-                        <Separator prefHeight="23.0" prefWidth="200.0" visible="false" />
-                        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="290.0">
-                           <children>
-                              <ImageView fitHeight="49.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../resources/IconPassword.png" />
-                                 </image>
-                              </ImageView>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Contrasenna">
-                                 <font>
-                                    <Font name="SansSerif Regular" size="24.0" />
-                                 </font>
-                              </Text>
-                           </children>
-                        </HBox>
-                        <PasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="187.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0; -fx-border-radius: 4px;" />
-                        <Separator prefHeight="15.0" prefWidth="214.0" visible="false" />
-                        <Text fill="#000359" onMouseClicked="#PasswordForget" strokeType="OUTSIDE" strokeWidth="0.0" text="%OlvidarContrasenna">
-                           <font>
-                              <Font name="Rockwell" size="14.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Text>
-                        <PasswordField editable="false" prefHeight="26.0" prefWidth="187.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0; -fx-border-color: white; -fx-border-radius: 4px;" visible="false" />
-                        <Button mnemonicParsing="false" onAction="#AcceptLogin" prefHeight="28.0" prefWidth="96.0" text="%Aceptar">
-                           <font>
-                              <Font name="Rockwell" size="16.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Separator prefHeight="25.0" prefWidth="216.0" visible="false" />
-                        <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%NoTieneCuenta">
-                           <font>
-                              <Font name="Tw Cen MT" size="18.0" />
-                           </font>
-                        </Text>
-                        <Separator prefHeight="9.0" prefWidth="216.0" visible="false" />
-                        <Button mnemonicParsing="false" onAction="#Register" prefHeight="26.0" prefWidth="123.0" text="%Registrate">
-                           <font>
-                              <Font name="Tw Cen MT" size="16.0" />
-                           </font>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                     </children>
-                     <padding>
-                        <Insets top="5.0" />
-                     </padding>
-                  </VBox>
-                  <VBox prefHeight="600.0" prefWidth="179.0">
-                     <children>
-                        <Separator prefHeight="151.0" prefWidth="179.0" visible="false" />
-                        <ImageView fitHeight="171.0" fitWidth="147.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../resources/IconClinica.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-         </center>
-      </BorderPane>
       <BorderPane fx:id="RegisterView" prefHeight="672.0" prefWidth="1000.0" style="-fx-background-color: white;">
          <center>
             <HBox alignment="CENTER" fillHeight="false" maxHeight="494.0" maxWidth="913.0" minHeight="494.0" minWidth="913.0" prefHeight="494.0" prefWidth="913.0" style="-fx-background-color: white; -fx-background-radius: 5px;" BorderPane.alignment="CENTER">
@@ -440,6 +307,139 @@
                   <Insets top="5.0" />
                </padding>
             </VBox>
+         </center>
+      </BorderPane>
+      <BorderPane fx:id="loginView" prefHeight="672.0" prefWidth="1000.0" stylesheets="@StyleClinica.css">
+         <center>
+            <HBox maxHeight="600.0" maxWidth="1000.0" minHeight="600.0" minWidth="1000.0" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox prefHeight="582.0" prefWidth="274.0">
+                     <children>
+                        <Label alignment="CENTER" onMouseClicked="#openChangeIdiom" prefHeight="37.0" prefWidth="278.0" text="%Idioms" textFill="#cc9900" />
+                        <VBox fx:id="VboxChangeIdioms" prefHeight="561.0" prefWidth="274.0" style="-fx-background-color: white;" visible="false">
+                           <children>
+                              <Separator prefHeight="18.0" prefWidth="274.0" visible="false" />
+                              <Button id="idioms" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#changeIdiomSpanish" prefHeight="30.0" prefWidth="238.0" text="%Espannol">
+                                 <VBox.margin>
+                                    <Insets left="4.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Separator prefHeight="15.0" prefWidth="274.0" />
+                              <Button id="idioms" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#changeIdiomEnglish" prefHeight="30.0" prefWidth="238.0" text="%Ingles">
+                                 <VBox.margin>
+                                    <Insets left="5.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Separator prefHeight="23.0" prefWidth="274.0" />
+                              <Button id="idioms" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#changeIdiomFrench" prefHeight="30.0" prefWidth="238.0" text="%Frances">
+                                 <VBox.margin>
+                                    <Insets left="5.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Separator prefHeight="17.0" prefWidth="274.0" />
+                              <Button id="idioms" alignment="CENTER" mnemonicParsing="false" onMouseClicked="#changeIdiomJapanese" prefHeight="30.0" prefWidth="238.0" text="%Japones">
+                                 <VBox.margin>
+                                    <Insets left="5.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" fillWidth="false" onKeyPressed="#AcceptLoginEnter" prefHeight="326.0" prefWidth="506.0" style="-fx-background-color: white; -fx-background-radius: 5px;">
+                     <children>
+                        <Separator prefHeight="10.0" prefWidth="214.0" visible="false" />
+                        <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%IniciarSesion">
+                           <font>
+                              <Font name="Rockwell" size="32.0" />
+                           </font>
+                        </Text>
+                        <Separator prefHeight="6.0" prefWidth="214.0" visible="false" />
+                        <Pane prefHeight="2.0" prefWidth="96.0" style="-fx-background-color: #CC9900; -fx-background-radius: 3px;" />
+                        <HBox alignment="CENTER_LEFT" prefHeight="74.0" prefWidth="278.0">
+                           <children>
+                              <ImageView fitHeight="41.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/IconUser.png" />
+                                 </image>
+                              </ImageView>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Usuario" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="Harrington" size="24.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </Text>
+                           </children>
+                        </HBox>
+                        <TextField fx:id="usernameField" prefHeight="26.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0; -fx-border-radius: 4px;" />
+                        <Separator prefHeight="23.0" prefWidth="200.0" visible="false" />
+                        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="290.0">
+                           <children>
+                              <ImageView fitHeight="49.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/IconPassword.png" />
+                                 </image>
+                              </ImageView>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Contrasenna">
+                                 <font>
+                                    <Font name="SansSerif Regular" size="24.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </HBox>
+                        <PasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="187.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0; -fx-border-radius: 4px;" />
+                        <Separator prefHeight="15.0" prefWidth="214.0" visible="false" />
+                        <Text fill="#000359" onMouseClicked="#PasswordForget" strokeType="OUTSIDE" strokeWidth="0.0" text="%OlvidarContrasenna">
+                           <font>
+                              <Font name="Rockwell" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Text>
+                        <PasswordField editable="false" prefHeight="26.0" prefWidth="187.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0; -fx-border-color: white; -fx-border-radius: 4px;" visible="false" />
+                        <Button mnemonicParsing="false" onAction="#AcceptLogin" prefHeight="28.0" prefWidth="96.0" text="%Aceptar">
+                           <font>
+                              <Font name="Rockwell" size="16.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Separator prefHeight="25.0" prefWidth="216.0" visible="false" />
+                        <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%NoTieneCuenta">
+                           <font>
+                              <Font name="Tw Cen MT" size="18.0" />
+                           </font>
+                        </Text>
+                        <Separator prefHeight="9.0" prefWidth="216.0" visible="false" />
+                        <Button mnemonicParsing="false" onAction="#Register" prefHeight="26.0" prefWidth="123.0" text="%Registrate">
+                           <font>
+                              <Font name="Tw Cen MT" size="16.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox prefHeight="600.0" prefWidth="179.0">
+                     <children>
+                        <Separator prefHeight="151.0" prefWidth="179.0" visible="false" />
+                        <ImageView fitHeight="171.0" fitWidth="147.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../resources/IconClinica.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
          </center>
       </BorderPane>
    </children>
