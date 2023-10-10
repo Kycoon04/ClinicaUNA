@@ -5,20 +5,30 @@
 package cr.ac.una.clinicauna.controller;
 
 import com.jfoenix.controls.JFXTimePicker;
+import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.UserDto;
+import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.UserService;
+import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
+import java.util.ArrayList;
+import static java.util.Collections.list;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -64,23 +74,23 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldSearch_State;
     @FXML
-    private TableView<?> tableViewUser;
+    private TableView<UserDto> tableViewUser;
     @FXML
-    private TableColumn<?, ?> tableColAct;
+    private TableColumn<UserDto, String> tableColAct;
     @FXML
-    private TableColumn<?, ?> tableColIdentif;
+    private TableColumn<UserDto, String> tableColIdentif;
     @FXML
-    private TableColumn<?, ?> tableColName;
+    private TableColumn<UserDto, String> tableColName;
     @FXML
-    private TableColumn<?, ?> tableColPsurname;
+    private TableColumn<UserDto, String> tableColPsurname;
     @FXML
-    private TableColumn<?, ?> tableColSsurname;
+    private TableColumn<UserDto, String> tableColSsurname;
     @FXML
-    private TableColumn<?, ?> tableColUserName;
+    private TableColumn<UserDto, String> tableColUserName;
     @FXML
-    private TableColumn<?, ?> tableColEmail;
+    private TableColumn<UserDto, String> tableColEmail;
     @FXML
-    private TableColumn<?, ?> tableColAdmi;
+    private TableColumn<UserDto, String> tableColAdmi;
     @FXML
     private Button BtndeleteWorker;
     @FXML
@@ -112,23 +122,23 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldSearchDoc_License;
     @FXML
-    private TableView<?> tableViewDoctors;
+    private TableView<DoctorDto> tableViewDoctors;
     @FXML
-    private TableColumn<?, ?> tableColDocCode;
+    private TableColumn<DoctorDto, String> tableColDocCode;
     @FXML
-    private TableColumn<?, ?> tableColDocFolio;
+    private TableColumn<DoctorDto, String> tableColDocFolio;
     @FXML
-    private TableColumn<?, ?> tableColDocName;
+    private TableColumn<DoctorDto, String> tableColDocName;
     @FXML
-    private TableColumn<?, ?> tableColDocPsurname;
+    private TableColumn<DoctorDto, String> tableColDocLicense;
     @FXML
-    private TableColumn<?, ?> tableColDocLicense;
+    private TableColumn<DoctorDto, String> tableColDocId;
     @FXML
-    private TableColumn<?, ?> tableColDocIniWork;
+    private TableColumn<DoctorDto, String> tableColDocIniWork;
     @FXML
-    private TableColumn<?, ?> tableColDocFinishWork;
+    private TableColumn<DoctorDto, String> tableColDocFinishWork;
     @FXML
-    private TableColumn<?, ?> tableColDocBreaks;
+    private TableColumn<DoctorDto, String> tableColDocBreaks;
     @FXML
     private Button BtndeleteDoctor;
     @FXML
@@ -137,6 +147,10 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private Button btnMantUsers;
     @FXML
     private Button btnMantDoctors;
+    List<UserDto> userList = new ArrayList<>();
+    private ObservableList<UserDto> userObservableList;
+    List<DoctorDto> doctorList = new ArrayList<>();
+    private ObservableList<DoctorDto> doctorObservableList;
 
     /**
      * Initializes the controller class.
@@ -145,6 +159,50 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         OptionsMenuView.toFront();
+        this.tableColAct.setCellValueFactory(new PropertyValueFactory("UsState"));
+        this.tableColIdentif.setCellValueFactory(new PropertyValueFactory("UsIdentification"));
+        this.tableColName.setCellValueFactory(new PropertyValueFactory("UsName"));
+        this.tableColPsurname.setCellValueFactory(new PropertyValueFactory("UsPlastname"));
+        this.tableColSsurname.setCellValueFactory(new PropertyValueFactory("UsSlastname"));
+        this.tableColUserName.setCellValueFactory(new PropertyValueFactory("UsUsername"));
+        this.tableColEmail.setCellValueFactory(new PropertyValueFactory("UsEmail"));
+        this.tableColAdmi.setCellValueFactory(new PropertyValueFactory("UsType"));
+
+        this.tableColDocBreaks.setCellValueFactory(new PropertyValueFactory("DrBreak"));
+        this.tableColDocFinishWork.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
+        this.tableColDocLicense.setCellValueFactory(new PropertyValueFactory("DrLicense"));
+        this.tableColDocId.setCellValueFactory(new PropertyValueFactory("DrId"));
+        this.tableColDocName.setCellValueFactory(new PropertyValueFactory("DrUser"));
+        this.tableColDocFolio.setCellValueFactory(new PropertyValueFactory("DrFol"));
+        this.tableColDocIniWork.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
+        this.tableColDocCode.setCellValueFactory(new PropertyValueFactory("DrCode"));
+
+        fillTableUsers();
+        fillTableDoctors();
+    }
+
+    private void fillTableUsers() {
+        UserService service = new UserService();
+        userList = service.getUsers();
+        if (userList.isEmpty()) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "No hay ningun Usuario", getStage(), "");
+        } else {
+            userObservableList = FXCollections.observableArrayList(userList);
+        }
+        this.tableViewUser.refresh();
+        this.tableViewUser.setItems(userObservableList);
+    }
+//jfoenix + cambiar tabla
+    private void fillTableDoctors() {
+        DoctorService service = new DoctorService();
+        doctorList = service.getDoctor();
+        if (doctorList.isEmpty()) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "No hay ningun Doctor", getStage(), "");
+        } else {
+            doctorObservableList = FXCollections.observableArrayList(doctorList);
+        }
+        this.tableViewDoctors.refresh();
+        this.tableViewDoctors.setItems(doctorObservableList);
     }
 
     @FXML

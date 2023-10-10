@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Clinica UNA</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+
+            header {
+                background-color: #333;
+                color: #fff;
+                text-align: center;
+                padding: 1em;
+            }
+
+            nav {
+                background-color: #4CAF50;
+                overflow: hidden;
+            }
+
+            nav a {
+                float: left;
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+            nav a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+
+            section {
+                text-align: center;
+                padding: 20px;
+                margin: 20px;
+                background-color: #fff;
+            }
+
+            section img {
+                max-width: 100%;
+                height: auto;
+                margin: 10px;
+            }
+
+            footer {
+                background-color: #333;
+                color: #fff;
+                text-align: center;
+                padding: 1em;
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Clinica UNA</h1>
+        </header>
+
+        <nav>
+            <a href="#" id="activacionLink">Activación</a>
+        </nav>
+
+        <section>
+            <h2>Bienvenido a nuestra clínica</h2>
+            <p>Ofrecemos una amplia gama de servicios médicos para cuidar de tu salud.</p>
+
+            <script>
+                document.querySelector('#activacionLink').addEventListener('click', function () {
+                   
+                    var urlParams = new URLSearchParams(window.location.search);
+                    var code = urlParams.get('Code');
+
+                    
+                    if (code !== null) {
+                   
+                        fetch('http://localhost:8080/WsClinicaUNA/ws/ModuleUser/userActive/' + code, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                                .then(response => {
+                                    if (!response.ok) {
+                                         alert('¡Activación exitosa!');
+                                    }
+                                    return response.json();
+                                });
+                               
+                    } else {
+                        alert("El parámetro 'Code' no está presente en la URL.");
+                    }
+                });
+            </script>
+
+        </section>
+
+        <footer>
+            <p>&copy; Dilan Sancho Lopez.</p>
+            <p>&copy; Jose Valverde Valverde.</p>
+            <p>&copy; Anderson Fernandez.</p>
+            <p>&copy; 2023 Clinica UNA. Todos los derechos reservados.</p>
+        </footer>
+    </body>
+</html>

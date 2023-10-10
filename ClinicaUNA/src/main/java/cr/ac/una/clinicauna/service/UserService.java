@@ -100,7 +100,6 @@ public class UserService {
     }
         public Respuesta getUserName(String usUsername) {
         try {
-
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("usUsername", usUsername);
             Request request = new Request("ModuleUser/userName", "/{usUsername}", parametros);

@@ -260,7 +260,7 @@ public class LoginViewController extends Controller implements Initializable {
         }
         Email email;
         email = new Email(emailRegisField.getText(), userRegisField.getText() + " " + surname1RegisField.getText(), "Activacion de usuario");
-        email.envioDeCorreos("http://localhost:8080/WsClinicaUNA/index.html?Code=" + code);
+        email.envioDeCorreos("http://localhost:8080/WsClinicaUNA/Activacion.html?Code=" + code);
         return user;
     }
 

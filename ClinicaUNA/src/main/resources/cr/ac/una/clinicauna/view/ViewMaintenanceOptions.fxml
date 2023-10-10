@@ -478,7 +478,7 @@
                                                             <TableColumn fx:id="tableColDocCode" prefWidth="77.60000991821289" text="%TableCode" />
                                                             <TableColumn fx:id="tableColDocFolio" minWidth="0.0" prefWidth="74.39999389648438" text="%TableFolio" />
                                                             <TableColumn fx:id="tableColDocName" prefWidth="90.40000915527344" text="%TableNombre" />
-                                                            <TableColumn fx:id="tableColDocPsurname" prefWidth="132.00001525878906" text="%TablePApellido" />
+                                                            <TableColumn fx:id="tableColDocId" prefWidth="132.00001525878906" text="%TablePApellido" />
                                                             <TableColumn fx:id="tableColDocLicense" prefWidth="124.7999267578125" text="%TableLicense" />
                                                             <TableColumn fx:id="tableColDocIniWork" prefWidth="111.20004272460938" text="%TableIniWorking" />
                                                             <TableColumn fx:id="tableColDocFinishWork" prefWidth="103.199951171875" text="%TableFinishWorking" />
