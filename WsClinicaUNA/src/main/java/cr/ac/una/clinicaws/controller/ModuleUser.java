@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Users", description = "Operations on employees")
 
-@Secure
+//@Secure
 public class ModuleUser {
 
     @EJB
@@ -67,7 +67,22 @@ public class ModuleUser {
             return Response.ok(res.getResultado("Users")).build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
-            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el empleado").build();
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el usuario").build();
+        }
+    }
+    
+    @GET
+    @Path("/userName/{usUsername}")
+    public Response getUserByEmail(@PathParam("usUsername") String name) {
+        try {
+            Respuesta res = userService.getUserEmail(name);
+            if (!res.getEstado()) {//retorna el codigo de respuesta del server 
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(res.getResultado("User")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el usuario").build();
         }
     }
 
@@ -99,7 +114,7 @@ public class ModuleUser {
             return Response.ok(res.getResultado("Users")).build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
-            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando el empleado").build();
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando el usuario").build();
         }
     }
 
@@ -114,7 +129,7 @@ public class ModuleUser {
             return Response.ok(res.getResultado("")).build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
-            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el empleado").build();
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el usuario").build();
         }
     }
 
@@ -129,7 +144,7 @@ public class ModuleUser {
             return Response.ok(res.getResultado("")).build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
-            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el empleado").build();
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el usuario").build();
         }
     }
 

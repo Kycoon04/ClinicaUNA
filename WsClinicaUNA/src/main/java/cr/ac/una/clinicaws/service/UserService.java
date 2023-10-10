@@ -53,6 +53,23 @@ public class UserService {
         }
     }
 
+     public Respuesta getUserEmail(String usUsername) {
+        try {
+            Query qryusuario = em.createNamedQuery("Users.findByUsUsername", Users.class);
+            qryusuario.setParameter("usUsername", usUsername);
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "User", new UsersDto((Users) qryusuario.getSingleResult()));
+
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getusuario NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.", "getusuario NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.", "getusuario " + ex.getMessage());
+        }
+    }
     public Respuesta validateUser(String usuario, String clave) {
         try {
             Query qryActividad = em.createNamedQuery("Users.findByUsuClave", Users.class);

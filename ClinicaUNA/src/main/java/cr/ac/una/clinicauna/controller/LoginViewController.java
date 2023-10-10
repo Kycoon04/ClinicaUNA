@@ -9,9 +9,12 @@ import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.Email;
 import cr.ac.una.clinicauna.util.FlowController;
+import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -20,6 +23,7 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.PasswordField;
@@ -29,7 +33,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-
 
 /**
  *
@@ -92,10 +95,26 @@ public class LoginViewController extends Controller implements Initializable {
     String[] English = {"Spanish", "English", "France", "Japonese"};
     String[] French = {"Espagnol", "Anglais", "Francais", "Japonais"};
 
+    List<Node> required = new ArrayList<>();
+    List<Node> required1 = new ArrayList<>();
+    List<Node> required2 = new ArrayList<>();
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         choiceBoxIdioms.getItems().addAll(Spanish);
+        userRegisField.setTextFormatter(Formato.getInstance().letrasFormat(18));
+        idRegisField.setTextFormatter(Formato.getInstance().integerFormat());
+        surname1RegisField.setTextFormatter(Formato.getInstance().letrasFormat(18));
+        surname2RegisField.setTextFormatter(Formato.getInstance().letrasFormat(18));
+        usernameRegisField.setTextFormatter(Formato.getInstance().letrasFormat(20));
+        emailRegisField.setTextFormatter(Formato.getInstance().maxLengthFormat(80));
+        emailRecoverField.setTextFormatter(Formato.getInstance().maxLengthFormat(80));
+        AceptRecoverField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));
+        passwordRegisField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));
+        password2RegisField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));
+     
 
+        IndicateRequired();
     }
 
     @Override
@@ -103,11 +122,46 @@ public class LoginViewController extends Controller implements Initializable {
 
     }
 
+    public boolean validateRequired(List<Node> re) {
+        Boolean validos = true;
+        String invalidos = "";
+        for (Node node : re) {
+            if (node instanceof TextField && ((TextField) node).getText().isBlank()) {
+                if (validos) {
+                    invalidos += ((TextField) node).getPromptText();
+                } else {
+                    invalidos += "," + ((TextField) node).getPromptText();
+                }
+                return false;
+            } else if (node instanceof PasswordField && ((PasswordField) node).getText().isEmpty()) {
+                if (validos) {
+                    invalidos += ((PasswordField) node).getPromptText();
+                } else {
+                    invalidos += "," + ((PasswordField) node).getPromptText();
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void IndicateRequired() {
+        required.clear();
+        required.addAll(Arrays.asList(userRegisField, surname1RegisField, idRegisField, passwordRegisField, password2RegisField));
+        required1.clear();
+        required1.add(AceptRecoverField);
+        required2.clear();
+        required2.add(emailRecoverField);
+    }
+
     private void saveUser(UserDto userDto) {
         try {
             UserService service = new UserService();
             Respuesta respuesta = service.saveUser(userDto);
             this.userDto = (UserDto) respuesta.getResultado("User");
+            if (userDto != null) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Usuario", getStage(), "Usuario guardado correctamente.");
+            }
         } catch (Exception ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error guardando el usuario.", ex);
             new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Usuario", getStage(), "Ocurrió un error al guardar el usuario.");
@@ -125,8 +179,10 @@ public class LoginViewController extends Controller implements Initializable {
 
                 if (service.isTempPass(name, password)) {
                     RecoverFinalView.toFront();
+                }else{
+                    FlowController.getInstance().goViewInWindow("ViewMaintenanceOptions");
                 }
-
+             
             } else {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "Validación Usuario", getStage(), respuesta.getMensaje());
             }
@@ -145,9 +201,6 @@ public class LoginViewController extends Controller implements Initializable {
     @FXML
     private void AcceptLogin(ActionEvent event) {
         login(usernameField.getText(), passwordField.getText());
-        FlowController.getInstance().goViewInWindow("ViewMaintenanceOptions");
-        
-
     }
 
     @FXML
@@ -157,7 +210,7 @@ public class LoginViewController extends Controller implements Initializable {
 
     @FXML
     private void AcceptLoginEnter(KeyEvent event) {
-        
+
     }
 
     @FXML
@@ -167,12 +220,15 @@ public class LoginViewController extends Controller implements Initializable {
 
     @FXML
     private void ConfirmRegister(ActionEvent event) {
-        //validar todos los campos llenos 
-        saveUser(bindNewUser());
+        if (!validateRequired(required)) {
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "campos inccompletos");
+        } else {
+            saveUser(bindNewUser());
+        }
     }
 
     UserDto bindNewUser() {
-        String idiom= ""; 
+        String idiom = "";
         UserDto user = new UserDto();
         user.setUsName(userRegisField.getText());
         user.setUsPlastname(surname1RegisField.getText());
@@ -180,35 +236,32 @@ public class LoginViewController extends Controller implements Initializable {
         user.setUsUsername(usernameRegisField.getText());
         user.setUsEmail(emailRegisField.getText());
         user.setUsState("I");
-        //setear type default
         user.setUsType("Doctor");
         user.setUsRecover("N");
         String code = CodeRamdon();
         user.setUsCode(code);
-
- 
-        if(choiceBoxIdioms.getValue().equals("Espagnol")||choiceBoxIdioms.getValue().equals("Spanish")||choiceBoxIdioms.getValue().equals("Español")){
-            idiom="Spanish";
-            user.setUsLenguage(idiom);
-        }if(choiceBoxIdioms.getValue().equals("Anglais")||choiceBoxIdioms.getValue().equals("English")||choiceBoxIdioms.getValue().equals("Inglés")){
-            idiom="English";
-            user.setUsLenguage(idiom);
-        }if(choiceBoxIdioms.getValue().equals("Francais")||choiceBoxIdioms.getValue().equals("Francais")||choiceBoxIdioms.getValue().equals("Francais")){
-            idiom="French";
+        if (choiceBoxIdioms.getValue().equals("Espagnol") || choiceBoxIdioms.getValue().equals("Spanish") || choiceBoxIdioms.getValue().equals("Español")) {
+            idiom = "Spanish";
             user.setUsLenguage(idiom);
         }
-      
+        if (choiceBoxIdioms.getValue().equals("Anglais") || choiceBoxIdioms.getValue().equals("English") || choiceBoxIdioms.getValue().equals("Inglés")) {
+            idiom = "English";
+            user.setUsLenguage(idiom);
+        }
+        if (choiceBoxIdioms.getValue().equals("Francais") || choiceBoxIdioms.getValue().equals("Francais") || choiceBoxIdioms.getValue().equals("Francais")) {
+            idiom = "French";
+            user.setUsLenguage(idiom);
+        }
         user.setUsIdentification(idRegisField.getText());
-        if(passwordRegisField.getText().equals(password2RegisField.getText())){
+        if (passwordRegisField.getText().equals(password2RegisField.getText())) {
             user.setUsPassword(passwordRegisField.getText());
-        }else{
+        } else {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Contraseña", getStage(), "Contraseñas distintas");
         }
-          Email email;
+        Email email;
         email = new Email(emailRegisField.getText(), userRegisField.getText() + " " + surname1RegisField.getText(), "Activacion de usuario");
         email.envioDeCorreos("http://localhost:8080/WsClinicaUNA/index.html?Code=" + code);
-
-        return user; 
+        return user;
     }
 
     @FXML
@@ -298,19 +351,46 @@ public class LoginViewController extends Controller implements Initializable {
     private void RecoverPassword(ActionEvent event) {
         UserService service = new UserService();
         String pass = PasswordRamdon();
+         if (!validateRequired(required2)) {
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "campos incompletos");
+        } else {
         service.ResetTemp(emailRecoverField.getText(), pass);
-         Email email;
+        Email email;
         email = new Email(emailRecoverField.getText(), userRegisField.getText() + " " + surname1RegisField.getText(), "Recuperar contrañesa");
         email.envioCmbClave(pass);
+         }
     }
 
     @FXML
     private void AceptPassword(ActionEvent event) {
         UserService service = new UserService();
-        service.resetAccontPassword(emailRegisField.getText(), AceptRecoverField.getText());
-
+       
+        if (!validateRequired(required1)) {
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "campos incompletos");
+        } else {
+            if(getUserName(usernameField.getText())==""){
+                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reseteo", getStage(), "Sin exito");
+            }else{
+            service.resetAccontPassword(getUserName(usernameField.getText()), AceptRecoverField.getText());
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reseteo", getStage(), "Con exito");
+            }
+        }
     }
 
+        private String getUserName(String user) {
+        try {
+            UserService service = new UserService();
+            Respuesta respuesta = service.getUserName(user);
+            this.userDto = (UserDto) respuesta.getResultado("User");
+          
+        } catch (Exception ex) {
+            Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando el empleado.", ex);
+
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar Empleado", getStage(), "Ocurrio un error consultando el empleado.");
+        }
+        return userDto.getUsEmail();
+    }
+    
     String CodeRamdon() {
         char c1;
         String s = "";

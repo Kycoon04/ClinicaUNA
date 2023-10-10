@@ -98,6 +98,23 @@ public class UserService {
             return new Respuesta(false, "Error obteniendo el usuario.", "getUsuario " + ex.getMessage());
         }
     }
+        public Respuesta getUserName(String usUsername) {
+        try {
+
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("usUsername", usUsername);
+            Request request = new Request("ModuleUser/userName", "/{usUsername}", parametros);
+            request.get();
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            UserDto userDto = (UserDto) request.readEntity(UserDto.class);
+            return new Respuesta(true, "", "", "User", userDto);
+        } catch (Exception ex) {
+            Logger.getLogger(UserService.class.getName()).log(Level.SEVERE, "Error obteniendo el usuario [" + usUsername + "]", ex);
+            return new Respuesta(false, "Error obteniendo el usuario.", "getUsuario " + ex.getMessage());
+        }
+    }
 
     public Respuesta resetAccontPassword(String email, String password) {
         try {
