@@ -128,7 +128,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 
 .table-row-cell {
-    -fx-background-color: #212121;
-    -fx-text-fill: white;
+    -fx-background-color:white;
+    -fx-text-fill: #000359;
 
+}
+
+.scroll-pane {
+    -fx-background-color: #000359; 
+}
+.scroll-bar:vertical {
+   -fx-base: #000359; 
+}
+.scroll-bar:horizontal {
+   -fx-base: #000359; 
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: white; 
+}
+
+.scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: white; 
 }

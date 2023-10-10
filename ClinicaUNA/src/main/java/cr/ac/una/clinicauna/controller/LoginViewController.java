@@ -181,6 +181,7 @@ public class LoginViewController extends Controller implements Initializable {
                     RecoverFinalView.toFront();
                 }else{
                     FlowController.getInstance().goViewInWindow("ViewMaintenanceOptions");
+                    FlowController.getInstance().salir();
                 }
              
             } else {

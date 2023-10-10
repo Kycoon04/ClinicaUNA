@@ -9,6 +9,7 @@ import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.UserService;
+import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
@@ -151,6 +152,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private ObservableList<UserDto> userObservableList;
     List<DoctorDto> doctorList = new ArrayList<>();
     private ObservableList<DoctorDto> doctorObservableList;
+    @FXML
+    private BorderPane MenuView;
 
     /**
      * Initializes the controller class.
@@ -209,33 +212,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private void UpdateWorkerEnter(KeyEvent event) {
     }
 
-    @FXML
-    private void searchWorker_Name(KeyEvent event) {
-    }
 
-    @FXML
-    private void searchWorker_Pusername(KeyEvent event) {
-    }
-
-    @FXML
-    private void searchWorker_Identification(KeyEvent event) {
-    }
-
-    @FXML
-    private void searchWorker_Rol(KeyEvent event) {
-    }
-
-    @FXML
-    private void searchWorker_Susername(KeyEvent event) {
-    }
-
-    @FXML
-    private void searchWorker_State(KeyEvent event) {
-    }
-
-    @FXML
-    private void workerClicked(MouseEvent event) {
-    }
 
     @FXML
     private void deleteClicked(MouseEvent event) {
@@ -267,6 +244,64 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private void openManDoctors(ActionEvent event) {
         OptionsMainDoctorsView.toFront();
 
+    }
+
+    @FXML
+    private void exit(ActionEvent event) {
+        FlowController.getInstance().goMain();
+        
+   }
+
+    @FXML
+    private void searchUser_Name(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchUser_Pusername(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchUser_username(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchUser_Rol(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchUser_Susername(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchUser_State(KeyEvent event) {
+    }
+
+    @FXML
+    private void userClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void searchDoctor_Name(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchDoctor_Pusername(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchDoctor_code(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchDoctor_Folio(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchDoctor_License(KeyEvent event) {
+    }
+
+    @FXML
+    private void doctorClicked(MouseEvent event) {
     }
 
 }

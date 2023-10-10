@@ -141,7 +141,7 @@ public class FlowController {
         controller.initialize();
         Stage stage = new Stage();
         //stage.getIcons().add(new Image(App.class.getResourceAsStream("/cr/ac/una/clinicauna/resources/Usuario-48.png")));
-        stage.setTitle("UNA PLANILLA");
+        stage.setTitle("Clinica");
         stage.setOnHidden((WindowEvent event) -> {
             controller.getStage().getScene().setRoot(new Pane());
             controller.setStage(null);
