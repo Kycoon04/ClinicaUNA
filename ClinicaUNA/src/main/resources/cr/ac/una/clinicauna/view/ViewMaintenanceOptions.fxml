@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
@@ -23,6 +24,254 @@
 
 <StackPane stylesheets="@StyleClinica.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.clinicauna.controller.ViewMaintenanceOptionsController">
    <children>
+      <BorderPane fx:id="OptionsMainDoctorsView" layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="1000.0">
+         <left>
+            <VBox prefHeight="600.0" prefWidth="206.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER" />
+         </left>
+         <center>
+            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
+      <BorderPane fx:id="OptionsMainUsersView" layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="1000.0">
+         <left>
+            <VBox prefHeight="600.0" prefWidth="206.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER" />
+         </left>
+         <center>
+            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+               <children>
+                  <TabPane fx:id="tabPaneMantWorkers" prefHeight="0.0" prefWidth="986.0" tabClosingPolicy="UNAVAILABLE">
+                     <tabs>
+                        <Tab fx:id="tabMantWorkers" text="%MantenimientoU">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" onKeyPressed="#UpdateWorkerEnter" prefHeight="646.0" prefWidth="971.0">
+                                 <children>
+                                    <Text id="Text" fill="#000359" layoutX="207.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%MantenimientoUsuarios" wrappingWidth="417.9281220436096">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <VBox fillWidth="false" layoutX="49.0" layoutY="126.0" prefHeight="406.0" prefWidth="240.0">
+                                       <children>
+                                          <HBox id="Text" prefHeight="31.0" prefWidth="227.0">
+                                             <children>
+                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ManNombre">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="24.0" />
+                                                   </font>
+                                                </Text>
+                                             </children>
+                                          </HBox>
+                                          <TextField fx:id="userMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
+                                          <Separator prefHeight="28.0" prefWidth="216.0" visible="false" />
+                                          <HBox prefHeight="31.0" prefWidth="227.0">
+                                             <children>
+                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ManPrimerApellido">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="24.0" />
+                                                   </font>
+                                                </Text>
+                                             </children>
+                                          </HBox>
+                                          <TextField fx:id="psurnameMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
+                                          <Separator prefHeight="40.0" prefWidth="213.0" visible="false" />
+                                          <HBox prefHeight="31.0" prefWidth="227.0">
+                                             <children>
+                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ManSegundoApellido">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="24.0" />
+                                                   </font>
+                                                </Text>
+                                             </children>
+                                          </HBox>
+                                          <TextField fx:id="ssurnameMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
+                                          <Separator prefHeight="66.0" prefWidth="201.0" visible="false" />
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="20.0" left="40.0" top="20.0" />
+                                       </padding>
+                                    </VBox>
+                                    <VBox layoutX="509.0" layoutY="145.0" prefHeight="262.0" prefWidth="194.0">
+                                       <children>
+                                          <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ManCedula">
+                                             <font>
+                                                <Font name="Tw Cen MT" size="24.0" />
+                                             </font>
+                                          </Text>
+                                          <TextField fx:id="identMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
+                                          <Separator prefHeight="31.0" prefWidth="194.0" visible="false" />
+                                          <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ManPuesto" wrappingWidth="142.1812744140625">
+                                             <font>
+                                                <Font name="Tw Cen MT" size="24.0" />
+                                             </font>
+                                          </Text>
+                                          <ChoiceBox prefHeight="39.0" prefWidth="195.0" />
+                                       </children>
+                                    </VBox>
+                                    <VBox layoutX="289.0" layoutY="145.0" prefHeight="314.0" prefWidth="194.0">
+                                       <children>
+                                          <HBox prefHeight="31.0" prefWidth="227.0">
+                                             <children>
+                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ManUsuario">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="24.0" />
+                                                   </font>
+                                                </Text>
+                                             </children>
+                                          </HBox>
+                                          <TextField fx:id="usernameMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
+                                          <Separator prefHeight="27.0" prefWidth="194.0" visible="false" />
+                                          <HBox prefHeight="31.0" prefWidth="227.0">
+                                             <children>
+                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ManCorreo">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="24.0" />
+                                                   </font>
+                                                </Text>
+                                             </children>
+                                          </HBox>
+                                          <TextField fx:id="emailMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
+                                          <Separator prefHeight="44.0" prefWidth="194.0" visible="false" />
+                                          <HBox prefHeight="31.0" prefWidth="227.0" />
+                                       </children>
+                                    </VBox>
+                                    <Button layoutX="625.0" layoutY="490.0" mnemonicParsing="false" onAction="#UpdateWorker" prefHeight="35.0" prefWidth="123.0" text="%ManActualizar">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="16.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab text="%ListaUsuarios">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="590.0" prefWidth="794.0">
+                                 <children>
+                                    <VBox alignment="CENTER" layoutX="-2.0" prefHeight="575.0" prefWidth="794.0">
+                                       <children>
+                                          <Separator prefHeight="30.0" prefWidth="920.0" visible="false" />
+                                          <GridPane prefHeight="120.0" prefWidth="868.0">
+                                             <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="142.39995880126952" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="200.0000244140625" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="0.0" prefWidth="40.79997558593749" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="207.99999999999994" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="188.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="29.399999999999977" />
+                                             </columnConstraints>
+                                             <rowConstraints>
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                             </rowConstraints>
+                                             <children>
+                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListNombre" textAlignment="CENTER" wrappingWidth="139.53668785095215">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="25.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="textFieldSearch_Name" onKeyPressed="#searchWorker_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="23.0" />
+                                                   </font>
+                                                </TextField>
+                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListPApellido" textAlignment="RIGHT" wrappingWidth="187.5366725921631" GridPane.columnIndex="3">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="25.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="textFieldSearch_Pusername" onKeyPressed="#searchWorker_Pusername" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="4">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="23.0" />
+                                                   </font>
+                                                </TextField>
+                                                <Text fill="#000359" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListUsuario" textAlignment="RIGHT" wrappingWidth="128.3366756439209" GridPane.rowIndex="2">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="25.0" />
+                                                   </font>
+                                                </Text>
+                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListRol" textAlignment="RIGHT" wrappingWidth="90.73669242858887" GridPane.rowIndex="4">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="25.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="textFieldSearch_Identification" onKeyPressed="#searchWorker_Identification" prefHeight="27.0" prefWidth="194.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="23.0" />
+                                                   </font>
+                                                </TextField>
+                                                <TextField fx:id="textFieldSearch_Rol" onKeyPressed="#searchWorker_Rol" prefHeight="27.0" prefWidth="194.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="23.0" />
+                                                   </font>
+                                                </TextField>
+                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListSApellido" textAlignment="RIGHT" wrappingWidth="202.7366237640381" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="25.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="textFieldSearch_Susername" onKeyPressed="#searchWorker_Susername" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="23.0" />
+                                                   </font>
+                                                </TextField>
+                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListEstado" textAlignment="RIGHT" wrappingWidth="205.1366481781006" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="25.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="textFieldSearch_State" onKeyPressed="#searchWorker_State" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="23.0" />
+                                                   </font>
+                                                </TextField>
+                                             </children>
+                                          </GridPane>
+                                          <Separator prefHeight="32.0" prefWidth="920.0" />
+                                          <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" hvalue="2.0" prefHeight="331.0" prefWidth="803.0" vbarPolicy="ALWAYS" vmax="2.0">
+                                             <content>
+                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="356.0" prefWidth="835.0">
+                                                   <children>
+                                                      <TableView fx:id="tableViewUser" onMouseClicked="#workerClicked" prefHeight="370.0" prefWidth="922.0">
+                                                         <columns>
+                                                            <TableColumn fx:id="tableColAct" prefWidth="77.60000991821289" text="%TableEstado" />
+                                                            <TableColumn fx:id="tableColIdentif" minWidth="0.0" prefWidth="74.39999389648438" text="%TableCedula" />
+                                                            <TableColumn fx:id="tableColName" prefWidth="90.40000915527344" text="%TableNombre" />
+                                                            <TableColumn fx:id="tableColPsurname" prefWidth="132.00001525878906" text="%TablePApellido" />
+                                                            <TableColumn fx:id="tableColSsurname" prefWidth="143.19998168945312" text="%TableSApellido" />
+                                                            <TableColumn fx:id="tableColUserName" prefWidth="92.79998779296875" text="%TableUsuario" />
+                                                            <TableColumn fx:id="tableColEmail" prefWidth="138.4000244140625" text="%TableEmail" />
+                                                            <TableColumn fx:id="tableColAdmi" prefWidth="97.5999755859375" text="%TableRol" />
+                                                         </columns>
+                                                      </TableView>
+                                                   </children>
+                                                </AnchorPane>
+                                             </content>
+                                          </ScrollPane>
+                                       </children>
+                                    </VBox>
+                                    <Text id="Text" fill="#000359" layoutX="20.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%BusquedaUsuario" wrappingWidth="346.73670768737793">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="28.0" />
+                                       </font>
+                                    </Text>
+                                    <Button fx:id="BtndeleteWorker" layoutX="640.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#deleteClicked" prefHeight="30.0" prefWidth="94.0" text="%EliminarUsuario" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                     </tabs>
+                  </TabPane>
+               </children>
+            </HBox>
+         </center>
+      </BorderPane>
       <BorderPane fx:id="OptionsMenuView" prefHeight="600.0" prefWidth="1000.0">
          <left>
             <VBox prefHeight="600.0" prefWidth="206.0" style="-fx-background-color: #000359;" BorderPane.alignment="CENTER">
@@ -33,7 +282,7 @@
                      </VBox.margin>
                   </Text>
                   <Separator prefHeight="74.0" prefWidth="207.0" visible="false" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="193.0" style="-fx-background-color: transparent; -fx-font-size: 18px;" text="%ManUsuarios">
+                  <Button mnemonicParsing="false" onAction="#openManUsers" prefHeight="30.0" prefWidth="193.0" style="-fx-background-color: transparent; -fx-font-size: 18px;" text="%ManUsuarios">
                      <VBox.margin>
                         <Insets left="7.0" />
                      </VBox.margin>
@@ -55,254 +304,6 @@
          </left>
          <center>
             <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER" />
-         </center>
-      </BorderPane>
-      <BorderPane fx:id="OptionsMainDoctorsView" layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="1000.0">
-         <left>
-            <VBox prefHeight="600.0" prefWidth="206.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER" />
-         </left>
-         <center>
-            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER" />
-         </center>
-      </BorderPane>
-      <BorderPane fx:id="OptionsMainUsersView" layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="1000.0">
-         <left>
-            <VBox prefHeight="600.0" prefWidth="206.0" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER" />
-         </left>
-         <center>
-            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
-               <children>
-                  <TabPane fx:id="tabPaneMantWorkers" prefHeight="0.0" prefWidth="986.0" tabClosingPolicy="UNAVAILABLE">
-                     <tabs>
-                        <Tab fx:id="tabMantWorkers" text="Mantenimiento">
-                           <content>
-                              <AnchorPane minHeight="0.0" minWidth="0.0" onKeyPressed="#UpdateWorkerEnter" prefHeight="646.0" prefWidth="971.0">
-                                 <children>
-                                    <Text id="Text" fill="#000359" layoutX="207.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Mantenimiento Usuarios" wrappingWidth="417.9281220436096">
-                                       <font>
-                                          <Font name="Tw Cen MT" size="29.0" />
-                                       </font>
-                                    </Text>
-                                    <VBox fillWidth="false" layoutX="49.0" layoutY="126.0" prefHeight="406.0" prefWidth="240.0">
-                                       <children>
-                                          <HBox id="Text" prefHeight="31.0" prefWidth="227.0">
-                                             <children>
-                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre:">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="24.0" />
-                                                   </font>
-                                                </Text>
-                                             </children>
-                                          </HBox>
-                                          <TextField fx:id="userMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
-                                          <Separator prefHeight="28.0" prefWidth="216.0" visible="false" />
-                                          <HBox prefHeight="31.0" prefWidth="227.0">
-                                             <children>
-                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="Primer apellido:">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="24.0" />
-                                                   </font>
-                                                </Text>
-                                             </children>
-                                          </HBox>
-                                          <TextField fx:id="psurnameMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
-                                          <Separator prefHeight="40.0" prefWidth="213.0" visible="false" />
-                                          <HBox prefHeight="31.0" prefWidth="227.0">
-                                             <children>
-                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="Segundo apellido:">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="24.0" />
-                                                   </font>
-                                                </Text>
-                                             </children>
-                                          </HBox>
-                                          <TextField fx:id="ssurnameMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
-                                          <Separator prefHeight="66.0" prefWidth="201.0" visible="false" />
-                                       </children>
-                                       <padding>
-                                          <Insets bottom="20.0" left="40.0" top="20.0" />
-                                       </padding>
-                                    </VBox>
-                                    <VBox layoutX="509.0" layoutY="145.0" prefHeight="262.0" prefWidth="194.0">
-                                       <children>
-                                          <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="Cédula:">
-                                             <font>
-                                                <Font name="Tw Cen MT" size="24.0" />
-                                             </font>
-                                          </Text>
-                                          <TextField fx:id="identMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
-                                          <Separator prefHeight="31.0" prefWidth="194.0" visible="false" />
-                                          <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="Puesto:" wrappingWidth="99.78125">
-                                             <font>
-                                                <Font name="Tw Cen MT" size="24.0" />
-                                             </font>
-                                          </Text>
-                                          <TextField fx:id="JobMainField" editable="false" onMouseClicked="#viewChooseJob" prefHeight="32.0" prefWidth="184.0" promptText="Presiona" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0; -fx-border-radius: 4px; -fx-border-color: white;" />
-                                       </children>
-                                    </VBox>
-                                    <VBox layoutX="289.0" layoutY="145.0" prefHeight="314.0" prefWidth="194.0">
-                                       <children>
-                                          <HBox prefHeight="31.0" prefWidth="227.0">
-                                             <children>
-                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="Usuario:">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="24.0" />
-                                                   </font>
-                                                </Text>
-                                             </children>
-                                          </HBox>
-                                          <TextField fx:id="usernameMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
-                                          <Separator prefHeight="27.0" prefWidth="194.0" visible="false" />
-                                          <HBox prefHeight="31.0" prefWidth="227.0">
-                                             <children>
-                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="Correo electrónico:">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="24.0" />
-                                                   </font>
-                                                </Text>
-                                             </children>
-                                          </HBox>
-                                          <TextField fx:id="emailMainField" prefHeight="32.0" prefWidth="184.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
-                                          <Separator prefHeight="44.0" prefWidth="194.0" visible="false" />
-                                          <HBox prefHeight="31.0" prefWidth="227.0" />
-                                       </children>
-                                    </VBox>
-                                    <Button layoutX="625.0" layoutY="490.0" mnemonicParsing="false" onAction="#UpdateWorker" prefHeight="35.0" prefWidth="123.0" text="Actualizar">
-                                       <font>
-                                          <Font name="Tw Cen MT" size="16.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                        </Tab>
-                        <Tab text="Lista Trabajadores">
-                           <content>
-                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="779.0">
-                                 <children>
-                                    <VBox alignment="CENTER" layoutX="-2.0" prefHeight="571.0" prefWidth="794.0">
-                                       <children>
-                                          <Separator prefHeight="30.0" prefWidth="920.0" visible="false" />
-                                          <GridPane prefHeight="120.0" prefWidth="868.0">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="138.8" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="196.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="0.0" prefWidth="0.0" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="314.59999999999997" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="265.5999267578125" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="152.00007324218757" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre" wrappingWidth="108.33666801452637">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="28.0" />
-                                                   </font>
-                                                </Text>
-                                                <TextField fx:id="textFieldSearch_Name" onKeyPressed="#searchWorker_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="23.0" />
-                                                   </font>
-                                                </TextField>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Primer Apellido" textAlignment="RIGHT" wrappingWidth="251.5366725921631" GridPane.columnIndex="3">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="25.0" />
-                                                   </font>
-                                                </Text>
-                                                <TextField fx:id="textFieldSearch_Pusername" onKeyPressed="#searchWorker_Pusername" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="4">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="23.0" />
-                                                   </font>
-                                                </TextField>
-                                                <Text fill="WHITE" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cedula" wrappingWidth="125.13665580749512" GridPane.rowIndex="2">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="25.0" />
-                                                   </font>
-                                                </Text>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Rol" wrappingWidth="108.33666801452637" GridPane.rowIndex="4">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="28.0" />
-                                                   </font>
-                                                </Text>
-                                                <TextField fx:id="textFieldSearch_Identification" onKeyPressed="#searchWorker_Identification" prefHeight="27.0" prefWidth="194.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="23.0" />
-                                                   </font>
-                                                </TextField>
-                                                <TextField fx:id="textFieldSearch_Rol" onKeyPressed="#searchWorker_Rol" prefHeight="27.0" prefWidth="194.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="23.0" />
-                                                   </font>
-                                                </TextField>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Segundo Apellido" textAlignment="RIGHT" wrappingWidth="251.5366725921631" GridPane.columnIndex="3" GridPane.rowIndex="2">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="25.0" />
-                                                   </font>
-                                                </Text>
-                                                <TextField fx:id="textFieldSearch_Susername" onKeyPressed="#searchWorker_Susername" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="4" GridPane.rowIndex="2">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="23.0" />
-                                                   </font>
-                                                </TextField>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Estado" textAlignment="RIGHT" wrappingWidth="251.5366725921631" GridPane.columnIndex="3" GridPane.rowIndex="4">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="25.0" />
-                                                   </font>
-                                                </Text>
-                                                <TextField fx:id="textFieldSearch_State" onKeyPressed="#searchWorker_State" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="4" GridPane.rowIndex="4">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="23.0" />
-                                                   </font>
-                                                </TextField>
-                                             </children>
-                                          </GridPane>
-                                          <Separator prefHeight="32.0" prefWidth="920.0" />
-                                          <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" hvalue="2.0" prefHeight="410.0" prefWidth="790.0" vbarPolicy="ALWAYS" vmax="2.0">
-                                             <content>
-                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="414.0" prefWidth="835.0">
-                                                   <children>
-                                                      <TableView fx:id="tableViewUser" layoutY="2.0" onMouseClicked="#workerClicked" prefHeight="418.0" prefWidth="922.0">
-                                                         <columns>
-                                                            <TableColumn fx:id="tableColAct" prefWidth="48.800015449523926" text="Estado" />
-                                                            <TableColumn fx:id="tableColIdentif" prefWidth="102.39999008178711" text="Cedula" />
-                                                            <TableColumn fx:id="tableColName" prefWidth="90.40000915527344" text="Nombre" />
-                                                            <TableColumn fx:id="tableColPsurname" prefWidth="115.20002746582031" text="Primer Apellido" />
-                                                            <TableColumn fx:id="tableColSsurname" prefWidth="112.79998779296875" text="Segundo Apellido" />
-                                                            <TableColumn fx:id="tableColUserName" prefWidth="94.39996337890625" text="Usuario" />
-                                                            <TableColumn fx:id="tableColEmail" prefWidth="112.79998779296875" text="Email" />
-                                                            <TableColumn fx:id="tableColAdmi" prefWidth="113.60009765625" text="Rol" />
-                                                         </columns>
-                                                      </TableView>
-                                                   </children>
-                                                </AnchorPane>
-                                             </content>
-                                          </ScrollPane>
-                                       </children>
-                                    </VBox>
-                                    <Text fill="WHITE" layoutX="20.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Busqueda de trabajor:" wrappingWidth="346.73670768737793">
-                                       <font>
-                                          <Font name="Tw Cen MT" size="28.0" />
-                                       </font>
-                                    </Text>
-                                    <Button fx:id="BtndeleteWorker" layoutX="842.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#deleteClicked" prefHeight="30.0" prefWidth="94.0" text="Eliminar" />
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                        </Tab>
-                     </tabs>
-                  </TabPane>
-               </children>
-            </HBox>
          </center>
       </BorderPane>
    </children>

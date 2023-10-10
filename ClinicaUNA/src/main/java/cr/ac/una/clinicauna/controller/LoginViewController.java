@@ -16,6 +16,7 @@ import cr.ac.una.clinicauna.service.SpaceService;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.Email;
+import cr.ac.una.clinicauna.util.FlowController;
 
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
@@ -155,6 +156,8 @@ public class LoginViewController extends Controller implements Initializable {
     @FXML
     private void AcceptLogin(ActionEvent event) {
         login(usernameField.getText(), passwordField.getText());
+        FlowController.getInstance().goViewInWindow("ViewMaintenanceOptions");
+        
 
     }
 
@@ -165,6 +168,7 @@ public class LoginViewController extends Controller implements Initializable {
 
     @FXML
     private void AcceptLoginEnter(KeyEvent event) {
+        
     }
 
     @FXML

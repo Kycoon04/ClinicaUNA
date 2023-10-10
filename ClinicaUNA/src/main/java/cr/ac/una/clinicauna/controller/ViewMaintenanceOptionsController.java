@@ -24,7 +24,7 @@ import javafx.scene.layout.BorderPane;
  *
  * @author Anderson
  */
-public class ViewMaintenanceOptionsController implements Initializable {
+public class ViewMaintenanceOptionsController extends Controller implements Initializable {
 
     @FXML
     private BorderPane OptionsMenuView;
@@ -44,8 +44,6 @@ public class ViewMaintenanceOptionsController implements Initializable {
     private TextField ssurnameMainField;
     @FXML
     private TextField identMainField;
-    @FXML
-    private TextField JobMainField;
     @FXML
     private TextField usernameMainField;
     @FXML
@@ -89,11 +87,9 @@ public class ViewMaintenanceOptionsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        OptionsMenuView.toFront();
     }    
 
-    @FXML
-    private void viewChooseJob(MouseEvent event) {
-    }
 
     @FXML
     private void UpdateWorker(ActionEvent event) {
@@ -133,6 +129,16 @@ public class ViewMaintenanceOptionsController implements Initializable {
 
     @FXML
     private void deleteClicked(MouseEvent event) {
+    }
+
+    @Override
+    public void initialize() {
+       
+    }
+
+    @FXML
+    private void openManUsers(ActionEvent event) {
+        OptionsMainUsersView.toFront();
     }
     
 }
