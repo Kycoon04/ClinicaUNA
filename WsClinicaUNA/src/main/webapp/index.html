@@ -1,144 +1,99 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Clinica UNA</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #f4f4f4;
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinica UNA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
 
-            header {
-                background-color: #333;
-                color: #fff;
-                text-align: center;
-                padding: 1em;
-            }
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+        }
 
-            nav {
-                background-color: #4CAF50;
-                overflow: hidden;
-            }
+        nav {
+            background-color: #4CAF50;
+            overflow: hidden;
+        }
 
-            nav a {
-                float: left;
-                display: block;
-                color: white;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-            }
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
 
-            nav a:hover {
-                background-color: #ddd;
-                color: black;
-            }
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
 
-            section {
-                text-align: center;
-                padding: 20px;
-                margin: 20px;
-                background-color: #fff;
-            }
+        section {
+            text-align: center;
+            padding: 20px;
+            margin: 20px;
+            background-color: #fff;
+        }
 
-            section img {
-                max-width: 100%;
-                height: auto;
-                margin: 10px;
-            }
+        section img {
+            max-width: 100%;
+            height: auto;
+            margin: 10px;
+        }
 
-            footer {
-                background-color: #333;
-                color: #fff;
-                text-align: center;
-                padding: 1em;
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-            <h1>Clinica UNA</h1>
-        </header>
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Clinica UNA</h1>
+    </header>
 
-        <nav>
-            <a href="#">Inicio</a>
-            <a href="#">Servicios</a>
-            <a href="#" id="activacionLink">Activación</a>
-        </nav>
+    <nav>
+        <a href="#">Inicio</a>
+        <a href="#">Servicios</a>
+        <!-- Eliminado el botón de activación -->
+    </nav>
 
-        <section>
-            <h2>Bienvenido a nuestra clínica</h2>
-            <p>Ofrecemos una amplia gama de servicios médicos para cuidar de tu salud.</p>
+    <section>
+        <h2>Bienvenido a nuestra clínica</h2>
+        <p>Ofrecemos una amplia gama de servicios médicos para cuidar de tu salud.</p>
 
-            <div id="servicios" style="display:none;">
-                <p>Citas</p>
-                <p>Revisión</p>
-                <p>Registro de Usuarios</p>
-            </div>
+        <div id="servicios" style="display:none;">
+            <p>Citas</p>
+            <p>Revisión</p>
+            <p>Registro de Usuarios</p>
+        </div>
 
-            <img src="imagen1.jpg" alt="Imagen 1">
-            <img src="imagen2.jpg" alt="Imagen 2">
-            <img src="imagen3.jpg" alt="Imagen 3">
-            <img src="imagen4.jpg" alt="Imagen 4">
+        <img src="imagen1.jpg" alt="Imagen 1">
+        <img src="imagen2.jpg" alt="Imagen 2">
+        <img src="imagen3.jpg" alt="Imagen 3">
+        <img src="imagen4.jpg" alt="Imagen 4">
+    </section>
 
-            <script>
-                document.querySelector('#activacionLink').addEventListener('click', function () {
-                    // Obtener los parámetros de la URL
-                    var urlParams = new URLSearchParams(window.location.search);
-                    var code = urlParams.get('Code');
-
-                    // Verificar si el parámetro "Code" está presente
-                    if (code !== null) {
-                        // Consumir el servicio REST
-                        fetch('http://localhost:8080/WsClinicaUNA/ws/ModuleUser/userActive/' + code, {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                        })
-                                .then(response => {
-                                    if (!response.ok) {
-                                         alert('¡Activación exitosa!');
-                                    }
-                                    return response.json();
-                                });
-                               
-                    } else {
-                        alert("El parámetro 'Code' no está presente en la URL.");
-                    }
-                });
-
-                document.querySelector('nav a:nth-child(2)').addEventListener('click', function () {
-                    document.getElementById('servicios').style.display = 'block';
-                    document.querySelector('section img:nth-child(1)').style.display = 'none';
-                    document.querySelector('section img:nth-child(2)').style.display = 'none';
-                    document.querySelector('section img:nth-child(3)').style.display = 'none';
-                    document.querySelector('section img:nth-child(4)').style.display = 'none';
-                });
-
-                document.querySelector('nav a:nth-child(1)').addEventListener('click', function () {
-                    document.getElementById('servicios').style.display = 'none';
-                    document.querySelector('section img:nth-child(1)').style.display = 'block';
-                    document.querySelector('section img:nth-child(2)').style.display = 'block';
-                    document.querySelector('section img:nth-child(3)').style.display = 'block';
-                    document.querySelector('section img:nth-child(4)').style.display = 'block';
-                });
-            </script>
-
-        </section>
-
-        <footer>
-            <p>&copy; Dilan Sancho Lopez.</p>
-            <p>&copy; Jose Valverde Valverde.</p>
-            <p>&copy; Anderson Fernandez.</p>
-            <p>&copy; 2023 Clinica UNA. Todos los derechos reservados.</p>
-        </footer>
-    </body>
+    <footer>
+        <p>&copy; Dilan Sancho Lopez.</p>
+        <p>&copy; Jose Valverde Valverde.</p>
+        <p>&copy; Anderson Fernandez.</p>
+        <p>&copy; 2023 Clinica UNA. Todos los derechos reservados.</p>
+    </footer>
+</body>
 </html>
