@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicauna.controller;
 
+import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.Respuesta;
@@ -21,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 
 /**
  * FXML Controller class
@@ -37,8 +39,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private BorderPane OptionsMainUsersView;
     @FXML
     private TabPane tabPaneMantWorkers;
-    @FXML
-    private Tab tabMantWorkers;
     @FXML
     private TextField userMainField;
     @FXML
@@ -83,6 +83,60 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private TableColumn<?, ?> tableColAdmi;
     @FXML
     private Button BtndeleteWorker;
+    @FXML
+    private Tab tabMantUsers;
+    @FXML
+    private TabPane tabPaneMantWorkers1;
+    @FXML
+    private Tab tabManDoctors;
+    @FXML
+    private TextField codeDocMainField;
+    @FXML
+    private TextField licenseDocMainField;
+    @FXML
+    private TextField folioDocMainField;
+    @FXML
+    private TextField usernameMainField1;
+    @FXML
+    private JFXTimePicker timepickerIniWork;
+    @FXML
+    private Text textMainDoctor;
+    @FXML
+    private TextField textFieldSearchDoc_Name;
+    @FXML
+    private TextField textFieldSearchDoc_Pusername;
+    @FXML
+    private TextField textFieldSearchDoc_Code;
+    @FXML
+    private TextField textFieldSearchDoc_Folio;
+    @FXML
+    private TextField textFieldSearchDoc_License;
+    @FXML
+    private TableView<?> tableViewDoctors;
+    @FXML
+    private TableColumn<?, ?> tableColDocCode;
+    @FXML
+    private TableColumn<?, ?> tableColDocFolio;
+    @FXML
+    private TableColumn<?, ?> tableColDocName;
+    @FXML
+    private TableColumn<?, ?> tableColDocPsurname;
+    @FXML
+    private TableColumn<?, ?> tableColDocLicense;
+    @FXML
+    private TableColumn<?, ?> tableColDocIniWork;
+    @FXML
+    private TableColumn<?, ?> tableColDocFinishWork;
+    @FXML
+    private TableColumn<?, ?> tableColDocBreaks;
+    @FXML
+    private Button BtndeleteDoctor;
+    @FXML
+    private JFXTimePicker timepickerFinWork;
+    @FXML
+    private Button btnMantUsers;
+    @FXML
+    private Button btnMantDoctors;
 
     /**
      * Initializes the controller class.
@@ -91,11 +145,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         OptionsMenuView.toFront();
-    }    
-
-
-    @FXML
-    private void UpdateWorker(ActionEvent event) {
     }
 
     @FXML
@@ -136,12 +185,30 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @Override
     public void initialize() {
-       
+
     }
 
     @FXML
     private void openManUsers(ActionEvent event) {
         OptionsMainUsersView.toFront();
     }
-    
+
+    @FXML
+    private void UpdateUser(ActionEvent event) {
+    }
+
+    @FXML
+    private void UpdateDoctor(ActionEvent event) {
+    }
+
+    @FXML
+    private void deleteDoctorClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void openManDoctors(ActionEvent event) {
+        OptionsMainDoctorsView.toFront();
+
+    }
+
 }
