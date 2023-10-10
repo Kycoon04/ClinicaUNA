@@ -1,34 +1,23 @@
 package cr.ac.una.clinicauna.controller;
 
-import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiaryDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
-import cr.ac.una.clinicauna.model.SpaceDto;
 import cr.ac.una.clinicauna.model.UserDto;
-import cr.ac.una.clinicauna.service.AppointmentService;
-import cr.ac.una.clinicauna.service.DiaryService;
-import cr.ac.una.clinicauna.service.DiseaseService;
-import cr.ac.una.clinicauna.service.DoctorService;
-import cr.ac.una.clinicauna.service.ProceedingsService;
-import cr.ac.una.clinicauna.service.SpaceService;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.Email;
 import cr.ac.una.clinicauna.util.FlowController;
-
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;

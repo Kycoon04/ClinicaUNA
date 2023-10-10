@@ -4,6 +4,9 @@
  */
 package cr.ac.una.clinicauna.controller;
 
+import cr.ac.una.clinicauna.model.UserDto;
+import cr.ac.una.clinicauna.service.UserService;
+import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;

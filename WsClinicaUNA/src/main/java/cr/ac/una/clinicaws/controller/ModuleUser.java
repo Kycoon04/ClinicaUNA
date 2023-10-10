@@ -15,9 +15,11 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,12 +32,30 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Users", description = "Operations on employees")
 
-//@Secure
+@Secure
 public class ModuleUser {
 
     @EJB
     UserService userService;
+    @Context
+    SecurityContext securityContext;
 
+    @GET
+    @Path("/renovar")
+    public Response renovarToken() {
+        try {
+            String usuarioRequest = securityContext.getUserPrincipal().getName();
+            if (usuarioRequest != null && !usuarioRequest.isEmpty()) {
+                return Response.ok(JwTokenHelper.getInstance().generatePrivateKey(usuarioRequest)).build();
+            } else {
+                return Response.status(CodigoRespuesta.ERROR_PERMISOS.getValue()).entity("No se pudo renovar el token.").build();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error al renovar token").build();
+        }
+    }
+    
     @GET
     @Path("/user/{id}")
     public Response getUser(@PathParam("id") Integer id) {
