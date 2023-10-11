@@ -43,15 +43,21 @@ public class UserService {
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("user", user);
             parametros.put("pass", password);
+
             Request request = new Request("ModuleUser/userIsAct", "/{user}/{pass}", parametros);
+
             request.get();
+
             if (request.isError()) {
                 return false;
             }
-            Respuesta res = (Respuesta) request.readEntity(Respuesta.class);
-            return res.getEstado();
+
+            return (boolean) request.readEntity(Boolean.class);
+
         } catch (Exception ex) {
-            Logger.getLogger(UserService.class.getName()).log(Level.SEVERE, "Error verificando la activación del usuario [" + user + "]", ex);
+            // Log an error if an exception occurs
+            Logger.getLogger(UserService.class.getName())
+                    .log(Level.SEVERE, "Error verificando si esta activo [" + user + "]", ex);
             return false;
         }
     }
@@ -98,7 +104,8 @@ public class UserService {
             return new Respuesta(false, "Error obteniendo el usuario.", "getUsuario " + ex.getMessage());
         }
     }
-        public Respuesta getUserName(String usUsername) {
+
+    public Respuesta getUserName(String usUsername) {
         try {
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("usUsername", usUsername);
@@ -200,7 +207,7 @@ public class UserService {
             return null;
         }
     }
-    
+
     public Respuesta renovarToken() {
         try {
             Request request = new Request("ModuleUser/renovar");
@@ -215,6 +222,5 @@ public class UserService {
             return new Respuesta(false, "Error renovando el token.", "renovarToken " + ex.getMessage());
         }
     }
-    
-    
+
 }

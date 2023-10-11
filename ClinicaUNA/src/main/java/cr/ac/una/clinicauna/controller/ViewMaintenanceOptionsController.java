@@ -248,7 +248,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void exit(ActionEvent event) {
-        FlowController.getInstance().goMain();
+        FlowController.getInstance().goMain("LoginView");
         
    }
 
