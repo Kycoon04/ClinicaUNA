@@ -101,6 +101,15 @@ public class UserDto {
     public String getUsState() {
         return usState.get();
     }
+    public String getUsSState(){
+        String state="";
+        if(usState.getValue().equals("A")){
+            state= "Activo";
+        }else{
+            state= "Inactivo";
+        }
+        return state;
+    }
 
     public void setUsState(String usState) {
         this.usState.set(usState);

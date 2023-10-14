@@ -27,6 +27,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -165,6 +166,10 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private TextField textFieldSearch_Usuario;
     @FXML
     private TextField textFieldSearchDoc_State;
+    @FXML
+    private ChoiceBox<String> choiceBoxJobsTypes;
+    String jobs[]={"Administrador", "Recepcionista", "Doctor"};
+    boolean userDoctor=false;
 
     /**
      * Initializes the controller class.
@@ -173,7 +178,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         OptionsMenuView.toFront();
-        this.tableColAct.setCellValueFactory(new PropertyValueFactory("UsState"));
+        choiceBoxJobsTypes.getItems().addAll(jobs);
+        this.tableColAct.setCellValueFactory(new PropertyValueFactory("UsSState"));
         this.tableColIdentif.setCellValueFactory(new PropertyValueFactory("UsIdentification"));
         this.tableColName.setCellValueFactory(new PropertyValueFactory("UsName"));
         this.tableColPsurname.setCellValueFactory(new PropertyValueFactory("UsPlastname"));
@@ -239,30 +245,40 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void UpdateUser(ActionEvent event) {
-        if (userDto != null) {
+        if (userDto != null&&!choiceBoxJobsTypes.getValue().equals("Doctor")) {
             UserDto us = new UserDto();
-            //  UserService service = new UserService();
-            //  service.saveUser(bindNewUser());
+            UserService service = new UserService();
+            service.saveUser(bindNewUser());
+        }else{
+            userDoctor=true;
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Debes completar la siguiente información");
+            textMainDoctor.setText(userMainField.getText()+" "+psurnameMainField.getText()+" "+ssurnameMainField.getText());
+            OptionsMainDoctorsView.toFront();
         }
     }
 
-//    UserDto bindNewUser() {
-//       /*
-//        UserDto user = new UserDto();
-//        user.setUsId(userDto.getUsId());
-//        user.setUsName(userMainField.getText());
-//        user.setUsPlastname(psurnameMainField.getText());
-//        user.setUsSlastname(ssurnameMainField.getText());
-//        user.setUsUsername(usernameMainField.getText());
-//        user.setUsEmail(emailMainField.getText());
-//        user.setUsState(userDto.getUsState());
-//        user.setUsType("Default");
-//        user.setUsIdentification(identMainField.getText());
-//    */
-//        return user;
-//    }
+  UserDto bindNewUser() {
+       
+        UserDto user = new UserDto();
+        user.setUsId(userDto.getUsId());
+        user.setUsName(userMainField.getText());
+        user.setUsPlastname(psurnameMainField.getText());
+        user.setUsSlastname(ssurnameMainField.getText());
+        user.setUsUsername(usernameMainField.getText());
+        user.setUsEmail(emailMainField.getText());
+        user.setUsState(userDto.getUsState());
+        user.setUsType(choiceBoxJobsTypes.getValue());
+        user.setUsIdentification(identMainField.getText());
+        return user;
+    }
     @FXML
     private void UpdateDoctor(ActionEvent event) {
+        if(userDoctor){
+             UserService service = new UserService();
+             service.saveUser(bindNewUser());
+        }else{
+            
+        }
     }
 
     @FXML
@@ -390,7 +406,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                     return true;
                 }
                 String search = newValue.toLowerCase();
-                if (UserDto.getUsState().toLowerCase().contains(search)) {
+                if (UserDto.getUsSState().toLowerCase().indexOf(search)==0) {
                     return true;
                 } else {
                     return false;
