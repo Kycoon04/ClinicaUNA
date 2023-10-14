@@ -9,6 +9,7 @@ import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.UserService;
+import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Mensaje;
 import java.net.URL;
@@ -153,6 +154,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private BorderPane MenuView;
 
+    
+    UserDto userDto = new UserDto(); 
     /**
      * Initializes the controller class.
      */
@@ -178,6 +181,9 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableColDocIniWork.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
         this.tableColDocCode.setCellValueFactory(new PropertyValueFactory("DrCode"));
 
+     
+       
+        
         fillTableUsers();
         fillTableDoctors();
     }
@@ -228,6 +234,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void UpdateUser(ActionEvent event) {
+        
     }
 
     @FXML

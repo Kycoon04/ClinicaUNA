@@ -17,7 +17,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FlowController.getInstance().InitializeFlow(stage,ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Japanese"));
+        FlowController.getInstance().InitializeFlow(stage,ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Spanish"));
         FlowController.getInstance().goMain("LoginView");
         /*FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("LoginView.fxml"));

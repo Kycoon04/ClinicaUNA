@@ -95,11 +95,11 @@ public class LoginViewController extends Controller implements Initializable {
     String[] English = {"Spanish", "English", "France", "Japonese"};
     String[] French = {"Espagnol", "Anglais", "Francais", "Japonais"};
     String[] Japanesse = {"スペイン語", "英語", "フランス語", "日本語"};
-    
+
     List<Node> required = new ArrayList<>();
     List<Node> required1 = new ArrayList<>();
     List<Node> required2 = new ArrayList<>();
-
+    private boolean pass= false; 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         choiceBoxIdioms.getItems().addAll(Spanish);
@@ -114,12 +114,11 @@ public class LoginViewController extends Controller implements Initializable {
         passwordRegisField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));
         password2RegisField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));
         IndicateRequired();
-    
     }
 
     @Override
     public void initialize() {
-       
+
     }
 
     public boolean validateRequired(List<Node> re) {
@@ -154,25 +153,17 @@ public class LoginViewController extends Controller implements Initializable {
         required2.add(emailRecoverField);
     }
 
-   private void saveUser(UserDto userDto) {
+    private void saveUser(UserDto userDto) {
+       Respuesta respuesta= new Respuesta();
         try {
             UserService service = new UserService();
-            Respuesta respuesta = service.saveUser(userDto);
+            if(pass==true){
+            respuesta = service.saveUser(userDto);
+              }
             this.userDto = (UserDto) respuesta.getResultado("User");
             if (userDto != null) {
                 if (userDto.getUsLenguage() != "") {
-                    if (userDto.getUsLenguage() == "Japanese") {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "ユーザー保存", getStage(), "ユーザーが正常に保存されました。");
-                    }
-                    if (userDto.getUsLenguage() == "Spanish") {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Usuario", getStage(), "Usuario guardado correctamente.");
-                    }
-                    if (userDto.getUsLenguage() == "English") {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save User", getStage(), "User saved successfully.");
-                    }
-                    if (userDto.getUsLenguage() == "French") {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer l'utilisateur", getStage(), "Utilisateur enregistré avec succès.");
-                    }
+                    multiLenguage("ユーザーが正常に保存されました。","Usuario guardado correctamente.","User saved successfully.","Utilisateur enregistré avec succès.");
                 } else {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Usuario", getStage(), "Usuario guardado correctamente.");
                 }
@@ -183,8 +174,24 @@ public class LoginViewController extends Controller implements Initializable {
         }
     }
 
-  private void login(String name, String password) {
+    private void multiLenguage(String l1,String l2, String l3, String l4) {
+        if(userDto.getUsLenguage()!=""){
+        if ( userDto.getUsLenguage().equals("Japanese") ) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "ユーザー保存", getStage(), l1);
+        }
+        if ( userDto.getUsLenguage() .equals("Spanish") ) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Usuario", getStage(),  l2);
+        }
+        if ( userDto.getUsLenguage().equals("English") ) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save User", getStage(),  l3);
+        }
+        if ( userDto.getUsLenguage() .equals("French") ) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer l'utilisateur", getStage(), l4);
+        }
+        }
+    }
 
+    private void login(String name, String password) {
         try {
             UserService service = new UserService();
             Respuesta respuesta = service.getUser(name, password);
@@ -192,14 +199,18 @@ public class LoginViewController extends Controller implements Initializable {
                 this.userDto = (UserDto) respuesta.getResultado("User");
                 AppContext.getInstance().set("Token", userDto.getToken());
                 AppContext.getInstance().set("Usuario", userDto);
-                if(service.isActive(name, password)){
-                if (service.isTempPass(name, password)) {
-                    RecoverFinalView.toFront();
+                if (service.isActive(name, password)) {
+                    if (service.isTempPass(name, password)) {
+                        RecoverFinalView.toFront();
+                    } else {
+                        if (service.isAdmin(name, password)) {
+                            getUsLenguage();
+                        } else {
+                            System.out.println("sfedsdfsdf");
+                        }
+                    }
                 } else {
-                    FlowController.getInstance().goMain("ViewMaintenanceOptions");
-                }
-                }else{
-                      new Mensaje().showModal(Alert.AlertType.INFORMATION, "Validación Usuario", getStage(),"El usuario no esta activo");
+                    ChoiceIdiom(this.userDto.getUsLenguage(),"L'utilisateur n'est pas actif","The user is not active", "El usuario no esta activo","ユーザーはアクティブではありません" );
                 }
             } else {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "Validación Usuario", getStage(), respuesta.getMensaje());
@@ -210,8 +221,26 @@ public class LoginViewController extends Controller implements Initializable {
 
             new Mensaje().showModal(Alert.AlertType.ERROR, "Cargar Empleado", getStage(), "Ocurrio un error consultando el usuarios.");
         }
-         
-    } 
+    }
+
+    private void getUsLenguage() {
+        if (this.userDto.getUsLenguage().equals("Spanish")) {
+            System.out.println("French");
+            FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Spanish"));
+            FlowController.getInstance().goMain("ViewMaintenanceOptions");
+        } else if (this.userDto.getUsLenguage().equals("English")) {
+            System.out.println("English");
+            FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/English"));
+            FlowController.getInstance().goMain("ViewMaintenanceOptions");
+        } else if (this.userDto.getUsLenguage().equals("French")) {
+            System.out.println("French");
+            FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/French"));
+            FlowController.getInstance().goMain("ViewMaintenanceOptions");
+        } else if (this.userDto.getUsLenguage().equals("Japanese")) {
+            FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Japanese"));
+            FlowController.getInstance().goMain("ViewMaintenanceOptions");
+        }
+    }
 
     @FXML
     private void PasswordForget(MouseEvent event) {
@@ -233,8 +262,23 @@ public class LoginViewController extends Controller implements Initializable {
 
     }
 
+    public void cleanScreen() {
+        usernameField.setText("");
+        surname1RegisField.setText("");
+        surname2RegisField.setText("");
+        usernameRegisField.setText("");
+        emailRegisField.setText("");
+        idRegisField.setText("");
+        passwordRegisField.setText("");
+        password2RegisField.setText("");
+        emailRecoverField.setText("");
+        passwordField.setText("");
+        userRegisField.setText("");
+    }
+
     @FXML
     private void Back(ActionEvent event) {
+        cleanScreen();
         loginView.toFront();
     }
 
@@ -243,10 +287,36 @@ public class LoginViewController extends Controller implements Initializable {
         if (!validateRequired(required)) {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "campos inccompletos");
         } else {
+          
             saveUser(bindNewUser());
+            
         }
     }
 
+      private void ChoiceIdiom(String idiom, String l1,String l2,String l3,String l4) {
+          System.out.println("sfddfsdfsdfsdfsfsdfsdfs");
+          System.out.println("");
+        if (idiom != "") {
+            if (idiom == "French") {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "v", getStage(), l1);
+                  System.out.println(idiom);
+            }
+            if (idiom == "English") {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "v", getStage(), l2);
+            }
+            if (idiom == "Spanish") {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "v", getStage(), l3);
+            }
+            if (idiom == "Japanese") {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "v", getStage(), l4);
+            }
+        } else {
+            new Mensaje().showModal(Alert.AlertType.ERROR, "v", getStage(), l3);
+        }
+
+    }
+      
+      
     UserDto bindNewUser() {
         String idiom = "";
         UserDto user = new UserDto();
@@ -256,7 +326,7 @@ public class LoginViewController extends Controller implements Initializable {
         user.setUsUsername(usernameRegisField.getText());
         user.setUsEmail(emailRegisField.getText());
         user.setUsState("I");
-        user.setUsType("Doctor");
+        user.setUsType("Default");
         user.setUsRecover("N");
         String code = CodeRamdon();
         user.setUsCode(code);
@@ -271,27 +341,18 @@ public class LoginViewController extends Controller implements Initializable {
         if (choiceBoxIdioms.getValue().equals("Francais") || choiceBoxIdioms.getValue().equals("France") || choiceBoxIdioms.getValue().equals("Francés")) {
             idiom = "French";
             user.setUsLenguage(idiom);
-        }
+        }/*
+         if (choiceBoxIdioms.getValue().equals("Francais") || choiceBoxIdioms.getValue().equals("France") || choiceBoxIdioms.getValue().equals("Francés")) {
+            idiom = "French";
+            user.setUsLenguage(idiom);
+        }*/
         user.setUsIdentification(idRegisField.getText());
         if (passwordRegisField.getText().equals(password2RegisField.getText())) {
             user.setUsPassword(passwordRegisField.getText());
+            pass=true; 
         } else {
-            if (idiom != "") {
-                if (idiom == "French") {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "Contraseña", getStage(), "Différents mots de passe");
-                }
-                if (idiom == "English") {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "Contraseña", getStage(), "Different passwords");
-                }
-                if (idiom == "Spanish") {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "Contraseña", getStage(), "Contraseña Distinta");
-                }
-                if (idiom == "Japanese") {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "パスワード", getStage(), "異なるパスワード");
-                }
-            } else {
-                new Mensaje().showModal(Alert.AlertType.ERROR, "Contraseña", getStage(), "Contraseña Distinta");
-            }
+          ChoiceIdiom(idiom,"Différents mots de passe","Different passwords","Contraseña Distinta","異なるパスワード");
+          pass=false; 
         }
         Email email;
         email = new Email(emailRegisField.getText(), userRegisField.getText() + " " + surname1RegisField.getText(), "Activacion de usuario");
@@ -299,14 +360,13 @@ public class LoginViewController extends Controller implements Initializable {
         return user;
     }
 
-
     @FXML
     private void changeIdiomSpanish(MouseEvent event) {
-        FlowController.setIdioma(   ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Spanish"));
+        FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Spanish"));
         FlowController.getInstance().goMain("LoginView");
         choiceBoxIdioms.getItems().clear();
         choiceBoxIdioms.getItems().addAll(Spanish);
-   
+
         TranslateTransition slide = new TranslateTransition();
         slide.setDuration(Duration.seconds(0.4));
         slide.setNode(VboxChangeIdioms);
@@ -316,12 +376,12 @@ public class LoginViewController extends Controller implements Initializable {
         slide.setOnFinished((ActionEvent e) -> {
             VboxChangeIdioms.setVisible(false);
         });
-    
+
     }
 
     @FXML
     private void changeIdiomEnglish(MouseEvent event) {
-                FlowController.setIdioma(   ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/English"));
+        FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/English"));
         FlowController.getInstance().goMain("LoginView");
         choiceBoxIdioms.getItems().clear();
         choiceBoxIdioms.getItems().addAll(English);
@@ -339,11 +399,11 @@ public class LoginViewController extends Controller implements Initializable {
 
     @FXML
     private void changeIdiomFrench(MouseEvent event) {
-         FlowController.setIdioma(   ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/French"));
+        FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/French"));
         FlowController.getInstance().goMain("LoginView");
         choiceBoxIdioms.getItems().clear();
         choiceBoxIdioms.getItems().addAll(French);
-       
+
         TranslateTransition slide = new TranslateTransition();
         slide.setDuration(Duration.seconds(0.4));
         slide.setNode(VboxChangeIdioms);
@@ -357,8 +417,8 @@ public class LoginViewController extends Controller implements Initializable {
 
     @FXML
     private void changeIdiomJapanese(MouseEvent event) {
-         FlowController.setIdioma(   ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Japanese"));
-       FlowController.getInstance().goMain("LoginView");
+        FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Japanese"));
+        FlowController.getInstance().goMain("LoginView");
         choiceBoxIdioms.getItems().clear();
         choiceBoxIdioms.getItems().addAll(Japanesse);
         TranslateTransition slide = new TranslateTransition();
@@ -370,7 +430,7 @@ public class LoginViewController extends Controller implements Initializable {
         slide.setOnFinished((ActionEvent e) -> {
             VboxChangeIdioms.setVisible(false);
         });
-        
+
     }
 
     @FXML
@@ -402,38 +462,38 @@ public class LoginViewController extends Controller implements Initializable {
     private void RecoverPassword(ActionEvent event) {
         UserService service = new UserService();
         String pass = PasswordRamdon();
-         if (!validateRequired(required2)) {
+        if (!validateRequired(required2)) {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "campos incompletos");
         } else {
-        service.ResetTemp(emailRecoverField.getText(), pass);
-        Email email;
-        email = new Email(emailRecoverField.getText(), userRegisField.getText() + " " + surname1RegisField.getText(), "Recuperar contrañesa");
-        email.envioCmbClave(pass);
-         }
+            service.ResetTemp(emailRecoverField.getText(), pass);
+            Email email;
+            email = new Email(emailRecoverField.getText(), userRegisField.getText() + " " + surname1RegisField.getText(), "Recuperar contrañesa");
+            email.envioCmbClave(pass);
+        }
     }
 
     @FXML
     private void AceptPassword(ActionEvent event) {
         UserService service = new UserService();
-       
+
         if (!validateRequired(required1)) {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "campos incompletos");
         } else {
-            if(getUserName(usernameField.getText())==""){
-                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reseteo", getStage(), "Sin exito");
-            }else{
-            service.resetAccontPassword(getUserName(usernameField.getText()), AceptRecoverField.getText());
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reseteo", getStage(), "Con exito");
+            if (getUserName(usernameField.getText()) == "") {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reseteo", getStage(), "Sin exito");
+            } else {
+                service.resetAccontPassword(getUserName(usernameField.getText()), AceptRecoverField.getText());
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reseteo", getStage(), "Con exito");
             }
         }
     }
 
-        private String getUserName(String user) {
+    private String getUserName(String user) {
         try {
             UserService service = new UserService();
             Respuesta respuesta = service.getUserName(user);
             this.userDto = (UserDto) respuesta.getResultado("User");
-          
+
         } catch (Exception ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error consultando el empleado.", ex);
 
@@ -441,7 +501,7 @@ public class LoginViewController extends Controller implements Initializable {
         }
         return userDto.getUsEmail();
     }
-    
+
     String CodeRamdon() {
         char c1;
         String s = "";

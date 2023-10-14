@@ -174,6 +174,28 @@ public class UserService {
         }
     }
 
+    
+       public Respuesta isAdmin(String usuario, String clave) {
+        Users users;
+        try {
+            if (usuario != null && !clave.isEmpty()) {
+                TypedQuery<Users> query = em.createNamedQuery("Users.findByUsuClave", Users.class);
+                query.setParameter("usuario", usuario);
+                query.setParameter("clave", clave);
+                users = query.getSingleResult();
+                if (users.getUsType().equals("Administrator")) {
+                    return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
+                }
+                return new Respuesta(false, CodigoRespuesta.CORRECTO, "", "");
+            } else {
+                return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "Debe cargar el usuario a eliminar.", "eliminarusuario NoResultException");
+            }
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al guardar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el usuario.", "eliminarusuario " + ex.getMessage());
+        }
+    }
+        
     public Respuesta isTempPas(String usuario, String clave) {
         Users users;
         try {

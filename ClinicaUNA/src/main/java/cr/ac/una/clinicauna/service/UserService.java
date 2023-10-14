@@ -62,6 +62,34 @@ public class UserService {
         }
     }
 
+        public boolean isAdmin(String user, String password) {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("user", user);
+            parametros.put("pass", password);
+
+            Request request = new Request("ModuleUser/userIsAdmin", "/{user}/{pass}", parametros);
+
+            request.get();
+
+            if (request.isError()) {
+                return false;
+            }
+
+            return (boolean) request.readEntity(Boolean.class);
+
+        } catch (Exception ex) {
+            // Log an error if an exception occurs
+            Logger.getLogger(UserService.class.getName())
+                    .log(Level.SEVERE, "Error verificando si es admin [" + user + "]", ex);
+            return false;
+        }
+    }
+    
+    
+    
+    
+    
     public boolean isTempPass(String user, String password) {
         try {
 

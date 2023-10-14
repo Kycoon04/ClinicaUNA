@@ -159,6 +159,16 @@ public class ModuleUser {
         return true;
     }
     
+    @GET
+    @Path("/userIsAdmin/{user}/{pass}")
+    public boolean isAdmin(@PathParam("user") String user, @PathParam("pass") String pass) {
+
+        Respuesta res = userService.isAdmin(user, pass);
+        if (!res.getEstado()) {
+            return false;
+        }
+        return true;
+    }
     
     @GET
     @Path("/userIsTemp/{user}/{pass}")

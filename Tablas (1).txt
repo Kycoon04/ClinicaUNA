@@ -1,0 +1,661 @@
+-- Create sequence 
+create sequence SECUENCIACLINICA
+minvalue 1
+maxvalue 99999
+start with 281
+increment by 1
+cache 20;
+
+-- Create table
+create table CL_USERS
+(
+  us_name           VARCHAR2(30) not null,
+  us_plastname      VARCHAR2(30) not null,
+  us_slastname      VARCHAR2(30),
+  us_identification VARCHAR2(30) not null,
+  us_type           VARCHAR2(15),
+  us_lenguage       VARCHAR2(15) not null,
+  us_state          VARCHAR2(1) not null,
+  us_username       VARCHAR2(15) not null,
+  us_password       VARCHAR2(15) not null,
+  us_email          VARCHAR2(30) not null,
+  us_recover        VARCHAR2(1),
+  us_temppassword   VARCHAR2(15),
+  us_id             NUMBER(5) not null,
+  us_code           VARCHAR2(15)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_USERS
+  add constraint PK_USID primary key (US_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table CL_USERS
+  add constraint UE_EMAIL unique (US_EMAIL)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table CL_USERS
+  add constraint UE_IDENTIFICATION unique (US_IDENTIFICATION)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table CL_USERS
+  add constraint UE_USERNAME unique (US_USERNAME)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate check constraints 
+alter table CL_USERS
+  add constraint LENGUAGECONSTRAINT
+  check (us_lenguage in('Spanish','English','French','Japanese'));
+alter table CL_USERS
+  add constraint RECOVERCONSTRAINT
+  check (us_recover in ('Y','N'));
+alter table CL_USERS
+  add constraint STATECONSTRAINT
+  check (us_state in ('A','I'));
+alter table CL_USERS
+  add constraint TYPECONSTRAINT
+  check (us_type in ('Administrator','Receptionist','Doctor','Default'));
+
+-- Create table
+create table CL_DOCTOR
+(
+  dr_id           NUMBER(5) not null,
+  dr_code         NUMBER(5) not null,
+  dr_license      NUMBER(5) not null,
+  dr_fol          NUMBER(5) not null,
+  dr_iniworking   VARCHAR2(10) not null,
+  dr_finisworking VARCHAR2(10) not null,
+  dr_break        VARCHAR2(10) not null,
+  dr_user         NUMBER(5) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_DOCTOR
+  add constraint PK_DRID primary key (DR_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_DOCTOR
+  add constraint UE_DRCODE unique (DR_CODE)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_DOCTOR
+  add constraint UE_DRFOL unique (DR_FOL)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_DOCTOR
+  add constraint UE_DRLICENCE unique (DR_LICENSE)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_DOCTOR
+  add constraint FK_USER foreign key (DR_USER)
+  references CL_USERS (US_ID);
+
+
+
+-- Create table
+create table CL_PATIENT
+(
+  pt_name           VARCHAR2(30) not null,
+  pt_plastname      VARCHAR2(30) not null,
+  pt_slastname      VARCHAR2(30),
+  pt_identification VARCHAR2(30) not null,
+  pt_gender         VARCHAR2(1) not null,
+  pt_email          VARCHAR2(30) not null,
+  pt_birthdate      DATE,
+  pt_id             NUMBER(5) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_PATIENT
+  add constraint PK_PTID primary key (PT_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table CL_PATIENT
+  add constraint UEPT_EMAIL unique (PT_EMAIL)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table CL_PATIENT
+  add constraint UEPT_IDENTIFICATION unique (PT_IDENTIFICATION)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+
+-- Create table
+create table CL_APPOINTMENT
+(
+  at_id           NUMBER(5) not null,
+  at_patient      NUMBER(5) not null,
+  at_userregister NUMBER(5) not null,
+  at_reason       VARCHAR2(200),
+  at_telephone    NUMBER(10),
+  at_email        VARCHAR2(30),
+  at_state        VARCHAR2(15) not null CONSTRAINT at_stateConstraint CHECK (at_state in ('Programada','Atendida','Cancelada','Ausente'))
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_APPOINTMENT
+  add constraint PK_ATID primary key (AT_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_APPOINTMENT
+  add constraint FK_ATPATIENT foreign key (AT_PATIENT)
+  references CL_PATIENT (PT_ID);
+alter table CL_APPOINTMENT
+  add constraint FK_ATUSER foreign key (AT_USERREGISTER)
+  references CL_USERS (US_ID);
+
+
+-- Create table
+create table CL_SPACE
+(
+  se_hour        DATE not null,
+  se_appointment NUMBER(5) not null,
+  se_id          NUMBER(5) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_SPACE
+  add constraint PK_SEID primary key (SE_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_SPACE
+  add constraint FK_SEAPPOINTMENT foreign key (SE_APPOINTMENT)
+  references CL_APPOINTMENT (AT_ID);
+
+
+-- Create table
+create table CL_DIARY
+(
+  dy_id     NUMBER(5) not null,
+  dy_date   DATE not null,
+  dy_space  NUMBER(5) not null,
+  dy_doctor NUMBER(5) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_DIARY
+  add constraint PK_DYID primary key (DY_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_DIARY
+  add constraint FK_DYDOCTOR foreign key (DY_DOCTOR)
+  references CL_DOCTOR (DR_ID);
+alter table CL_DIARY
+  add constraint FK_SPACE foreign key (DY_SPACE)
+  references CL_SPACE (SE_ID);
+
+-- Create table
+create table CL_PERSONALBACKGROUND
+(
+  pb_id      NUMBER(5) not null,
+  pb_type    VARCHAR2(20) not null,
+  pb_context VARCHAR2(200) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_PERSONALBACKGROUND
+  add constraint PK_PBID primary key (PB_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+-- Create/Recreate check constraints 
+alter table CL_PERSONALBACKGROUND
+  add constraint PB_TYPECONSTRAINT
+  check (pb_type in ('Pathological','Hospitalizations','Surgery','Allergies','Treatments'));
+
+
+-- Create table
+create table CL_PROCEEDINGS
+(
+  ps_id      NUMBER(5) not null,
+  ps_patient NUMBER(5) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_PROCEEDINGS
+  add constraint PK_PSID primary key (PS_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_PROCEEDINGS
+  add constraint FK_PSPATIENT foreign key (PS_PATIENT)
+  references CL_PATIENT (PT_ID);
+
+
+-- Create table
+create table CL_P_PROCEEDINGS
+(
+  pp_id           NUMBER(5) not null,
+  pp_personalback NUMBER(5) not null,
+  pp_proceedings  NUMBER(5) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_P_PROCEEDINGS
+  add constraint PK_PPID primary key (PP_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_P_PROCEEDINGS
+  add constraint FK_PPPROCEEDINGS foreign key (PP_PROCEEDINGS)
+  references CL_PROCEEDINGS (PS_ID);
+
+
+-- Create table
+create table CL_DISEASE
+(
+  ds_id   NUMBER(5) not null,
+  ds_name NVARCHAR2(30) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_DISEASE
+  add constraint PK_DSID primary key (DS_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_DISEASE
+  add constraint UEDS_NAME unique (DS_NAME)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+
+-- Create table
+create table CL_FAMILYBACKGROUND
+(
+  fb_id           NUMBER(5) not null,
+  fb_disease      NUMBER(5) not null,
+  fb_relationship NVARCHAR2(30) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_FAMILYBACKGROUND
+  add constraint PK_FBID primary key (FB_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_FAMILYBACKGROUND
+  add constraint FK_FBDISEASE foreign key (FB_DISEASE)
+  references CL_DISEASE (DS_ID);
+
+
+-- Create table
+create table CL_F_PROCEEDINGS
+(
+  fp_id          NUMBER(5) not null,
+  fp_familyback  NUMBER(5) not null,
+  fp_proceedings NUMBER(5) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_F_PROCEEDINGS
+  add constraint PK_FPID primary key (FP_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_F_PROCEEDINGS
+  add constraint FK_FPFAMILYBACK foreign key (FP_FAMILYBACK)
+  references CL_FAMILYBACKGROUND (FB_ID);
+alter table CL_F_PROCEEDINGS
+  add constraint FK_FPPROCEEDINGS foreign key (FP_PROCEEDINGS)
+  references CL_PROCEEDINGS (PS_ID);
+
+-- Create table
+create table CL_REPORT
+(
+  rt_id            NUMBER(5) not null,
+  rt_appointment   NUMBER(5) not null,
+  rt_pressure      NUMBER(4) not null,
+  rt_heart_rate    NUMBER(4) not null,
+  rt_weight        NUMBER(4) not null,
+  rt_height        NUMBER(4) not null,
+  rt_temperature   NUMBER(4) not null,
+  rt_body_mass     NUMBER(4) not null,
+  rt_notes_nursing NVARCHAR2(200) not null,
+  rt_doctor_reason NVARCHAR2(300) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_REPORT
+  add constraint PK_RTID primary key (RT_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_REPORT
+  add constraint FK_RTAPPOINTMENT foreign key (RT_APPOINTMENT)
+  references CL_APPOINTMENT (AT_ID);
+
+
+-- Create table
+create table CL_EXAM
+(
+  em_id          NUMBER(5) not null,
+  em_name        VARCHAR2(20) not null,
+  em_doctornote  VARCHAR2(200) not null,
+  em_doctor      NUMBER(5) not null,
+  em_proceedings NUMBER(5) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_EXAM
+  add constraint PK_EMID primary key (EM_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_EXAM
+  add constraint FK_EMDOCTOR foreign key (EM_DOCTOR)
+  references CL_DOCTOR (DR_ID);
+alter table CL_EXAM
+  add constraint FK_EMPROCEEDINGS foreign key (EM_PROCEEDINGS)
+  references CL_PROCEEDINGS (PS_ID);
+
+
+
+
+
+
+
+create or replace trigger TriggerExam
+  before insert
+  on CL_EXAM 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.EM_ID FROM dual;
+end TriggerExam;
+/
+create or replace trigger TriggerReport
+  before insert
+  on CL_REPORT 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.RT_ID FROM dual;
+end TriggerReport;
+/
+create or replace trigger TriggerF_Proceedings
+  before insert
+  on CL_F_PROCEEDINGS 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.FP_ID FROM dual;
+end TriggerF_Proceedings;
+/
+create or replace trigger TriggerFB
+  before insert
+  on CL_FAMILYBACKGROUND 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.FB_ID FROM dual;
+end TriggerFB;
+/
+create or replace trigger TriggerDisease
+  before insert
+  on CL_DISEASE 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.DS_ID FROM dual;
+end TriggerDisease;
+/
+create or replace trigger TriggerP_Proceedings
+  before insert
+  on CL_P_PROCEEDINGS 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.PP_ID FROM dual;
+end TriggerP_Proceedings;
+/
+create or replace trigger TriggerProceedings
+  before insert
+  on CL_PROCEEDINGS 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.PS_ID FROM dual;
+end TriggerProceedings;
+/
+create or replace trigger TriggerPersonalBack
+  before insert
+  on CL_PERSONALBACKGROUND 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.PB_ID FROM dual;
+end TriggerPersonalBack;
+/
+create or replace trigger TriggerDiary
+  before insert
+  on CL_DIARY 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.DY_ID FROM dual;
+end TriggerDiary;
+/
+create or replace trigger TriggerSpace
+  before insert
+  on CL_SPACE 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.SE_ID FROM dual;
+end TriggerSpace;
+/
+create or replace noneditionable trigger TriggerAppointment
+  before insert
+  on CL_APPOINTMENT 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.AT_ID FROM dual;
+end TriggerAppointment;
+
+/
+create or replace noneditionable trigger TriggerPatient
+  before insert
+  on CL_PATIENT 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.PT_ID FROM dual;
+end TriggerPatient;
+/
+create or replace trigger TriggerDoctor
+  before insert
+  on CL_DOCTOR 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.DR_ID FROM dual;
+end TriggerDoctor;
+/
+create or replace noneditionable trigger TriggerUser
+  before insert
+  on CL_USERS 
+  for each row
+declare
+  -- local variables here
+begin
+ SELECT SecuenciaClinica.nextval INTO :new.US_ID FROM dual;
+end TriggerUser;
