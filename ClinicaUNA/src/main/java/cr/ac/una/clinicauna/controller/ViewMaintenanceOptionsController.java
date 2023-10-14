@@ -13,11 +13,15 @@ import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Mensaje;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -67,8 +71,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldSearch_Pusername;
     @FXML
-    private TextField textFieldSearch_Identification;
-    @FXML
     private TextField textFieldSearch_Rol;
     @FXML
     private TextField textFieldSearch_Susername;
@@ -106,8 +108,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private TextField licenseDocMainField;
     @FXML
     private TextField folioDocMainField;
-    @FXML
-    private TextField usernameMainField1;
     @FXML
     private JFXTimePicker timepickerIniWork;
     @FXML
@@ -157,8 +157,14 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     UserDto userDto = new UserDto();
     DoctorDto doctorDto = new DoctorDto();
+    private TextField freeTimeMainField1;
     @FXML
-    private AnchorPane rootUsers;
+    private TextField usernameMainField1;
+    private TextField textFieldSearch_Ident;
+    @FXML
+    private TextField textFieldSearch_Usuario;
+    @FXML
+    private TextField textFieldSearchDoc_State;
 
     /**
      * Initializes the controller class.
@@ -179,8 +185,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableColDocBreaks.setCellValueFactory(new PropertyValueFactory("DrBreak"));
         this.tableColDocFinishWork.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
         this.tableColDocLicense.setCellValueFactory(new PropertyValueFactory("DrLicense"));
-        this.tableColDocId.setCellValueFactory(new PropertyValueFactory("DrId"));
-        this.tableColDocName.setCellValueFactory(new PropertyValueFactory("DrUser"));
+        this.tableColDocId.setCellValueFactory(new PropertyValueFactory("DoctorPsurname"));
+        this.tableColDocName.setCellValueFactory(new PropertyValueFactory("DoctorName"));
         this.tableColDocFolio.setCellValueFactory(new PropertyValueFactory("DrFol"));
         this.tableColDocIniWork.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
         this.tableColDocCode.setCellValueFactory(new PropertyValueFactory("DrCode"));
@@ -206,7 +212,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         DoctorService service = new DoctorService();
         doctorList = service.getDoctor();
         if (doctorList.isEmpty()) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "No hay ningun Doctor", getStage(), "");
         } else {
             doctorObservableList = FXCollections.observableArrayList(doctorList);
         }
@@ -236,8 +241,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private void UpdateUser(ActionEvent event) {
         if (userDto != null) {
             UserDto us = new UserDto();
-          //  UserService service = new UserService();
-          //  service.saveUser(bindNewUser());
+            //  UserService service = new UserService();
+            //  service.saveUser(bindNewUser());
         }
     }
 
@@ -256,7 +261,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 //    */
 //        return user;
 //    }
-
     @FXML
     private void UpdateDoctor(ActionEvent event) {
     }
@@ -268,37 +272,132 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private void openManDoctors(ActionEvent event) {
         OptionsMainDoctorsView.toFront();
-
     }
 
     @FXML
     private void exit(ActionEvent event) {
         FlowController.getInstance().goMain("LoginView");
-
     }
 
     @FXML
     private void searchUser_Name(KeyEvent event) {
+        FilteredList<UserDto> filteredUser = new FilteredList<>(userObservableList, f -> true);
+
+        textFieldSearch_Name.textProperty().addListener((observable, value, newValue) -> {
+            filteredUser.setPredicate(UserDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (UserDto.getUsName().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredUsers(filteredUser);
+    }
+
+    private void filteredUsers(FilteredList<UserDto> list) {
+        SortedList<UserDto> sorted = new SortedList<>(list);
+        sorted.comparatorProperty().bind(tableViewUser.comparatorProperty());
+        tableViewUser.setItems(sorted);
     }
 
     @FXML
     private void searchUser_Pusername(KeyEvent event) {
+        FilteredList<UserDto> filteredUser = new FilteredList<>(userObservableList, f -> true);
+        textFieldSearch_Pusername.textProperty().addListener((observable, value, newValue) -> {
+            filteredUser.setPredicate(UserDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (UserDto.getUsPlastname().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredUsers(filteredUser);
     }
 
     @FXML
     private void searchUser_username(KeyEvent event) {
+        FilteredList<UserDto> filteredUser = new FilteredList<>(userObservableList, f -> true);
+        textFieldSearch_Usuario.textProperty().addListener((observable, value, newValue) -> {
+            filteredUser.setPredicate(UserDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (UserDto.getUsUsername().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredUsers(filteredUser);
     }
 
     @FXML
     private void searchUser_Rol(KeyEvent event) {
+        FilteredList<UserDto> filteredUser = new FilteredList<>(userObservableList, f -> true);
+        textFieldSearch_Rol.textProperty().addListener((observable, value, newValue) -> {
+            filteredUser.setPredicate(UserDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (UserDto.getUsType().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredUsers(filteredUser);
     }
 
     @FXML
     private void searchUser_Susername(KeyEvent event) {
+        FilteredList<UserDto> filteredUser = new FilteredList<>(userObservableList, f -> true);
+        textFieldSearch_Susername.textProperty().addListener((observable, value, newValue) -> {
+            filteredUser.setPredicate(UserDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (UserDto.getUsSlastname().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredUsers(filteredUser);
     }
 
     @FXML
     private void searchUser_State(KeyEvent event) {
+        FilteredList<UserDto> filteredUser = new FilteredList<>(userObservableList, f -> true);
+        textFieldSearch_State.textProperty().addListener((observable, value, newValue) -> {
+            filteredUser.setPredicate(UserDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (UserDto.getUsState().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredUsers(filteredUser);
     }
 
     @FXML
@@ -319,29 +418,139 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         identMainField.setText(user.getUsIdentification());
     }
 
+    private void fillDoctors(DoctorDto doctorDto) {
+        codeDocMainField.setText(doctorDto.getDrCode() + "");
+        licenseDocMainField.setText(doctorDto.getDrLicense() + "");
+        folioDocMainField.setText(doctorDto.getDrFol() + "");
+        freeTimeMainField1.setText(doctorDto.getDrBreak());
+
+        LocalTime defaultTime = LocalTime.of(12, 0);
+
+        timepickerIniWork.setValue(defaultTime);
+        timepickerFinWork.setValue(defaultTime);
+    }
+
     @FXML
     private void searchDoctor_Name(KeyEvent event) {
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        textFieldSearchDoc_Name.textProperty().addListener((observable, value, newValue) -> {
+            filteredDoctor.setPredicate(DoctorDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (DoctorDto.getDoctorName().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDoctors(filteredDoctor);
+    }
+
+    private void filteredDoctors(FilteredList<DoctorDto> list) {
+        SortedList<DoctorDto> sorted = new SortedList<>(list);
+        sorted.comparatorProperty().bind(tableViewDoctors.comparatorProperty());
+        tableViewDoctors.setItems(sorted);
     }
 
     @FXML
     private void searchDoctor_Pusername(KeyEvent event) {
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        textFieldSearchDoc_Pusername.textProperty().addListener((observable, value, newValue) -> {
+            filteredDoctor.setPredicate(DoctorDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (DoctorDto.getDoctorPsurname().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDoctors(filteredDoctor);
     }
 
     @FXML
     private void searchDoctor_code(KeyEvent event) {
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        textFieldSearchDoc_Code.textProperty().addListener((observable, value, newValue) -> {
+            filteredDoctor.setPredicate(DoctorDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                String doctorPsurnameAsString = String.valueOf(DoctorDto.getDrCode());
+
+                if (doctorPsurnameAsString.indexOf(search) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDoctors(filteredDoctor);
     }
 
     @FXML
-    private void searchDoctor_Folio(KeyEvent event) {
+    private void searchDoctor_Folio(KeyEvent event){
+         FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        textFieldSearchDoc_Folio.textProperty().addListener((observable, value, newValue) -> {
+            filteredDoctor.setPredicate(DoctorDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                String doctorPsurnameAsString = String.valueOf(DoctorDto.getDrFol());
+
+                if (doctorPsurnameAsString.indexOf(search) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDoctors(filteredDoctor);
     }
 
     @FXML
     private void searchDoctor_License(KeyEvent event) {
+          FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        textFieldSearchDoc_License.textProperty().addListener((observable, value, newValue) -> {
+            filteredDoctor.setPredicate(DoctorDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                String doctorPsurnameAsString = String.valueOf(DoctorDto.getDrLicense());
+
+                if (doctorPsurnameAsString.indexOf(search) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDoctors(filteredDoctor);
     }
 
     @FXML
     private void doctorClicked(MouseEvent event) {
 
+        if (event.getClickCount() == 2) {
+            doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
+            fillDoctors(doctorDto);
+            System.out.println(userDto.getUsName());
+        }
+
+    }
+
+    @FXML
+    private void searchDoctor_State(KeyEvent event) {
+    
     }
 
 }

@@ -95,5 +95,11 @@ public class DoctorDto {
     public void setDrUser(UserDto drUser) {
         this.drUser = drUser;
     }
+    public String getDoctorName(){
+        return drUser.getUsName();
+    }
+    public String getDoctorPsurname(){
+        return drUser.getUsPlastname();
+    }
 
 }
