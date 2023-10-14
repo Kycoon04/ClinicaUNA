@@ -159,8 +159,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     UserDto userDto = new UserDto();
     DoctorDto doctorDto = new DoctorDto();
     private TextField freeTimeMainField1;
-    @FXML
-    private TextField usernameMainField1;
     private TextField textFieldSearch_Ident;
     @FXML
     private TextField textFieldSearch_Usuario;
@@ -171,6 +169,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     String jobsSpanish[]={"Administrador", "Recepcionista", "Doctor"};
     String jobsEnglish[]={"Administrator", "Receptionist", "Doctor"};
     boolean userDoctor=false;
+    @FXML
+    private TextField breaksMainField1;
 
     /**
      * Initializes the controller class.
@@ -261,28 +261,61 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
   UserDto bindNewUser() {
        
-        
-        userDto.setUsId(userDto.getUsId());
-        userDto.setUsName(userMainField.getText());
+       userDto.setUsId(userDto.getUsId());
+       userDto.setUsName(userMainField.getText());
        userDto.setUsPlastname(psurnameMainField.getText());
        userDto.setUsSlastname(ssurnameMainField.getText());
-        userDto.setUsUsername(usernameMainField.getText());
-        userDto.setUsEmail(emailMainField.getText());
-        userDto.setUsState(userDto.getUsState());
-        userDto.setUsType(choiceBoxJobsTypes.getValue());
-        userDto.setUsIdentification(identMainField.getText());
+       userDto.setUsUsername(usernameMainField.getText());
+       userDto.setUsEmail(emailMainField.getText());
+       userDto.setUsState(userDto.getUsState());
+       userDto.setUsType(choiceBoxJobsTypes.getValue());
+       userDto.setUsIdentification(identMainField.getText());
         return userDto;
     }
+  
+   DoctorDto bindNewDoctor() {
+
+        if (userDto != null) {
+            doctorDto.setDrUser(userDto);
+            doctorDto.setDrId(0);
+            doctorDto.setDrBreak(breaksMainField1.getText());
+            doctorDto.setDrCode(Integer.parseInt(codeDocMainField.getText()));
+            doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
+            doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
+            
+            LocalTime defaultTime = LocalTime.of(12, 0);
+            timepickerIniWork.setValue(defaultTime);
+            timepickerFinWork.setValue(defaultTime);
+
+        } else {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Debes cargar primero un usuario");
+        }
+
+        return doctorDto;
+    }
+
+  
     @FXML
     private void UpdateDoctor(ActionEvent event) {
         if(userDoctor){
              UserService service = new UserService();
              service.saveUser(bindNewUser());
+             DoctorService serviceD = new DoctorService();
+             serviceD.saveDoctor(bindNewDoctor());
         }else{
             
         }
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
     @FXML
     private void deleteDoctorClicked(MouseEvent event) {
     }
