@@ -330,22 +330,22 @@ public class LoginViewController extends Controller implements Initializable {
         user.setUsRecover("N");
         String code = CodeRamdon();
         user.setUsCode(code);
-        if (choiceBoxIdioms.getValue().equals("Espagnol") || choiceBoxIdioms.getValue().equals("Spanish") || choiceBoxIdioms.getValue().equals("Español")) {
+        if (choiceBoxIdioms.getValue().equals("Espagnol") || choiceBoxIdioms.getValue().equals("Spanish") || choiceBoxIdioms.getValue().equals("Español")|| choiceBoxIdioms.getValue().equals("スペイン語")) {
             idiom = "Spanish";
             user.setUsLenguage(idiom);
         }
-        if (choiceBoxIdioms.getValue().equals("Anglais") || choiceBoxIdioms.getValue().equals("English") || choiceBoxIdioms.getValue().equals("Inglés")) {
+        if (choiceBoxIdioms.getValue().equals("Anglais") || choiceBoxIdioms.getValue().equals("English") || choiceBoxIdioms.getValue().equals("Inglés")|| choiceBoxIdioms.getValue().equals("英語")) {
             idiom = "English";
             user.setUsLenguage(idiom);
         }
-        if (choiceBoxIdioms.getValue().equals("Francais") || choiceBoxIdioms.getValue().equals("France") || choiceBoxIdioms.getValue().equals("Francés")) {
+        if (choiceBoxIdioms.getValue().equals("Francais") || choiceBoxIdioms.getValue().equals("France") || choiceBoxIdioms.getValue().equals("Francés")|| choiceBoxIdioms.getValue().equals("フランス語")) {
             idiom = "French";
             user.setUsLenguage(idiom);
-        }/*
-         if (choiceBoxIdioms.getValue().equals("Francais") || choiceBoxIdioms.getValue().equals("France") || choiceBoxIdioms.getValue().equals("Francés")) {
-            idiom = "French";
+        }
+         if (choiceBoxIdioms.getValue().equals("Japonais") || choiceBoxIdioms.getValue().equals("Japonese") || choiceBoxIdioms.getValue().equals("Japonés")|| choiceBoxIdioms.getValue().equals("日本語")) {
+            idiom = "Japonese";
             user.setUsLenguage(idiom);
-        }*/
+        }
         user.setUsIdentification(idRegisField.getText());
         if (passwordRegisField.getText().equals(password2RegisField.getText())) {
             user.setUsPassword(passwordRegisField.getText());
