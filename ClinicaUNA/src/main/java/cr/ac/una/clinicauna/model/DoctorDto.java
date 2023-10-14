@@ -101,5 +101,16 @@ public class DoctorDto {
     public String getDoctorPsurname(){
         return drUser.getUsPlastname();
     }
-
+@Override
+public String toString() {
+    return "DoctorDto{" +
+            "drId=" + drId.get() +
+            ", drCode=" + drCode.get() +
+            ", drLicense=" + drLicense.get() +
+            ", drFol=" + drFol.get() +
+            ", drIniworking='" + drIniworking.get() + '\'' +
+            ", drFinisworking='" + drFinisworking.get() + '\'' +
+            ", drBreak='" + drBreak.get() + '\'' +
+            '}';
+}
 }

@@ -277,15 +277,20 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
         if (userDto != null) {
             doctorDto.setDrUser(userDto);
-            doctorDto.setDrId(0);
+
             doctorDto.setDrBreak(breaksMainField1.getText());
             doctorDto.setDrCode(Integer.parseInt(codeDocMainField.getText()));
             doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
             doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
             
-            LocalTime defaultTime = LocalTime.of(12, 0);
-            timepickerIniWork.setValue(defaultTime);
-            timepickerFinWork.setValue(defaultTime);
+            System.out.println(timepickerIniWork.getValue().toString());
+             System.out.println(timepickerFinWork.getValue().toString());
+             
+            doctorDto.setDrIniworking(timepickerIniWork.getValue().toString());
+            doctorDto.setDrFinisworking(timepickerFinWork.getValue().toString());
+            
+            doctorDto.toString(); 
+            userDto.toString();
 
         } else {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Debes cargar primero un usuario");
