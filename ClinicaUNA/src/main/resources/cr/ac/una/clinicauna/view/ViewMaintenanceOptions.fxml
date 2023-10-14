@@ -58,16 +58,16 @@
             </VBox>
          </left>
          <center>
-            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER" fillHeight="false" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
                <children>
                   <StackPane>
                      <children>
-                        <BorderPane fx:id="OptionsMenuView" prefHeight="600.0" prefWidth="1000.0">
+                        <BorderPane fx:id="OptionsMenuView" prefHeight="600.0" prefWidth="1000.0" StackPane.alignment="CENTER">
                            <center>
                               <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER" />
                            </center>
                         </BorderPane>
-                        <BorderPane fx:id="OptionsMainUsersView" prefHeight="600.0" prefWidth="967.0">
+                        <BorderPane fx:id="OptionsMainUsersView" prefHeight="600.0" prefWidth="967.0" StackPane.alignment="CENTER">
                            <center>
                               <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
                                  <children>
@@ -304,7 +304,7 @@
                               </HBox>
                            </center>
                         </BorderPane>
-                        <BorderPane fx:id="OptionsMainDoctorsView" prefHeight="600.0" prefWidth="1000.0">
+                        <BorderPane fx:id="OptionsMainDoctorsView" prefHeight="600.0" prefWidth="1000.0" StackPane.alignment="CENTER">
                            <center>
                               <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
                                  <children>
