@@ -166,9 +166,9 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private TextField textFieldSearchDoc_State;
     @FXML
     private ChoiceBox<String> choiceBoxJobsTypes;
-    String jobsSpanish[]={"Administrador", "Recepcionista", "Doctor"};
-    String jobsEnglish[]={"Administrator", "Receptionist", "Doctor"};
-    boolean userDoctor=false;
+    String jobsSpanish[] = {"Administrador", "Recepcionista", "Doctor"};
+    String jobsEnglish[] = {"Administrator", "Receptionist", "Doctor"};
+    boolean userDoctor = false;
     @FXML
     private TextField breaksMainField1;
 
@@ -224,6 +224,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         }
         this.tableViewDoctors.refresh();
         this.tableViewDoctors.setItems(doctorObservableList);
+
     }
 
     @FXML
@@ -246,34 +247,34 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void UpdateUser(ActionEvent event) {
-        if (userDto != null&&!choiceBoxJobsTypes.getValue().equals("Doctor")) {
+        if (userDto != null && !choiceBoxJobsTypes.getValue().equals("Doctor")) {
             UserDto us = new UserDto();
             UserService service = new UserService();
             service.saveUser(bindNewUser());
-        }else{
-            userDoctor=true;
+        } else {
+            userDoctor = true;
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Debes completar la siguiente información");
-            textMainDoctor.setText(userMainField.getText()+" "+psurnameMainField.getText()+" "+ssurnameMainField.getText());
+            textMainDoctor.setText(userMainField.getText() + " " + psurnameMainField.getText() + " " + ssurnameMainField.getText());
             OptionsMainDoctorsView.toFront();
         }
         fillTableUsers();
     }
 
-  UserDto bindNewUser() {
-       
-       userDto.setUsId(userDto.getUsId());
-       userDto.setUsName(userMainField.getText());
-       userDto.setUsPlastname(psurnameMainField.getText());
-       userDto.setUsSlastname(ssurnameMainField.getText());
-       userDto.setUsUsername(usernameMainField.getText());
-       userDto.setUsEmail(emailMainField.getText());
-       userDto.setUsState(userDto.getUsState());
-       userDto.setUsType(choiceBoxJobsTypes.getValue());
-       userDto.setUsIdentification(identMainField.getText());
+    UserDto bindNewUser() {
+
+        userDto.setUsId(userDto.getUsId());
+        userDto.setUsName(userMainField.getText());
+        userDto.setUsPlastname(psurnameMainField.getText());
+        userDto.setUsSlastname(ssurnameMainField.getText());
+        userDto.setUsUsername(usernameMainField.getText());
+        userDto.setUsEmail(emailMainField.getText());
+        userDto.setUsState(userDto.getUsState());
+        userDto.setUsType(choiceBoxJobsTypes.getValue());
+        userDto.setUsIdentification(identMainField.getText());
         return userDto;
     }
-  
-   DoctorDto bindNewDoctor() {
+
+    DoctorDto bindNewDoctor() {
 
         if (userDto != null) {
             doctorDto.setDrUser(userDto);
@@ -282,14 +283,14 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             doctorDto.setDrCode(Integer.parseInt(codeDocMainField.getText()));
             doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
             doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
-            
+
             System.out.println(timepickerIniWork.getValue().toString());
-             System.out.println(timepickerFinWork.getValue().toString());
-             
+            System.out.println(timepickerFinWork.getValue().toString());
+
             doctorDto.setDrIniworking(timepickerIniWork.getValue().toString());
             doctorDto.setDrFinisworking(timepickerFinWork.getValue().toString());
-            
-            doctorDto.toString(); 
+
+            doctorDto.toString();
             userDto.toString();
 
         } else {
@@ -299,28 +300,25 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         return doctorDto;
     }
 
-  
     @FXML
     private void UpdateDoctor(ActionEvent event) {
-        if(userDoctor){
-             UserService service = new UserService();
-             service.saveUser(bindNewUser());
-             DoctorService serviceD = new DoctorService();
-             serviceD.saveDoctor(bindNewDoctor());
-        }else{
-            
+        if (userDoctor) {
+            UserService service = new UserService();
+            service.saveUser(bindNewUser());
+            DoctorService serviceD = new DoctorService();
+            serviceD.saveDoctor(bindNewDoctor());
+            fillTableUsers();
+            fillTableDoctors();
+        } else {
+            if (doctorDto != null) {
+                DoctorService serviceD = new DoctorService();
+                serviceD.saveDoctor(bindNewDoctor());
+                fillTableDoctors();
+            }
+
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
     @FXML
     private void deleteDoctorClicked(MouseEvent event) {
     }
@@ -446,7 +444,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                     return true;
                 }
                 String search = newValue.toLowerCase();
-                if (UserDto.getUsSState().toLowerCase().indexOf(search)==0) {
+                if (UserDto.getUsSState().toLowerCase().indexOf(search) == 0) {
                     return true;
                 } else {
                     return false;
@@ -553,8 +551,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     }
 
     @FXML
-    private void searchDoctor_Folio(KeyEvent event){
-         FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+    private void searchDoctor_Folio(KeyEvent event) {
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
         textFieldSearchDoc_Folio.textProperty().addListener((observable, value, newValue) -> {
             filteredDoctor.setPredicate(DoctorDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -575,7 +573,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void searchDoctor_License(KeyEvent event) {
-          FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
         textFieldSearchDoc_License.textProperty().addListener((observable, value, newValue) -> {
             filteredDoctor.setPredicate(DoctorDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -607,7 +605,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void searchDoctor_State(KeyEvent event) {
-    
+
     }
 
 }
