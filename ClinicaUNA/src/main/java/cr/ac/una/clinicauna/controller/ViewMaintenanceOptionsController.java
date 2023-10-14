@@ -168,7 +168,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private TextField textFieldSearchDoc_State;
     @FXML
     private ChoiceBox<String> choiceBoxJobsTypes;
-    String jobs[]={"Administrador", "Recepcionista", "Doctor"};
+    String jobsSpanish[]={"Administrador", "Recepcionista", "Doctor"};
+    String jobsEnglish[]={"Administrator", "Receptionist", "Doctor"};
     boolean userDoctor=false;
 
     /**
@@ -178,7 +179,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         OptionsMenuView.toFront();
-        choiceBoxJobsTypes.getItems().addAll(jobs);
+        choiceBoxJobsTypes.getItems().addAll(jobsEnglish);
         this.tableColAct.setCellValueFactory(new PropertyValueFactory("UsSState"));
         this.tableColIdentif.setCellValueFactory(new PropertyValueFactory("UsIdentification"));
         this.tableColName.setCellValueFactory(new PropertyValueFactory("UsName"));
@@ -255,21 +256,22 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             textMainDoctor.setText(userMainField.getText()+" "+psurnameMainField.getText()+" "+ssurnameMainField.getText());
             OptionsMainDoctorsView.toFront();
         }
+        fillTableUsers();
     }
 
   UserDto bindNewUser() {
        
-        UserDto user = new UserDto();
-        user.setUsId(userDto.getUsId());
-        user.setUsName(userMainField.getText());
-        user.setUsPlastname(psurnameMainField.getText());
-        user.setUsSlastname(ssurnameMainField.getText());
-        user.setUsUsername(usernameMainField.getText());
-        user.setUsEmail(emailMainField.getText());
-        user.setUsState(userDto.getUsState());
-        user.setUsType(choiceBoxJobsTypes.getValue());
-        user.setUsIdentification(identMainField.getText());
-        return user;
+        
+        userDto.setUsId(userDto.getUsId());
+        userDto.setUsName(userMainField.getText());
+       userDto.setUsPlastname(psurnameMainField.getText());
+       userDto.setUsSlastname(ssurnameMainField.getText());
+        userDto.setUsUsername(usernameMainField.getText());
+        userDto.setUsEmail(emailMainField.getText());
+        userDto.setUsState(userDto.getUsState());
+        userDto.setUsType(choiceBoxJobsTypes.getValue());
+        userDto.setUsIdentification(identMainField.getText());
+        return userDto;
     }
     @FXML
     private void UpdateDoctor(ActionEvent event) {
@@ -432,6 +434,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         usernameMainField.setText(user.getUsUsername());
         emailMainField.setText(user.getUsUsername());
         identMainField.setText(user.getUsIdentification());
+        choiceBoxJobsTypes.setValue(user.getUsType());
     }
 
     private void fillDoctors(DoctorDto doctorDto) {
