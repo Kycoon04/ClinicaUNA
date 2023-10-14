@@ -31,6 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
@@ -154,8 +155,11 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private BorderPane MenuView;
 
-    
-    UserDto userDto = new UserDto(); 
+    UserDto userDto = new UserDto();
+    DoctorDto doctorDto = new DoctorDto();
+    @FXML
+    private AnchorPane rootUsers;
+
     /**
      * Initializes the controller class.
      */
@@ -181,9 +185,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableColDocIniWork.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
         this.tableColDocCode.setCellValueFactory(new PropertyValueFactory("DrCode"));
 
-     
-       
-        
         fillTableUsers();
         fillTableDoctors();
     }
@@ -200,6 +201,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableViewUser.setItems(userObservableList);
     }
 //jfoenix + cambiar tabla
+
     private void fillTableDoctors() {
         DoctorService service = new DoctorService();
         doctorList = service.getDoctor();
@@ -215,8 +217,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private void UpdateWorkerEnter(KeyEvent event) {
     }
-
-
 
     @FXML
     private void deleteClicked(MouseEvent event) {
@@ -234,8 +234,28 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void UpdateUser(ActionEvent event) {
-        
+        if (userDto != null) {
+            UserDto us = new UserDto();
+          //  UserService service = new UserService();
+          //  service.saveUser(bindNewUser());
+        }
     }
+
+//    UserDto bindNewUser() {
+//       /*
+//        UserDto user = new UserDto();
+//        user.setUsId(userDto.getUsId());
+//        user.setUsName(userMainField.getText());
+//        user.setUsPlastname(psurnameMainField.getText());
+//        user.setUsSlastname(ssurnameMainField.getText());
+//        user.setUsUsername(usernameMainField.getText());
+//        user.setUsEmail(emailMainField.getText());
+//        user.setUsState(userDto.getUsState());
+//        user.setUsType("Default");
+//        user.setUsIdentification(identMainField.getText());
+//    */
+//        return user;
+//    }
 
     @FXML
     private void UpdateDoctor(ActionEvent event) {
@@ -254,8 +274,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private void exit(ActionEvent event) {
         FlowController.getInstance().goMain("LoginView");
-        
-   }
+
+    }
 
     @FXML
     private void searchUser_Name(KeyEvent event) {
@@ -283,6 +303,20 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void userClicked(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            userDto = tableViewUser.getSelectionModel().getSelectedItem();
+            fillUser(userDto);
+            System.out.println(userDto.getUsName());
+        }
+    }
+
+    private void fillUser(UserDto user) {
+        userMainField.setText(user.getUsName());
+        psurnameMainField.setText(user.getUsPlastname());
+        ssurnameMainField.setText(user.getUsSlastname());
+        usernameMainField.setText(user.getUsUsername());
+        emailMainField.setText(user.getUsUsername());
+        identMainField.setText(user.getUsIdentification());
     }
 
     @FXML
@@ -307,6 +341,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void doctorClicked(MouseEvent event) {
+
     }
 
 }
