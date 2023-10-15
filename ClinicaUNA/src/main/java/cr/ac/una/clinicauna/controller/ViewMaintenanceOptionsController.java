@@ -316,6 +316,10 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         fillTablePatient();
         fillTableDiseases();
     }
+        @Override
+    public void initialize() {
+
+    }
 
     private void fillTableUsers() {
         UserService service = new UserService();
@@ -354,7 +358,35 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableViewPatient.refresh();
         this.tableViewPatient.setItems(patientObservableList);
     }
+     private void fillTableDiseases() {
 
+        DiseaseService service = new DiseaseService();
+        diseaseList = service.getDisease();
+        if (diseaseList.isEmpty()) {
+        } else {
+            diseaseObservableList = FXCollections.observableArrayList(diseaseList);
+        }
+
+        this.tableViewDisease.refresh();
+        this.tableViewDisease.setItems(diseaseObservableList);
+    }
+
+       private void fillPatient(PatientDto patientsDto) {
+        namePatMainField.setText(patientsDto.getPtName());
+        firstNamePatMainField.setText(patientsDto.getPtPlastname());
+        lastNamePatMainField.setText(patientsDto.getPtSlastname());
+        emailPatMainField.setText(patientsDto.getPtEmail());
+        if (patientsDto.getPtGender().equals("M")) {
+            radioBtnMale.setSelected(true);
+        } else {
+            radioBtnFemale.setSelected(true);
+        }
+        datePickerBirthdayPat.setValue(patientsDto.getPtBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        identPatMainField.setText(patientsDto.getPtIdentification());
+    }
+
+   
+    
     @FXML
     private void UpdateWorkerEnter(KeyEvent event) {
     }
@@ -362,11 +394,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private void deleteClicked(MouseEvent event) {
         deleteUser = true;
-    }
-
-    @Override
-    public void initialize() {
-
     }
 
     @FXML
@@ -384,13 +411,12 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             userDoctor = true;
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Debes completar la siguiente información");
             textMainDoctor.setText(userMainField.getText() + " " + psurnameMainField.getText() + " " + ssurnameMainField.getText());
-            OptionsMainDoctorsView.toFront();
+            OptionsMainDoctorsView.toFront();    
         }
         fillTableUsers();
     }
 
     UserDto bindNewUser() {
-
         userDto.setUsId(userDto.getUsId());
         userDto.setUsName(userMainField.getText());
         userDto.setUsPlastname(psurnameMainField.getText());
@@ -402,67 +428,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         userDto.setUsIdentification(identMainField.getText());
         return userDto;
     }
-
-    DoctorDto bindNewDoctor() {
-        if (userDto != null) {
-            doctorDto.setDrUser(userDto);
-
-            doctorDto.setDrBreak(breaksMainField.getText());
-            doctorDto.setDrCode(Integer.parseInt(codeDocMainField.getText()));
-            doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
-            doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
-
-            System.out.println(timepickerIniWork.getValue().toString());
-            System.out.println(timepickerFinWork.getValue().toString());
-
-            doctorDto.setDrIniworking(timepickerIniWork.getValue().toString());
-            doctorDto.setDrFinisworking(timepickerFinWork.getValue().toString());
-
-            doctorDto.toString();
-            userDto.toString();
-
-        } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Debes cargar primero un usuario");
-        }
-
-        return doctorDto;
-    }
-
-    @FXML
-    private void UpdateDoctor(ActionEvent event) {
-        if (userDoctor) {
-            UserService service = new UserService();
-            service.saveUser(bindNewUser());
-            DoctorService serviceD = new DoctorService();
-            serviceD.saveDoctor(bindNewDoctor());
-            fillTableUsers();
-            fillTableDoctors();
-        } else {
-            if (doctorDto != null) {
-                DoctorService serviceD = new DoctorService();
-                serviceD.saveDoctor(bindNewDoctor());
-                fillTableDoctors();
-            }
-        }
-    }
-
-    @FXML
-    private void deleteDoctorClicked(MouseEvent event) {
-        deleteDoctor = true;
-
-    }
-
-    @FXML
-    private void openManDoctors(ActionEvent event) {
-        OptionsMainDoctorsView.toFront();
-    }
-
-    @FXML
-    private void exit(ActionEvent event) {
-        FlowController.getInstance().goMain("LoginView");
-    }
-
-    @FXML
+      @FXML
     private void searchUser_Name(KeyEvent event) {
         FilteredList<UserDto> filteredUser = new FilteredList<>(userObservableList, f -> true);
 
@@ -599,6 +565,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                         doc = serviceD.deleteDoctor(doctorDto.getDrId());
                         us = serviceU.deleteUser(userDto.getUsId());
                         deleteUser = false;
+                        userDto= new UserDto();
                         if (doc.getEstado() && us.getEstado()) {
                             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Usuario y Doctor eliminado");
                         }
@@ -631,6 +598,87 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         identMainField.setText(user.getUsIdentification());
         choiceBoxJobsTypes.setValue(user.getUsType());
     }
+
+    
+    
+        DoctorDto bindNewDoctor() {
+        
+         if(doctorDto!=null && userDto== null){
+            doctorDto.setDrId(doctorDto.getDrId());
+            doctorDto.setDrUser(doctorDto.getDrUser());
+            doctorDto.setDrBreak(breaksMainField.getText());
+            doctorDto.setDrCode(Integer.parseInt(codeDocMainField.getText()));
+            doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
+            doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
+          
+            System.out.println(timepickerIniWork.getValue().toString());
+            System.out.println(timepickerFinWork.getValue().toString());
+
+            doctorDto.setDrIniworking(timepickerIniWork.getValue().toString());
+            doctorDto.setDrFinisworking(timepickerFinWork.getValue().toString());
+
+            doctorDto.toString();
+            userDto.toString();
+          
+        }else
+        if (userDto != null) {
+            doctorDto.setDrId(doctorDto.getDrId());
+            doctorDto.setDrUser(userDto);
+            doctorDto.setDrBreak(breaksMainField.getText());
+            doctorDto.setDrCode(Integer.parseInt(codeDocMainField.getText()));
+            doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
+            doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
+
+            System.out.println(timepickerIniWork.getValue().toString());
+            System.out.println(timepickerFinWork.getValue().toString());
+
+            doctorDto.setDrIniworking(timepickerIniWork.getValue().toString());
+            doctorDto.setDrFinisworking(timepickerFinWork.getValue().toString());
+
+            doctorDto.toString();
+            userDto.toString();
+        }
+        return doctorDto;
+    }
+    
+    @FXML
+    private void UpdateDoctor(ActionEvent event) {
+        if (userDoctor) {
+            UserService service = new UserService();
+            service.saveUser(bindNewUser());
+            DoctorService serviceD = new DoctorService();
+            serviceD.saveDoctor(bindNewDoctor());
+            fillTableUsers();
+            fillTableDoctors();
+            userDoctor=false;
+            doctorDto= new DoctorDto();
+        } else {
+            if (doctorDto != null) {
+                DoctorService serviceD = new DoctorService();
+                serviceD.saveDoctor(bindNewDoctor());
+                fillTableDoctors();
+                doctorDto= new DoctorDto();
+            }
+        }
+    }
+
+    @FXML
+    private void deleteDoctorClicked(MouseEvent event) {
+        deleteDoctor = true;
+
+    }
+
+    @FXML
+    private void openManDoctors(ActionEvent event) {
+        OptionsMainDoctorsView.toFront();
+    }
+
+    @FXML
+    private void exit(ActionEvent event) {
+        FlowController.getInstance().goMain("LoginView");
+    }
+
+  
 
     private void fillDoctors(DoctorDto doctorDto) {
         codeDocMainField.setText(doctorDto.getDrCode() + "");
@@ -767,9 +815,12 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 deleteDoctor = false;
                 doctorList.clear();
                 doctorObservableList.clear();
+                userList.clear();
+                userObservableList.clear();
                 fillTableDoctors();
                 fillTableUsers();
-                 patientDto= new PatientDto();
+                doctorDto= new DoctorDto();
+                userDto= new UserDto();
                 if (r.getEstado()) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Usuario eliminado");
                 } else {
@@ -777,9 +828,9 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 }
             }
         } else if (event.getClickCount() == 2) {
-            doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
-            fillTableUsers();
-            System.out.println(userDto.getUsName());
+             doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
+             fillDoctors(doctorDto);
+           
         }
     }
 
@@ -958,32 +1009,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         }
     }
 
-    private void fillPatient(PatientDto patientsDto) {
-        namePatMainField.setText(patientsDto.getPtName());
-        firstNamePatMainField.setText(patientsDto.getPtPlastname());
-        lastNamePatMainField.setText(patientsDto.getPtSlastname());
-        emailPatMainField.setText(patientsDto.getPtEmail());
-        if (patientsDto.getPtGender().equals("M")) {
-            radioBtnMale.setSelected(true);
-        } else {
-            radioBtnFemale.setSelected(true);
-        }
-        datePickerBirthdayPat.setValue(patientsDto.getPtBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        identPatMainField.setText(patientsDto.getPtIdentification());
-    }
-
-    private void fillTableDiseases() {
-
-        DiseaseService service = new DiseaseService();
-        diseaseList = service.getDisease();
-        if (diseaseList.isEmpty()) {
-        } else {
-            diseaseObservableList = FXCollections.observableArrayList(diseaseList);
-        }
-
-        this.tableViewDisease.refresh();
-        this.tableViewDisease.setItems(diseaseObservableList);
-    }
+ 
 
     @FXML
     private void deletePatientClicked(MouseEvent event) {
@@ -1110,5 +1136,4 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         });
         filteredDisease(filteredDisease);
     }
-
 }
