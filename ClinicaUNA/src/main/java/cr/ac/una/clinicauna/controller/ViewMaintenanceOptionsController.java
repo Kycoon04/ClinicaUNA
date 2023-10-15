@@ -7,8 +7,10 @@ package cr.ac.una.clinicauna.controller;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.DoctorDto;
+import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.DoctorService;
+import cr.ac.una.clinicauna.service.PatientService;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
@@ -17,8 +19,10 @@ import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -158,11 +162,17 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private ObservableList<UserDto> userObservableList;
     List<DoctorDto> doctorList = new ArrayList<>();
     private ObservableList<DoctorDto> doctorObservableList;
+
+    List<PatientDto> patientList = new ArrayList<>();
+    private ObservableList<PatientDto> patientObservableList;
+
     @FXML
     private BorderPane MenuView;
 
     UserDto userDto = new UserDto();
     DoctorDto doctorDto = new DoctorDto();
+    PatientDto patientDto = new PatientDto();
+
     private TextField textFieldSearch_Ident;
     @FXML
     private TextField textFieldSearch_Usuario;
@@ -176,6 +186,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     boolean deleteDoctor = false;
     boolean deleteUser = false;
+    boolean deletePatient= false; 
+    
 
     @FXML
     private BorderPane OptionsMainPatientView;
@@ -198,21 +210,21 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldSearchPat_Susername;
     @FXML
-    private TableView<?> tableViewPatient;
+    private TableView<PatientDto> tableViewPatient;
     @FXML
-    private TableColumn<?, ?> tableColId;
+    private TableColumn<PatientDto, String> tableColId;
     @FXML
-    private TableColumn<?, ?> tableColPatIdentif;
+    private TableColumn<PatientDto, String> tableColPatIdentif;
     @FXML
-    private TableColumn<?, ?> tableColPatName;
+    private TableColumn<PatientDto, String> tableColPatName;
     @FXML
-    private TableColumn<?, ?> tableColPatPsurname;
+    private TableColumn<PatientDto, String> tableColPatPsurname;
     @FXML
-    private TableColumn<?, ?> tableColPatSsurname;
+    private TableColumn<PatientDto, String> tableColPatSsurname;
     @FXML
-    private TableColumn<?, ?> tableColPatGender;
+    private TableColumn<PatientDto, String> tableColPatGender;
     @FXML
-    private TableColumn<?, ?> tableColPatEmail;
+    private TableColumn<PatientDto, String> tableColPatEmail;
     @FXML
     private Button BtndeletePatient;
     public static ToggleGroup gender;
@@ -260,8 +272,17 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableColDocIniWork.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
         this.tableColDocCode.setCellValueFactory(new PropertyValueFactory("DrCode"));
 
+        this.tableColPatIdentif.setCellValueFactory(new PropertyValueFactory("PtIdentification"));
+        this.tableColPatName.setCellValueFactory(new PropertyValueFactory("PtName"));
+        this.tableColPatPsurname.setCellValueFactory(new PropertyValueFactory("PtPlastname"));
+        this.tableColPatSsurname.setCellValueFactory(new PropertyValueFactory("PtSlastname"));
+        this.tableColPatGender.setCellValueFactory(new PropertyValueFactory("PtGender"));
+        this.tableColPatEmail.setCellValueFactory(new PropertyValueFactory("PtEmail"));
+        this.tableColId.setCellValueFactory(new PropertyValueFactory("PtId"));
+
         fillTableUsers();
         fillTableDoctors();
+        fillTablePatient();
     }
 
     private void fillTableUsers() {
@@ -275,7 +296,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableViewUser.refresh();
         this.tableViewUser.setItems(userObservableList);
     }
-//jfoenix + cambiar tabla
 
     private void fillTableDoctors() {
 
@@ -288,6 +308,19 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
         this.tableViewDoctors.refresh();
         this.tableViewDoctors.setItems(doctorObservableList);
+    }
+
+    private void fillTablePatient() {
+
+        PatientService service = new PatientService();
+        patientList = service.getPatients();
+        if (patientList.isEmpty()) {
+        } else {
+            patientObservableList = FXCollections.observableArrayList(patientList);
+        }
+
+        this.tableViewPatient.refresh();
+        this.tableViewPatient.setItems(patientObservableList);
     }
 
     @FXML
@@ -339,7 +372,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     }
 
     DoctorDto bindNewDoctor() {
-
         if (userDto != null) {
             doctorDto.setDrUser(userDto);
 
@@ -532,11 +564,11 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                     doc = serviceD.getDoctorUser(userDto.getUsId());
                     this.doctorDto = (DoctorDto) doc.getResultado("Doctor");
                     if (doctorDto != null) {
-                        doc=serviceD.deleteDoctor(doctorDto.getDrId());
-                        us=serviceU.deleteUser(userDto.getUsId());
+                        doc = serviceD.deleteDoctor(doctorDto.getDrId());
+                        us = serviceU.deleteUser(userDto.getUsId());
                         deleteUser = false;
-                        if(doc.getEstado()&& us.getEstado()){
-                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Usuario y Doctor eliminado"); 
+                        if (doc.getEstado() && us.getEstado()) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Usuario y Doctor eliminado");
                         }
                     }
                 } else {
@@ -574,14 +606,13 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         folioDocMainField.setText(doctorDto.getDrFol() + "");
         breaksMainField.setText(doctorDto.getDrBreak());
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            LocalTime iniWorkin = LocalTime.parse(doctorDto.getDrIniworking(), formatter);
-            LocalTime finiWorkin = LocalTime.parse(doctorDto.getDrFinisworking(), formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime iniWorkin = LocalTime.parse(doctorDto.getDrIniworking(), formatter);
+        LocalTime finiWorkin = LocalTime.parse(doctorDto.getDrFinisworking(), formatter);
 
-            timepickerIniWork.setValue(iniWorkin);
-            timepickerFinWork.setValue(finiWorkin);
-        }
-    
+        timepickerIniWork.setValue(iniWorkin);
+        timepickerFinWork.setValue(finiWorkin);
+    }
 
     @FXML
     private void searchDoctor_Name(KeyEvent event) {
@@ -705,6 +736,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 doctorList.clear();
                 doctorObservableList.clear();
                 fillTableDoctors();
+                fillTableUsers();
 
                 if (r.getEstado()) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Usuario eliminado");
@@ -714,7 +746,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             }
         } else if (event.getClickCount() == 2) {
             doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
-            fillDoctors(doctorDto);
+
+            fillTableUsers();
             System.out.println(userDto.getUsName());
         }
     }
@@ -724,36 +757,187 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     }
 
+    PatientDto bindNewPatient() {
+        LocalDate localDate = datePickerBirthdayPat.getValue();
+        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        String genere = "";
+        patientDto.setPtBirthdate(date);
+        patientDto.setPtEmail(emailPatMainField.getText());
+        patientDto.setPtId(patientDto.getPtId());
+        if (radioBtnMale.isSelected()) {
+            genere = "M";
+        } else {
+            genere = "F";
+        }
+        patientDto.setPtGender(genere);
+        patientDto.setPtIdentification(identPatMainField.getText());
+        patientDto.setPtName(namePatMainField.getText());
+        patientDto.setPtPlastname(firstNamePatMainField.getText());
+        patientDto.setPtSlastname(lastNamePatMainField.getText());
+        return patientDto;
+    }
+
     @FXML
     private void UpdatePatient(ActionEvent event) {
+        PatientService patient = new PatientService();
+        Respuesta r;
+        r = patient.savePatient(bindNewPatient());
+        fillTablePatient();
+        if (r.getEstado()) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Paciente Guardado");
+            //limpiar los campos 
+        } else {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Error al guardar paciente");
+        }
+        patientDto = null;
     }
 
     @FXML
     private void searchPat_Name(KeyEvent event) {
+        FilteredList<PatientDto> filteredPatient = new FilteredList<>(patientObservableList, f -> true);
+        textFieldSearchPat_Name.textProperty().addListener((observable, value, newValue) -> {
+            filteredPatient.setPredicate(PatientDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (PatientDto.getPtName().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredPatient(filteredPatient);
+    }
+
+    private void filteredPatient(FilteredList<PatientDto> list) {
+        SortedList<PatientDto> sorted = new SortedList<>(list);
+        sorted.comparatorProperty().bind(tableViewPatient.comparatorProperty());
+        tableViewPatient.setItems(sorted);
     }
 
     @FXML
     private void searchPat_Pusername(KeyEvent event) {
+        FilteredList<PatientDto> filteredPatient = new FilteredList<>(patientObservableList, f -> true);
+        textFieldSearchPat_Pusername.textProperty().addListener((observable, value, newValue) -> {
+            filteredPatient.setPredicate(PatientDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (PatientDto.getPtPlastname().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredPatient(filteredPatient);
     }
 
     @FXML
     private void searchPat_identification(KeyEvent event) {
+        FilteredList<PatientDto> filteredPatient = new FilteredList<>(patientObservableList, f -> true);
+        textFieldSearchPat_Identification.textProperty().addListener((observable, value, newValue) -> {
+            filteredPatient.setPredicate(PatientDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (PatientDto.getPtIdentification().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredPatient(filteredPatient);
     }
 
     @FXML
     private void searchPat_Gender(KeyEvent event) {
+        FilteredList<PatientDto> filteredPatient = new FilteredList<>(patientObservableList, f -> true);
+        textFieldSearchPat_Gender.textProperty().addListener((observable, value, newValue) -> {
+            filteredPatient.setPredicate(PatientDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (PatientDto.getPtGender().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredPatient(filteredPatient);
     }
 
     @FXML
     private void searchPat_Susername(KeyEvent event) {
+        FilteredList<PatientDto> filteredPatient = new FilteredList<>(patientObservableList, f -> true);
+        textFieldSearchPat_Susername.textProperty().addListener((observable, value, newValue) -> {
+            filteredPatient.setPredicate(PatientDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (PatientDto.getPtSlastname().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredPatient(filteredPatient);
     }
 
     @FXML
     private void patientClicked(MouseEvent event) {
+        PatientService patient= new PatientService(); 
+        Respuesta r; 
+        if(event.getClickCount()== 1){
+            if(deletePatient){
+              patientDto = tableViewPatient.getSelectionModel().getSelectedItem();
+              if(patientDto!=null)
+              {
+                 r=patient.deletePatient(patientDto.getPtId());
+                 fillTablePatient();
+                 deletePatient=false; 
+                 if(r.getEstado()){
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Paciente Eliminado Correctamente");
+                 }else{
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Error al eliminar paciente");
+                 }
+              } 
+            }
+        }
+        if (event.getClickCount() == 2) {
+            patientDto = tableViewPatient.getSelectionModel().getSelectedItem();
+            if (patientDto != null) {
+                fillPatient(patientDto);
+            }
+        }
+    }
+
+    private void fillPatient(PatientDto patientsDto) {
+        namePatMainField.setText(patientsDto.getPtName());
+        firstNamePatMainField.setText(patientsDto.getPtPlastname());
+        lastNamePatMainField.setText(patientsDto.getPtSlastname());
+        emailPatMainField.setText(patientsDto.getPtEmail());
+        if (patientsDto.getPtGender().equals("M")) {
+            radioBtnMale.setSelected(true);
+        } else {
+            radioBtnFemale.setSelected(true);
+        }
+        datePickerBirthdayPat.setValue(patientsDto.getPtBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        identPatMainField.setText(patientsDto.getPtIdentification());
     }
 
     @FXML
     private void deletePatientClicked(MouseEvent event) {
+        deletePatient=true;
     }
 
     @FXML
