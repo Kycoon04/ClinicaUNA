@@ -34,6 +34,7 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Doctor.findByDrFol", query = "SELECT d FROM Doctor d WHERE d.drFol = :drFol"),
     @NamedQuery(name = "Doctor.findByDrIniworking", query = "SELECT d FROM Doctor d WHERE d.drIniworking = :drIniworking"),
     @NamedQuery(name = "Doctor.findByDrFinisworking", query = "SELECT d FROM Doctor d WHERE d.drFinisworking = :drFinisworking"),
+    @NamedQuery(name = "Doctor.findDoctorByUserId", query = "SELECT d FROM Doctor d WHERE d.drUser.usId = :userId"),
     @NamedQuery(name = "Doctor.findByDrBreak", query = "SELECT d FROM Doctor d WHERE d.drBreak = :drBreak")})
 public class Doctor implements Serializable {
 

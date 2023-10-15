@@ -55,6 +55,21 @@ public class ModuleDoctor {
     }
 
 
+    @GET
+    @Path("/doctorByUser/{id}")
+    public Response getDoctorByUser(@PathParam("id") Long id) {
+        try {
+            Respuesta res = doctorService.getDoctorByUser(id);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(res.getResultado("Doctors")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleDoctor.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo Doctor").build();
+        }
+    }
+    
     @POST
     @Path("/doctor")
     public Response saveDoctor(DoctorDto doctorDto) {

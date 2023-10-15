@@ -52,6 +52,25 @@ public class UserService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.", "getusuario " + ex.getMessage());
         }
     }
+    
+ public Respuesta getUserDoc(Integer drId) {
+    try {
+        Query qryusuario = em.createNamedQuery("Users.findUserByDoctorId", Users.class);
+        qryusuario.setParameter("doctorId", drId);
+
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Users", new UsersDto((Users) qryusuario.getSingleResult()));
+
+    } catch (NoResultException ex) {//sin resultado
+        return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getusuario NoResultException");
+    } catch (NonUniqueResultException ex) {//mas de un resultado 
+        LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.", "getusuario NonUniqueResultException");
+    } catch (Exception ex) {// codig de erro en el server 
+        LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.", "getusuario " + ex.getMessage());
+    }
+}
+
 
      public Respuesta getUserEmail(String usUsername) {
         try {

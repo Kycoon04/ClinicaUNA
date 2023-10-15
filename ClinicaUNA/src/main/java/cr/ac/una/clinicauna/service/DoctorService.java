@@ -37,6 +37,25 @@ public class DoctorService {
             return new Respuesta(false, "Error obteniendo Doctor", "getDoctor " + ex.getMessage());
         }
     }
+     
+     public Respuesta getDoctorUser(Integer id) {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("id", id);
+            Request request = new Request("ModuleDoctor/doctorByUser", "/{id}", parametros);
+            request.get();
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            DoctorDto doctorDto = (DoctorDto) request.readEntity(DoctorDto.class);
+            System.out.println(doctorDto.drUser);
+            return new Respuesta(true, "", "", "Doctor", doctorDto);
+        } catch (Exception ex) {
+            Logger.getLogger(DoctorService.class.getName()).log(Level.SEVERE, "Error obteniendo Doctor [" + id + "]", ex);
+            return new Respuesta(false, "Error obteniendo Doctor", "getDoctor " + ex.getMessage());
+        }
+    }
+
 
     public Respuesta saveDoctor(DoctorDto doctorDto) {
         try {

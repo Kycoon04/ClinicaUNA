@@ -54,7 +54,24 @@ public class DoctorService {
         }
     }
 
+    
+    public Respuesta getDoctorByUser(Long drId) {
+        try {
+            Query qryusuario = em.createNamedQuery("Doctor.findDoctorByUserId", Doctor.class);
+            qryusuario.setParameter("userId", drId);
 
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Doctors", new DoctorDto((Doctor) qryusuario.getSingleResult()));
+
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un Doctor con el código ingresado.", "getDoctor NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar un Doctor.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Doctor.", "getDoctor NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar un Doctor.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Doctor.", "getDoctor " + ex.getMessage());
+        }
+    }
 
     public Respuesta saveDoctor(DoctorDto doctorDto) {
         try {

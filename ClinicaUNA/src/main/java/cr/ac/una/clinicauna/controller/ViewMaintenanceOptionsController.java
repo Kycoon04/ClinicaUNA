@@ -12,9 +12,11 @@ import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Mensaje;
+import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -169,6 +171,10 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     String jobsSpanish[] = {"Administrador", "Recepcionista", "Doctor"};
     String jobsEnglish[] = {"Administrator", "Receptionist", "Doctor"};
     boolean userDoctor = false;
+
+    boolean deleteDoctor = false;
+    boolean deleteUser = false;
+
     @FXML
     private TextField breaksMainField1;
 
@@ -216,15 +222,16 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 //jfoenix + cambiar tabla
 
     private void fillTableDoctors() {
+
         DoctorService service = new DoctorService();
         doctorList = service.getDoctor();
         if (doctorList.isEmpty()) {
         } else {
             doctorObservableList = FXCollections.observableArrayList(doctorList);
         }
+
         this.tableViewDoctors.refresh();
         this.tableViewDoctors.setItems(doctorObservableList);
-
     }
 
     @FXML
@@ -233,6 +240,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void deleteClicked(MouseEvent event) {
+        deleteUser = true;
     }
 
     @Override
@@ -315,12 +323,13 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 serviceD.saveDoctor(bindNewDoctor());
                 fillTableDoctors();
             }
-
         }
     }
 
     @FXML
     private void deleteDoctorClicked(MouseEvent event) {
+        deleteDoctor = true;
+
     }
 
     @FXML
@@ -456,6 +465,36 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void userClicked(MouseEvent event) {
+        DoctorService serviceD = new DoctorService();
+        UserService serviceU = new UserService();
+        Respuesta doc;
+        Respuesta us;
+        if (event.getClickCount() == 1) {
+            if (deleteUser == true) {
+                userDto = tableViewUser.getSelectionModel().getSelectedItem();
+                if (userDto.getUsType().equals("Doctor")) {
+                    doc = serviceD.getDoctorUser(userDto.getUsId());
+                    this.doctorDto = (DoctorDto) doc.getResultado("Doctor");
+                    if (doctorDto != null) {
+                        doc=serviceD.deleteDoctor(doctorDto.getDrId());
+                        us=serviceU.deleteUser(userDto.getUsId());
+                        deleteUser = false;
+                        if(doc.getEstado()&& us.getEstado()){
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Usuario y Doctor eliminado"); 
+                        }
+                    }
+                } else {
+                    serviceU.deleteUser(userDto.getUsId());
+                    deleteUser = false;
+                }
+                userList.clear();
+                userObservableList.clear();
+                doctorList.clear();
+                doctorObservableList.clear();
+                fillTableUsers();
+                fillTableDoctors();
+            }
+        }
         if (event.getClickCount() == 2) {
             userDto = tableViewUser.getSelectionModel().getSelectedItem();
             fillUser(userDto);
@@ -474,15 +513,19 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     }
 
     private void fillDoctors(DoctorDto doctorDto) {
-        codeDocMainField.setText(doctorDto.getDrCode() + "");
-        licenseDocMainField.setText(doctorDto.getDrLicense() + "");
-        folioDocMainField.setText(doctorDto.getDrFol() + "");
-        freeTimeMainField1.setText(doctorDto.getDrBreak());
+        if (doctorDto != null) {
+            codeDocMainField.setText(doctorDto.getDrCode() + "");
+            licenseDocMainField.setText(doctorDto.getDrLicense() + "");
+            folioDocMainField.setText(doctorDto.getDrFol() + "");
+            breaksMainField1.setText(doctorDto.getDrBreak());
 
-        LocalTime defaultTime = LocalTime.of(12, 0);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            LocalTime iniWorkin = LocalTime.parse(doctorDto.getDrIniworking(), formatter);
+            LocalTime finiWorkin = LocalTime.parse(doctorDto.getDrFinisworking(), formatter);
 
-        timepickerIniWork.setValue(defaultTime);
-        timepickerFinWork.setValue(defaultTime);
+            timepickerIniWork.setValue(iniWorkin);
+            timepickerFinWork.setValue(finiWorkin);
+        }
     }
 
     @FXML
@@ -594,13 +637,31 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void doctorClicked(MouseEvent event) {
+        DoctorService serviceD = new DoctorService();
+        UserService serviceU = new UserService();
+        if (event.getClickCount() == 1) {
+            if (deleteDoctor == true) {
+                doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
+                userDto = doctorDto.getDrUser();
+                userDto.setUsType("Default");
+                serviceU.saveUser(userDto);
+                Respuesta r = serviceD.deleteDoctor(doctorDto.getDrId());
+                deleteDoctor = false;
+                doctorList.clear();
+                doctorObservableList.clear();
+                fillTableDoctors();
 
-        if (event.getClickCount() == 2) {
+                if (r.getEstado()) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Usuario eliminado");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Error aleliminar usuario");
+                }
+            }
+        } else if (event.getClickCount() == 2) {
             doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
             fillDoctors(doctorDto);
             System.out.println(userDto.getUsName());
         }
-
     }
 
     @FXML
