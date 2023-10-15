@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicauna.controller;
 
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.UserDto;
@@ -30,11 +31,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -160,7 +163,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     UserDto userDto = new UserDto();
     DoctorDto doctorDto = new DoctorDto();
-    private TextField freeTimeMainField1;
     private TextField textFieldSearch_Ident;
     @FXML
     private TextField textFieldSearch_Usuario;
@@ -176,7 +178,58 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     boolean deleteUser = false;
 
     @FXML
-    private TextField breaksMainField1;
+    private BorderPane OptionsMainPatientView;
+    @FXML
+    private TabPane tabPaneMantWorkers2;
+    @FXML
+    private Tab tabMantPatient;
+    @FXML
+    private RadioButton radioBtnMale;
+    @FXML
+    private RadioButton radioBtnFemale;
+    @FXML
+    private TextField textFieldSearchPat_Name;
+    @FXML
+    private TextField textFieldSearchPat_Pusername;
+    @FXML
+    private TextField textFieldSearchPat_Identification;
+    @FXML
+    private TextField textFieldSearchPat_Gender;
+    @FXML
+    private TextField textFieldSearchPat_Susername;
+    @FXML
+    private TableView<?> tableViewPatient;
+    @FXML
+    private TableColumn<?, ?> tableColId;
+    @FXML
+    private TableColumn<?, ?> tableColPatIdentif;
+    @FXML
+    private TableColumn<?, ?> tableColPatName;
+    @FXML
+    private TableColumn<?, ?> tableColPatPsurname;
+    @FXML
+    private TableColumn<?, ?> tableColPatSsurname;
+    @FXML
+    private TableColumn<?, ?> tableColPatGender;
+    @FXML
+    private TableColumn<?, ?> tableColPatEmail;
+    @FXML
+    private Button BtndeletePatient;
+    public static ToggleGroup gender;
+    @FXML
+    private TextField namePatMainField;
+    @FXML
+    private TextField firstNamePatMainField;
+    @FXML
+    private TextField lastNamePatMainField;
+    @FXML
+    private TextField identPatMainField;
+    @FXML
+    private TextField emailPatMainField;
+    @FXML
+    private JFXDatePicker datePickerBirthdayPat;
+    @FXML
+    private TextField breaksMainField;
 
     /**
      * Initializes the controller class.
@@ -186,6 +239,9 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         // TODO
         OptionsMenuView.toFront();
         choiceBoxJobsTypes.getItems().addAll(jobsEnglish);
+        gender = new ToggleGroup();
+        this.radioBtnMale.setToggleGroup(gender);
+        this.radioBtnFemale.setToggleGroup(gender);
         this.tableColAct.setCellValueFactory(new PropertyValueFactory("UsSState"));
         this.tableColIdentif.setCellValueFactory(new PropertyValueFactory("UsIdentification"));
         this.tableColName.setCellValueFactory(new PropertyValueFactory("UsName"));
@@ -287,7 +343,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         if (userDto != null) {
             doctorDto.setDrUser(userDto);
 
-            doctorDto.setDrBreak(breaksMainField1.getText());
+            doctorDto.setDrBreak(breaksMainField.getText());
             doctorDto.setDrCode(Integer.parseInt(codeDocMainField.getText()));
             doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
             doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
@@ -513,11 +569,10 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     }
 
     private void fillDoctors(DoctorDto doctorDto) {
-        if (doctorDto != null) {
-            codeDocMainField.setText(doctorDto.getDrCode() + "");
-            licenseDocMainField.setText(doctorDto.getDrLicense() + "");
-            folioDocMainField.setText(doctorDto.getDrFol() + "");
-            breaksMainField1.setText(doctorDto.getDrBreak());
+        codeDocMainField.setText(doctorDto.getDrCode() + "");
+        licenseDocMainField.setText(doctorDto.getDrLicense() + "");
+        folioDocMainField.setText(doctorDto.getDrFol() + "");
+        breaksMainField.setText(doctorDto.getDrBreak());
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             LocalTime iniWorkin = LocalTime.parse(doctorDto.getDrIniworking(), formatter);
@@ -526,7 +581,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             timepickerIniWork.setValue(iniWorkin);
             timepickerFinWork.setValue(finiWorkin);
         }
-    }
+    
 
     @FXML
     private void searchDoctor_Name(KeyEvent event) {
@@ -667,6 +722,43 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private void searchDoctor_State(KeyEvent event) {
 
+    }
+
+    @FXML
+    private void UpdatePatient(ActionEvent event) {
+    }
+
+    @FXML
+    private void searchPat_Name(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchPat_Pusername(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchPat_identification(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchPat_Gender(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchPat_Susername(KeyEvent event) {
+    }
+
+    @FXML
+    private void patientClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void deletePatientClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void openManPatient(ActionEvent event) {
+        OptionsMainPatientView.toFront();
     }
 
 }
