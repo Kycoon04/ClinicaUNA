@@ -769,7 +769,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 doctorObservableList.clear();
                 fillTableDoctors();
                 fillTableUsers();
-
+                 patientDto= new PatientDto();
                 if (r.getEstado()) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Usuario eliminado");
                 } else {
@@ -778,7 +778,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             }
         } else if (event.getClickCount() == 2) {
             doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
-
             fillTableUsers();
             System.out.println(userDto.getUsName());
         }
@@ -812,9 +811,13 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private void UpdatePatient(ActionEvent event) {
         PatientService patient = new PatientService();
-        Respuesta r;
+        Respuesta r = null;
+        if(patientDto!=null){
         r = patient.savePatient(bindNewPatient());
         fillTablePatient();
+        patientDto= new PatientDto();
+        }
+       
         if (r.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Paciente Guardado");
             //limpiar los campos 
@@ -934,10 +937,11 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 patientDto = tableViewPatient.getSelectionModel().getSelectedItem();
                 if (patientDto != null) {
                     r = patient.deletePatient(patientDto.getPtId());
-                    fillTablePatient();
                     deletePatient = false;
                     patientList.clear();
                     patientObservableList.clear();
+                     fillTablePatient();
+                     patientDto= new PatientDto();
                     if (r.getEstado()) {
                         new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Paciente Eliminado Correctamente");
                     } else {
@@ -1000,6 +1004,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private void UpdateDesease(ActionEvent event) {
         DiseaseService service = new DiseaseService();
         Respuesta r = null;
+        
         if(diseaseDto==null){
               diseaseDto.setDsName(nameDistMainField.getText());
                   r = service.saveDisease(diseaseDto);
@@ -1007,6 +1012,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         diseaseDto.setDsId(diseaseDto.getDsId());
         diseaseDto.setDsName(nameDistMainField.getText());
         r = service.saveDisease(diseaseDto);
+        diseaseDto= new DiseaseDto();
         }
         if (r.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Enfermedad guardada");
@@ -1027,10 +1033,11 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 diseaseDto = tableViewDisease.getSelectionModel().getSelectedItem();
                 if (diseaseDto != null) {
                     r = service.deleteDisease(diseaseDto.getDsId());
-                    fillTableDiseases();
-                    deleteDisease = false;
                      diseaseList.clear();
                      diseaseObservableList.clear();
+                    fillTableDiseases();
+                    deleteDisease = false;
+                    diseaseDto= new DiseaseDto();
                     if (r.getEstado()) {
                         new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Enfermedad Eliminada Correctamente");
                     } else {
