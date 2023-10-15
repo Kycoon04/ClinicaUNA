@@ -47,8 +47,8 @@ public class DiseaseService {
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
             }
-            DiseaseService diseaseDtos = (DiseaseService) request.readEntity(DiseaseService.class);
-            return new Respuesta(true, "", "", "Disease", diseaseDtos);
+            DiseaseDto diseaseDtos = (DiseaseDto) request.readEntity(DiseaseDto.class);
+            return new Respuesta(true, "", "", "Diseases", diseaseDtos);
         } catch (Exception ex) {
             Logger.getLogger(DiseaseService.class.getName()).log(Level.SEVERE, "Error guardando enfermedad.", ex);
             return new Respuesta(false, "Error guardando enfermedad.", "guardarenfermedad" + ex.getMessage());
