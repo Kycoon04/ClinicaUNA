@@ -206,7 +206,7 @@ public class LoginViewController extends Controller implements Initializable {
                         if (service.isAdmin(name, password)) {
                             getUsLenguage();
                         } else {
-                            System.out.println("sfedsdfsdf");
+                             getUsLenguage();
                         }
                     }
                 } else {

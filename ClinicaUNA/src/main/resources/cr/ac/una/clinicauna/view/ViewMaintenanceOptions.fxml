@@ -56,7 +56,7 @@
                      </VBox.margin>
                   </Button>
                   <Separator prefHeight="31.0" prefWidth="207.0" visible="false" />
-                  <Button mnemonicParsing="false" onAction="#openManDesease" prefHeight="30.0" prefWidth="193.0" style="-fx-background-color: trasnparent; -fx-font-size: 18px;" text="%ManEnfermedades" />
+                  <Button fx:id="btnDiseases" mnemonicParsing="false" onAction="#openManDesease" prefHeight="30.0" prefWidth="193.0" style="-fx-background-color: trasnparent; -fx-font-size: 18px;" text="%ManEnfermedades" />
                   <Separator prefHeight="31.0" prefWidth="207.0" visible="false" />
                   <Button mnemonicParsing="false" onAction="#openManDiary" prefHeight="30.0" prefWidth="193.0" style="-fx-background-color: trasnparent; -fx-font-size: 18px;" text="%ManAgenda" />
                   <Separator prefHeight="254.0" prefWidth="207.0" visible="false" />

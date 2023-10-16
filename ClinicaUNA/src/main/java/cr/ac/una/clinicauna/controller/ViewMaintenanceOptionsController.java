@@ -327,7 +327,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private RadioButton pmRadio;
 
     private String matrizAgenda[][] = new String[15][8];
-    private Map<Node, Posicion> mapaPosiciones = new HashMap<>();
+    //private Map<Node, Posicion> mapaPosiciones = new HashMap<>();
     private Map<Integer, String> horas = new HashMap<>();
     private Map<Integer, String> dias = new HashMap<>();
     ToggleGroup Tou= new ToggleGroup();
@@ -359,13 +359,20 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private TableColumn<?, ?> tableColPatEmail1;
     @FXML
     private Button BtndeletePatient2;
+      private Map<Node, Posicion> mapaPosiciones = new HashMap<>();
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+      
         OptionsMenuView.toFront();
+        UserDto us= new UserDto();
+        us= (UserDto) AppContext.getInstance().get("Usuario");
+        if(us.getUsType().equals("Receptionist")){
+            btnMantUsers.setDisable(true);
+            btnMantDoctors.setDisable(true);
+        }
         choiceBoxJobsTypes.getItems().addAll(jobsEnglish);
         gender = new ToggleGroup();
         this.radioBtnMale.setToggleGroup(gender);
@@ -1385,7 +1392,7 @@ private void obtenerElementosGrid() {
 
     @FXML
     private void openManDiary(ActionEvent event) {
-        OptionsMainDiary.toFront();
+       FlowController.getInstance().goMain("ViewDiariesOptions");
     }
 
 }
