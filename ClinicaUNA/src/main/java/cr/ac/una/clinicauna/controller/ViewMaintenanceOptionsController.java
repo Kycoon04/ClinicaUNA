@@ -1189,6 +1189,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void openProceeding(ActionEvent event) {
+         FlowController.getInstance().goMain("ViewProceedingsOptions");
     }
 
 }
