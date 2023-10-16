@@ -83,9 +83,7 @@ public class Appointment implements Serializable {
         this.atReason = appointmentDto.getAtReason();
         this.atState = appointmentDto.getAtState();
         this.atTelephone = appointmentDto.getAtTelephone();
-        //this.atUserregister = appointmentDto.getAtUserregister();
-      //  this.reportList = appointmentDto.getReportList();
-        //this.spaceList = appointmentDto.getSpaceList();
+        this.atUserregister = appointmentDto.getAtUserregister();
     
     }
     
@@ -150,7 +148,7 @@ public class Appointment implements Serializable {
     public void setAtPatient(Patient atPatient) {
         this.atPatient = atPatient;
     }
-/*
+
     public Users getAtUserregister() {
         return atUserregister;
     }
@@ -158,7 +156,7 @@ public class Appointment implements Serializable {
     public void setAtUserregister(Users atUserregister) {
         this.atUserregister = atUserregister;
     }
-
+/*
     public List<Report> getReportList() {
         return reportList;
     }

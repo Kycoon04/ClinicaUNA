@@ -4,12 +4,17 @@
  */
 package cr.ac.una.clinicauna.controller;
 
+import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.UserDto;
+import cr.ac.una.clinicauna.service.AppointmentService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.PatientService;
+import cr.ac.una.clinicauna.util.AppContext;
+import cr.ac.una.clinicauna.util.Mensaje;
+import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +29,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -31,7 +37,9 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -134,17 +142,41 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private Tab tabDiary1;
     @FXML
     private Text textMainDoctor11;
-    
+
     UserDto userDto = new UserDto();
     DoctorDto doctorDto = new DoctorDto();
     PatientDto patientDto = new PatientDto();
     DiseaseDto diseaseDto = new DiseaseDto();
+    @FXML
+    private TextField nameP;
+    @FXML
+    private TextField userLog;
+    @FXML
+    private TextArea reason;
+    @FXML
+    private TextField numberP;
+    @FXML
+    private TextField email;
+    @FXML
+    private RadioButton Attended;
+    @FXML
+    private RadioButton Scheduled;
+    @FXML
+    private RadioButton Cancelled;
+    @FXML
+    private RadioButton Absent;
+    ToggleGroup Tou = new ToggleGroup();
+    @FXML
+    private BorderPane OptionsMainDiary1;
+    @FXML
+    private TabPane tabPaneMantWorkers111;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        MenuView.toFront();
         this.tableColPatIdentif1.setCellValueFactory(new PropertyValueFactory("PtIdentification"));
         this.tableColPatName1.setCellValueFactory(new PropertyValueFactory("PtName"));
         this.tableColPatPsurname1.setCellValueFactory(new PropertyValueFactory("PtPlastname"));
@@ -161,6 +193,10 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         this.tableColDocFolio1.setCellValueFactory(new PropertyValueFactory("DrFol"));
         this.tableColDocIniWork1.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
         this.tableColDocCode1.setCellValueFactory(new PropertyValueFactory("DrCode"));
+        Absent.setToggleGroup(Tou);
+        Cancelled.setToggleGroup(Tou);
+        Attended.setToggleGroup(Tou);
+        Scheduled.setToggleGroup(Tou);
 
         agenda();
         selectDiary();
@@ -169,9 +205,55 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     }
 
+    private void fillAppoiment() {
+        AppointmentDto appointmentDto = new AppointmentDto();
+        Respuesta r = null;
+        AppointmentService service = new AppointmentService();
+        this.userDto = (UserDto) AppContext.getInstance().get("Usuario");
+        if(userDto!=null && patientDto!=null){
+        appointmentDto.setAtPatient(patientDto);
+        appointmentDto.setAtUserregister(userDto);
+        appointmentDto.setAtReason(reason.getText());
+        Long numLong = Long.parseLong(numberP.getText());
+        appointmentDto.setAtTelephone(numLong);
+        appointmentDto.setAtEmail(email.getText());
+            System.out.println(email.getText());
+        if (Scheduled.isSelected()) {
+            appointmentDto.setAtState("Programada");
+        } else if (Attended.isSelected()) {
+            appointmentDto.setAtState("Atendida");
+        } else if (Cancelled.isSelected()) {
+            appointmentDto.setAtState("Cancelada");
+        } else {
+            appointmentDto.setAtState("Ausente");
+        }
+ 
+        System.out.println(appointmentDto.getAtPatient().getPtName()+" "+appointmentDto.getAtUserregister().getUsName());
+        r= service.saveAppointment(appointmentDto);
+        }
+        if(r.getEstado()){
+           new Mensaje().showModal(Alert.AlertType.INFORMATION, "Registrada", getStage(), "");
+        }else{
+             new Mensaje().showModal(Alert.AlertType.INFORMATION, "No se pudo Registrar", getStage(), "");
+        }
+    }
+
     @FXML
     private void ContinueDetail(ActionEvent event) {
+        fillAppoiment();
     }
+
+    @FXML
+    private void openAppoimentRegister(MouseEvent event) {
+        OptionsMainDiary1.toFront();
+    }
+
+
+    @FXML
+    private void openDiaryV(MouseEvent event) {
+        OptionsMainDiary.toFront();
+    }
+
 
     private class Posicion {
 
@@ -330,6 +412,18 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
 
     @FXML
+    private void patientClicked(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            this.userDto = (UserDto) AppContext.getInstance().get("Usuario");
+            patientDto = tableViewPatient1.getSelectionModel().getSelectedItem();
+            if (patientDto != null) {
+                nameP.setText(patientDto.getPtName());
+                userLog.setText(userDto.getUsName());
+            }
+        }
+    }
+
+    @FXML
     private void searchPat_Name(KeyEvent event) {
     }
 
@@ -348,11 +442,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private void searchPat_Susername(KeyEvent event) {
     }
-
-    @FXML
-    private void patientClicked(MouseEvent event) {
-    }
-
 
     @FXML
     private void searchDoctor_Name(KeyEvent event) {
@@ -381,7 +470,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private void doctorDiaryClicked(MouseEvent event) {
     }
-
 
     @FXML
     private void updateAgenda(ActionEvent event) {

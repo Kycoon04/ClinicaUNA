@@ -21,7 +21,7 @@ public class AppointmentDto {
     private List<Space> spaceList;
     private Patient atPatient;
     private Users atUserregister;
-   // private List<Report> reportList;
+  
 
     public AppointmentDto(Appointment appointment) {
         this.atId = appointment.getAtId();
@@ -29,10 +29,9 @@ public class AppointmentDto {
         this.atTelephone = appointment.getAtTelephone();
         this.atEmail = appointment.getAtEmail();
         this.atState = appointment.getAtState();
-        
         this.atPatient = appointment.getAtPatient();
-        //this.atUserregister = appointment.getAtUserregister();
-       // this.reportList = appointment.getReportList();
+        this.atUserregister = appointment.getAtUserregister();
+     
     }
 
     public AppointmentDto() {

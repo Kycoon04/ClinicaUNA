@@ -360,6 +360,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private Button BtndeletePatient2;
       private Map<Node, Posicion> mapaPosiciones = new HashMap<>();
+    @FXML
+    private Button btnDiseases;
     /**
      * Initializes the controller class.
      */
