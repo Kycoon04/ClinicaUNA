@@ -281,85 +281,14 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private TableView<DiseaseDto> tableViewDisease;
     @FXML
     private TextField nameDistMainField;
-    @FXML
-    private BorderPane OptionsMainDiary;
-    @FXML
-    private TabPane tabPaneMantWorkers11;
-    @FXML
-    private TextField textFieldSearchDoc_Name1;
-    @FXML
-    private TextField textFieldSearchDoc_Pusername1;
-    @FXML
-    private TextField textFieldSearchDoc_Code1;
-    @FXML
-    private TextField textFieldSearchDoc_Folio1;
-    @FXML
-    private TextField textFieldSearchDoc_License1;
-    @FXML
-    private TextField textFieldSearchDoc_State1;
-    @FXML
-    private TableView<DoctorDto> tableViewDoctorsDiary;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocCode1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocFolio1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocName1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocId1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocLicense1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocIniWork1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocFinishWork1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocBreaks1;
-    @FXML
-    private Tab tabManDoctors1;
-    @FXML
-    private Text textMainDoctor1;
-    @FXML
-    private GridPane grid;
-    @FXML
-    private RadioButton amRadio;
-    @FXML
-    private RadioButton pmRadio;
+
 
     private String matrizAgenda[][] = new String[15][8];
     //private Map<Node, Posicion> mapaPosiciones = new HashMap<>();
     private Map<Integer, String> horas = new HashMap<>();
     private Map<Integer, String> dias = new HashMap<>();
     ToggleGroup Tou= new ToggleGroup();
-    @FXML
-    private TextField textFieldSearchPat_Name1;
-    @FXML
-    private TextField textFieldSearchPat_Pusername1;
-    @FXML
-    private TextField textFieldSearchPat_Identification1;
-    @FXML
-    private TextField textFieldSearchPat_Gender1;
-    @FXML
-    private TextField textFieldSearchPat_Susername1;
-    @FXML
-    private TableView<?> tableViewPatient1;
-    @FXML
-    private TableColumn<?, ?> tableColId1;
-    @FXML
-    private TableColumn<?, ?> tableColPatIdentif1;
-    @FXML
-    private TableColumn<?, ?> tableColPatName1;
-    @FXML
-    private TableColumn<?, ?> tableColPatPsurname1;
-    @FXML
-    private TableColumn<?, ?> tableColPatSsurname1;
-    @FXML
-    private TableColumn<?, ?> tableColPatGender1;
-    @FXML
-    private TableColumn<?, ?> tableColPatEmail1;
-    @FXML
-    private Button BtndeletePatient2;
-      private Map<Node, Posicion> mapaPosiciones = new HashMap<>();
+   
     @FXML
     private Button btnDiseases;
     /**
@@ -405,172 +334,29 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableColPatEmail.setCellValueFactory(new PropertyValueFactory("PtEmail"));
         this.tableColId.setCellValueFactory(new PropertyValueFactory("PtId"));
 
-        this.tableColDocBreaks1.setCellValueFactory(new PropertyValueFactory("DrBreak"));
-        this.tableColDocFinishWork1.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
-        this.tableColDocLicense1.setCellValueFactory(new PropertyValueFactory("DrLicense"));
-        this.tableColDocId1.setCellValueFactory(new PropertyValueFactory("DoctorPsurname"));
-        this.tableColDocName1.setCellValueFactory(new PropertyValueFactory("DoctorName"));
-        this.tableColDocFolio1.setCellValueFactory(new PropertyValueFactory("DrFol"));
-        this.tableColDocIniWork1.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
-        this.tableColDocCode1.setCellValueFactory(new PropertyValueFactory("DrCode"));
+     
         
         this.tableColDeseaseId.setCellValueFactory(new PropertyValueFactory("DsId"));
         this.tableColDeseaseName.setCellValueFactory(new PropertyValueFactory("DsName"));
         
-        amRadio.setToggleGroup(Tou);
-        pmRadio.setToggleGroup(Tou);
-        
-        agenda();
-        selectDiary();
-        
+
+       
         fillTableUsers();
         fillTableDoctors();
         fillTablePatient();
         fillTableDiseases();
     }
 
-    private class Posicion {
-        int fila;
-        int columna;
-
-        public Posicion(int fila, int columna) {
-            this.fila = fila;
-            this.columna = columna;
-        }
-    }
-
+ 
     @Override
     public void initialize() {
 
     }
 
-    private void agenda() {
-        String[] diasSemana = {"LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO", "DOMINGO"};
-        for (int i = 0; i < diasSemana.length; i++) {
-            String dia = diasSemana[i];
-            Label label = new Label(dia);
-            label.setAlignment(Pos.CENTER);
-            label.setStyle("-fx-content-display: center;");
-            label.setWrapText(false);
-            int columna = i + 1;
-            int fila = 0;
-            if (columna < grid.getColumnConstraints().size()) {
-                label.setPrefWidth(grid.getColumnConstraints().get(columna).getPercentWidth());
-            }
-            label.setPrefHeight(grid.getRowConstraints().get(fila).getPercentHeight());
-            grid.add(label, columna, fila);
-            matrizAgenda[0][columna] = dia;
-
-            mapaPosiciones.put(label, new Posicion(fila, columna));
-        }
-
-        String hora = null;
-        int indice = 1;
-        for (int i = 0; i < 13; i++) {
-            hora = Integer.toString(i) + ":00";
-            Label label = new Label(hora);
-
-            label.setAlignment(Pos.CENTER);
-            label.setStyle("-fx-content-display: center;");
-            label.setWrapText(false);
-
-            int fila = indice;
-            int columna = 0;
-
-            if (indice < grid.getRowConstraints().size()) {
-                label.setPrefWidth(grid.getColumnConstraints().get(columna).getPercentWidth());
-                label.setPrefHeight(grid.getRowConstraints().get(fila).getPercentHeight());
-            }
-
-            grid.add(label, columna, fila);
-            matrizAgenda[indice][0] = hora;
-
-            mapaPosiciones.put(label, new Posicion(fila, columna));
-
-            indice++;
-        }
-    }
-
-private void obtenerElementosGrid() {
-   for (Node node : grid.getChildren()) {
-        if (node instanceof HBox) {
-            Integer columna = GridPane.getColumnIndex(node);
-            Integer fila = GridPane.getRowIndex(node);
-
-            if (columna != null && fila != null) {
-                HBox hbox = (HBox) node;
-                for (Node child : hbox.getChildren()) {
-                    if (child instanceof Label) {
-                        String contenido = ((Label) child).getText();
-                        if (!contenido.isEmpty()) {
-                            String hora = matrizAgenda[fila][0];
-                            String dia = matrizAgenda[0][columna];
-
-                            System.out.println("Elemento en columna " + columna + ", fila " + fila
-                                    + ": Contenido = " + contenido + ", Hora = " + hora + ", Día = " + dia);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+  
 
 
-    @FXML
-    private void selectDiary() {
- grid.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                double x = event.getX();
-                double y = event.getY();
-
-                int columna = obtenerColumnaDesdeX(x);
-                int fila = obtenerFilaDesdeY(y);
-
-                // Verifica si la posición está dentro de los límites del GridPane
-                if (columna >= 0 && columna < 8 && fila >= 0 && fila < 14) {
-                    // Crea un HBox para los nuevos Label
-                    HBox hbox = new HBox();
-
-                    // Agrega tres nuevos Label al HBox
-                    for (int i = 0; i < 3; i++) {
-                        Label nuevoLabel = new Label(" " + (i + 1));
-                        hbox.getChildren().add(nuevoLabel);
-                    }
-
-                    // Agrega el HBox al GridPane
-                    grid.add(hbox, columna, fila);
-
-                    String hora = obtenerHoraDesdeFila(fila);
-                    String dia = obtenerDiaDesdeColumna(columna);
-
-                    System.out.println("Nuevos eventos agregados en columna " + columna + ", fila " + fila
-                            + ": Hora = " + hora + ", Día = " + dia);
-                } else {
-                    System.out.println("Clic fuera de los límites del GridPane");
-                }
-            }
-        });
-    }
-
-    private int obtenerColumnaDesdeX(double x) {
-        return (int) (x / 100); // Ajusta según tu diseño
-    }
-
-    private int obtenerFilaDesdeY(double y) {
-        return (int) (y / 30); // Ajusta según tu diseño
-    }
-
-    private String obtenerHoraDesdeFila(int fila) {
-        return "Hora" + fila;
-    }
-
-    private String obtenerDiaDesdeColumna(int columna) {
-        return "Día" + columna;
-    }
-
- 
+   
 
     private void fillTableUsers() {
         UserService service = new UserService();
@@ -592,8 +378,6 @@ private void obtenerElementosGrid() {
         } else {
             doctorObservableList = FXCollections.observableArrayList(doctorList);
         }
-        this.tableViewDoctorsDiary.refresh();
-        this.tableViewDoctorsDiary.setItems(doctorObservableList);
         this.tableViewDoctors.refresh();
         this.tableViewDoctors.setItems(doctorObservableList);
     }
@@ -1383,14 +1167,6 @@ private void obtenerElementosGrid() {
         filteredDisease(filteredDisease);
     }
 
-    @FXML
-    private void doctorDiaryClicked(MouseEvent event) {
-    }
-
-    @FXML
-    private void updateAgenda(ActionEvent event) {
-        obtenerElementosGrid();
-    }
 
     @FXML
     private void openManDiary(ActionEvent event) {
