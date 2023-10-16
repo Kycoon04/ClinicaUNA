@@ -13,6 +13,7 @@ import cr.ac.una.clinicauna.service.AppointmentService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.PatientService;
 import cr.ac.una.clinicauna.util.AppContext;
+import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
@@ -254,6 +255,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private void openDiaryV(MouseEvent event) {
         OptionsMainDiary.toFront();
+    }
+
+    @FXML
+    private void backDiary(MouseEvent event) {
+        FlowController.getInstance().goMain("ViewMaintenanceOptions");
     }
 
 

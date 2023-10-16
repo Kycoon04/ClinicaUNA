@@ -38,6 +38,8 @@
                   <Separator prefHeight="117.0" prefWidth="207.0" />
                   <Button mnemonicParsing="false" onMouseClicked="#openAppoimentRegister" prefHeight="30.0" prefWidth="193.0" style="-fx-background-color: trasnparent; -fx-font-size: 18px;" text="%Appoiments" />
                   <Button mnemonicParsing="false" onMouseClicked="#openDiaryV" prefHeight="30.0" prefWidth="193.0" style="-fx-background-color: trasnparent; -fx-font-size: 18px;" text="%Diary" />
+                  <Separator prefHeight="317.0" prefWidth="207.0" visible="false" />
+                  <Button layoutX="10.0" layoutY="199.0" mnemonicParsing="false" onMouseClicked="#backDiary" prefHeight="30.0" prefWidth="193.0" style="-fx-background-color: trasnparent; -fx-font-size: 18px;" text="%Retroceder" />
                </children>
             </VBox>
          </left>

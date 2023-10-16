@@ -1187,4 +1187,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         FlowController.getInstance().goMain("ViewDiariesOptions");
     }
 
+    @FXML
+    private void openProceeding(ActionEvent event) {
+    }
+
 }
