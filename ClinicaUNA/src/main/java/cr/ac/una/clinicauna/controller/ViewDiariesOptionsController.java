@@ -4,12 +4,20 @@
  */
 package cr.ac.una.clinicauna.controller;
 
+import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.PatientDto;
+import cr.ac.una.clinicauna.model.UserDto;
+import cr.ac.una.clinicauna.service.DoctorService;
+import cr.ac.una.clinicauna.service.PatientService;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -38,6 +46,7 @@ import javafx.scene.text.Text;
  * @author dilan
  */
 public class ViewDiariesOptionsController extends Controller implements Initializable {
+
     @FXML
     private BorderPane MenuView;
     @FXML
@@ -71,8 +80,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private TableColumn<PatientDto, String> tableColPatEmail1;
     @FXML
-    private Button BtndeletePatient2;
-    @FXML
     private TextField textFieldSearchDoc_Name1;
     @FXML
     private TextField textFieldSearchDoc_Pusername1;
@@ -85,7 +92,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private TextField textFieldSearchDoc_State1;
     @FXML
-    private TableView<?> tableViewDoctorsDiary;
+    private TableView<DoctorDto> tableViewDoctorsDiary;
     @FXML
     private TableColumn<DoctorDto, String> tableColDocCode1;
     @FXML
@@ -103,8 +110,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private TableColumn<DoctorDto, String> tableColDocBreaks1;
     @FXML
-    private Tab tabManDoctors1;
-    @FXML
     private Text textMainDoctor1;
     @FXML
     private GridPane grid;
@@ -114,7 +119,27 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private RadioButton pmRadio;
     private String matrizAgenda[][] = new String[15][8];
     private Map<Node, Posicion> mapaPosiciones = new HashMap<>();
- 
+    List<DoctorDto> doctorList = new ArrayList<>();
+    private ObservableList<DoctorDto> doctorObservableList;
+
+    List<PatientDto> patientList = new ArrayList<>();
+    private ObservableList<PatientDto> patientObservableList;
+    @FXML
+    private Tab tabPatient;
+    @FXML
+    private Tab tabDoc;
+    @FXML
+    private Tab tabDiary;
+    @FXML
+    private Tab tabDiary1;
+    @FXML
+    private Text textMainDoctor11;
+    
+    UserDto userDto = new UserDto();
+    DoctorDto doctorDto = new DoctorDto();
+    PatientDto patientDto = new PatientDto();
+    DiseaseDto diseaseDto = new DiseaseDto();
+
     /**
      * Initializes the controller class.
      */
@@ -136,13 +161,20 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         this.tableColDocFolio1.setCellValueFactory(new PropertyValueFactory("DrFol"));
         this.tableColDocIniWork1.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
         this.tableColDocCode1.setCellValueFactory(new PropertyValueFactory("DrCode"));
-        
+
         agenda();
         selectDiary();
-        
-    }    
-    
-      private class Posicion {
+        fillTablePatient();
+        fillTableDoctors();
+
+    }
+
+    @FXML
+    private void ContinueDetail(ActionEvent event) {
+    }
+
+    private class Posicion {
+
         int fila;
         int columna;
 
@@ -151,8 +183,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             this.columna = columna;
         }
     }
- 
-       
+
     private void agenda() {
         String[] diasSemana = {"LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO", "DOMINGO"};
         for (int i = 0; i < diasSemana.length; i++) {
@@ -200,35 +231,34 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
     }
 
-private void obtenerElementosGrid() {
-   for (Node node : grid.getChildren()) {
-        if (node instanceof HBox) {
-            Integer columna = GridPane.getColumnIndex(node);
-            Integer fila = GridPane.getRowIndex(node);
+    private void obtenerElementosGrid() {
+        for (Node node : grid.getChildren()) {
+            if (node instanceof HBox) {
+                Integer columna = GridPane.getColumnIndex(node);
+                Integer fila = GridPane.getRowIndex(node);
 
-            if (columna != null && fila != null) {
-                HBox hbox = (HBox) node;
-                for (Node child : hbox.getChildren()) {
-                    if (child instanceof Label) {
-                        String contenido = ((Label) child).getText();
-                        if (!contenido.isEmpty()) {
-                            String hora = matrizAgenda[fila][0];
-                            String dia = matrizAgenda[0][columna];
+                if (columna != null && fila != null) {
+                    HBox hbox = (HBox) node;
+                    for (Node child : hbox.getChildren()) {
+                        if (child instanceof Label) {
+                            String contenido = ((Label) child).getText();
+                            if (!contenido.isEmpty()) {
+                                String hora = matrizAgenda[fila][0];
+                                String dia = matrizAgenda[0][columna];
 
-                            System.out.println("Elemento en columna " + columna + ", fila " + fila
-                                    + ": Contenido = " + contenido + ", Hora = " + hora + ", Día = " + dia);
+                                System.out.println("Elemento en columna " + columna + ", fila " + fila
+                                        + ": Contenido = " + contenido + ", Hora = " + hora + ", Día = " + dia);
+                            }
                         }
                     }
                 }
             }
         }
     }
-}
-
 
     @FXML
     private void selectDiary() {
- grid.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        grid.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 double x = event.getX();
@@ -237,12 +267,10 @@ private void obtenerElementosGrid() {
                 int columna = obtenerColumnaDesdeX(x);
                 int fila = obtenerFilaDesdeY(y);
 
-         
                 if (columna >= 0 && columna < 8 && fila >= 0 && fila < 13) {
-             
+
                     HBox hbox = new HBox();
 
-               
                     for (int i = 0; i < 3; i++) {
                         Label nuevoLabel = new Label(" " + (i + 1));
                         hbox.getChildren().add(nuevoLabel);
@@ -262,11 +290,11 @@ private void obtenerElementosGrid() {
     }
 
     private int obtenerColumnaDesdeX(double x) {
-        return (int) (x / 100); 
+        return (int) (x / 100);
     }
 
     private int obtenerFilaDesdeY(double y) {
-        return (int) (y / 25); 
+        return (int) (y / 25);
     }
 
     private String obtenerHoraDesdeFila(int fila) {
@@ -277,8 +305,30 @@ private void obtenerElementosGrid() {
         return "Día" + columna;
     }
 
- 
-    
+    private void fillTablePatient() {
+
+        PatientService service = new PatientService();
+        patientList = service.getPatients();
+        if (patientList.isEmpty()) {
+        } else {
+            patientObservableList = FXCollections.observableArrayList(patientList);
+        }
+
+        this.tableViewPatient1.refresh();
+        this.tableViewPatient1.setItems(patientObservableList);
+    }
+
+    private void fillTableDoctors() {
+        DoctorService service = new DoctorService();
+        doctorList = service.getDoctor();
+        if (doctorList.isEmpty()) {
+        } else {
+            doctorObservableList = FXCollections.observableArrayList(doctorList);
+        }
+        this.tableViewDoctorsDiary.refresh();
+        this.tableViewDoctorsDiary.setItems(doctorObservableList);
+    }
+
     @FXML
     private void searchPat_Name(KeyEvent event) {
     }
@@ -303,9 +353,6 @@ private void obtenerElementosGrid() {
     private void patientClicked(MouseEvent event) {
     }
 
-    @FXML
-    private void deletePatientClicked(MouseEvent event) {
-    }
 
     @FXML
     private void searchDoctor_Name(KeyEvent event) {
@@ -335,13 +382,10 @@ private void obtenerElementosGrid() {
     private void doctorDiaryClicked(MouseEvent event) {
     }
 
-    @FXML
-    private void selectDiary(MouseEvent event) {
-    }
 
     @FXML
     private void updateAgenda(ActionEvent event) {
-         obtenerElementosGrid();
+        obtenerElementosGrid();
     }
 
     @FXML
@@ -352,5 +396,5 @@ private void obtenerElementosGrid() {
     public void initialize() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
 }
