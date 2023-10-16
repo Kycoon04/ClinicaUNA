@@ -16,6 +16,7 @@ import cr.ac.una.clinicauna.service.PatientService;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
+import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
@@ -282,25 +283,25 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private TextField nameDistMainField;
 
-
     private String matrizAgenda[][] = new String[15][8];
     //private Map<Node, Posicion> mapaPosiciones = new HashMap<>();
     private Map<Integer, String> horas = new HashMap<>();
     private Map<Integer, String> dias = new HashMap<>();
-    ToggleGroup Tou= new ToggleGroup();
-   
+    ToggleGroup Tou = new ToggleGroup();
+
     @FXML
     private Button btnDiseases;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-      
+        formater();
         OptionsMenuView.toFront();
-        UserDto us= new UserDto();
-        us= (UserDto) AppContext.getInstance().get("Usuario");
-        if(us.getUsType().equals("Receptionist")){
+        UserDto us = new UserDto();
+        us = (UserDto) AppContext.getInstance().get("Usuario");
+        if (us.getUsType().equals("Receptionist")) {
             btnMantUsers.setDisable(true);
             btnMantDoctors.setDisable(true);
         }
@@ -334,29 +335,42 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableColPatEmail.setCellValueFactory(new PropertyValueFactory("PtEmail"));
         this.tableColId.setCellValueFactory(new PropertyValueFactory("PtId"));
 
-     
-        
         this.tableColDeseaseId.setCellValueFactory(new PropertyValueFactory("DsId"));
         this.tableColDeseaseName.setCellValueFactory(new PropertyValueFactory("DsName"));
-        
 
-       
         fillTableUsers();
         fillTableDoctors();
         fillTablePatient();
         fillTableDiseases();
     }
 
- 
+    private void formater() {
+
+        userMainField.setTextFormatter(Formato.getInstance().letrasFormat(18));
+        identMainField.setTextFormatter(Formato.getInstance().integerFormat());
+        psurnameMainField.setTextFormatter(Formato.getInstance().letrasFormat(18));
+        ssurnameMainField.setTextFormatter(Formato.getInstance().letrasFormat(18));
+        usernameMainField.setTextFormatter(Formato.getInstance().letrasFormat(20));
+        emailMainField.setTextFormatter(Formato.getInstance().maxLengthFormat(80));
+
+        namePatMainField.setTextFormatter(Formato.getInstance().letrasFormat(18));
+        identPatMainField.setTextFormatter(Formato.getInstance().integerFormat());
+        firstNamePatMainField.setTextFormatter(Formato.getInstance().letrasFormat(18));
+        lastNamePatMainField.setTextFormatter(Formato.getInstance().letrasFormat(18));
+        emailPatMainField.setTextFormatter(Formato.getInstance().maxLengthFormat(80));
+
+        codeDocMainField.setTextFormatter(Formato.getInstance().integerFormat());
+        licenseDocMainField.setTextFormatter(Formato.getInstance().integerFormat());
+        folioDocMainField.setTextFormatter(Formato.getInstance().integerFormat());
+        breaksMainField.setTextFormatter(Formato.getInstance().integerFormat());
+        
+        nameDistMainField.setTextFormatter(Formato.getInstance().letrasFormat(10));
+    }
+
     @Override
     public void initialize() {
 
     }
-
-  
-
-
-   
 
     private void fillTableUsers() {
         UserService service = new UserService();
@@ -1063,6 +1077,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         if (diseaseDto == null) {
             diseaseDto.setDsName(nameDistMainField.getText());
             r = service.saveDisease(diseaseDto);
+            diseaseDto = new DiseaseDto();
         } else if (diseaseDto != null) {
             diseaseDto.setDsId(diseaseDto.getDsId());
             diseaseDto.setDsName(nameDistMainField.getText());
@@ -1167,10 +1182,9 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         filteredDisease(filteredDisease);
     }
 
-
     @FXML
     private void openManDiary(ActionEvent event) {
-       FlowController.getInstance().goMain("ViewDiariesOptions");
+        FlowController.getInstance().goMain("ViewDiariesOptions");
     }
 
 }

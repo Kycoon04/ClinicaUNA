@@ -13,6 +13,7 @@ import cr.ac.una.clinicauna.service.AppointmentService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.PatientService;
 import cr.ac.una.clinicauna.util.AppContext;
+import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
@@ -204,7 +205,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         fillTableDoctors();
 
     }
-
+    
+  
     private void fillAppoiment() {
         AppointmentDto appointmentDto = new AppointmentDto();
         Respuesta r = null;
@@ -232,9 +234,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         r= service.saveAppointment(appointmentDto);
         }
         if(r.getEstado()){
-           new Mensaje().showModal(Alert.AlertType.INFORMATION, "Registrada", getStage(), "");
+           new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Registrada");
         }else{
-             new Mensaje().showModal(Alert.AlertType.INFORMATION, "No se pudo Registrar", getStage(), "");
+             new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "No se pudo Registrar");
         }
     }
 
