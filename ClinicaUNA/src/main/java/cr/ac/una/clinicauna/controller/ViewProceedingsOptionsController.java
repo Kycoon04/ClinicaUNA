@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicauna.controller;
 
+import cr.ac.una.clinicauna.util.FlowController;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -26,7 +27,7 @@ import javafx.scene.text.Text;
  *
  * @author Anderson
  */
-public class ViewProceedingsOptionsController implements Initializable {
+public class ViewProceedingsOptionsController extends Controller implements Initializable {
 
     @FXML
     private BorderPane MenuView;
@@ -34,26 +35,6 @@ public class ViewProceedingsOptionsController implements Initializable {
     private TabPane tabPaneMantWorkers111;
     @FXML
     private Tab tabPatient;
-    @FXML
-    private TextField textFieldSearchPat_Name1;
-    @FXML
-    private TextField textFieldSearchPat_Pusername1;
-    @FXML
-    private TextField textFieldSearchPat_Identification1;
-    @FXML
-    private TextField textFieldSearchPat_Gender1;
-    @FXML
-    private TextField textFieldSearchPat_Susername1;
-    @FXML
-    private TableView<?> tableViewPatient1;
-    @FXML
-    private TableColumn<?, ?> tableColId1;
-    @FXML
-    private TableColumn<?, ?> tableColPatIdentif1;
-    @FXML
-    private TableColumn<?, ?> tableColPatName1;
-    @FXML
-    private TableColumn<?, ?> tableColPatGender1;
     @FXML
     private Tab tabDiary1;
     @FXML
@@ -76,6 +57,24 @@ public class ViewProceedingsOptionsController implements Initializable {
     private TextField userLog;
     @FXML
     private TextField nameP;
+    @FXML
+    private TextField textFieldNameExam;
+    @FXML
+    private TextField textFieldDoctor;
+    @FXML
+    private TextArea textFieldDoctorNotes;
+    @FXML
+    private TextField textFieldSearchExam_Doctor;
+    @FXML
+    private TextField textFieldSearchExam_Name;
+    @FXML
+    private TableView<?> tableViewExamns;
+    @FXML
+    private TableColumn<?, ?> tableColExamName;
+    @FXML
+    private TableColumn<?, ?> tableColExamDoctor;
+    @FXML
+    private Tab tabDiary11;
 
     /**
      * Initializes the controller class.
@@ -97,17 +96,7 @@ public class ViewProceedingsOptionsController implements Initializable {
     private void searchPat_identification(KeyEvent event) {
     }
 
-    @FXML
-    private void searchPat_Gender(KeyEvent event) {
-    }
 
-    @FXML
-    private void searchPat_Susername(KeyEvent event) {
-    }
-
-    @FXML
-    private void patientClicked(MouseEvent event) {
-    }
 
     @FXML
     private void ContinueDetail(ActionEvent event) {
@@ -115,6 +104,19 @@ public class ViewProceedingsOptionsController implements Initializable {
 
     @FXML
     private void UpdateWorkerEnter(KeyEvent event) {
+    }
+
+    @FXML
+    private void backProceeding(ActionEvent event) {
+        FlowController.getInstance().goMain("ViewMaintenanceOptions");
+    }
+
+    @FXML
+    private void examClicked(MouseEvent event) {
+    }
+
+    @Override
+    public void initialize() {
     }
     
 }
