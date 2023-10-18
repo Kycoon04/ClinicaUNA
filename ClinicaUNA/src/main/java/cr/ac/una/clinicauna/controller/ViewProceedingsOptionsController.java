@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -74,7 +75,51 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private TableColumn<?, ?> tableColExamDoctor;
     @FXML
-    private Tab tabDiary11;
+    private BorderPane OptionsMainDesease;
+    @FXML
+    private TextField nameDistMainField;
+    @FXML
+    private TextField textFieldSearchDesease_ID;
+    @FXML
+    private TextField textFieldSearchDesease_Name;
+    @FXML
+    private Button BtndeletePatient1;
+    @FXML
+    private TableView<?> tableViewDisease;
+    @FXML
+    private TableColumn<?, ?> tableColDeseaseId;
+    @FXML
+    private TableColumn<?, ?> tableColDeseaseName;
+    @FXML
+    private Text textProcName;
+    @FXML
+    private TextField textFieldPersBgType;
+    @FXML
+    private TextArea textFieldPersBgContext;
+    @FXML
+    private TextField textFieldSearchPersBg_Type;
+    @FXML
+    private TextField textFieldSearchPersBg_Context;
+    @FXML
+    private TableView<?> tableViewPersonalBg;
+    @FXML
+    private TableColumn<?, ?> tableColPersBgType;
+    @FXML
+    private TableColumn<?, ?> tableColPersBgContext;
+    @FXML
+    private TextField textFieldFamBgRelationship;
+    @FXML
+    private TextField textFieldFamBgDisease;
+    @FXML
+    private TextField textFieldSearchFamBg_Relationship;
+    @FXML
+    private TextField textFieldSearchFamBg_Disease;
+    @FXML
+    private TableView<?> tableViewFamilyBg;
+    @FXML
+    private TableColumn<?, ?> tableColFamBgRelation;
+    @FXML
+    private TableColumn<?, ?> tableColFamBgDisease;
 
     /**
      * Initializes the controller class.
@@ -117,6 +162,50 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @Override
     public void initialize() {
+    }
+
+    @FXML
+    private void AddDesease(ActionEvent event) {
+    }
+
+    @FXML
+    private void searchDesease_Id(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchDesease_Name(KeyEvent event) {
+    }
+
+    @FXML
+    private void deleteDeseaseClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void deseaseClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void updateExam(ActionEvent event) {
+    }
+
+    @FXML
+    private void updatePersonalBg(ActionEvent event) {
+    }
+
+    @FXML
+    private void personalBgClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void selectDisease(KeyEvent event) {
+    }
+
+    @FXML
+    private void updateFamilyBg(ActionEvent event) {
+    }
+
+    @FXML
+    private void familiyBgClicked(MouseEvent event) {
     }
     
 }
