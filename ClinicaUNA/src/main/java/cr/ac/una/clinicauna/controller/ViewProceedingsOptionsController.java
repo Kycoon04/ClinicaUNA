@@ -31,8 +31,6 @@ import javafx.scene.text.Text;
 public class ViewProceedingsOptionsController extends Controller implements Initializable {
 
     @FXML
-    private BorderPane MenuView;
-    @FXML
     private TabPane tabPaneMantWorkers111;
     @FXML
     private Tab tabPatient;
@@ -62,8 +60,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TextField textFieldNameExam;
     @FXML
     private TextField textFieldDoctor;
-    @FXML
-    private TextArea textFieldDoctorNotes;
     @FXML
     private TextField textFieldSearchExam_Doctor;
     @FXML
@@ -95,8 +91,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldPersBgType;
     @FXML
-    private TextArea textFieldPersBgContext;
-    @FXML
     private TextField textFieldSearchPersBg_Type;
     @FXML
     private TextField textFieldSearchPersBg_Context;
@@ -120,6 +114,46 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TableColumn<?, ?> tableColFamBgRelation;
     @FXML
     private TableColumn<?, ?> tableColFamBgDisease;
+    @FXML
+    private BorderPane ReportView;
+    @FXML
+    private TextField textFieldRep_Pressure;
+    @FXML
+    private TextField textFieldRep_HeartRate;
+    @FXML
+    private TextField textFieldRep_Height;
+    @FXML
+    private TextField textFieldRep_Weight;
+    @FXML
+    private TextField textFieldRep_Temperature;
+    @FXML
+    private TextField textFieldRep_BodyMass;
+    @FXML
+    private TextArea textAreaRep_Reason;
+    @FXML
+    private TextArea textAreaRep_Notes;
+    @FXML
+    private BorderPane OptionsProceedingsView;
+    @FXML
+    private TextArea textAreaDoctorNotes;
+    @FXML
+    private TextArea textAreaPersBgContext;
+    @FXML
+    private TextField textFieldSpaceState;
+    @FXML
+    private TextField textFieldSpaceDate;
+    @FXML
+    private TextField textFieldSpaceHour;
+    @FXML
+    private TextField textFieldSearchSpace_State;
+    @FXML
+    private TableView<?> tableViewPersonalBg1;
+    @FXML
+    private TableColumn<?, ?> tableColSpaceState;
+    @FXML
+    private TableColumn<?, ?> tableColPersBgContext1;
+    @FXML
+    private TableColumn<?, ?> tableColPersBgType11;
 
     /**
      * Initializes the controller class.
@@ -127,6 +161,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+         OptionsProceedingsView.toFront();
     }    
 
     @FXML
@@ -196,9 +231,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void personalBgClicked(MouseEvent event) {
     }
 
-    @FXML
-    private void selectDisease(KeyEvent event) {
-    }
 
     @FXML
     private void updateFamilyBg(ActionEvent event) {
@@ -206,6 +238,25 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void familiyBgClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void backReport(ActionEvent event) {
+        OptionsProceedingsView.toFront();
+    }
+
+    @FXML
+    private void calculateBodyMass(ActionEvent event) {
+    }
+
+    @FXML
+    private void generateReport(ActionEvent event) {
+        ReportView.toFront();
+    }
+
+    @FXML
+    private void selectDisease(MouseEvent event) {
+         OptionsMainDesease.toFront();
     }
     
 }
