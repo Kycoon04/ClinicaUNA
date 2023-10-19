@@ -400,7 +400,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         } else {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Error al guardar paciente");
         }
-        patientDto = null;
+        patientDto = new PatientDto();
     }
 
     PatientDto bindNewPatient() {

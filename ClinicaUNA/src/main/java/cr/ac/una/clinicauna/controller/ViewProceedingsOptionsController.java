@@ -4,12 +4,24 @@
  */
 package cr.ac.una.clinicauna.controller;
 
+import cr.ac.una.clinicauna.model.DiseaseDto;
+import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.util.FlowController;
+import cr.ac.una.clinicauna.util.Formato;
+import cr.ac.una.clinicauna.util.Mensaje;
+import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -18,6 +30,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -81,11 +94,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private Button BtndeletePatient1;
     @FXML
-    private TableView<?> tableViewDisease;
+    private TableView<DiseaseDto> tableViewDisease;
     @FXML
-    private TableColumn<?, ?> tableColDeseaseId;
+    private TableColumn<DiseaseDto, String> tableColDeseaseId;
     @FXML
-    private TableColumn<?, ?> tableColDeseaseName;
+    private TableColumn<DiseaseDto, String> tableColDeseaseName;
     @FXML
     private Text textProcName;
     @FXML
@@ -154,7 +167,14 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TableColumn<?, ?> tableColPersBgContext1;
     @FXML
     private TableColumn<?, ?> tableColPersBgType11;
+    private boolean deleteDisease= false;
+    
 
+    DiseaseDto diseaseDto= new DiseaseDto();
+    
+    List<DiseaseDto> diseaseList = new ArrayList<>();
+    private ObservableList<DiseaseDto> diseaseObservableList;
+    
     /**
      * Initializes the controller class.
      */
@@ -162,6 +182,13 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
          OptionsProceedingsView.toFront();
+         
+        this.tableColDeseaseId.setCellValueFactory(new PropertyValueFactory("DsId"));
+        this.tableColDeseaseName.setCellValueFactory(new PropertyValueFactory("DsName"));
+     
+        
+        fillTableDiseases();
+        nameDistMainField.setTextFormatter(Formato.getInstance().letrasFormat(10));
     }    
 
     @FXML
@@ -175,7 +202,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private void searchPat_identification(KeyEvent event) {
     }
-
 
 
     @FXML
@@ -199,26 +225,135 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     public void initialize() {
     }
 
+    
+    private void fillTableDiseases() {
+
+        DiseaseService service = new DiseaseService();
+        diseaseList = service.getDisease();
+        if (diseaseList.isEmpty()) {
+        } else {
+            diseaseObservableList = FXCollections.observableArrayList(diseaseList);
+        }
+
+        this.tableViewDisease.refresh();
+        this.tableViewDisease.setItems(diseaseObservableList);
+    }
+
+
+    
     @FXML
     private void AddDesease(ActionEvent event) {
+        DiseaseService service = new DiseaseService();
+        Respuesta r = null;
+
+        if (diseaseDto == null) {
+            diseaseDto.setDsName(nameDistMainField.getText());
+            r = service.saveDisease(diseaseDto);
+            diseaseDto = new DiseaseDto();
+        } else if (diseaseDto != null) {
+            diseaseDto.setDsId(diseaseDto.getDsId());
+            diseaseDto.setDsName(nameDistMainField.getText());
+            r = service.saveDisease(diseaseDto);
+            diseaseDto = new DiseaseDto();
+        }
+        if (r.getEstado()) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Enfermedad guardada");
+            //limpiar campos
+        } else {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Error al Guardar Enfermedad");
+        }
+
+        fillTableDiseases();
+        
     }
 
     @FXML
     private void searchDesease_Id(KeyEvent event) {
+         FilteredList<DiseaseDto> filteredDisease = new FilteredList<>(diseaseObservableList, f -> true);
+        textFieldSearchDesease_ID.textProperty().addListener((observable, value, newValue) -> {
+            filteredDisease.setPredicate(DiseaseDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+
+                String search = newValue.toLowerCase();
+                String disease = String.valueOf(DiseaseDto.getDsId());
+
+                if (disease.indexOf(search) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDisease(filteredDisease);
     }
 
+      private void filteredDisease(FilteredList<DiseaseDto> list) {
+        SortedList<DiseaseDto> sorted = new SortedList<>(list);
+        sorted.comparatorProperty().bind(tableViewDisease.comparatorProperty());
+        tableViewDisease.setItems(sorted);
+    }
+      
     @FXML
     private void searchDesease_Name(KeyEvent event) {
+                FilteredList<DiseaseDto> filteredDisease = new FilteredList<>(diseaseObservableList, f -> true);
+        textFieldSearchDesease_Name.textProperty().addListener((observable, value, newValue) -> {
+            filteredDisease.setPredicate(DiseaseDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (DiseaseDto.getDsName().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDisease(filteredDisease);
     }
 
     @FXML
     private void deleteDeseaseClicked(MouseEvent event) {
+          deleteDisease = true;
     }
 
     @FXML
     private void deseaseClicked(MouseEvent event) {
+        
+  DiseaseService service = new DiseaseService();
+        Respuesta r;
+        if (event.getClickCount() == 1) {
+            if (deleteDisease) {
+                diseaseDto = tableViewDisease.getSelectionModel().getSelectedItem();
+                if (diseaseDto != null) {
+                    r = service.deleteDisease(diseaseDto.getDsId());
+                    diseaseList.clear();
+                    diseaseObservableList.clear();
+                    fillTableDiseases();
+                    deleteDisease = false;
+                    diseaseDto = new DiseaseDto();
+                    if (r.getEstado()) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Enfermedad Eliminada Correctamente");
+                    } else {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Error al eliminar Enfermedad");
+                    }
+                }
+            }
+        }
+        if (event.getClickCount() == 2) {
+            diseaseDto = tableViewDisease.getSelectionModel().getSelectedItem();
+            if (diseaseDto != null) {
+                fillDisease(diseaseDto);
+            }
+        }
     }
 
+      private void fillDisease(DiseaseDto diseaseDto) {
+        nameDistMainField.setText(diseaseDto.getDsName());
+
+    }
     @FXML
     private void updateExam(ActionEvent event) {
     }
