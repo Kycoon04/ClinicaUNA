@@ -262,7 +262,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private TextField breaksMainField;
     private TextField namePatMainField1;
 
-
     private TextField nameDistMainField;
 
     private String matrizAgenda[][] = new String[15][8];
@@ -271,6 +270,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private Map<Integer, String> dias = new HashMap<>();
     ToggleGroup Tou = new ToggleGroup();
 
+    UserDto usrIdiom = (UserDto) AppContext.getInstance().get("Usuario");
 
     /**
      * Initializes the controller class.
@@ -315,12 +315,10 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableColPatEmail.setCellValueFactory(new PropertyValueFactory("PtEmail"));
         this.tableColId.setCellValueFactory(new PropertyValueFactory("PtId"));
 
-
-
         fillTableUsers();
         fillTableDoctors();
         fillTablePatient();
-   
+
     }
 
     private void formater() {
@@ -342,8 +340,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         licenseDocMainField.setTextFormatter(Formato.getInstance().integerFormat());
         folioDocMainField.setTextFormatter(Formato.getInstance().integerFormat());
         breaksMainField.setTextFormatter(Formato.getInstance().integerFormat());
-        
-    
+
     }
 
     @Override
@@ -355,6 +352,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         UserService service = new UserService();
         userList = service.getUsers();
         if (userList.isEmpty()) {
+
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "No hay ningun Usuario", getStage(), "");
         } else {
             userObservableList = FXCollections.observableArrayList(userList);
@@ -387,7 +385,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableViewPatient.refresh();
         this.tableViewPatient.setItems(patientObservableList);
     }
-
 
     private void fillPatient(PatientDto patientsDto) {
         namePatMainField.setText(patientsDto.getPtName());
@@ -423,9 +420,19 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             UserDto us = new UserDto();
             UserService service = new UserService();
             service.saveUser(bindNewUser());
+            
+            // hacer la respuesta
         } else {
             userDoctor = true;
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Debes completar la siguiente información");
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Debes completar la siguiente información");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Doctor", getStage(), "You must complete the following information");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer le médecin", getStage(), "Vous devez compléter les informations suivantes");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "医師を保存する", getStage(), "次の情報を入力してください");
+            }
             textMainDoctor.setText(userMainField.getText() + " " + psurnameMainField.getText() + " " + ssurnameMainField.getText());
             OptionsMainDoctorsView.toFront();
         }
@@ -834,6 +841,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 doctorDto = new DoctorDto();
                 userDto = new UserDto();
                 if (r.getEstado()) {
+                    
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Usuario eliminado");
                 } else {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Error aleliminar usuario");
@@ -1038,8 +1046,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void openProceeding(ActionEvent event) {
-         FlowController.getInstance().goMain("ViewProceedingsOptions");
+        FlowController.getInstance().goMain("ViewProceedingsOptions");
     }
-
 
 }
