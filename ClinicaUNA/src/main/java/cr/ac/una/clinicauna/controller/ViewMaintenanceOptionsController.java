@@ -260,27 +260,9 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private JFXDatePicker datePickerBirthdayPat;
     @FXML
     private TextField breaksMainField;
-    @FXML
-    private TabPane tabPaneMantWorkers21;
-    @FXML
-    private Tab tabMantPatient1;
     private TextField namePatMainField1;
-    @FXML
-    private TextField textFieldSearchDesease_ID;
-    @FXML
-    private TextField textFieldSearchDesease_Name;
-    @FXML
-    private Button BtndeletePatient1;
-    @FXML
-    private BorderPane OptionsMainDesease;
 
-    @FXML
-    private TableColumn<DiseaseDto, String> tableColDeseaseId;
-    @FXML
-    private TableColumn<DiseaseDto, String> tableColDeseaseName;
-    @FXML
-    private TableView<DiseaseDto> tableViewDisease;
-    @FXML
+
     private TextField nameDistMainField;
 
     private String matrizAgenda[][] = new String[15][8];
@@ -289,8 +271,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private Map<Integer, String> dias = new HashMap<>();
     ToggleGroup Tou = new ToggleGroup();
 
-    @FXML
-    private Button btnDiseases;
 
     /**
      * Initializes the controller class.
@@ -335,13 +315,12 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableColPatEmail.setCellValueFactory(new PropertyValueFactory("PtEmail"));
         this.tableColId.setCellValueFactory(new PropertyValueFactory("PtId"));
 
-        this.tableColDeseaseId.setCellValueFactory(new PropertyValueFactory("DsId"));
-        this.tableColDeseaseName.setCellValueFactory(new PropertyValueFactory("DsName"));
+
 
         fillTableUsers();
         fillTableDoctors();
         fillTablePatient();
-        fillTableDiseases();
+   
     }
 
     private void formater() {
@@ -364,7 +343,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         folioDocMainField.setTextFormatter(Formato.getInstance().integerFormat());
         breaksMainField.setTextFormatter(Formato.getInstance().integerFormat());
         
-        nameDistMainField.setTextFormatter(Formato.getInstance().letrasFormat(10));
+    
     }
 
     @Override
@@ -409,18 +388,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableViewPatient.setItems(patientObservableList);
     }
 
-    private void fillTableDiseases() {
-
-        DiseaseService service = new DiseaseService();
-        diseaseList = service.getDisease();
-        if (diseaseList.isEmpty()) {
-        } else {
-            diseaseObservableList = FXCollections.observableArrayList(diseaseList);
-        }
-
-        this.tableViewDisease.refresh();
-        this.tableViewDisease.setItems(diseaseObservableList);
-    }
 
     private void fillPatient(PatientDto patientsDto) {
         namePatMainField.setText(patientsDto.getPtName());
@@ -1065,124 +1032,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     }
 
     @FXML
-    private void openManDesease(ActionEvent event) {
-        OptionsMainDesease.toFront();
-    }
-
-    @FXML
-    private void UpdateDesease(ActionEvent event) {
-        DiseaseService service = new DiseaseService();
-        Respuesta r = null;
-
-        if (diseaseDto == null) {
-            diseaseDto.setDsName(nameDistMainField.getText());
-            r = service.saveDisease(diseaseDto);
-            diseaseDto = new DiseaseDto();
-        } else if (diseaseDto != null) {
-            diseaseDto.setDsId(diseaseDto.getDsId());
-            diseaseDto.setDsName(nameDistMainField.getText());
-            r = service.saveDisease(diseaseDto);
-            diseaseDto = new DiseaseDto();
-        }
-        if (r.getEstado()) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Enfermedad guardada");
-            //limpiar campos
-        } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Error al Guardar Enfermedad");
-        }
-
-        fillTableDiseases();
-    }
-
-    @FXML
-    private void deseaseClicked(MouseEvent event) {
-        DiseaseService service = new DiseaseService();
-        Respuesta r;
-        if (event.getClickCount() == 1) {
-            if (deleteDisease) {
-                diseaseDto = tableViewDisease.getSelectionModel().getSelectedItem();
-                if (diseaseDto != null) {
-                    r = service.deleteDisease(diseaseDto.getDsId());
-                    diseaseList.clear();
-                    diseaseObservableList.clear();
-                    fillTableDiseases();
-                    deleteDisease = false;
-                    diseaseDto = new DiseaseDto();
-                    if (r.getEstado()) {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Enfermedad Eliminada Correctamente");
-                    } else {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Error al eliminar Enfermedad");
-                    }
-                }
-            }
-        }
-        if (event.getClickCount() == 2) {
-            diseaseDto = tableViewDisease.getSelectionModel().getSelectedItem();
-            if (diseaseDto != null) {
-                fillDisease(diseaseDto);
-            }
-        }
-
-    }
-
-    private void fillDisease(DiseaseDto diseaseDto) {
-        nameDistMainField.setText(diseaseDto.getDsName());
-
-    }
-
-    @FXML
-    private void deleteDeseaseClicked(MouseEvent event) {
-        deleteDisease = true;
-    }
-
-    @FXML
-    private void searchDesease_Id(KeyEvent event) {
-        FilteredList<DiseaseDto> filteredDisease = new FilteredList<>(diseaseObservableList, f -> true);
-        textFieldSearchDesease_ID.textProperty().addListener((observable, value, newValue) -> {
-            filteredDisease.setPredicate(DiseaseDto -> {
-                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
-                    return true;
-                }
-
-                String search = newValue.toLowerCase();
-                String disease = String.valueOf(DiseaseDto.getDsId());
-
-                if (disease.indexOf(search) == 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-        });
-        filteredDisease(filteredDisease);
-    }
-
-    private void filteredDisease(FilteredList<DiseaseDto> list) {
-        SortedList<DiseaseDto> sorted = new SortedList<>(list);
-        sorted.comparatorProperty().bind(tableViewDisease.comparatorProperty());
-        tableViewDisease.setItems(sorted);
-    }
-
-    @FXML
-    private void searchDesease_Name(KeyEvent event) {
-        FilteredList<DiseaseDto> filteredDisease = new FilteredList<>(diseaseObservableList, f -> true);
-        textFieldSearchDesease_Name.textProperty().addListener((observable, value, newValue) -> {
-            filteredDisease.setPredicate(DiseaseDto -> {
-                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
-                    return true;
-                }
-                String search = newValue.toLowerCase();
-                if (DiseaseDto.getDsName().toLowerCase().contains(search)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-        });
-        filteredDisease(filteredDisease);
-    }
-
-    @FXML
     private void openManDiary(ActionEvent event) {
         FlowController.getInstance().goMain("ViewDiariesOptions");
     }
@@ -1191,5 +1040,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private void openProceeding(ActionEvent event) {
          FlowController.getInstance().goMain("ViewProceedingsOptions");
     }
+
 
 }
