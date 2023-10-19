@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.RadioButton?>
@@ -19,238 +20,856 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="MenuView" prefHeight="600.0" prefWidth="1000.0" stylesheets="@StyleClinica.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.clinicauna.controller.ViewProceedingsOptionsController">
-   <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <HBox alignment="CENTER" fillHeight="false" prefHeight="464.0" prefWidth="1000.0" style="-fx-background-color: white;">
+<StackPane stylesheets="@StyleClinica.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.clinicauna.controller.ViewProceedingsOptionsController">
+   <children>
+      <BorderPane fx:id="ReportView" layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="967.0">
+         <center>
+            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
                <children>
-                  <GridPane prefHeight="91.0" prefWidth="986.0">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+                  <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="57.0" visible="false" />
+                  <VBox prefHeight="600.0" prefWidth="454.0">
                      <children>
-                        <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Expediente" textAlignment="CENTER" wrappingWidth="346.73670768737793" GridPane.columnIndex="1">
-                           <font>
-                              <Font name="Tw Cen MT" size="28.0" />
-                           </font>
-                        </Text>
-                        <Button mnemonicParsing="false" onAction="#backProceeding" prefHeight="24.0" prefWidth="113.0" style="-fx-background-color: transparent;">
-                           <graphic>
-                              <ImageView fitHeight="59.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../resources/IconBack.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#backReport" prefHeight="24.0" prefWidth="113.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="59.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/IconBack.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets top="8.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Reporte" wrappingWidth="346.73670768737793">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="25.0" />
+                                 </HBox.margin>
+                              </Text>
+                           </children>
+                        </HBox>
+                        <Separator prefHeight="33.0" prefWidth="503.0" visible="false" />
+                        <HBox prefHeight="37.0" prefWidth="503.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 23;" text="%Presion" wrappingWidth="161.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_Pressure" prefHeight="26.0" prefWidth="208.0" />
+                           </children>
+                        </HBox>
+                        <Separator prefHeight="34.0" prefWidth="503.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="144.0" prefHeight="37.0" prefWidth="503.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%FrecuenciaCardiaca" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_HeartRate" prefHeight="51.0" prefWidth="208.0" />
+                           </children>
+                        </HBox>
+                        <Separator layoutX="10.0" layoutY="181.0" prefHeight="36.0" prefWidth="503.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="200.0" prefHeight="37.0" prefWidth="503.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Altura" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_Height" prefHeight="51.0" prefWidth="208.0" />
+                           </children>
+                        </HBox>
+                        <Separator layoutX="10.0" layoutY="248.0" prefHeight="40.0" prefWidth="503.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="267.0" prefHeight="37.0" prefWidth="503.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Peso" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_Weight" prefHeight="51.0" prefWidth="208.0" />
+                           </children>
+                        </HBox>
+                        <Separator layoutX="10.0" layoutY="304.0" prefHeight="38.0" prefWidth="503.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="324.0" prefHeight="37.0" prefWidth="503.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Temperatura" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_Temperature" prefHeight="51.0" prefWidth="208.0" />
+                           </children>
+                        </HBox>
+                        <Separator layoutX="10.0" layoutY="361.0" prefHeight="51.0" prefWidth="503.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="380.0" prefHeight="37.0" prefWidth="503.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%MasaCorporal" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_BodyMass" editable="false" prefHeight="38.0" prefWidth="170.0" />
+                              <Button mnemonicParsing="false" onAction="#calculateBodyMass" prefHeight="30.0" prefWidth="110.0" text="%Calcular">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
                      </children>
-                  </GridPane>
+                  </VBox>
+                  <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="15.0" visible="false" />
+                  <VBox prefHeight="600.0" prefWidth="443.0">
+                     <children>
+                        <Separator prefHeight="130.0" prefWidth="436.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="101.0" prefHeight="110.0" prefWidth="401.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%RazonConsulta" wrappingWidth="185.93665885925293">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextArea fx:id="textAreaRep_Reason" prefHeight="110.0" prefWidth="235.0" />
+                           </children>
+                        </HBox>
+                        <Separator layoutX="10.0" layoutY="10.0" prefHeight="91.0" prefWidth="401.0" visible="false" />
+                        <HBox prefHeight="110.0" prefWidth="401.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Observaciones" wrappingWidth="185.93665885925293">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextArea fx:id="textAreaRep_Notes" prefHeight="110.0" prefWidth="235.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
                </children>
             </HBox>
-            <TabPane fx:id="tabPaneMantWorkers111" prefHeight="742.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
-               <tabs>
-                  <Tab fx:id="tabPatient" text="%ListaExams">
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="486.0" prefWidth="1000.0">
+         </center>
+      </BorderPane>
+      <BorderPane fx:id="OptionsProceedingsView" prefHeight="600.0" prefWidth="1000.0" stylesheets="@StyleClinica.css">
+         <center>
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="CENTER" fillHeight="false" prefHeight="464.0" prefWidth="1000.0" style="-fx-background-color: white;">
+                     <children>
+                        <GridPane prefHeight="91.0" prefWidth="986.0">
+                          <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
                            <children>
-                              <HBox prefHeight="411.0" prefWidth="1000.0">
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Expediente" textAlignment="CENTER" wrappingWidth="346.73670768737793" GridPane.columnIndex="1">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <Button mnemonicParsing="false" onAction="#backProceeding" prefHeight="24.0" prefWidth="113.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="59.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/IconBack.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Text id="Text" fill="#000359" layoutX="339.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Nombre" textAlignment="RIGHT" wrappingWidth="322.73670768737793" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="24.0" />
+                                 </font>
+                              </Text>
+                              <Text id="Text" fx:id="textProcName" fill="#000359" layoutX="10.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="646.7366466522217" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="24.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </HBox>
+                  <TabPane fx:id="tabPaneMantWorkers111" prefHeight="742.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
+                     <tabs>
+                        <Tab fx:id="tabPatient" text="%ListaExams">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="486.0" prefWidth="1000.0">
                                  <children>
-                                    <VBox alignment="CENTER" prefHeight="374.0" prefWidth="862.0">
+                                    <HBox prefHeight="411.0" prefWidth="1000.0">
                                        <children>
-                                          <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%DatosExamenes" wrappingWidth="346.73670768737793">
-                                             <font>
-                                                <Font name="Tw Cen MT" size="28.0" />
-                                             </font>
-                                          </Text>
-                                          <Separator prefHeight="30.0" prefWidth="920.0" visible="false" />
-                                          <GridPane prefHeight="304.0" prefWidth="561.0">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="215.1999755859375" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="275.20002441406245" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="41.79998779296875" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="29.399999999999977" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="55.8000244140625" minHeight="10.0" prefHeight="18.200018310546874" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="103.59998168945312" minHeight="10.0" prefHeight="103.59998168945312" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="46.199987792968756" minHeight="5.400000000000006" prefHeight="35.799963378906256" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="101.4" minHeight="10.0" prefHeight="71.00003662109376" vgrow="SOMETIMES" />
-                                             </rowConstraints>
+                                          <VBox alignment="CENTER" prefHeight="374.0" prefWidth="862.0">
                                              <children>
-                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%NombreExamen" textAlignment="RIGHT" wrappingWidth="203.93674278259277">
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%DatosExamenes" wrappingWidth="346.73670768737793">
                                                    <font>
-                                                      <Font name="Tw Cen MT" size="21.0" />
+                                                      <Font name="Tw Cen MT" size="28.0" />
                                                    </font>
                                                 </Text>
-                                                <TextField fx:id="textFieldNameExam" editable="false" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="23.0" />
-                                                   </font>
-                                                </TextField>
-                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Medico" textAlignment="RIGHT" wrappingWidth="208.1367702484131" GridPane.rowIndex="2">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="21.0" />
-                                                   </font>
-                                                </Text>
-                                                <TextField fx:id="textFieldDoctor" onKeyPressed="#searchPat_Pusername" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="23.0" />
-                                                   </font>
-                                                </TextField>
-                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%NotasMedico" textAlignment="RIGHT" wrappingWidth="206.13658714294434" GridPane.rowIndex="4">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="21.0" />
-                                                   </font>
-                                                </Text>
-                                                <TextArea fx:id="textFieldDoctorNotes" prefHeight="83.0" prefWidth="249.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                             </children>
-                                          </GridPane>
-                                          <Separator prefHeight="32.0" prefWidth="920.0" visible="false" />
-                                       </children>
-                                    </VBox>
-                                    <VBox prefHeight="411.0" prefWidth="741.0">
-                                       <children>
-                                          <GridPane prefHeight="158.0" prefWidth="440.0">
-                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="195.9999755859375" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="210.40002441406247" />
-                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="25.600000000000023" />
-                                             </columnConstraints>
-                                             <rowConstraints>
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                             </rowConstraints>
-                                             <children>
-                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Medico" textAlignment="RIGHT" wrappingWidth="181.53668785095215">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="21.0" />
-                                                   </font>
-                                                </Text>
-                                                <TextField fx:id="textFieldSearchExam_Doctor" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="23.0" />
-                                                   </font>
-                                                </TextField>
-                                                <Text fill="#000359" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%NombreExamen" textAlignment="RIGHT" wrappingWidth="179.5366268157959" GridPane.rowIndex="1">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="21.0" />
-                                                   </font>
-                                                </Text>
-                                                <TextField fx:id="textFieldSearchExam_Name" onKeyPressed="#searchPat_identification" prefHeight="31.0" prefWidth="173.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                   <font>
-                                                      <Font name="Tw Cen MT" size="23.0" />
-                                                   </font>
-                                                </TextField>
-                                             </children>
-                                          </GridPane>
-                                          <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" hvalue="2.0" prefHeight="414.0" prefWidth="440.0" vbarPolicy="ALWAYS" vmax="2.0">
-                                             <content>
-                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="350.0" prefWidth="451.0">
+                                                <Separator prefHeight="14.0" prefWidth="561.0" visible="false" />
+                                                <GridPane prefHeight="270.0" prefWidth="561.0">
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="215.1999755859375" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="275.20002441406245" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="41.79998779296875" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="29.399999999999977" />
+                                                   </columnConstraints>
+                                                   <rowConstraints>
+                                                      <RowConstraints maxHeight="69.19999160766602" minHeight="10.0" prefHeight="69.19999160766602" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="127.20002746582033" minHeight="10.0" prefHeight="99.20001220703126" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="101.4" minHeight="10.0" prefHeight="80.20000000000002" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
                                                    <children>
-                                                      <TableView fx:id="tableViewExamns" layoutY="-4.0" onMouseClicked="#examClicked" prefHeight="352.0" prefWidth="468.0">
-                                                         <columns>
-                                                            <TableColumn fx:id="tableColExamName" prefWidth="218.4000182747841" text="%TableNombreExamen" />
-                                                            <TableColumn fx:id="tableColExamDoctor" minWidth="0.0" prefWidth="234.40005493164062" text="%TableMedicoExamen" />
-                                                         </columns>
-                                                      </TableView>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%NombreExamen" textAlignment="RIGHT" wrappingWidth="203.93674278259277">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldNameExam" editable="false" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Medico" textAlignment="RIGHT" wrappingWidth="208.1367702484131" GridPane.rowIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldDoctor" onKeyPressed="#searchPat_Pusername" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%NotasMedico" textAlignment="RIGHT" wrappingWidth="206.13658714294434" GridPane.rowIndex="2">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextArea fx:id="textAreaDoctorNotes" prefHeight="83.0" prefWidth="249.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                    </children>
-                                                </AnchorPane>
-                                             </content>
-                                          </ScrollPane>
+                                                </GridPane>
+                                                <Separator prefHeight="28.0" prefWidth="561.0" visible="false" />
+                                                <Button mnemonicParsing="false" onAction="#updateExam" prefHeight="30.0" prefWidth="177.0" text="%ManActualizar">
+                                                   <VBox.margin>
+                                                      <Insets bottom="8.0" />
+                                                   </VBox.margin>
+                                                </Button>
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="411.0" prefWidth="741.0">
+                                             <children>
+                                                <GridPane prefHeight="158.0" prefWidth="440.0">
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="195.9999755859375" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="210.40002441406247" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="25.600000000000023" />
+                                                   </columnConstraints>
+                                                   <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
+                                                   <children>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Medico" textAlignment="RIGHT" wrappingWidth="181.53668785095215">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldSearchExam_Doctor" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Text fill="#000359" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%NombreExamen" textAlignment="RIGHT" wrappingWidth="179.5366268157959" GridPane.rowIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldSearchExam_Name" onKeyPressed="#searchPat_identification" prefHeight="31.0" prefWidth="173.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                   </children>
+                                                </GridPane>
+                                                <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" hvalue="2.0" prefHeight="414.0" prefWidth="440.0" vbarPolicy="ALWAYS" vmax="2.0">
+                                                   <content>
+                                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="350.0" prefWidth="451.0">
+                                                         <children>
+                                                            <TableView fx:id="tableViewExamns" layoutY="-4.0" onMouseClicked="#examClicked" prefHeight="352.0" prefWidth="468.0">
+                                                               <columns>
+                                                                  <TableColumn fx:id="tableColExamName" prefWidth="218.4000182747841" text="%TableNombreExamen" />
+                                                                  <TableColumn fx:id="tableColExamDoctor" minWidth="0.0" prefWidth="234.40005493164062" text="%TableMedicoExamen" />
+                                                               </columns>
+                                                            </TableView>
+                                                         </children>
+                                                      </AnchorPane>
+                                                   </content>
+                                                </ScrollPane>
+                                             </children>
+                                          </VBox>
                                        </children>
-                                    </VBox>
+                                    </HBox>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab fx:id="tabDiary1" text="%Details">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" onKeyPressed="#UpdateWorkerEnter" prefHeight="646.0" prefWidth="971.0">
+                                 <children>
+                                    <Text id="Text" fill="#000359" layoutX="18.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Details" wrappingWidth="106.92812204360962">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <Text id="Text" fx:id="textMainDoctor11" fill="#000359" layoutX="445.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="323.12810373306274">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <Button layoutX="335.0" layoutY="457.0" mnemonicParsing="false" onAction="#ContinueDetail" prefHeight="35.0" prefWidth="123.0" text="%continue">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="16.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                    <Text id="Text" fill="#000359" layoutX="41.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%PatientName" wrappingWidth="223.92812204360962">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <Text id="Text" fill="#000359" layoutX="46.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%UserL" wrappingWidth="212.92812204360962">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <Text id="Text" fill="#000359" layoutX="41.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%StateAp" wrappingWidth="184.92812204360962">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <RadioButton fx:id="Attended" layoutX="188.0" layoutY="340.0" mnemonicParsing="false" text="%Attended" />
+                                    <RadioButton fx:id="Scheduled" layoutX="49.0" layoutY="340.0" mnemonicParsing="false" text="%Scheduled" />
+                                    <RadioButton fx:id="Cancelled" layoutX="49.0" layoutY="376.0" mnemonicParsing="false" text="%Cancelled" />
+                                    <RadioButton fx:id="Absent" layoutX="188.0" layoutY="376.0" mnemonicParsing="false" text="%Absent" />
+                                    <Text id="Text" fill="#000359" layoutX="521.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%ReasonAp" wrappingWidth="184.92812204360962">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <TextArea fx:id="reason" layoutX="458.0" layoutY="163.0" prefHeight="260.0" prefWidth="288.0" />
+                                    <Text id="Text" fill="#000359" layoutX="273.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Telephone" wrappingWidth="184.92812204360962">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <Text id="Text" fill="#000359" layoutX="281.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Email" wrappingWidth="136.92812204360962">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <TextField fx:id="numberP" layoutX="273.0" layoutY="129.0" />
+                                    <TextField fx:id="email" layoutX="273.0" layoutY="226.0" />
+                                    <TextField fx:id="userLog" layoutX="38.0" layoutY="226.0" />
+                                    <TextField fx:id="nameP" layoutX="38.0" layoutY="129.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab text="%ListaAntecedentesPer">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="486.0" prefWidth="1000.0">
+                                 <children>
+                                    <HBox prefHeight="411.0" prefWidth="1000.0">
+                                       <children>
+                                          <VBox alignment="CENTER" prefHeight="374.0" prefWidth="862.0">
+                                             <children>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%AntecedentesPersonales" wrappingWidth="346.73670768737793">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="28.0" />
+                                                   </font>
+                                                </Text>
+                                                <Separator prefHeight="42.0" prefWidth="561.0" visible="false" />
+                                                <GridPane prefHeight="230.0" prefWidth="561.0">
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="215.1999755859375" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="275.20002441406245" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="41.79998779296875" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="29.399999999999977" />
+                                                   </columnConstraints>
+                                                   <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="55.8000244140625" minHeight="10.0" prefHeight="22.8000244140625" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="104.199951171875" minHeight="10.0" prefHeight="104.199951171875" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="101.4" minHeight="10.0" prefHeight="71.00003662109376" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
+                                                   <children>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Tipo" textAlignment="RIGHT" wrappingWidth="203.93674278259277">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldPersBgType" editable="false" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Contexto" textAlignment="RIGHT" wrappingWidth="206.13658714294434" GridPane.rowIndex="2">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextArea fx:id="textAreaPersBgContext" prefHeight="83.0" prefWidth="249.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                   </children>
+                                                </GridPane>
+                                                <Button mnemonicParsing="false" onAction="#updatePersonalBg" prefHeight="30.0" prefWidth="177.0" text="%ManActualizar">
+                                                   <VBox.margin>
+                                                      <Insets bottom="8.0" />
+                                                   </VBox.margin>
+                                                </Button>
+                                                <Separator prefHeight="28.0" prefWidth="561.0" visible="false" />
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="411.0" prefWidth="741.0">
+                                             <children>
+                                                <GridPane prefHeight="158.0" prefWidth="440.0">
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="195.9999755859375" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="210.40002441406247" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="25.600000000000023" />
+                                                   </columnConstraints>
+                                                   <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
+                                                   <children>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Tipo" textAlignment="RIGHT" wrappingWidth="181.53668785095215">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldSearchPersBg_Type" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Text fill="#000359" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Contexto" textAlignment="RIGHT" wrappingWidth="179.5366268157959" GridPane.rowIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldSearchPersBg_Context" onKeyPressed="#searchPat_identification" prefHeight="31.0" prefWidth="173.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                   </children>
+                                                </GridPane>
+                                                <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" hvalue="2.0" prefHeight="414.0" prefWidth="440.0" vbarPolicy="ALWAYS" vmax="2.0">
+                                                   <content>
+                                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="350.0" prefWidth="451.0">
+                                                         <children>
+                                                            <TableView fx:id="tableViewPersonalBg" layoutY="-4.0" onMouseClicked="#personalBgClicked" prefHeight="352.0" prefWidth="468.0">
+                                                               <columns>
+                                                                  <TableColumn fx:id="tableColPersBgType" prefWidth="218.4000182747841" text="%Tipo" />
+                                                                  <TableColumn fx:id="tableColPersBgContext" minWidth="0.0" prefWidth="234.40005493164062" text="%Contexto" />
+                                                               </columns>
+                                                            </TableView>
+                                                         </children>
+                                                      </AnchorPane>
+                                                   </content>
+                                                </ScrollPane>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab text="%ListaAntecedentesFamiliares">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="486.0" prefWidth="1000.0">
+                                 <children>
+                                    <HBox prefHeight="411.0" prefWidth="1000.0">
+                                       <children>
+                                          <VBox alignment="CENTER" prefHeight="374.0" prefWidth="862.0">
+                                             <children>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%AntecedentesFamiliares" wrappingWidth="346.73670768737793">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="28.0" />
+                                                   </font>
+                                                   <VBox.margin>
+                                                      <Insets top="25.0" />
+                                                   </VBox.margin>
+                                                </Text>
+                                                <Separator prefHeight="55.0" prefWidth="561.0" visible="false" />
+                                                <GridPane prefHeight="244.0" prefWidth="561.0">
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="215.1999755859375" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="275.20002441406245" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="41.79998779296875" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="29.399999999999977" />
+                                                   </columnConstraints>
+                                                   <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="55.8000244140625" minHeight="10.0" prefHeight="18.200018310546874" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="103.59998168945312" minHeight="10.0" prefHeight="103.59998168945312" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="46.199987792968756" minHeight="5.400000000000006" prefHeight="35.799963378906256" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="101.4" minHeight="10.0" prefHeight="71.00003662109376" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
+                                                   <children>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Relacion" textAlignment="RIGHT" wrappingWidth="203.93674278259277">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldFamBgRelationship" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Enfermedad" textAlignment="RIGHT" wrappingWidth="206.13658714294434" GridPane.rowIndex="2">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldFamBgDisease" editable="false" layoutX="225.0" layoutY="16.0" onMouseClicked="#selectDisease" prefHeight="30.0" prefWidth="180.0" promptText="%Seleccionar" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                   </children>
+                                                </GridPane>
+                                                <Button mnemonicParsing="false" onAction="#updateFamilyBg" prefHeight="30.0" prefWidth="177.0" text="%ManActualizar">
+                                                   <VBox.margin>
+                                                      <Insets bottom="8.0" />
+                                                   </VBox.margin>
+                                                </Button>
+                                                <Separator prefHeight="50.0" prefWidth="561.0" visible="false" />
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="411.0" prefWidth="741.0">
+                                             <children>
+                                                <GridPane prefHeight="158.0" prefWidth="440.0">
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="195.9999755859375" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="210.40002441406247" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="25.600000000000023" />
+                                                   </columnConstraints>
+                                                   <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
+                                                   <children>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Relacion" textAlignment="RIGHT" wrappingWidth="181.53668785095215">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldSearchFamBg_Relationship" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Text fill="#000359" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Enfermedad" textAlignment="RIGHT" wrappingWidth="179.5366268157959" GridPane.rowIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldSearchFamBg_Disease" onKeyPressed="#searchPat_identification" prefHeight="31.0" prefWidth="173.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                   </children>
+                                                </GridPane>
+                                                <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" hvalue="2.0" prefHeight="414.0" prefWidth="440.0" vbarPolicy="ALWAYS" vmax="2.0">
+                                                   <content>
+                                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="350.0" prefWidth="451.0">
+                                                         <children>
+                                                            <TableView fx:id="tableViewFamilyBg" layoutY="-4.0" onMouseClicked="#familiyBgClicked" prefHeight="352.0" prefWidth="468.0">
+                                                               <columns>
+                                                                  <TableColumn fx:id="tableColFamBgRelation" prefWidth="231.2000595331192" text="%Relacion" />
+                                                                  <TableColumn fx:id="tableColFamBgDisease" minWidth="0.0" prefWidth="223.19998168945312" text="%Enfermedad" />
+                                                               </columns>
+                                                            </TableView>
+                                                         </children>
+                                                      </AnchorPane>
+                                                   </content>
+                                                </ScrollPane>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab text="%Reportes">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="486.0" prefWidth="1000.0">
+                                 <children>
+                                    <HBox prefHeight="411.0" prefWidth="1000.0">
+                                       <children>
+                                          <VBox alignment="CENTER" prefHeight="374.0" prefWidth="862.0">
+                                             <children>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Appoiments" wrappingWidth="346.73670768737793">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="28.0" />
+                                                   </font>
+                                                </Text>
+                                                <Separator prefHeight="46.0" prefWidth="561.0" visible="false" />
+                                                <GridPane prefHeight="244.0" prefWidth="561.0">
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="215.1999755859375" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="236.79998779296875" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="81.60001220703128" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="29.399999999999977" />
+                                                   </columnConstraints>
+                                                   <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="55.8000244140625" minHeight="10.0" prefHeight="37.400002288818364" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="103.59998168945312" minHeight="10.0" prefHeight="44.59996337890625" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="101.59998168945313" minHeight="5.400000000000006" prefHeight="87.00003662109377" vgrow="SOMETIMES" />
+                                                      <RowConstraints maxHeight="101.4" minHeight="10.0" prefHeight="46.80003662109377" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
+                                                   <children>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Estado" textAlignment="RIGHT" wrappingWidth="203.93674278259277">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldSpaceState" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Fecha" textAlignment="RIGHT" wrappingWidth="206.13658714294434" GridPane.rowIndex="2">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldSpaceDate" layoutX="225.0" layoutY="13.0" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Text fill="#000359" layoutX="10.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Hora" textAlignment="RIGHT" wrappingWidth="206.13658714294434" GridPane.rowIndex="3">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldSpaceHour" layoutX="224.0" layoutY="94.0" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                   </children>
+                                                </GridPane>
+                                                <Button mnemonicParsing="false" onAction="#generateReport" prefHeight="30.0" prefWidth="177.0" text="%GenerarReporte">
+                                                   <VBox.margin>
+                                                      <Insets bottom="8.0" />
+                                                   </VBox.margin>
+                                                </Button>
+                                                <Separator prefHeight="28.0" prefWidth="561.0" visible="false" />
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="411.0" prefWidth="741.0">
+                                             <children>
+                                                <GridPane prefHeight="158.0" prefWidth="440.0">
+                                                   <columnConstraints>
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="195.9999755859375" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="210.40002441406247" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="25.600000000000023" />
+                                                   </columnConstraints>
+                                                   <rowConstraints>
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                   </rowConstraints>
+                                                   <children>
+                                                      <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Estado" textAlignment="RIGHT" wrappingWidth="181.53668785095215">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField fx:id="textFieldSearchSpace_State" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                      <Text fill="#000359" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Contexto" textAlignment="RIGHT" wrappingWidth="179.5366268157959" GridPane.rowIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="21.0" />
+                                                         </font>
+                                                      </Text>
+                                                      <TextField onKeyPressed="#searchPat_identification" prefHeight="31.0" prefWidth="173.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="23.0" />
+                                                         </font>
+                                                      </TextField>
+                                                   </children>
+                                                </GridPane>
+                                                <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" hvalue="2.0" prefHeight="414.0" prefWidth="440.0" vbarPolicy="ALWAYS" vmax="2.0">
+                                                   <content>
+                                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="350.0" prefWidth="451.0">
+                                                         <children>
+                                                            <TableView fx:id="tableViewPersonalBg1" layoutY="-4.0" onMouseClicked="#personalBgClicked" prefHeight="352.0" prefWidth="468.0">
+                                                               <columns>
+                                                                  <TableColumn fx:id="tableColSpaceState" prefWidth="170.4000107049942" text="%Estado" />
+                                                                  <TableColumn fx:id="tableColPersBgContext1" minWidth="0.0" prefWidth="140.80007934570312" text="%Fecha" />
+                                                                  <TableColumn fx:id="tableColPersBgType11" prefWidth="140.0" text="%Hora" />
+                                                               </columns>
+                                                            </TableView>
+                                                         </children>
+                                                      </AnchorPane>
+                                                   </content>
+                                                </ScrollPane>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                     </tabs>
+                  </TabPane>
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+      <BorderPane fx:id="OptionsMainDesease" prefHeight="600.0" prefWidth="967.0">
+         <center>
+            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Separator prefHeight="36.0" prefWidth="418.0" visible="false" />
+                        <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%MantenimientoEnfermedades" textAlignment="CENTER" wrappingWidth="417.9281220436096">
+                           <font>
+                              <Font name="Tw Cen MT" size="29.0" />
+                           </font>
+                        </Text>
+                        <VBox alignment="CENTER" fillWidth="false" prefHeight="146.0" prefWidth="240.0">
+                           <children>
+                              <HBox id="Text" prefHeight="26.0" prefWidth="186.0">
+                                 <children>
+                                    <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ManNombreE" wrappingWidth="180.4117431640625">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="24.0" />
+                                       </font>
+                                    </Text>
                                  </children>
                               </HBox>
+                              <TextField fx:id="nameDistMainField" alignment="CENTER" prefHeight="26.0" prefWidth="186.0" style="-fx-background-color: transparent; -fx-border-width: 0 0 1 0;" />
+                              <Separator prefHeight="28.0" prefWidth="216.0" visible="false" />
+                              <HBox prefHeight="31.0" prefWidth="227.0" />
+                              <Separator prefHeight="40.0" prefWidth="213.0" visible="false" />
+                              <HBox prefHeight="31.0" prefWidth="227.0" />
+                              <Separator prefHeight="66.0" prefWidth="201.0" visible="false" />
                            </children>
-                        </AnchorPane>
-                     </content>
-                  </Tab>
-                  <Tab fx:id="tabDiary1" text="%Details">
-                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" onKeyPressed="#UpdateWorkerEnter" prefHeight="646.0" prefWidth="971.0">
+                           <padding>
+                              <Insets bottom="20.0" left="40.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                        <Button mnemonicParsing="false" onAction="#AddDesease" prefHeight="35.0" prefWidth="182.0" text="%Agregar">
+                           <font>
+                              <Font name="Tw Cen MT" size="16.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="65.0" visible="false" />
+                  <VBox prefHeight="600.0" prefWidth="508.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="600.0" prefWidth="501.0">
                            <children>
-                              <Text id="Text" fill="#000359" layoutX="18.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Details" wrappingWidth="106.92812204360962">
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%SeleccionarEnfermedad" wrappingWidth="346.73670768737793">
                                  <font>
-                                    <Font name="Tw Cen MT" size="29.0" />
+                                    <Font name="Tw Cen MT" size="28.0" />
                                  </font>
                               </Text>
-                              <Text id="Text" fx:id="textMainDoctor11" fill="#000359" layoutX="445.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="323.12810373306274">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="29.0" />
-                                 </font>
-                              </Text>
-                              <Button layoutX="335.0" layoutY="457.0" mnemonicParsing="false" onAction="#ContinueDetail" prefHeight="35.0" prefWidth="123.0" text="%continue">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="16.0" />
-                                 </font>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Button>
-                              <Text id="Text" fill="#000359" layoutX="41.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%PatientName" wrappingWidth="223.92812204360962">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="29.0" />
-                                 </font>
-                              </Text>
-                              <Text id="Text" fill="#000359" layoutX="46.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%UserL" wrappingWidth="212.92812204360962">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="29.0" />
-                                 </font>
-                              </Text>
-                              <Text id="Text" fill="#000359" layoutX="41.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%StateAp" wrappingWidth="184.92812204360962">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="29.0" />
-                                 </font>
-                              </Text>
-                              <RadioButton fx:id="Attended" layoutX="188.0" layoutY="340.0" mnemonicParsing="false" text="%Attended" />
-                              <RadioButton fx:id="Scheduled" layoutX="49.0" layoutY="340.0" mnemonicParsing="false" text="%Scheduled" />
-                              <RadioButton fx:id="Cancelled" layoutX="49.0" layoutY="376.0" mnemonicParsing="false" text="%Cancelled" />
-                              <RadioButton fx:id="Absent" layoutX="188.0" layoutY="376.0" mnemonicParsing="false" text="%Absent" />
-                              <Text id="Text" fill="#000359" layoutX="521.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%ReasonAp" wrappingWidth="184.92812204360962">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="29.0" />
-                                 </font>
-                              </Text>
-                              <TextArea fx:id="reason" layoutX="458.0" layoutY="163.0" prefHeight="260.0" prefWidth="288.0" />
-                              <Text id="Text" fill="#000359" layoutX="273.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Telephone" wrappingWidth="184.92812204360962">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="29.0" />
-                                 </font>
-                              </Text>
-                              <Text id="Text" fill="#000359" layoutX="281.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Email" wrappingWidth="136.92812204360962">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="29.0" />
-                                 </font>
-                              </Text>
-                              <TextField fx:id="numberP" layoutX="273.0" layoutY="129.0" />
-                              <TextField fx:id="email" layoutX="273.0" layoutY="226.0" />
-                              <TextField fx:id="userLog" layoutX="38.0" layoutY="226.0" />
-                              <TextField fx:id="nameP" layoutX="38.0" layoutY="129.0" />
+                              <Separator prefHeight="30.0" prefWidth="920.0" visible="false" />
+                              <GridPane prefHeight="120.0" prefWidth="482.0">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="131.79996337890626" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="129.40003662109373" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="128.20001220703125" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="110.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%IdEnfermedad" textAlignment="RIGHT" wrappingWidth="131.13671684265137">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="22.0" />
+                                       </font>
+                                    </Text>
+                                    <TextField fx:id="textFieldSearchDesease_ID" onKeyPressed="#searchDesease_Id" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="23.0" />
+                                       </font>
+                                    </TextField>
+                                    <Text fill="#000359" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Enfermedad" textAlignment="RIGHT" wrappingWidth="127.53668785095215" GridPane.columnIndex="2">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="22.0" />
+                                       </font>
+                                    </Text>
+                                    <TextField fx:id="textFieldSearchDesease_Name" onKeyPressed="#searchDesease_Name" prefHeight="31.0" prefWidth="173.0" style="-fx-text-fill: black;" GridPane.columnIndex="3">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="23.0" />
+                                       </font>
+                                    </TextField>
+                                    <Button fx:id="BtndeletePatient1" mnemonicParsing="false" onMouseClicked="#deleteDeseaseClicked" prefHeight="30.0" prefWidth="100.0" text="%EliminarEn" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                 </children>
+                              </GridPane>
+                              <Separator prefHeight="32.0" prefWidth="920.0" />
+                              <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" prefHeight="350.0" prefWidth="466.0" vbarPolicy="ALWAYS" vmax="2.0">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="368.0" prefWidth="462.0">
+                                       <children>
+                                          <TableView fx:id="tableViewDisease" onMouseClicked="#deseaseClicked" prefHeight="370.0" prefWidth="496.0">
+                                             <columns>
+                                                <TableColumn fx:id="tableColDeseaseId" prefWidth="256.0000122189522" text="%IdEnfermedad" />
+                                                <TableColumn fx:id="tableColDeseaseName" minWidth="0.0" prefWidth="240.00006103515625" text="%Enfermedad" />
+                                             </columns>
+                                          </TableView>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </ScrollPane>
                            </children>
-                        </AnchorPane>
-                     </content>
-                  </Tab>
-                  <Tab fx:id="tabDiary11" text="%Reportes">
-                     <content>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" />
-                     </content>
-                  </Tab>
-               </tabs>
-            </TabPane>
-         </children>
-      </VBox>
-   </center>
-</BorderPane>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </center>
+      </BorderPane>
+   </children>
+</StackPane>

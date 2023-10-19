@@ -225,15 +225,15 @@ public class LoginViewController extends Controller implements Initializable {
 
     private void getUsLenguage() {
         if (this.userDto.getUsLenguage().equals("Spanish")) {
-            System.out.println("French");
+         
             FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Spanish"));
             FlowController.getInstance().goMain("ViewMaintenanceOptions");
         } else if (this.userDto.getUsLenguage().equals("English")) {
-            System.out.println("English");
+          
             FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/English"));
             FlowController.getInstance().goMain("ViewMaintenanceOptions");
         } else if (this.userDto.getUsLenguage().equals("French")) {
-            System.out.println("French");
+          
             FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/French"));
             FlowController.getInstance().goMain("ViewMaintenanceOptions");
         } else if (this.userDto.getUsLenguage().equals("Japanese")) {
