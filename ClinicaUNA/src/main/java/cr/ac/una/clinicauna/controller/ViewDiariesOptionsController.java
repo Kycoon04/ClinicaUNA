@@ -144,7 +144,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private RadioButton pmRadio;
     private String matrizAgenda[][] = new String[15][8];
-    private Map<Node, Posicion> mapaPosiciones = new HashMap<>();
+
     List<DoctorDto> doctorList = new ArrayList<>();
     private ObservableList<DoctorDto> doctorObservableList;
 
@@ -181,7 +181,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private RadioButton Cancelled;
     @FXML
     private RadioButton Absent;
-       ToggleGroup Hour = new ToggleGroup();
+    ToggleGroup Hour = new ToggleGroup();
     ToggleGroup Tou = new ToggleGroup();
     @FXML
     private BorderPane OptionsMainDiary1;
@@ -350,10 +350,10 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         Cancelled.setToggleGroup(Tou);
         Attended.setToggleGroup(Tou);
         Scheduled.setToggleGroup(Tou);
-        
+
         amRadio1.setToggleGroup(Hour);
         pmRadio1.setToggleGroup(Hour);
-        
+
         calendarsProperties();
 
         fillTablePatient();
@@ -600,7 +600,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         return doctorDto -> {
             LocalTime doctorStartTime = LocalTime.parse(doctorDto.getDrIniworking(), formatter);
             LocalTime doctorEndTime = LocalTime.parse(doctorDto.getDrFinisworking(), formatter);
-// simple debbug
+            // debbug
             System.out.println("Doctor: " + doctorDto.getDoctorName());
             System.out.println("Doctor Start Time: " + doctorStartTime);
             System.out.println("Doctor End Time: " + doctorEndTime);
@@ -627,154 +627,24 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         listDoct = service.getDoctor();
         if (!listDoct.isEmpty()) {
-            List<DoctorDto> doctoresFiltrados = listDoct.stream()
-                    .filter(filterByTimeRange(iniHour.getValue(), endHour.getValue()))
-                    .collect(Collectors.toList());
+            if (iniHour.getValue() != null && endHour.getValue() != null) {
+                List<DoctorDto> doctoresFiltrados = listDoct.stream()
+                        .filter(filterByTimeRange(iniHour.getValue(), endHour.getValue()))
+                        .collect(Collectors.toList());
 
-            if (doctoresFiltrados.isEmpty()) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Vacio ", getStage(), "No Hay ningun doctor a la hora seleccionada");
-                doctorObservableList.clear();
-                this.tableViewDoctorsDiary1.refresh();
-                this.tableViewDoctorsDiary1.setItems(doctorObservableList);
-            } else {
-                doctorObservableList = FXCollections.observableArrayList(doctoresFiltrados);
-                this.tableViewDoctorsDiary1.refresh();
-                this.tableViewDoctorsDiary1.setItems(doctorObservableList);
-            }
-        }
-
-    }
-
-    private class Posicion {
-
-        int fila;
-        int columna;
-
-        public Posicion(int fila, int columna) {
-            this.fila = fila;
-            this.columna = columna;
-        }
-    }
-
-    private void agenda() {
-        String[] diasSemana = {"LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO", "DOMINGO"};
-        for (int i = 0; i < diasSemana.length; i++) {
-            String dia = diasSemana[i];
-            Label label = new Label(dia);
-            label.setAlignment(Pos.CENTER);
-            label.setStyle("-fx-content-display: center;");
-            label.setWrapText(false);
-            int columna = i + 1;
-            int fila = 0;
-            if (columna < grid.getColumnConstraints().size()) {
-                label.setPrefWidth(grid.getColumnConstraints().get(columna).getPercentWidth());
-            }
-            label.setPrefHeight(grid.getRowConstraints().get(fila).getPercentHeight());
-            grid.add(label, columna, fila);
-            matrizAgenda[0][columna] = dia;
-
-            mapaPosiciones.put(label, new ViewDiariesOptionsController.Posicion(fila, columna));
-        }
-
-        String hora = null;
-        int indice = 1;
-        for (int i = 1; i < 13; i++) {
-            hora = Integer.toString(i) + ":00";
-            Label label = new Label(hora);
-
-            label.setAlignment(Pos.CENTER);
-            label.setStyle("-fx-content-display: center;");
-            label.setWrapText(false);
-
-            int fila = indice;
-            int columna = 0;
-
-            if (indice < grid.getRowConstraints().size()) {
-                label.setPrefWidth(grid.getColumnConstraints().get(columna).getPercentWidth());
-                label.setPrefHeight(grid.getRowConstraints().get(fila).getPercentHeight());
-            }
-
-            grid.add(label, columna, fila);
-            matrizAgenda[indice][0] = hora;
-
-            mapaPosiciones.put(label, new ViewDiariesOptionsController.Posicion(fila, columna));
-
-            indice++;
-        }
-    }
-
-    private void obtenerElementosGrid() {
-        for (Node node : grid.getChildren()) {
-            if (node instanceof HBox) {
-                Integer columna = GridPane.getColumnIndex(node);
-                Integer fila = GridPane.getRowIndex(node);
-
-                if (columna != null && fila != null) {
-                    HBox hbox = (HBox) node;
-                    for (Node child : hbox.getChildren()) {
-                        if (child instanceof Label) {
-                            String contenido = ((Label) child).getText();
-                            if (!contenido.isEmpty()) {
-                                String hora = matrizAgenda[fila][0];
-                                String dia = matrizAgenda[0][columna];
-
-                                System.out.println("Elemento en columna " + columna + ", fila " + fila
-                                        + ": Contenido = " + contenido + ", Hora = " + hora + ", Día = " + dia);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @FXML
-    private void selectDiary() {
-        grid.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                double x = event.getX();
-                double y = event.getY();
-
-                int columna = obtenerColumnaDesdeX(x);
-                int fila = obtenerFilaDesdeY(y);
-
-                if (columna >= 0 && columna < 8 && fila >= 0 && fila < 13) {
-
-                    HBox hbox = new HBox();
-
-                    for (int i = 0; i < 3; i++) {
-                        Label nuevoLabel = new Label(" " + (i + 1));
-                        hbox.getChildren().add(nuevoLabel);
-                    }
-                    grid.add(hbox, columna, fila);
-
-                    String hora = obtenerHoraDesdeFila(fila);
-                    String dia = obtenerDiaDesdeColumna(columna);
-
-                    System.out.println("Nuevos eventos agregados en columna " + columna + ", fila " + fila
-                            + ": Hora = " + hora + ", Día = " + dia);
+                if (doctoresFiltrados.isEmpty()) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Vacio ", getStage(), "No Hay ningun doctor a la hora seleccionada");
+                    doctorObservableList.clear();
+                    this.tableViewDoctorsDiary1.refresh();
+                    this.tableViewDoctorsDiary1.setItems(doctorObservableList);
                 } else {
-                    System.out.println("Clic fuera de los límites del GridPane");
+                    doctorObservableList = FXCollections.observableArrayList(doctoresFiltrados);
+                    this.tableViewDoctorsDiary1.refresh();
+                    this.tableViewDoctorsDiary1.setItems(doctorObservableList);
                 }
             }
-        });
-    }
+        }
 
-    private int obtenerColumnaDesdeX(double x) {
-        return (int) (x / 100);
-    }
-
-    private int obtenerFilaDesdeY(double y) {
-        return (int) (y / 25);
-    }
-
-    private String obtenerHoraDesdeFila(int fila) {
-        return "Hora" + fila;
-    }
-
-    private String obtenerDiaDesdeColumna(int columna) {
-        return "Día" + columna;
     }
 
     private void fillTablePatient() {
@@ -975,7 +845,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void updateAgenda(ActionEvent event) {
-        obtenerElementosGrid();
+
     }
 
     @FXML
@@ -1080,6 +950,10 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @Override
     public void initialize() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @FXML
+    private void selectDiary(MouseEvent event) {
     }
 
 }
