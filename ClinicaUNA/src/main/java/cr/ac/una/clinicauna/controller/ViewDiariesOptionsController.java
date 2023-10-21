@@ -5,6 +5,7 @@
 package cr.ac.una.clinicauna.controller;
 
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
@@ -20,13 +21,18 @@ import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -52,9 +58,12 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 
 /**
@@ -172,6 +181,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private RadioButton Cancelled;
     @FXML
     private RadioButton Absent;
+       ToggleGroup Hour = new ToggleGroup();
     ToggleGroup Tou = new ToggleGroup();
     @FXML
     private BorderPane OptionsMainDiary1;
@@ -204,14 +214,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private Tab tabDiary2;
     @FXML
-    private Text textMainDoctor12;
-    @FXML
-    private GridPane grid1;
-    @FXML
-    private RadioButton amRadio1;
-    @FXML
-    private RadioButton pmRadio1;
-    @FXML
     private Tab tabDoc1;
     @FXML
     private TextField textFieldSearchDoc_Name11;
@@ -226,23 +228,23 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private TextField textFieldSearchDoc_State11;
     @FXML
-    private TableView<?> tableViewDoctorsDiary1;
+    private TableView<DoctorDto> tableViewDoctorsDiary1;
     @FXML
-    private TableColumn<?, ?> tableColDocCode11;
+    private TableColumn<DoctorDto, String> tableColDocCode11;
     @FXML
-    private TableColumn<?, ?> tableColDocFolio11;
+    private TableColumn<DoctorDto, String> tableColDocFolio11;
     @FXML
-    private TableColumn<?, ?> tableColDocName11;
+    private TableColumn<DoctorDto, String> tableColDocName11;
     @FXML
-    private TableColumn<?, ?> tableColDocId11;
+    private TableColumn<DoctorDto, String> tableColDocId11;
     @FXML
-    private TableColumn<?, ?> tableColDocLicense11;
+    private TableColumn<DoctorDto, String> tableColDocLicense11;
     @FXML
-    private TableColumn<?, ?> tableColDocIniWork11;
+    private TableColumn<DoctorDto, String> tableColDocIniWork11;
     @FXML
-    private TableColumn<?, ?> tableColDocFinishWork11;
+    private TableColumn<DoctorDto, String> tableColDocFinishWork11;
     @FXML
-    private TableColumn<?, ?> tableColDocBreaks11;
+    private TableColumn<DoctorDto, String> tableColDocBreaks11;
     @FXML
     private Tab tabPatient1;
     @FXML
@@ -291,6 +293,26 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private TableView<?> tableViewAppoiment;
     @FXML
     private TextArea reasonTxtField;
+    @FXML
+    private Tab tabDiary21;
+    @FXML
+    private AnchorPane rootCalendar;
+    private YearMonth currentYearMonth;
+    @FXML
+    private JFXTimePicker iniHour;
+    @FXML
+    private JFXTimePicker endHour;
+    @FXML
+    private AnchorPane rootDocDiary;
+    @FXML
+    private Text textMainDiary;
+    @FXML
+    private Text textMainDoctor12;
+    @FXML
+    private RadioButton amRadio1;
+    @FXML
+    private RadioButton pmRadio1;
+    private static final String[] DAY_NAMES = {"Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"};
 
     /**
      * Initializes the controller class.
@@ -314,16 +336,147 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         this.tableColDocFolio1.setCellValueFactory(new PropertyValueFactory("DrFol"));
         this.tableColDocIniWork1.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
         this.tableColDocCode1.setCellValueFactory(new PropertyValueFactory("DrCode"));
+
+        this.tableColDocBreaks11.setCellValueFactory(new PropertyValueFactory("DrBreak"));
+        this.tableColDocFinishWork11.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
+        this.tableColDocLicense11.setCellValueFactory(new PropertyValueFactory("DrLicense"));
+        this.tableColDocId11.setCellValueFactory(new PropertyValueFactory("DoctorPsurname"));
+        this.tableColDocName11.setCellValueFactory(new PropertyValueFactory("DoctorName"));
+        this.tableColDocFolio11.setCellValueFactory(new PropertyValueFactory("DrFol"));
+        this.tableColDocIniWork11.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
+        this.tableColDocCode11.setCellValueFactory(new PropertyValueFactory("DrCode"));
+
         Absent.setToggleGroup(Tou);
         Cancelled.setToggleGroup(Tou);
         Attended.setToggleGroup(Tou);
         Scheduled.setToggleGroup(Tou);
+        
+        amRadio1.setToggleGroup(Hour);
+        pmRadio1.setToggleGroup(Hour);
+        
+        calendarsProperties();
 
-        agenda();
-        selectDiary();
         fillTablePatient();
         fillTableDoctors();
 
+    }
+
+    private void calendarsProperties() {
+        currentYearMonth = YearMonth.now();
+
+        GridPane calendarPane = createCalendar(currentYearMonth);
+        calendarPane.setPrefSize(rootCalendar.getPrefWidth() / 2 + 400, rootCalendar.getPrefHeight() / 2 + 180);
+        calendarPane.setGridLinesVisible(true);
+
+        AnchorPane.setTopAnchor(calendarPane, (rootCalendar.getHeight() - calendarPane.getPrefHeight()) / 2);
+        AnchorPane.setLeftAnchor(calendarPane, (rootCalendar.getWidth() - calendarPane.getPrefWidth()) / 2);
+
+        rootCalendar.heightProperty().addListener((obs, oldVal, newVal)
+                -> AnchorPane.setTopAnchor(calendarPane, (newVal.doubleValue() - calendarPane.getPrefHeight()) / 2));
+
+        rootCalendar.widthProperty().addListener((obs, oldVal, newVal)
+                -> AnchorPane.setLeftAnchor(calendarPane, (newVal.doubleValue() - calendarPane.getPrefWidth()) / 2));
+
+        rootCalendar.getChildren().add(calendarPane);
+
+        GridPane DiaryPane = createWeekCalendarWithHeaders();
+        DiaryPane.setPrefSize(rootDocDiary.getPrefWidth() / 2 + 500, rootDocDiary.getPrefHeight() / 2 + 180);
+        DiaryPane.setGridLinesVisible(true);
+
+        AnchorPane.setTopAnchor(DiaryPane, (rootDocDiary.getHeight() - DiaryPane.getPrefHeight()) / 2);
+        AnchorPane.setLeftAnchor(DiaryPane, (rootDocDiary.getWidth() - DiaryPane.getPrefWidth()) / 2);
+
+        rootDocDiary.heightProperty().addListener((obs, oldVal, newVal)
+                -> AnchorPane.setTopAnchor(DiaryPane, (newVal.doubleValue() - DiaryPane.getPrefHeight()) / 2));
+
+        rootDocDiary.widthProperty().addListener((obs, oldVal, newVal)
+                -> AnchorPane.setLeftAnchor(DiaryPane, (newVal.doubleValue() - DiaryPane.getPrefWidth()) / 2));
+
+        rootDocDiary.getChildren().add(DiaryPane);
+
+    }
+
+    private GridPane createCalendar(YearMonth yearMonth) {
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHgap(2);
+        gridPane.setVgap(2);
+
+        LocalDate firstDayOfMonth = LocalDate.of(yearMonth.getYear(), yearMonth.getMonthValue(), 1);
+        int daysInMonth = yearMonth.lengthOfMonth();
+
+        String[] dayNames = {"Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"};
+        for (int i = 0; i < 7; i++) {
+            Label dayLabel = new Label(dayNames[i]);
+            dayLabel.setAlignment(Pos.CENTER);
+            dayLabel.setStyle("-fx-font-weight: bold");
+
+            dayLabel.setMaxWidth(Double.MAX_VALUE);
+            dayLabel.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setFillWidth(dayLabel, true);
+            GridPane.setFillHeight(dayLabel, true);
+
+            gridPane.add(dayLabel, i, 0);
+        }
+
+        int row = 1;
+        int col = firstDayOfMonth.getDayOfWeek().getValue() % 7;
+        for (int day = 1; day <= daysInMonth; day++) {
+            final int finalDay = day;
+
+            Label dayLabel = new Label(Integer.toString(day));
+            dayLabel.setStyle("-fx-font-size: 14");
+
+            final int finalRow = row;
+            final int finalCol = col;
+
+            dayLabel.setMaxWidth(Double.MAX_VALUE);
+            dayLabel.setMaxHeight(Double.MAX_VALUE);
+            dayLabel.setAlignment(Pos.TOP_LEFT);
+            GridPane.setFillWidth(dayLabel, true);
+            GridPane.setFillHeight(dayLabel, true);
+
+            dayLabel.setOnMouseClicked(event -> {
+                if (!dayLabel.getStyle().contains("green")) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE");
+                    String dayOfWeek = firstDayOfMonth.plusDays(finalDay - 1).format(formatter);
+
+                    System.out.println("Día clickeado: " + finalDay + " (" + dayOfWeek + ")");
+                    for (Node node : gridPane.getChildren()) {
+                        Integer rowIndex = GridPane.getRowIndex(node);
+                        Integer colIndex = GridPane.getColumnIndex(node);
+
+                        if (rowIndex != null && rowIndex == finalRow && colIndex != null && colIndex == finalCol) {
+                            node.setStyle("-fx-background-color: green;");
+                        }
+                    }
+                }
+            });
+
+            gridPane.add(dayLabel, col, row);
+
+            col++;
+            if (col == 7) {
+                col = 0;
+                row++;
+            }
+        }
+
+        for (int i = 0; i < 7; i++) {
+            ColumnConstraints columnConstraints = new ColumnConstraints();
+            columnConstraints.setFillWidth(true);
+            columnConstraints.setHgrow(javafx.scene.layout.Priority.ALWAYS);
+            gridPane.getColumnConstraints().add(columnConstraints);
+        }
+
+        for (int i = 0; i <= row; i++) {
+            RowConstraints rowConstraints = new RowConstraints();
+            rowConstraints.setFillHeight(true);
+            rowConstraints.setVgrow(javafx.scene.layout.Priority.ALWAYS);
+            gridPane.getRowConstraints().add(rowConstraints);
+        }
+
+        return gridPane;
     }
 
     private void fillAppoiment() {
@@ -431,13 +584,64 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         alert.setContentText("¿Quieres crear un nuevo paciente?");
         ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
         if (result == ButtonType.OK) {
-               OptionsMainDiary1.toFront();
+            OptionsMainDiary1.toFront();
         } else {
         }
     }
 
     @FXML
     private void detailsView(MouseEvent event) {
+
+    }
+
+    public static Predicate<DoctorDto> filterByTimeRange(LocalTime startTimeParam, LocalTime endTimeParam) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        return doctorDto -> {
+            LocalTime doctorStartTime = LocalTime.parse(doctorDto.getDrIniworking(), formatter);
+            LocalTime doctorEndTime = LocalTime.parse(doctorDto.getDrFinisworking(), formatter);
+// simple debbug
+            System.out.println("Doctor: " + doctorDto.getDoctorName());
+            System.out.println("Doctor Start Time: " + doctorStartTime);
+            System.out.println("Doctor End Time: " + doctorEndTime);
+            System.out.println("Start Time Param: " + startTimeParam);
+            System.out.println("End Time Param: " + endTimeParam);
+
+            boolean startInRange = !startTimeParam.isBefore(doctorStartTime);
+            boolean endInRange = !endTimeParam.isAfter(doctorEndTime);
+
+            boolean result = startInRange && endInRange;
+
+            System.out.println("Result: " + result);
+            System.out.println("");
+
+            return result;
+        };
+    }
+
+    @FXML
+    private void filterDoctorsByDay(ActionEvent event) {
+
+        DoctorService service = new DoctorService();
+        List<DoctorDto> listDoct = new ArrayList<>();
+
+        listDoct = service.getDoctor();
+        if (!listDoct.isEmpty()) {
+            List<DoctorDto> doctoresFiltrados = listDoct.stream()
+                    .filter(filterByTimeRange(iniHour.getValue(), endHour.getValue()))
+                    .collect(Collectors.toList());
+
+            if (doctoresFiltrados.isEmpty()) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Vacio ", getStage(), "No Hay ningun doctor a la hora seleccionada");
+                doctorObservableList.clear();
+                this.tableViewDoctorsDiary1.refresh();
+                this.tableViewDoctorsDiary1.setItems(doctorObservableList);
+            } else {
+                doctorObservableList = FXCollections.observableArrayList(doctoresFiltrados);
+                this.tableViewDoctorsDiary1.refresh();
+                this.tableViewDoctorsDiary1.setItems(doctorObservableList);
+            }
+        }
 
     }
 
@@ -776,6 +980,101 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void UpdateWorkerEnter(KeyEvent event) {
+    }
+
+    public static GridPane createWeekCalendarWithHeaders() {
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHgap(1);
+        gridPane.setVgap(1);
+
+        for (int i = 0; i < 7; i++) {
+            Label dayLabel = new Label(DAY_NAMES[i]);
+            dayLabel.setAlignment(Pos.CENTER);
+            dayLabel.setStyle("-fx-font-weight: bold");
+
+            dayLabel.setMaxWidth(Double.MAX_VALUE);
+            dayLabel.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setFillWidth(dayLabel, true);
+            GridPane.setFillHeight(dayLabel, true);
+
+            gridPane.add(dayLabel, i + 1, 0);
+        }
+
+        for (int i = 0; i < 13; i++) {
+            Label hourLabel = new Label(String.format("%02d:00", i));
+            hourLabel.setAlignment(Pos.CENTER);
+            hourLabel.setStyle("-fx-font-weight: bold");
+
+            hourLabel.setMaxWidth(Double.MAX_VALUE);
+            hourLabel.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setFillWidth(hourLabel, true);
+            GridPane.setFillHeight(hourLabel, true);
+
+            gridPane.add(hourLabel, 0, i + 1);
+        }
+
+        for (int day = 1; day <= 7; day++) {
+            for (int hour = 0; hour < 13; hour++) {
+                Label cellLabel = new Label();
+                cellLabel.setStyle("-fx-font-size: 10");
+
+                cellLabel.setMaxWidth(Double.MAX_VALUE);
+                cellLabel.setMaxHeight(Double.MAX_VALUE);
+                cellLabel.setAlignment(Pos.TOP_LEFT);
+                GridPane.setFillWidth(cellLabel, true);
+                GridPane.setFillHeight(cellLabel, true);
+
+                final int finalDay = day;
+                final int finalHour = hour;
+
+                cellLabel.setOnMouseClicked(event -> handleCellClick(gridPane, cellLabel, finalDay, finalHour));
+
+                gridPane.add(cellLabel, day, hour + 1);
+            }
+        }
+
+        for (int i = 0; i < 8; i++) {
+            ColumnConstraints columnConstraints = new ColumnConstraints();
+            columnConstraints.setFillWidth(true);
+            columnConstraints.setHgrow(javafx.scene.layout.Priority.ALWAYS);
+            columnConstraints.setPercentWidth(9.5);
+            gridPane.getColumnConstraints().add(columnConstraints);
+        }
+
+        for (int i = 0; i < 13; i++) {
+            RowConstraints rowConstraints = new RowConstraints();
+            rowConstraints.setFillHeight(true);
+            rowConstraints.setVgrow(javafx.scene.layout.Priority.ALWAYS);
+            rowConstraints.setPercentHeight(6.25);
+            gridPane.getRowConstraints().add(rowConstraints);
+        }
+
+        return gridPane;
+    }
+
+    private static void handleCellClick(GridPane gridPane, Label cellLabel, int day, int hour) {
+        if (!cellLabel.getStyle().contains("green")) {
+            System.out.println("Día clickeado: " + day + ", Hora clickeada: " + hour);
+            cellLabel.setStyle("-fx-background-color: green;");
+
+            HBox hbox = new HBox();
+            hbox.setAlignment(Pos.CENTER);
+            hbox.setSpacing(5);
+
+            for (int i = 1; i <= 3; i++) {
+                Label label = new Label(Integer.toString(i));
+                label.setStyle("-fx-font-size: 10");
+                hbox.getChildren().add(label);
+            }
+
+            GridPane.setColumnSpan(hbox, 1);
+            GridPane.setRowSpan(hbox, 1);
+            GridPane.setColumnIndex(hbox, GridPane.getColumnIndex(cellLabel));
+            GridPane.setRowIndex(hbox, GridPane.getRowIndex(cellLabel));
+
+            gridPane.getChildren().add(hbox);
+        }
     }
 
     @Override
