@@ -30,7 +30,7 @@
    <children>
       <BorderPane fx:id="MenuView" prefHeight="600.0" prefWidth="1000.0">
          <left>
-            <VBox focusTraversable="true" prefHeight="600.0" prefWidth="206.0" style="-fx-background-color: #000359;" BorderPane.alignment="CENTER">
+            <VBox focusTraversable="true" prefHeight="600.0" prefWidth="164.0" style="-fx-background-color: #000359;" BorderPane.alignment="CENTER">
                <children>
                   <Text id="Text" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="%Menu" textAlignment="CENTER" wrappingWidth="206.93670272827148">
                      <VBox.margin>
@@ -801,7 +801,7 @@
                                              <content>
                                                 <BorderPane>
                                                    <center>
-                                                      <AnchorPane fx:id="rootDocDiary" minHeight="0.0" minWidth="0.0" onKeyPressed="#UpdateWorkerEnter" prefHeight="646.0" prefWidth="971.0" />
+                                                      <AnchorPane fx:id="rootDocDiary" minHeight="0.0" minWidth="0.0" onKeyPressed="#UpdateWorkerEnter" prefHeight="502.0" prefWidth="849.0" />
                                                    </center>
                                                    <top>
                                                       <HBox BorderPane.alignment="CENTER">
