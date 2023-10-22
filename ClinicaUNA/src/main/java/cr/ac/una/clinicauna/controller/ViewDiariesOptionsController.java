@@ -186,30 +186,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private BorderPane OptionsMainDiary1;
     @FXML
-    private TabPane tabPaneMantWorkers111;
-    @FXML
-    private BorderPane OptionsMainPatientView;
-    @FXML
-    private TabPane tabPaneMantWorkers2;
-    @FXML
-    private Tab tabMantPatient;
-    @FXML
-    private TextField namePatMainField;
-    @FXML
-    private TextField firstNamePatMainField;
-    @FXML
-    private TextField lastNamePatMainField;
-    @FXML
-    private TextField identPatMainField;
-    @FXML
-    private RadioButton radioBtnMale;
-    @FXML
-    private RadioButton radioBtnFemale;
-    @FXML
-    private TextField emailPatMainField;
-    @FXML
-    private JFXDatePicker datePickerBirthdayPat;
-    @FXML
     private TabPane tabPaneMantWorkers112;
     @FXML
     private Tab tabDiary2;
@@ -246,30 +222,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private TableColumn<DoctorDto, String> tableColDocBreaks11;
     @FXML
-    private Tab tabPatient1;
-    @FXML
-    private TextField textFieldSearchPat_Name11;
-    @FXML
-    private TextField textFieldSearchPat_Pusername11;
-    @FXML
-    private TextField textFieldSearchPat_Identification11;
-    @FXML
-    private TextField textFieldSearchPat_Gender11;
-    @FXML
-    private TextField textFieldSearchPat_Susername11;
-    @FXML
-    private TableColumn<?, ?> tableColId11;
-    @FXML
-    private TableColumn<?, ?> tableColPatIdentif11;
-    @FXML
-    private TableColumn<?, ?> tableColPatPsurname11;
-    @FXML
-    private TableColumn<?, ?> tableColPatSsurname11;
-    @FXML
-    private TableColumn<?, ?> tableColPatGender11;
-    @FXML
-    private Tab tabMantPatient1;
-    @FXML
     private TextField namePatMainField1;
     @FXML
     private TextField firstNamePatMainField1;
@@ -290,17 +242,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private BorderPane CreateAppointment;
     @FXML
-    private TableView<?> tableViewAppoiment;
-    @FXML
-    private TextArea reasonTxtField;
-    @FXML
     private Tab tabDiary21;
     @FXML
     private AnchorPane rootCalendar;
     private YearMonth currentYearMonth;
-    @FXML
     private JFXTimePicker iniHour;
-    @FXML
     private JFXTimePicker endHour;
     @FXML
     private AnchorPane rootDocDiary;
@@ -589,10 +535,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
     }
 
-    @FXML
-    private void detailsView(MouseEvent event) {
-
-    }
 
     public static Predicate<DoctorDto> filterByTimeRange(LocalTime startTimeParam, LocalTime endTimeParam) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -664,9 +606,12 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         DoctorService service = new DoctorService();
         doctorList = service.getDoctor();
         if (doctorList.isEmpty()) {
+            System.out.println("fdf");
         } else {
             doctorObservableList = FXCollections.observableArrayList(doctorList);
         }
+        this.tableViewDoctorsDiary1.refresh();
+        this.tableViewDoctorsDiary1.setItems(doctorObservableList);
         this.tableViewDoctorsDiary.refresh();
         this.tableViewDoctorsDiary.setItems(doctorObservableList);
     }

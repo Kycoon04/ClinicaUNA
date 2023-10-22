@@ -33,7 +33,7 @@ public class UserDto {
 
     public UserDto() {
         this.usName = new SimpleStringProperty();
-         this.usPlastname = new SimpleStringProperty();
+        this.usPlastname = new SimpleStringProperty();
         this.usSlastname = new SimpleStringProperty();
         this.usIdentification = new SimpleStringProperty();
         this.usType = new SimpleObjectProperty();

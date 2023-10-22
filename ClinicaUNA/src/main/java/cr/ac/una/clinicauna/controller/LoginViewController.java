@@ -153,15 +153,15 @@ public class LoginViewController extends Controller implements Initializable {
         required2.add(emailRecoverField);
     }
 
-    private void saveUser(UserDto userDto) {
+    private void saveUser(UserDto userDtop) {
        Respuesta respuesta= new Respuesta();
         try {
             UserService service = new UserService();
             if(pass==true){
-            respuesta = service.saveUser(userDto);
+            respuesta = service.saveUser(userDtop);
               }
             this.userDto = (UserDto) respuesta.getResultado("User");
-            if (userDto != null) {
+            if (userDtop != null) {
                 if (userDto.getUsLenguage() != "") {
                     multiLenguage("ユーザーが正常に保存されました。","Usuario guardado correctamente.","User saved successfully.","Utilisateur enregistré avec succès.");
                 } else {
