@@ -116,12 +116,20 @@ create table CL_DOCTOR
   dr_iniworking   VARCHAR2(10) not null,
   dr_finisworking VARCHAR2(10) not null,
   dr_break        VARCHAR2(10) not null,
-  dr_user         NUMBER(5) not null
+  dr_user         NUMBER(5) not null,
+  dr_spaces       NUMBER(1) not null
 )
 tablespace USERS
   pctfree 10
   initrans 1
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 -- Create/Recreate primary, unique and foreign key constraints 
 alter table CL_DOCTOR
   add constraint PK_DRID primary key (DR_ID)
@@ -129,32 +137,59 @@ alter table CL_DOCTOR
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 alter table CL_DOCTOR
   add constraint UE_DRCODE unique (DR_CODE)
   using index 
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 alter table CL_DOCTOR
   add constraint UE_DRFOL unique (DR_FOL)
   using index 
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 alter table CL_DOCTOR
   add constraint UE_DRLICENCE unique (DR_LICENSE)
   using index 
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 alter table CL_DOCTOR
   add constraint FK_USER foreign key (DR_USER)
   references CL_USERS (US_ID);
-
 
 
 -- Create table
