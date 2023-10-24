@@ -258,7 +258,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private RadioButton amRadio1;
     @FXML
     private RadioButton pmRadio1;
-    private static final String[] DAY_NAMES = {"Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"};
 
     /**
      * Initializes the controller class.
@@ -535,7 +534,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
     }
 
-
     public static Predicate<DoctorDto> filterByTimeRange(LocalTime startTimeParam, LocalTime endTimeParam) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -802,8 +800,27 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(1);
         gridPane.setVgap(1);
+       
+        //tamaño de los esdpacios del medico 
+        String[] DAY_NAMES= new String[4];
+        int doctoSpaces = 4; // aqui igual
 
-        for (int i = 0; i < 7; i++) {
+        //simplificar
+        if (doctoSpaces == 2) {
+           DAY_NAMES[0]= "30";
+           DAY_NAMES[1]= "60";
+        } else if (doctoSpaces == 3) {
+            DAY_NAMES[0] = "20";
+            DAY_NAMES[1] = "40";
+            DAY_NAMES[2] = "60";
+        } else {
+            DAY_NAMES[0] = "15";
+            DAY_NAMES[1] = "30";
+            DAY_NAMES[2] = "45";
+            DAY_NAMES[3] = "60";
+        }
+
+        for (int i = 0; i < DAY_NAMES.length; i++) {
             Label dayLabel = new Label(DAY_NAMES[i]);
             dayLabel.setAlignment(Pos.CENTER);
             dayLabel.setStyle("-fx-font-weight: bold");
@@ -817,7 +834,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
 
         for (int i = 0; i < 13; i++) {
-            Label hourLabel = new Label(String.format("%02d:00", i));
+            Label hourLabel = new Label(String.format("%02d", i));
             hourLabel.setAlignment(Pos.CENTER);
             hourLabel.setStyle("-fx-font-weight: bold");
 
@@ -829,7 +846,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             gridPane.add(hourLabel, 0, i + 1);
         }
 
-        for (int day = 1; day <= 7; day++) {
+        for (int day = 1; day <= DAY_NAMES.length+1; day++) {
             for (int hour = 0; hour < 13; hour++) {
                 Label cellLabel = new Label();
                 cellLabel.setStyle("-fx-font-size: 10");
@@ -840,16 +857,16 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 GridPane.setFillWidth(cellLabel, true);
                 GridPane.setFillHeight(cellLabel, true);
 
-                final int finalDay = day;
+                final int minute = day;
                 final int finalHour = hour;
 
-                cellLabel.setOnMouseClicked(event -> handleCellClick(gridPane, cellLabel, finalDay, finalHour));
+                cellLabel.setOnMouseClicked(event -> handleCellClick(gridPane, cellLabel, minute, finalHour));
 
                 gridPane.add(cellLabel, day, hour + 1);
             }
         }
-
-        for (int i = 0; i < 8; i++) {
+        // doctor. getNumSpaces by hour
+        for (int i = 0; i < DAY_NAMES.length+1; i++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setFillWidth(true);
             columnConstraints.setHgrow(javafx.scene.layout.Priority.ALWAYS);
@@ -868,27 +885,23 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         return gridPane;
     }
 
-    private static void handleCellClick(GridPane gridPane, Label cellLabel, int day, int hour) {
+    private static void handleCellClick(GridPane gridPane, Label cellLabel, int min, int hour) {
         if (!cellLabel.getStyle().contains("green")) {
-            System.out.println("Día clickeado: " + day + ", Hora clickeada: " + hour);
+            System.out.println("Campo clickeado: " + min + ", Hora clickeada: " + hour);
             cellLabel.setStyle("-fx-background-color: green;");
 
-            HBox hbox = new HBox();
-            hbox.setAlignment(Pos.CENTER);
-            hbox.setSpacing(5);
-
-            for (int i = 1; i <= 3; i++) {
-                Label label = new Label(Integer.toString(i));
+       
+          
+                Label label = new Label("Cita");
                 label.setStyle("-fx-font-size: 10");
-                hbox.getChildren().add(label);
-            }
+        
 
-            GridPane.setColumnSpan(hbox, 1);
-            GridPane.setRowSpan(hbox, 1);
-            GridPane.setColumnIndex(hbox, GridPane.getColumnIndex(cellLabel));
-            GridPane.setRowIndex(hbox, GridPane.getRowIndex(cellLabel));
+            GridPane.setColumnSpan(label, 1);
+            GridPane.setRowSpan(label, 1);
+            GridPane.setColumnIndex(label, GridPane.getColumnIndex(cellLabel));
+            GridPane.setRowIndex(label, GridPane.getRowIndex(cellLabel));
 
-            gridPane.getChildren().add(hbox);
+            gridPane.getChildren().add(label);
         }
     }
 
