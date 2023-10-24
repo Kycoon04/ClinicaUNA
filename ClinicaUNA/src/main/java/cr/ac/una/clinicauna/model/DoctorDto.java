@@ -21,6 +21,15 @@ public class DoctorDto {
     public SimpleStringProperty drFinisworking;
     public SimpleStringProperty drBreak;
     public UserDto drUser;
+    public short drSpaces;
+
+    public short getDrSpaces(){
+        return drSpaces;
+    }
+
+    public void setDrSpaces(short drSpaces) {
+        this.drSpaces = drSpaces;
+    }
 
     public DoctorDto() {
         this.drId = new SimpleIntegerProperty();
@@ -30,6 +39,7 @@ public class DoctorDto {
         this.drIniworking = new SimpleStringProperty();
         this.drFinisworking = new SimpleStringProperty();
         this.drBreak = new SimpleStringProperty();
+      
     }
 
     public int getDrId() {

@@ -5,7 +5,6 @@
 package cr.ac.una.clinicaws.model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,12 +12,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import java.util.List;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -35,7 +32,8 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Doctor.findByDrIniworking", query = "SELECT d FROM Doctor d WHERE d.drIniworking = :drIniworking"),
     @NamedQuery(name = "Doctor.findByDrFinisworking", query = "SELECT d FROM Doctor d WHERE d.drFinisworking = :drFinisworking"),
     @NamedQuery(name = "Doctor.findDoctorByUserId", query = "SELECT d FROM Doctor d WHERE d.drUser.usId = :userId"),
-    @NamedQuery(name = "Doctor.findByDrBreak", query = "SELECT d FROM Doctor d WHERE d.drBreak = :drBreak")})
+    @NamedQuery(name = "Doctor.findByDrBreak", query = "SELECT d FROM Doctor d WHERE d.drBreak = :drBreak"),
+    @NamedQuery(name = "Doctor.findByDrSpaces", query = "SELECT d FROM Doctor d WHERE d.drSpaces = :drSpaces")})
 public class Doctor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -71,22 +69,38 @@ public class Doctor implements Serializable {
     @Size(min = 1, max = 10)
     @Column(name = "DR_BREAK")
     private String drBreak;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "DR_SPACES")
+    private short drSpaces;
     @JoinColumn(name = "DR_USER", referencedColumnName = "US_ID")
     @ManyToOne(optional = false)
     private Users drUser;
-  /* @OneToMany(cascade = CascadeType.ALL, mappedBy = "dyDoctor")
-    private List<Diary> diaryList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "emDoctor")
-    private List<Exam> examList;*/
 
     public Doctor() {
+    }
+
+    public Doctor(Integer drId) {
+        this.drId = drId;
     }
 
      public Doctor(DoctorDto doctorDto) {
        this.drId = doctorDto.getDrId();
         update(doctorDto);
     }
-    public void update(DoctorDto doctorDto) {   
+     
+    public Doctor(Integer drId, int drCode, int drLicense, int drFol, String drIniworking, String drFinisworking, String drBreak, short drSpaces, Users drUser) {
+        this.drId = drId;
+        this.drCode = drCode;
+        this.drLicense = drLicense;
+        this.drFol = drFol;
+        this.drIniworking = drIniworking;
+        this.drFinisworking = drFinisworking;
+        this.drBreak = drBreak;
+        this.drSpaces = drSpaces;
+        this.drUser = drUser;
+    }
+       public void update(DoctorDto doctorDto) {   
       
         this.drCode = doctorDto.getDrCode();
         this.drLicense = doctorDto.getDrLicense();
@@ -95,22 +109,9 @@ public class Doctor implements Serializable {
         this.drFinisworking = doctorDto.getDrFinisworking();
         this.drBreak = doctorDto.getDrBreak();
         this.drUser = doctorDto.getDrUser();
+        this.drSpaces= doctorDto.getDrSpaces();
     }
-    
-    public Doctor(Integer drId) {
-        this.drId = drId;
-    }
-
-    public Doctor(Integer drId, int drCode, int drLicense, int drFol, String drIniworking, String drFinisworking, String drBreak) {
-        this.drId = drId;
-        this.drCode = drCode;
-        this.drLicense = drLicense;
-        this.drFol = drFol;
-        this.drIniworking = drIniworking;
-        this.drFinisworking = drFinisworking;
-        this.drBreak = drBreak;
-    }
-
+       
     public Integer getDrId() {
         return drId;
     }
@@ -167,6 +168,14 @@ public class Doctor implements Serializable {
         this.drBreak = drBreak;
     }
 
+    public short getDrSpaces() {
+        return drSpaces;
+    }
+
+    public void setDrSpaces(short drSpaces) {
+        this.drSpaces = drSpaces;
+    }
+
     public Users getDrUser() {
         return drUser;
     }
@@ -174,22 +183,6 @@ public class Doctor implements Serializable {
     public void setDrUser(Users drUser) {
         this.drUser = drUser;
     }
-/*
-    public List<Diary> getDiaryList() {
-        return diaryList;
-    }
-
-    public void setDiaryList(List<Diary> diaryList) {
-        this.diaryList = diaryList;
-    }
-
-    public List<Exam> getExamList() {
-        return examList;
-    }
-
-    public void setExamList(List<Exam> examList) {
-        this.examList = examList;
-    }*/
 
     @Override
     public int hashCode() {

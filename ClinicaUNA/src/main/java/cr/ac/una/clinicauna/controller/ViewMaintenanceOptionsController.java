@@ -632,13 +632,13 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             doctorDto.setDrCode(Integer.parseInt(codeDocMainField.getText()));
             doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
             doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
-
+   doctorDto.setDrSpaces(intToShort(3));
             System.out.println(timepickerIniWork.getValue().toString());
             System.out.println(timepickerFinWork.getValue().toString());
 
             doctorDto.setDrIniworking(timepickerIniWork.getValue().toString());
             doctorDto.setDrFinisworking(timepickerFinWork.getValue().toString());
-
+            
             doctorDto.toString();
             userDto.toString();
 
@@ -649,7 +649,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             doctorDto.setDrCode(Integer.parseInt(codeDocMainField.getText()));
             doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
             doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
-
+            doctorDto.setDrSpaces(intToShort(3));
             System.out.println(timepickerIniWork.getValue().toString());
             System.out.println(timepickerFinWork.getValue().toString());
 
@@ -662,6 +662,17 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         return doctorDto;
     }
 
+    public static short intToShort(int x) {
+        if (x < Short.MIN_VALUE) {
+            return Short.MIN_VALUE;
+        }
+        if (x > Short.MAX_VALUE) {
+            return Short.MAX_VALUE;
+        }
+        return (short) Math.round(x);
+    }
+
+    
     @FXML
     private void UpdateDoctor(ActionEvent event) {
         if (userDoctor) {

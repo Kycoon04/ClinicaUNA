@@ -18,6 +18,7 @@ public class DoctorDto {
     private String drFinisworking;
     private String drBreak;
     private Users drUser;
+    private short drSpaces;
 
     public DoctorDto(Doctor doctor) {
         this.drId = doctor.getDrId();
@@ -28,6 +29,15 @@ public class DoctorDto {
         this.drFinisworking = doctor.getDrFinisworking();
         this.drBreak = doctor.getDrBreak();
         this.drUser = doctor.getDrUser();
+        this.drSpaces= doctor.getDrSpaces();
+    }
+
+    public short getDrSpaces() {
+        return drSpaces;
+    }
+
+    public void setDrSpaces(short drSpaces) {
+        this.drSpaces = drSpaces;
     }
 
     public DoctorDto() {
