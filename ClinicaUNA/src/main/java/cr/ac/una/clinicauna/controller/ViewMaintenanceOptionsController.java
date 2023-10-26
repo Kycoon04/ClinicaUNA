@@ -271,6 +271,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     ToggleGroup Tou = new ToggleGroup();
 
     UserDto usrIdiom = (UserDto) AppContext.getInstance().get("Usuario");
+    @FXML
+    private TextField SpacesDocMainField1;
 
     /**
      * Initializes the controller class.
@@ -632,7 +634,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             doctorDto.setDrCode(Integer.parseInt(codeDocMainField.getText()));
             doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
             doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
-   doctorDto.setDrSpaces(intToShort(3));
+            doctorDto.setDrSpaces(intToShort(Integer.parseInt(SpacesDocMainField1.getText())));
             System.out.println(timepickerIniWork.getValue().toString());
             System.out.println(timepickerFinWork.getValue().toString());
 

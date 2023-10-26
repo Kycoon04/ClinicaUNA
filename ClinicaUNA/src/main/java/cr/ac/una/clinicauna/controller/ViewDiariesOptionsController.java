@@ -10,6 +10,7 @@ import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.PatientDto;
+import cr.ac.una.clinicauna.model.SpaceDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.AppointmentService;
 import cr.ac.una.clinicauna.service.DoctorService;
@@ -22,6 +23,7 @@ import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -33,6 +35,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -46,6 +49,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -159,10 +163,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private Text textMainDoctor11;
 
-    UserDto userDto = new UserDto();
-    DoctorDto doctorDto = new DoctorDto();
-    PatientDto patientDto = new PatientDto();
-    DiseaseDto diseaseDto = new DiseaseDto();
+    private UserDto userDto = new UserDto();
+    private DoctorDto doctorDto = new DoctorDto();
+    private PatientDto patientDto = new PatientDto();
+    private DiseaseDto diseaseDto = new DiseaseDto();
+
     @FXML
     private TextField nameP;
     @FXML
@@ -183,6 +188,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private RadioButton Absent;
     ToggleGroup Hour = new ToggleGroup();
     ToggleGroup Tou = new ToggleGroup();
+    @FXML
+    ComboBox<String> spaces = new ComboBox();
+
     @FXML
     private BorderPane OptionsMainDiary1;
     @FXML
@@ -251,13 +259,18 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private AnchorPane rootDocDiary;
     @FXML
-    private Text textMainDiary;
-    @FXML
     private Text textMainDoctor12;
     @FXML
     private RadioButton amRadio1;
     @FXML
     private RadioButton pmRadio1;
+
+    @FXML
+    private TableColumn<DoctorDto, String> tableColDocSpaces11;
+    @FXML
+    private ComboBox<Integer> yearPicker;
+    private List<Label> citasAgregadasList = new ArrayList<>();
+    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     /**
      * Initializes the controller class.
@@ -290,20 +303,31 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         this.tableColDocFolio11.setCellValueFactory(new PropertyValueFactory("DrFol"));
         this.tableColDocIniWork11.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
         this.tableColDocCode11.setCellValueFactory(new PropertyValueFactory("DrCode"));
-
+        // this.tableColDocSpaces11.setCellFactory(new PropertyValueFactory("DrSpaces"));
+        yearPicker.getItems().addAll(getYears(Year.now().getValue(), 2100));
         Absent.setToggleGroup(Tou);
         Cancelled.setToggleGroup(Tou);
         Attended.setToggleGroup(Tou);
         Scheduled.setToggleGroup(Tou);
-
         amRadio1.setToggleGroup(Hour);
         pmRadio1.setToggleGroup(Hour);
 
-        calendarsProperties();
+        ObservableList<String> items = FXCollections.observableArrayList(
+                "2",
+                "3",
+                "4"
+        );
 
+        spaces.setItems(items);
+
+        calendarsProperties();
         fillTablePatient();
         fillTableDoctors();
 
+    }
+
+    private Integer[] getYears(int startYear, int endYear) {
+        return IntStream.rangeClosed(startYear, endYear).boxed().toArray(Integer[]::new);
     }
 
     private void calendarsProperties() {
@@ -323,21 +347,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 -> AnchorPane.setLeftAnchor(calendarPane, (newVal.doubleValue() - calendarPane.getPrefWidth()) / 2));
 
         rootCalendar.getChildren().add(calendarPane);
-
-        GridPane DiaryPane = createWeekCalendarWithHeaders();
-        DiaryPane.setPrefSize(rootDocDiary.getPrefWidth() / 2 + 500, rootDocDiary.getPrefHeight() / 2 + 180);
-        DiaryPane.setGridLinesVisible(true);
-
-        AnchorPane.setTopAnchor(DiaryPane, (rootDocDiary.getHeight() - DiaryPane.getPrefHeight()) / 2);
-        AnchorPane.setLeftAnchor(DiaryPane, (rootDocDiary.getWidth() - DiaryPane.getPrefWidth()) / 2);
-
-        rootDocDiary.heightProperty().addListener((obs, oldVal, newVal)
-                -> AnchorPane.setTopAnchor(DiaryPane, (newVal.doubleValue() - DiaryPane.getPrefHeight()) / 2));
-
-        rootDocDiary.widthProperty().addListener((obs, oldVal, newVal)
-                -> AnchorPane.setLeftAnchor(DiaryPane, (newVal.doubleValue() - DiaryPane.getPrefWidth()) / 2));
-
-        rootDocDiary.getChildren().add(DiaryPane);
 
     }
 
@@ -366,6 +375,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         int row = 1;
         int col = firstDayOfMonth.getDayOfWeek().getValue() % 7;
+
+        final Label[] selectedLabel = {null}; // Usamos un array para almacenar la etiqueta seleccionada
+
         for (int day = 1; day <= daysInMonth; day++) {
             final int finalDay = day;
 
@@ -382,19 +394,17 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             GridPane.setFillHeight(dayLabel, true);
 
             dayLabel.setOnMouseClicked(event -> {
+                if (selectedLabel[0] != null) {
+                    selectedLabel[0].setStyle(""); // Restablece el estilo de la etiqueta anteriormente seleccionada
+                }
+
                 if (!dayLabel.getStyle().contains("green")) {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE");
                     String dayOfWeek = firstDayOfMonth.plusDays(finalDay - 1).format(formatter);
 
                     System.out.println("Día clickeado: " + finalDay + " (" + dayOfWeek + ")");
-                    for (Node node : gridPane.getChildren()) {
-                        Integer rowIndex = GridPane.getRowIndex(node);
-                        Integer colIndex = GridPane.getColumnIndex(node);
-
-                        if (rowIndex != null && rowIndex == finalRow && colIndex != null && colIndex == finalCol) {
-                            node.setStyle("-fx-background-color: green;");
-                        }
-                    }
+                    dayLabel.setStyle("-fx-background-color: green;");
+                    selectedLabel[0] = dayLabel; // Almacena la etiqueta recién seleccionada
                 }
             });
 
@@ -406,7 +416,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 row++;
             }
         }
-
         for (int i = 0; i < 7; i++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setFillWidth(true);
@@ -460,6 +469,12 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private void ContinueDetail(ActionEvent event) {
         fillAppoiment();
+        SpaceDto spacesDto = new SpaceDto();
+
+        for (int i = 0; i <= doctorDto.getDrSpaces(); i++) {
+            spacesDto.setSeId(0);
+            //spacesDto.setSeHour(seHour);
+        }
     }
 
     @FXML
@@ -564,26 +579,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         DoctorService service = new DoctorService();
         List<DoctorDto> listDoct = new ArrayList<>();
-
-        listDoct = service.getDoctor();
-        if (!listDoct.isEmpty()) {
-            if (iniHour.getValue() != null && endHour.getValue() != null) {
-                List<DoctorDto> doctoresFiltrados = listDoct.stream()
-                        .filter(filterByTimeRange(iniHour.getValue(), endHour.getValue()))
-                        .collect(Collectors.toList());
-
-                if (doctoresFiltrados.isEmpty()) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Vacio ", getStage(), "No Hay ningun doctor a la hora seleccionada");
-                    doctorObservableList.clear();
-                    this.tableViewDoctorsDiary1.refresh();
-                    this.tableViewDoctorsDiary1.setItems(doctorObservableList);
-                } else {
-                    doctorObservableList = FXCollections.observableArrayList(doctoresFiltrados);
-                    this.tableViewDoctorsDiary1.refresh();
-                    this.tableViewDoctorsDiary1.setItems(doctorObservableList);
-                }
-            }
-        }
 
     }
 
@@ -784,6 +779,28 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void doctorDiaryClicked(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            doctorDto = tableViewDoctorsDiary1.getSelectionModel().getSelectedItem();
+            eventAgendDoct();
+            textMainDoctor12.setText(doctorDto.getDoctorName());
+        }
+    }
+
+    public void eventAgendDoct() {
+        GridPane DiaryPane = createWeekCalendarWithHeaders(doctorDto.getDrSpaces());
+        DiaryPane.setPrefSize(rootDocDiary.getPrefWidth() / 2 + 500, rootDocDiary.getPrefHeight() / 2 + 180);
+        DiaryPane.setGridLinesVisible(true);
+
+        AnchorPane.setTopAnchor(DiaryPane, (rootDocDiary.getHeight() - DiaryPane.getPrefHeight()) / 2);
+        AnchorPane.setLeftAnchor(DiaryPane, (rootDocDiary.getWidth() - DiaryPane.getPrefWidth()) / 2);
+
+        rootDocDiary.heightProperty().addListener((obs, oldVal, newVal)
+                -> AnchorPane.setTopAnchor(DiaryPane, (newVal.doubleValue() - DiaryPane.getPrefHeight()) / 2));
+
+        rootDocDiary.widthProperty().addListener((obs, oldVal, newVal)
+                -> AnchorPane.setLeftAnchor(DiaryPane, (newVal.doubleValue() - DiaryPane.getPrefWidth()) / 2));
+
+        rootDocDiary.getChildren().add(DiaryPane);
     }
 
     @FXML
@@ -795,29 +812,28 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private void UpdateWorkerEnter(KeyEvent event) {
     }
 
-    public static GridPane createWeekCalendarWithHeaders() {
+    public GridPane createWeekCalendarWithHeaders(int v) {
+        final int op = 0;
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(1);
         gridPane.setVgap(1);
-       
-        //tamaño de los esdpacios del medico 
-        String[] DAY_NAMES= new String[4];
-        int doctoSpaces = 4; // aqui igual
 
-        //simplificar
+        String[] DAY_NAMES = new String[v];
+        int doctoSpaces = v;
+
         if (doctoSpaces == 2) {
-           DAY_NAMES[0]= "30";
-           DAY_NAMES[1]= "60";
-        } else if (doctoSpaces == 3) {
-            DAY_NAMES[0] = "20";
-            DAY_NAMES[1] = "40";
-            DAY_NAMES[2] = "60";
-        } else {
-            DAY_NAMES[0] = "15";
+            DAY_NAMES[0] = "00";
             DAY_NAMES[1] = "30";
-            DAY_NAMES[2] = "45";
-            DAY_NAMES[3] = "60";
+        } else if (doctoSpaces == 3) {
+            DAY_NAMES[0] = "00";
+            DAY_NAMES[1] = "20";
+            DAY_NAMES[2] = "40";
+        } else {
+            DAY_NAMES[0] = "00";
+            DAY_NAMES[1] = "15";
+            DAY_NAMES[2] = "30";
+            DAY_NAMES[3] = "45";
         }
 
         for (int i = 0; i < DAY_NAMES.length; i++) {
@@ -846,7 +862,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             gridPane.add(hourLabel, 0, i + 1);
         }
 
-        for (int day = 1; day <= DAY_NAMES.length+1; day++) {
+        for (int day = 1; day <= DAY_NAMES.length + 1; day++) {
+
             for (int hour = 0; hour < 13; hour++) {
                 Label cellLabel = new Label();
                 cellLabel.setStyle("-fx-font-size: 10");
@@ -860,13 +877,13 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 final int minute = day;
                 final int finalHour = hour;
 
-                cellLabel.setOnMouseClicked(event -> handleCellClick(gridPane, cellLabel, minute, finalHour));
+                cellLabel.setOnMouseClicked(event -> handleCellClick(gridPane, cellLabel, DAY_NAMES, finalHour));
 
                 gridPane.add(cellLabel, day, hour + 1);
             }
         }
-        // doctor. getNumSpaces by hour
-        for (int i = 0; i < DAY_NAMES.length+1; i++) {
+
+        for (int i = 0; i < DAY_NAMES.length + 1; i++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setFillWidth(true);
             columnConstraints.setHgrow(javafx.scene.layout.Priority.ALWAYS);
@@ -885,23 +902,31 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         return gridPane;
     }
 
-    private static void handleCellClick(GridPane gridPane, Label cellLabel, int min, int hour) {
-        if (!cellLabel.getStyle().contains("green")) {
-            System.out.println("Campo clickeado: " + min + ", Hora clickeada: " + hour);
-            cellLabel.setStyle("-fx-background-color: green;");
+    private void handleCellClick(GridPane gridPane, Label cellLabel, String min[], int hour) {
+        int maxCitas = Integer.parseInt(spaces.getValue());
 
-       
-          
+        if (!cellLabel.getStyle().contains("green")) {
+           
+            int citasAgregadas = 0;
+            while (citasAgregadas < maxCitas) {
+                cellLabel.setStyle("-fx-background-color: green;");
                 Label label = new Label("Cita");
                 label.setStyle("-fx-font-size: 10");
-        
+                GridPane.setColumnSpan(label, 1);
+                GridPane.setRowSpan(label, 1);
+                GridPane.setColumnIndex(label, GridPane.getColumnIndex(cellLabel) + citasAgregadas);
+                GridPane.setRowIndex(label, GridPane.getRowIndex(cellLabel));
+                gridPane.getChildren().add(label);
+                citasAgregadasList.add(label);  
 
-            GridPane.setColumnSpan(label, 1);
-            GridPane.setRowSpan(label, 1);
-            GridPane.setColumnIndex(label, GridPane.getColumnIndex(cellLabel));
-            GridPane.setRowIndex(label, GridPane.getRowIndex(cellLabel));
-
-            gridPane.getChildren().add(label);
+                citasAgregadas++;
+            }
+            for (int j = 0; j < min.length; j++) {
+                System.out.println(min[j]);
+                LocalTime horaActual = LocalTime.of(hour, Integer.parseInt(min[j]));
+                String horaFormateada = horaActual.format(timeFormatter);
+                System.out.println("Hora agregada: " + horaFormateada);
+            }
         }
     }
 
