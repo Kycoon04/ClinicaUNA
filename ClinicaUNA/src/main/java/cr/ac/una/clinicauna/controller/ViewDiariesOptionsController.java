@@ -15,12 +15,15 @@ import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.AppointmentService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.PatientService;
+import cr.ac.una.clinicauna.service.SpaceService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Year;
@@ -34,6 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javafx.collections.FXCollections;
@@ -162,7 +167,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private Tab tabDiary;
     @FXML
     private Text textMainDoctor11;
-
+    AppointmentDto appointmentDto = new AppointmentDto();
     private UserDto userDto = new UserDto();
     private DoctorDto doctorDto = new DoctorDto();
     private PatientDto patientDto = new PatientDto();
@@ -271,7 +276,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private ComboBox<Integer> yearPicker;
     private List<Label> citasAgregadasList = new ArrayList<>();
     private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-
+    SpaceDto spacesDto = new SpaceDto();
     /**
      * Initializes the controller class.
      */
@@ -434,7 +439,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
 
     private void fillAppoiment() {
-        AppointmentDto appointmentDto = new AppointmentDto();
+        
         Respuesta r = null;
         AppointmentService service = new AppointmentService();
         this.userDto = (UserDto) AppContext.getInstance().get("Usuario");
@@ -469,12 +474,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private void ContinueDetail(ActionEvent event) {
         fillAppoiment();
-        SpaceDto spacesDto = new SpaceDto();
 
-        for (int i = 0; i <= doctorDto.getDrSpaces(); i++) {
-            spacesDto.setSeId(0);
-            //spacesDto.setSeHour(seHour);
-        }
     }
 
     @FXML
@@ -805,6 +805,14 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void updateAgenda(ActionEvent event) {
+        
+        SpaceService service= new SpaceService();
+        Respuesta r= service.saveSpace(spacesDto);
+              if(r.getEstado()){
+                  
+              }else{
+                  System.out.println("Error");
+              }
 
     }
 
@@ -819,25 +827,25 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         gridPane.setHgap(1);
         gridPane.setVgap(1);
 
-        String[] DAY_NAMES = new String[v];
+        String[] mint = new String[v];
         int doctoSpaces = v;
 
         if (doctoSpaces == 2) {
-            DAY_NAMES[0] = "00";
-            DAY_NAMES[1] = "30";
+            mint[0] = "00";
+            mint[1] = "30";
         } else if (doctoSpaces == 3) {
-            DAY_NAMES[0] = "00";
-            DAY_NAMES[1] = "20";
-            DAY_NAMES[2] = "40";
+            mint[0] = "00";
+            mint[1] = "20";
+            mint[2] = "40";
         } else {
-            DAY_NAMES[0] = "00";
-            DAY_NAMES[1] = "15";
-            DAY_NAMES[2] = "30";
-            DAY_NAMES[3] = "45";
+            mint[0] = "00";
+            mint[1] = "15";
+            mint[2] = "30";
+            mint[3] = "45";
         }
 
-        for (int i = 0; i < DAY_NAMES.length; i++) {
-            Label dayLabel = new Label(DAY_NAMES[i]);
+        for (int i = 0; i < mint.length; i++) {
+            Label dayLabel = new Label(mint[i]);
             dayLabel.setAlignment(Pos.CENTER);
             dayLabel.setStyle("-fx-font-weight: bold");
 
@@ -862,7 +870,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             gridPane.add(hourLabel, 0, i + 1);
         }
 
-        for (int day = 1; day <= DAY_NAMES.length + 1; day++) {
+        for (int day = 1; day <= mint.length + 1; day++) {
 
             for (int hour = 0; hour < 13; hour++) {
                 Label cellLabel = new Label();
@@ -877,13 +885,19 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 final int minute = day;
                 final int finalHour = hour;
 
-                cellLabel.setOnMouseClicked(event -> handleCellClick(gridPane, cellLabel, DAY_NAMES, finalHour));
+                cellLabel.setOnMouseClicked(event -> {
+                    try {
+                        handleCellClick(gridPane, cellLabel, mint, finalHour);
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ViewDiariesOptionsController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
 
                 gridPane.add(cellLabel, day, hour + 1);
             }
         }
 
-        for (int i = 0; i < DAY_NAMES.length + 1; i++) {
+        for (int i = 0; i < mint.length + 1; i++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setFillWidth(true);
             columnConstraints.setHgrow(javafx.scene.layout.Priority.ALWAYS);
@@ -902,11 +916,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         return gridPane;
     }
 
-    private void handleCellClick(GridPane gridPane, Label cellLabel, String min[], int hour) {
+    private void handleCellClick(GridPane gridPane, Label cellLabel, String min[], int hour) throws ParseException {
         int maxCitas = Integer.parseInt(spaces.getValue());
-
+        
         if (!cellLabel.getStyle().contains("green")) {
-           
+
             int citasAgregadas = 0;
             while (citasAgregadas < maxCitas) {
                 cellLabel.setStyle("-fx-background-color: green;");
@@ -917,15 +931,25 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 GridPane.setColumnIndex(label, GridPane.getColumnIndex(cellLabel) + citasAgregadas);
                 GridPane.setRowIndex(label, GridPane.getRowIndex(cellLabel));
                 gridPane.getChildren().add(label);
-                citasAgregadasList.add(label);  
+                citasAgregadasList.add(label);
 
                 citasAgregadas++;
             }
             for (int j = 0; j < min.length; j++) {
-                System.out.println(min[j]);
+   
                 LocalTime horaActual = LocalTime.of(hour, Integer.parseInt(min[j]));
                 String horaFormateada = horaActual.format(timeFormatter);
                 System.out.println("Hora agregada: " + horaFormateada);
+               
+                for (int i = 0; i <= doctorDto.getDrSpaces(); i++) {
+                    String dateTimeString = "2023-10-26 "+horaFormateada;
+                    SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    Date dateTime = dateTimeFormat.parse(dateTimeString);
+                    spacesDto.setSeId(0);
+                    spacesDto.setSeHour(dateTime);
+                    spacesDto.setSeAppointment(appointmentDto);
+                    
+                }
             }
         }
     }
