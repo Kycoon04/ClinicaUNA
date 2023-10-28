@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Space", description = "Operations on Space")
-@Secure
+//@Secure
 public class ModuleSpace {
     
     @EJB

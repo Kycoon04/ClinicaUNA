@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Proceedings", description = "Operations on Proceedings")
-@Secure
+//@Secure
 public class ModuleProceedings {
 
     @EJB

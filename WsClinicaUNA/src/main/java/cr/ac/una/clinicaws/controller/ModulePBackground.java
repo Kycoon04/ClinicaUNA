@@ -37,7 +37,7 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Personal Background", description = "Operations on Personal Background")
 
-@Secure
+//@Secure
 public class ModulePBackground {
 
     @EJB

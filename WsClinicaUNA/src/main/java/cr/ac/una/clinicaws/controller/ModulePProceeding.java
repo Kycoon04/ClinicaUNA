@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "PProceeding", description = "Operations on PProceeding")
 
-@Secure
+//@Secure
 public class ModulePProceeding {
 
     @EJB

@@ -3,29 +3,30 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package cr.ac.una.clinicaws.model;
-
-import java.util.Date;
 /**
  *
  * @author dilan
  */
 public class SpaceDto {
 
-    private Date seHour;
+    private String seHour;
     private Integer seId;
     private Appointment seAppointment;
 
     public SpaceDto(Space space) {
-        this.seHour = space.getSeTime();
+        this.seHour = space.getSeHour();
         this.seId = space.getSeId();
         this.seAppointment = space.getSeAppointment();
     }
 
-    public Date getSeHour() {
+    public SpaceDto() {
+    }
+
+    public String getSeHour() {
         return seHour;
     }
 
-    public void setSeHour(Date seHour) {
+    public void setSeHour(String seHour) {
         this.seHour = seHour;
     }
 

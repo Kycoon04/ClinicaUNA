@@ -13,11 +13,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.util.Date;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
  *
@@ -27,16 +25,16 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "CL_SPACE")
 @NamedQueries({
     @NamedQuery(name = "Space.findAll", query = "SELECT s FROM Space s"),
-    @NamedQuery(name = "Space.findBySeTime", query = "SELECT s FROM Space s WHERE s.seTime = :seTime"),
+    @NamedQuery(name = "Space.findBySeHour", query = "SELECT s FROM Space s WHERE s.seHour = :seHour"),
     @NamedQuery(name = "Space.findBySeId", query = "SELECT s FROM Space s WHERE s.seId = :seId")})
 public class Space implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "SE_TIME")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date seTime;
+    @Size(min = 1, max = 10)
+    @Column(name = "SE_HOUR")
+    private String seHour;
     @Id
     @Basic(optional = false)
     @NotNull
@@ -45,7 +43,7 @@ public class Space implements Serializable {
     @JoinColumn(name = "SE_APPOINTMENT", referencedColumnName = "AT_ID")
     @ManyToOne(optional = false)
     private Appointment seAppointment;
-
+    
     public Space() {
     }
 
@@ -55,26 +53,30 @@ public class Space implements Serializable {
     }
 
     public void update(SpaceDto space) {
-        this.seTime = space.getSeHour();
-        this.seId = space.getSeId();
+        this.seHour = space.getSeHour();
         this.seAppointment = space.getSeAppointment();
     }
-
     public Space(Integer seId) {
         this.seId = seId;
     }
 
-    public Space(Integer seId, Date seTime) {
+    public Space(Integer seId, String seHour) {
         this.seId = seId;
-        this.seTime = seTime;
+        this.seHour = seHour;
     }
 
-    public Date getSeTime() {
-        return seTime;
+    public String getSeHour() {
+        return seHour;
+    }
+    public Appointment getSeAppointment() {
+        return seAppointment;
     }
 
-    public void setSeTime(Date seTime) {
-        this.seTime = seTime;
+    public void setSeAppointment(Appointment seAppointment) {
+        this.seAppointment = seAppointment;
+    }
+    public void setSeHour(String seHour) {
+        this.seHour = seHour;
     }
 
     public Integer getSeId() {
@@ -105,17 +107,9 @@ public class Space implements Serializable {
         return true;
     }
 
-    public Appointment getSeAppointment() {
-        return seAppointment;
-    }
-
-    public void setSeAppointment(Appointment seAppointment) {
-        this.seAppointment = seAppointment;
-    }
-
     @Override
     public String toString() {
         return "cr.ac.una.clinicaws.model.Space[ seId=" + seId + " ]";
     }
-
+    
 }

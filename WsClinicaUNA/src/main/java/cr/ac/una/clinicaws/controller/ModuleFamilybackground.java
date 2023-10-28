@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Familybackground", description = "Operations on Familybackground")
-@Secure
+//@Secure
 public class ModuleFamilybackground {
     
       @EJB

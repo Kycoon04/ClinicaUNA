@@ -25,6 +25,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Year;
 import java.time.YearMonth;
@@ -275,6 +276,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     SpaceDto spacesDto = new SpaceDto();
     @FXML
     private Text textMainDoctor121;
+    List<LocalTime> horasAgregadas = new ArrayList<>();
 
     /**
      * Initializes the controller class.
@@ -317,11 +319,12 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         pmRadio1.setToggleGroup(Hour);
 
         ObservableList<String> items = FXCollections.observableArrayList(
+                "1",
                 "2",
                 "3",
                 "4"
         );
-
+        spaces.setValue("1");
         spaces.setItems(items);
         fillTablePatient();
         fillTableDoctors();
@@ -344,7 +347,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             Long numLong = Long.parseLong(numberP.getText());
             appointmentDto.setAtTelephone(numLong);
             appointmentDto.setAtEmail(email.getText());
-            System.out.println(email.getText());
             if (Scheduled.isSelected()) {
                 appointmentDto.setAtState("Programada");
             } else if (Attended.isSelected()) {
@@ -354,21 +356,46 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             } else {
                 appointmentDto.setAtState("Ausente");
             }
-
-            System.out.println(appointmentDto.getAtPatient().getPtName() + " " + appointmentDto.getAtUserregister().getUsName());
             r = service.saveAppointment(appointmentDto);
         }
         if (r.getEstado()) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Registrada");
+            appointmentDto = (AppointmentDto) r.getResultado("Appointments");
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita Registrada");
         } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "No se pudo Registrar");
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita No se pudo Registrar");
         }
     }
 
     @FXML
     private void ContinueDetail(ActionEvent event) {
+        Respuesta respuesta = null;
         fillAppoiment();
-
+        int espacios = 1;
+        SpaceService service = new SpaceService();
+        try {
+            espacios = Integer.parseInt(spaces.getValue());
+        } catch (NumberFormatException e) {
+        }
+        
+        for (int i = 0; i < espacios; i++) {
+            spacesDto = new SpaceDto();
+            spacesDto.setSeAppointment(appointmentDto);
+            String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
+            spacesDto.setSeHour(horaFormateada);
+            
+            System.out.println("id: "+appointmentDto.getAtId());
+            System.out.println("hora: "+horaFormateada);
+            
+            respuesta = service.saveSpace(spacesDto);
+            
+            if (respuesta.getEstado()) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Espacio Registrada");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Espacio No se pudo Registrar");
+                return;
+            }
+        }
+        
     }
 
     @FXML
@@ -443,31 +470,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
     }
 
-    public static Predicate<DoctorDto> filterByTimeRange(LocalTime startTimeParam, LocalTime endTimeParam) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-
-        return doctorDto -> {
-            LocalTime doctorStartTime = LocalTime.parse(doctorDto.getDrIniworking(), formatter);
-            LocalTime doctorEndTime = LocalTime.parse(doctorDto.getDrFinisworking(), formatter);
-            // debbug
-            System.out.println("Doctor: " + doctorDto.getDoctorName());
-            System.out.println("Doctor Start Time: " + doctorStartTime);
-            System.out.println("Doctor End Time: " + doctorEndTime);
-            System.out.println("Start Time Param: " + startTimeParam);
-            System.out.println("End Time Param: " + endTimeParam);
-
-            boolean startInRange = !startTimeParam.isBefore(doctorStartTime);
-            boolean endInRange = !endTimeParam.isAfter(doctorEndTime);
-
-            boolean result = startInRange && endInRange;
-
-            System.out.println("Result: " + result);
-            System.out.println("");
-
-            return result;
-        };
-    }
-
     private void filterDoctorsByDay(ActionEvent event) {
 
         DoctorService service = new DoctorService();
@@ -491,7 +493,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private void fillTableDoctors() {
         DoctorService service = new DoctorService();
         doctorList = service.getDoctor();
-        if (doctorList==null) {
+        if (doctorList == null) {
             System.out.println("fdf");
         } else {
             doctorObservableList = FXCollections.observableArrayList(doctorList);
@@ -684,10 +686,10 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         String horaFin = doctorDto.getDrFinisworking();
         String[] partesInicio = horaInicio.split(":");
         String[] partesFin = horaFin.split(":");
-        
+
         int horaInicioInt = Integer.parseInt(partesInicio[0]);
         int horaFinInt = Integer.parseInt(partesFin[0]);
-        
+
         GridPane DiaryPane = createWeekCalendarWithHeaders(horaInicioInt, horaFinInt, doctorDto.getDrSpaces());
         DiaryPane.setPrefSize(rootDocDiary.getPrefWidth() / 2 + 500, rootDocDiary.getPrefHeight() / 2 + 180);
         DiaryPane.setGridLinesVisible(true);
@@ -711,8 +713,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         Respuesta r = service.saveSpace(spacesDto);
         if (r.getEstado()) {
 
-            
-            
         } else {
             System.out.println("Error");
         }
@@ -829,61 +829,51 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         return diferenciaHoras;
     }
 
-private void handleCellClick(GridPane gridPane, Label cellLabel, String min[], int hour) throws ParseException {
-    int maxCitas = Integer.parseInt(spaces.getValue());
+    private void handleCellClick(GridPane gridPane, Label cellLabel, String min[], int hour) throws ParseException {
+        int maxCitas = Integer.parseInt(spaces.getValue());
 
-    gridPane.getChildren().removeAll(citasAgregadasList);
-    citasAgregadasList.clear();
+        gridPane.getChildren().removeAll(citasAgregadasList);
+        citasAgregadasList.clear();
 
-    Set<LocalTime> horasAgregadas = new HashSet<>();
+        horasAgregadas = new ArrayList<>();
 
-    int citasAgregadas = 0;
-    int startColumn = GridPane.getColumnIndex(cellLabel);
-    int columnIdx = 1;
-    int rowIndex = GridPane.getRowIndex(cellLabel);
+        int citasAgregadas = 0;
+        int startColumn = GridPane.getColumnIndex(cellLabel);
+        int columnIdx = 1;
+        int rowIndex = GridPane.getRowIndex(cellLabel);
 
-    while (citasAgregadas < maxCitas) {
-        Label label = new Label("Cita");
-        label.setStyle("-fx-font-size: 15");
-        GridPane.setColumnSpan(label, 1);
-        GridPane.setRowSpan(label, 1);
-        GridPane.setColumnIndex(label, columnIdx);
-        GridPane.setRowIndex(label, rowIndex);
+        while (citasAgregadas < maxCitas) {
+            Label label = new Label("Cita");
+            label.setStyle("-fx-font-size: 15");
+            GridPane.setColumnSpan(label, 1);
+            GridPane.setRowSpan(label, 1);
+            GridPane.setColumnIndex(label, columnIdx);
+            GridPane.setRowIndex(label, rowIndex);
 
-        gridPane.getChildren().add(label);
-        citasAgregadasList.add(label);
+            gridPane.getChildren().add(label);
+            citasAgregadasList.add(label);
 
-        LocalTime horaActual = null;
-        if (citasAgregadas < min.length) {
-            horaActual = LocalTime.of(hour, Integer.parseInt(min[citasAgregadas]));
-            horasAgregadas.add(horaActual);
-        }
-
-        citasAgregadas++;
-
-        if (columnIdx + 1 >= gridPane.getColumnConstraints().size()) {
-            if (rowIndex  >= gridPane.getRowConstraints().size()) {
-       
-                break;
+            LocalTime horaActual = null;
+            if (citasAgregadas < min.length) {
+                horaActual = LocalTime.of(hour, Integer.parseInt(min[citasAgregadas]));
+                horasAgregadas.add(horaActual);
             }
 
-            columnIdx = 1;
-            rowIndex++;
-        } else {
-            columnIdx++;
+            citasAgregadas++;
+
+            if (columnIdx + 1 >= gridPane.getColumnConstraints().size()) {
+                if (rowIndex >= gridPane.getRowConstraints().size()) {
+
+                    break;
+                }
+
+                columnIdx = 1;
+                rowIndex++;
+            } else {
+                columnIdx++;
+            }
         }
     }
-
-    for (LocalTime horaAgregada : horasAgregadas) {
-        String horaFormateada = horaAgregada.format(timeFormatter);
-        System.out.println("Hora agregada: " + horaFormateada);
-    }
-}
-
-
-
-
-
 
     @Override
     public void initialize() {

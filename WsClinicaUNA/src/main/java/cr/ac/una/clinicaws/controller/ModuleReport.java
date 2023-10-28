@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Report", description = "Operations on Report")
 
-@Secure
+//@Secure
 public class ModuleReport {
 
     @EJB
