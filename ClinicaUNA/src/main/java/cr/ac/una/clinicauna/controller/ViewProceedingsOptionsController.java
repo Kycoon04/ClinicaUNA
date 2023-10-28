@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicauna.controller;
 
+import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.util.FlowController;
@@ -21,9 +22,11 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -35,6 +38,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -52,23 +56,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private Text textMainDoctor11;
     @FXML
-    private RadioButton Attended;
-    @FXML
-    private RadioButton Scheduled;
-    @FXML
-    private RadioButton Cancelled;
-    @FXML
-    private RadioButton Absent;
-    @FXML
-    private TextArea reason;
-    @FXML
     private TextField numberP;
     @FXML
     private TextField email;
     @FXML
     private TextField userLog;
-    @FXML
-    private TextField nameP;
     @FXML
     private TextField textFieldNameExam;
     @FXML
@@ -167,6 +159,14 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TableColumn<?, ?> tableColPersBgContext1;
     @FXML
     private TableColumn<?, ?> tableColPersBgType11;
+    @FXML
+    private Spinner<?> spinnerAppoinment;
+    @FXML
+    private TextField textFieldPatientIdent;
+    @FXML
+    private TextField userLog1;
+    @FXML
+    private LineChart<?, ?> lineChartBodyMass;
     private boolean deleteDisease= false;
     
 
@@ -174,6 +174,9 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     
     List<DiseaseDto> diseaseList = new ArrayList<>();
     private ObservableList<DiseaseDto> diseaseObservableList;
+    
+    List<AppointmentDto> reportList=new ArrayList<>();
+
     
     /**
      * Initializes the controller class.
@@ -392,6 +395,37 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private void selectDisease(MouseEvent event) {
          OptionsMainDesease.toFront();
+    }
+
+    @FXML
+    private void changeViewAppointment(MouseEvent event) {
+        /*spinnerAppoinment = new Spinner<>(appointmentsList);
+
+        // Configurar el StringConverter personalizado
+        spinnerAppoinment.getValueFactory().setConverter(new StringConverter<>() {
+            @Override
+            public String toString(AppointmentDto appointment) {
+                return appointment.;
+            }
+
+            @Override
+            public Person fromString(String string) {
+                return people.stream()
+                        .filter(person -> person.getName().equals(string))
+                        .findFirst()
+                        .orElse(null);
+            }
+        });*/
+    }
+    
+    private void loadAppoinmentList(){
+        reportList.clear();
+    }
+
+    @FXML
+    private void cleanUpProcceding(ActionEvent event) {
+        
+        
     }
     
 }
