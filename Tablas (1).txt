@@ -268,12 +268,20 @@ create table CL_APPOINTMENT
   at_reason       VARCHAR2(200),
   at_telephone    NUMBER(10),
   at_email        VARCHAR2(30),
-  at_state        VARCHAR2(15) not null CONSTRAINT at_stateConstraint CHECK (at_state in ('Programada','Atendida','Cancelada','Ausente'))
+  at_state        VARCHAR2(15) not null,
+  at_code         VARCHAR2(10)
 )
 tablespace USERS
   pctfree 10
   initrans 1
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 -- Create/Recreate primary, unique and foreign key constraints 
 alter table CL_APPOINTMENT
   add constraint PK_ATID primary key (AT_ID)
@@ -281,26 +289,58 @@ alter table CL_APPOINTMENT
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table CL_APPOINTMENT
+  add constraint UNI_CODEAT unique (AT_CODE)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 alter table CL_APPOINTMENT
   add constraint FK_ATPATIENT foreign key (AT_PATIENT)
   references CL_PATIENT (PT_ID);
 alter table CL_APPOINTMENT
   add constraint FK_ATUSER foreign key (AT_USERREGISTER)
   references CL_USERS (US_ID);
+-- Create/Recreate check constraints 
+alter table CL_APPOINTMENT
+  add constraint AT_STATECONSTRAINT
+  check (at_state in ('Programada','Atendida','Cancelada','Ausente'));
 
 
 -- Create table
 create table CL_SPACE
 (
-  se_hour        DATE not null,
+  se_hour        VARCHAR2(10) not null,
   se_appointment NUMBER(5) not null,
   se_id          NUMBER(5) not null
 )
 tablespace USERS
   pctfree 10
   initrans 1
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 -- Create/Recreate primary, unique and foreign key constraints 
 alter table CL_SPACE
   add constraint PK_SEID primary key (SE_ID)
@@ -308,10 +348,18 @@ alter table CL_SPACE
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 alter table CL_SPACE
   add constraint FK_SEAPPOINTMENT foreign key (SE_APPOINTMENT)
   references CL_APPOINTMENT (AT_ID);
+
 
 
 -- Create table
