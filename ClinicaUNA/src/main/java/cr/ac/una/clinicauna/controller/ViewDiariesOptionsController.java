@@ -598,7 +598,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private void fillTableDoctors() {
         DoctorService service = new DoctorService();
         doctorList = service.getDoctor();
-        if (doctorList.isEmpty()) {
+        if (doctorList==null) {
             System.out.println("fdf");
         } else {
             doctorObservableList = FXCollections.observableArrayList(doctorList);
