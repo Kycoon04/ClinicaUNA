@@ -475,26 +475,6 @@
                                                 </AnchorPane>
                                              </content>
                                           </Tab>
-                                          <Tab fx:id="tabDiary21" text="%Agenda">
-                                             <content>
-                                                <BorderPane>
-                                                   <center>
-                                                      <AnchorPane fx:id="rootCalendar" minHeight="0.0" minWidth="0.0" onKeyPressed="#UpdateWorkerEnter" prefHeight="400.0" prefWidth="598.0" />
-                                                   </center>
-                                                   <bottom>
-                                                      <Button mnemonicParsing="false" onAction="#filterDoctorsByDay" prefHeight="67.0" prefWidth="126.0" text="Continuar" BorderPane.alignment="CENTER" />
-                                                   </bottom>
-                                                   <top>
-                                                      <HBox BorderPane.alignment="CENTER">
-                                                         <children>
-                                                            <Separator orientation="VERTICAL" prefHeight="25.0" prefWidth="305.0" visible="false" />
-                                                            <ComboBox fx:id="yearPicker" prefWidth="150.0" />
-                                                         </children>
-                                                      </HBox>
-                                                   </top>
-                                                </BorderPane>
-                                             </content>
-                                          </Tab>
                                           <Tab fx:id="tabDiary2" text="%Agenda">
                                              <content>
                                                 <BorderPane>
@@ -509,13 +489,19 @@
                                                                   <Font name="Tw Cen MT" size="29.0" />
                                                                </font>
                                                             </Text>
-                                                            <Text id="Text" fx:id="textMainDoctor12" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="480.12810373306274">
+                                                            <Text id="Text" fx:id="textMainDoctor12" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="86.12810373306274">
                                                                <font>
                                                                   <Font name="Tw Cen MT" size="29.0" />
                                                                </font>
                                                             </Text>
                                                             <ComboBox fx:id="spaces" prefWidth="150.0" />
                                                             <HBox alignment="CENTER" />
+                                                            <Text id="Text" fx:id="textMainDoctor121" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="62.128103733062744">
+                                                               <font>
+                                                                  <Font name="Tw Cen MT" size="29.0" />
+                                                               </font>
+                                                            </Text>
+                                                            <JFXDatePicker />
                                                          </children>
                                                       </HBox>
                                                    </top>

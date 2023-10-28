@@ -33,9 +33,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -254,10 +256,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private Tab newPatientAppoiment;
     @FXML
     private BorderPane CreateAppointment;
-    @FXML
-    private Tab tabDiary21;
-    @FXML
-    private AnchorPane rootCalendar;
     private YearMonth currentYearMonth;
     private JFXTimePicker iniHour;
     private JFXTimePicker endHour;
@@ -272,11 +270,12 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private TableColumn<DoctorDto, String> tableColDocSpaces11;
-    @FXML
-    private ComboBox<Integer> yearPicker;
     private List<Label> citasAgregadasList = new ArrayList<>();
     private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
     SpaceDto spacesDto = new SpaceDto();
+    @FXML
+    private Text textMainDoctor121;
+
     /**
      * Initializes the controller class.
      */
@@ -309,7 +308,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         this.tableColDocIniWork11.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
         this.tableColDocCode11.setCellValueFactory(new PropertyValueFactory("DrCode"));
         // this.tableColDocSpaces11.setCellFactory(new PropertyValueFactory("DrSpaces"));
-        yearPicker.getItems().addAll(getYears(Year.now().getValue(), 2100));
+
         Absent.setToggleGroup(Tou);
         Cancelled.setToggleGroup(Tou);
         Attended.setToggleGroup(Tou);
@@ -324,8 +323,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         );
 
         spaces.setItems(items);
-
-        calendarsProperties();
         fillTablePatient();
         fillTableDoctors();
 
@@ -335,111 +332,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         return IntStream.rangeClosed(startYear, endYear).boxed().toArray(Integer[]::new);
     }
 
-    private void calendarsProperties() {
-        currentYearMonth = YearMonth.now();
-
-        GridPane calendarPane = createCalendar(currentYearMonth);
-        calendarPane.setPrefSize(rootCalendar.getPrefWidth() / 2 + 400, rootCalendar.getPrefHeight() / 2 + 180);
-        calendarPane.setGridLinesVisible(true);
-
-        AnchorPane.setTopAnchor(calendarPane, (rootCalendar.getHeight() - calendarPane.getPrefHeight()) / 2);
-        AnchorPane.setLeftAnchor(calendarPane, (rootCalendar.getWidth() - calendarPane.getPrefWidth()) / 2);
-
-        rootCalendar.heightProperty().addListener((obs, oldVal, newVal)
-                -> AnchorPane.setTopAnchor(calendarPane, (newVal.doubleValue() - calendarPane.getPrefHeight()) / 2));
-
-        rootCalendar.widthProperty().addListener((obs, oldVal, newVal)
-                -> AnchorPane.setLeftAnchor(calendarPane, (newVal.doubleValue() - calendarPane.getPrefWidth()) / 2));
-
-        rootCalendar.getChildren().add(calendarPane);
-
-    }
-
-    private GridPane createCalendar(YearMonth yearMonth) {
-        GridPane gridPane = new GridPane();
-        gridPane.setAlignment(Pos.CENTER);
-        gridPane.setHgap(2);
-        gridPane.setVgap(2);
-
-        LocalDate firstDayOfMonth = LocalDate.of(yearMonth.getYear(), yearMonth.getMonthValue(), 1);
-        int daysInMonth = yearMonth.lengthOfMonth();
-
-        String[] dayNames = {"Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"};
-        for (int i = 0; i < 7; i++) {
-            Label dayLabel = new Label(dayNames[i]);
-            dayLabel.setAlignment(Pos.CENTER);
-            dayLabel.setStyle("-fx-font-weight: bold");
-
-            dayLabel.setMaxWidth(Double.MAX_VALUE);
-            dayLabel.setMaxHeight(Double.MAX_VALUE);
-            GridPane.setFillWidth(dayLabel, true);
-            GridPane.setFillHeight(dayLabel, true);
-
-            gridPane.add(dayLabel, i, 0);
-        }
-
-        int row = 1;
-        int col = firstDayOfMonth.getDayOfWeek().getValue() % 7;
-
-        final Label[] selectedLabel = {null}; // Usamos un array para almacenar la etiqueta seleccionada
-
-        for (int day = 1; day <= daysInMonth; day++) {
-            final int finalDay = day;
-
-            Label dayLabel = new Label(Integer.toString(day));
-            dayLabel.setStyle("-fx-font-size: 14");
-
-            final int finalRow = row;
-            final int finalCol = col;
-
-            dayLabel.setMaxWidth(Double.MAX_VALUE);
-            dayLabel.setMaxHeight(Double.MAX_VALUE);
-            dayLabel.setAlignment(Pos.TOP_LEFT);
-            GridPane.setFillWidth(dayLabel, true);
-            GridPane.setFillHeight(dayLabel, true);
-
-            dayLabel.setOnMouseClicked(event -> {
-                if (selectedLabel[0] != null) {
-                    selectedLabel[0].setStyle(""); // Restablece el estilo de la etiqueta anteriormente seleccionada
-                }
-
-                if (!dayLabel.getStyle().contains("green")) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE");
-                    String dayOfWeek = firstDayOfMonth.plusDays(finalDay - 1).format(formatter);
-
-                    System.out.println("Día clickeado: " + finalDay + " (" + dayOfWeek + ")");
-                    dayLabel.setStyle("-fx-background-color: green;");
-                    selectedLabel[0] = dayLabel; // Almacena la etiqueta recién seleccionada
-                }
-            });
-
-            gridPane.add(dayLabel, col, row);
-
-            col++;
-            if (col == 7) {
-                col = 0;
-                row++;
-            }
-        }
-        for (int i = 0; i < 7; i++) {
-            ColumnConstraints columnConstraints = new ColumnConstraints();
-            columnConstraints.setFillWidth(true);
-            columnConstraints.setHgrow(javafx.scene.layout.Priority.ALWAYS);
-            gridPane.getColumnConstraints().add(columnConstraints);
-        }
-
-        for (int i = 0; i <= row; i++) {
-            RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setFillHeight(true);
-            rowConstraints.setVgrow(javafx.scene.layout.Priority.ALWAYS);
-            gridPane.getRowConstraints().add(rowConstraints);
-        }
-
-        return gridPane;
-    }
-
     private void fillAppoiment() {
-        
+
         Respuesta r = null;
         AppointmentService service = new AppointmentService();
         this.userDto = (UserDto) AppContext.getInstance().get("Usuario");
@@ -574,7 +468,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         };
     }
 
-    @FXML
     private void filterDoctorsByDay(ActionEvent event) {
 
         DoctorService service = new DoctorService();
@@ -787,7 +680,15 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
 
     public void eventAgendDoct() {
-        GridPane DiaryPane = createWeekCalendarWithHeaders(doctorDto.getDrSpaces());
+        String horaInicio = doctorDto.getDrIniworking();
+        String horaFin = doctorDto.getDrFinisworking();
+        String[] partesInicio = horaInicio.split(":");
+        String[] partesFin = horaFin.split(":");
+        
+        int horaInicioInt = Integer.parseInt(partesInicio[0]);
+        int horaFinInt = Integer.parseInt(partesFin[0]);
+        
+        GridPane DiaryPane = createWeekCalendarWithHeaders(horaInicioInt, horaFinInt, doctorDto.getDrSpaces());
         DiaryPane.setPrefSize(rootDocDiary.getPrefWidth() / 2 + 500, rootDocDiary.getPrefHeight() / 2 + 180);
         DiaryPane.setGridLinesVisible(true);
 
@@ -805,14 +706,14 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void updateAgenda(ActionEvent event) {
-        
-        SpaceService service= new SpaceService();
-        Respuesta r= service.saveSpace(spacesDto);
-              if(r.getEstado()){
-                  
-              }else{
-                  System.out.println("Error");
-              }
+
+        SpaceService service = new SpaceService();
+        Respuesta r = service.saveSpace(spacesDto);
+        if (r.getEstado()) {
+
+        } else {
+            System.out.println("Error");
+        }
 
     }
 
@@ -820,8 +721,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private void UpdateWorkerEnter(KeyEvent event) {
     }
 
-    public GridPane createWeekCalendarWithHeaders(int v) {
-        final int op = 0;
+    public GridPane createWeekCalendarWithHeaders(int iniHora, int finHora, int v) {
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(1);
@@ -843,7 +743,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             mint[2] = "30";
             mint[3] = "45";
         }
-
         for (int i = 0; i < mint.length; i++) {
             Label dayLabel = new Label(mint[i]);
             dayLabel.setAlignment(Pos.CENTER);
@@ -857,8 +756,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             gridPane.add(dayLabel, i + 1, 0);
         }
 
-        for (int i = 0; i < 13; i++) {
-            Label hourLabel = new Label(String.format("%02d", i));
+        for (int i = iniHora; i <= finHora; i++) {
+            Label hourLabel = new Label(String.format("%02d:00", i));
             hourLabel.setAlignment(Pos.CENTER);
             hourLabel.setStyle("-fx-font-weight: bold");
 
@@ -867,12 +766,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             GridPane.setFillWidth(hourLabel, true);
             GridPane.setFillHeight(hourLabel, true);
 
-            gridPane.add(hourLabel, 0, i + 1);
+            gridPane.add(hourLabel, 0, i - iniHora + 1);
         }
 
-        for (int day = 1; day <= mint.length + 1; day++) {
-
-            for (int hour = 0; hour < 13; hour++) {
+        for (int day = 1; day <= mint.length; day++) {
+            for (int hour = iniHora; hour <= finHora; hour++) {
                 Label cellLabel = new Label();
                 cellLabel.setStyle("-fx-font-size: 10");
 
@@ -882,7 +780,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 GridPane.setFillWidth(cellLabel, true);
                 GridPane.setFillHeight(cellLabel, true);
 
-                final int minute = day;
                 final int finalHour = hour;
 
                 cellLabel.setOnMouseClicked(event -> {
@@ -893,7 +790,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                     }
                 });
 
-                gridPane.add(cellLabel, day, hour + 1);
+                gridPane.add(cellLabel, day, hour - iniHora + 1);
             }
         }
 
@@ -901,58 +798,90 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setFillWidth(true);
             columnConstraints.setHgrow(javafx.scene.layout.Priority.ALWAYS);
-            columnConstraints.setPercentWidth(9.5);
+            columnConstraints.setPercentWidth(80.0 / (mint.length + 1));
             gridPane.getColumnConstraints().add(columnConstraints);
         }
 
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < calcularNumeroHoras(iniHora, finHora) + 1; i++) {
             RowConstraints rowConstraints = new RowConstraints();
             rowConstraints.setFillHeight(true);
             rowConstraints.setVgrow(javafx.scene.layout.Priority.ALWAYS);
-            rowConstraints.setPercentHeight(6.25);
+            rowConstraints.setPercentHeight(100.0 / (15 + 1));
             gridPane.getRowConstraints().add(rowConstraints);
         }
 
         return gridPane;
     }
 
-    private void handleCellClick(GridPane gridPane, Label cellLabel, String min[], int hour) throws ParseException {
-        int maxCitas = Integer.parseInt(spaces.getValue());
-        
-        if (!cellLabel.getStyle().contains("green")) {
+    public static int calcularNumeroHoras(int horaInicio, int horaFin) {
 
-            int citasAgregadas = 0;
-            while (citasAgregadas < maxCitas) {
-                cellLabel.setStyle("-fx-background-color: green;");
-                Label label = new Label("Cita");
-                label.setStyle("-fx-font-size: 10");
-                GridPane.setColumnSpan(label, 1);
-                GridPane.setRowSpan(label, 1);
-                GridPane.setColumnIndex(label, GridPane.getColumnIndex(cellLabel) + citasAgregadas);
-                GridPane.setRowIndex(label, GridPane.getRowIndex(cellLabel));
-                gridPane.getChildren().add(label);
-                citasAgregadasList.add(label);
+        horaInicio = (horaInicio + 24) % 24;
+        horaFin = (horaFin + 24) % 24;
 
-                citasAgregadas++;
+        int diferenciaHoras = horaFin - horaInicio;
+
+        if (diferenciaHoras < 0) {
+            diferenciaHoras += 24;
+        }
+
+        return diferenciaHoras;
+    }
+
+private void handleCellClick(GridPane gridPane, Label cellLabel, String min[], int hour) throws ParseException {
+    int maxCitas = Integer.parseInt(spaces.getValue());
+
+    gridPane.getChildren().removeAll(citasAgregadasList);
+    citasAgregadasList.clear();
+
+    Set<LocalTime> horasAgregadas = new HashSet<>();
+
+    int citasAgregadas = 0;
+    int startColumn = GridPane.getColumnIndex(cellLabel);
+    int columnIdx = 1;
+    int rowIndex = GridPane.getRowIndex(cellLabel);
+
+    while (citasAgregadas < maxCitas) {
+        Label label = new Label("Cita");
+        label.setStyle("-fx-font-size: 15");
+        GridPane.setColumnSpan(label, 1);
+        GridPane.setRowSpan(label, 1);
+        GridPane.setColumnIndex(label, columnIdx);
+        GridPane.setRowIndex(label, rowIndex);
+
+        gridPane.getChildren().add(label);
+        citasAgregadasList.add(label);
+
+        LocalTime horaActual = null;
+        if (citasAgregadas < min.length) {
+            horaActual = LocalTime.of(hour, Integer.parseInt(min[citasAgregadas]));
+            horasAgregadas.add(horaActual);
+        }
+
+        citasAgregadas++;
+
+        if (columnIdx + 1 >= gridPane.getColumnConstraints().size()) {
+            if (rowIndex  >= gridPane.getRowConstraints().size()) {
+       
+                break;
             }
-            for (int j = 0; j < min.length; j++) {
-   
-                LocalTime horaActual = LocalTime.of(hour, Integer.parseInt(min[j]));
-                String horaFormateada = horaActual.format(timeFormatter);
-                System.out.println("Hora agregada: " + horaFormateada);
-               
-                for (int i = 0; i <= doctorDto.getDrSpaces(); i++) {
-                    String dateTimeString = "2023-10-26 "+horaFormateada;
-                    SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                    Date dateTime = dateTimeFormat.parse(dateTimeString);
-                    spacesDto.setSeId(0);
-                    spacesDto.setSeHour(dateTime);
-                    spacesDto.setSeAppointment(appointmentDto);
-                    
-                }
-            }
+
+            columnIdx = 1;
+            rowIndex++;
+        } else {
+            columnIdx++;
         }
     }
+
+    for (LocalTime horaAgregada : horasAgregadas) {
+        String horaFormateada = horaAgregada.format(timeFormatter);
+        System.out.println("Hora agregada: " + horaFormateada);
+    }
+}
+
+
+
+
+
 
     @Override
     public void initialize() {
