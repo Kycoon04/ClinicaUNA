@@ -14,7 +14,10 @@ import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -283,7 +286,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         if (patientDto != null) {
             textProcName.setText(patientDto.getPtName());
             textFieldPatientIdent.setText(patientDto.getPtIdentification());
-            textFieldPatientBirthday.setText(patientDto.getPtBirthdate().toString());
+            Date fecha = patientDto.getPtBirthdate();
+            LocalDate localDate = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            String date= localDate.getDayOfMonth()+"/"+localDate.getMonthValue()+"/"+localDate.getYear();
+            System.out.println(date);
+            textFieldPatientBirthday.setText(date);
            textFieldPatientGender.setText(patientDto.getPtGender());
             textFieldPatientEmail.setText(patientDto.getPtEmail());
         }
@@ -302,11 +309,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             diseaseDto.setDsId(diseaseDto.getDsId());
             diseaseDto.setDsName(nameDistMainField.getText());
             r = service.saveDisease(diseaseDto);
-            diseaseDto = new DiseaseDto();
+           // diseaseDto = new DiseaseDto();
         }
         if (r.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Enfermedad guardada");
-            //limpiar campos
+           // textFieldFamBgDisease.setText(diseaseDto.);
         } else {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Error al Guardar Enfermedad");
         }
@@ -380,6 +387,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                     diseaseList.clear();
                     diseaseObservableList.clear();
                     fillTableDiseases();
+                    textFieldFamBgDisease.setText(diseaseDto.getDsName());
                     deleteDisease = false;
                     diseaseDto = new DiseaseDto();
                     if (r.getEstado()) {

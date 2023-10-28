@@ -834,8 +834,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         gridPane.getChildren().removeAll(citasAgregadasList);
         citasAgregadasList.clear();
 
-        Set<LocalTime> horasAgregadas = new HashSet<>();
-
         int citasAgregadas = 0;
         int startColumn = GridPane.getColumnIndex(cellLabel);
         int columnIdx = startColumn; // Start from the clicked column

@@ -1054,8 +1054,12 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void openProceeding(ActionEvent event) {
-        AppContext.getInstance().set("Patient", patientDto);
-        FlowController.getInstance().goMain("ViewProceedingsOptions");
+        if (patientDto.getPtId()!=0) {
+            AppContext.getInstance().set("Patient", patientDto);
+            FlowController.getInstance().goMain("ViewProceedingsOptions");
+        }else{
+             new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Debes cargar un paciente ");
+        }
     }
 
     @FXML
@@ -1064,7 +1068,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             cleanUpDoctor();
         }
     }
-    private void cleanUpDoctor(){
+
+    private void cleanUpDoctor() {
         codeDocMainField.clear();
         licenseDocMainField.clear();
         folioDocMainField.clear();
@@ -1076,11 +1081,12 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void cleanUpMantUser(ActionEvent event) {
-       if (new Mensaje().showConfirmation("Limpiar Usuario", getStage(), "¿Esta seguro que desea limpiar el registro?")) {
+        if (new Mensaje().showConfirmation("Limpiar Usuario", getStage(), "¿Esta seguro que desea limpiar el registro?")) {
             cleanUpUser();
         }
     }
-    private void cleanUpUser(){
+
+    private void cleanUpUser() {
         userMainField.clear();
         psurnameMainField.clear();
         ssurnameMainField.clear();
@@ -1096,7 +1102,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             cleanUpPatient();
         }
     }
-    private void cleanUpPatient(){
+
+    private void cleanUpPatient() {
         namePatMainField.clear();
         firstNamePatMainField.clear();
         lastNamePatMainField.clear();
