@@ -694,6 +694,12 @@
                                                       <TextField fx:id="email" layoutX="273.0" layoutY="226.0" />
                                                       <TextField fx:id="userLog" layoutX="38.0" layoutY="226.0" />
                                                       <TextField fx:id="nameP" layoutX="38.0" layoutY="129.0" />
+                                                      <TextField fx:id="code" layoutX="273.0" layoutY="312.0" />
+                                                      <Text id="Text" fill="#000359" layoutX="270.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%CodeDetails" wrappingWidth="190.92812204360962">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="29.0" />
+                                                         </font>
+                                                      </Text>
                                                    </children>
                                                 </AnchorPane>
                                              </content>

@@ -19,6 +19,7 @@ public class AppointmentDto {
     public SimpleLongProperty atTelephone;
     public SimpleStringProperty atEmail;
     public SimpleStringProperty atState;
+    public SimpleStringProperty atCode;
     public PatientDto atPatient;
     public UserDto atUserregister;
 
@@ -29,6 +30,7 @@ public class AppointmentDto {
         this.atEmail = new SimpleStringProperty();
         this.atState = new SimpleStringProperty();
         this.atUserregister = new UserDto();
+        this.atCode = new SimpleStringProperty();
     }
 
     public int getAtId() {
@@ -37,6 +39,14 @@ public class AppointmentDto {
 
     public void setAtId(int atId) {
         this.atId.set(atId);
+    }
+
+    public String getAtCode() {
+        return atCode.get();
+    }
+
+    public void setAtCode(String atCode) {
+        this.atCode.set(atCode);
     }
 
     public String getAtReason() {

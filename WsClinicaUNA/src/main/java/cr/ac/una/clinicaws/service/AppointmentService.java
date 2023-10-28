@@ -68,7 +68,9 @@ public class AppointmentService {
                 em.persist(appointment);
             }
             em.flush();
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Appointments", new AppointmentDto(appointment));
+            Query qryusuario = em.createNamedQuery("Appointment.findByAtCode", Appointment.class);
+            qryusuario.setParameter("atCode", appointment.getAtCode());
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Appointments", new AppointmentDto((Appointment) qryusuario.getSingleResult()));
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrio un error al guardar la cita.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al guardar la cita.", "guardarCita " + ex.getMessage());

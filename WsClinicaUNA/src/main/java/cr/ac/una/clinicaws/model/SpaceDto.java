@@ -10,6 +10,7 @@ package cr.ac.una.clinicaws.model;
 public class SpaceDto {
 
     private String seHour;
+    
     private Integer seId;
     private Appointment seAppointment;
 

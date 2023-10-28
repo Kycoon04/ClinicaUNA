@@ -47,6 +47,9 @@ public class Space implements Serializable {
     public Space() {
     }
 
+    public Space(Integer seId) {
+        this.seId = seId;
+    }
     public Space(SpaceDto spaceDto) {
         this.seId = spaceDto.getSeId();
         update(spaceDto);
@@ -56,10 +59,6 @@ public class Space implements Serializable {
         this.seHour = space.getSeHour();
         this.seAppointment = space.getSeAppointment();
     }
-    public Space(Integer seId) {
-        this.seId = seId;
-    }
-
     public Space(Integer seId, String seHour) {
         this.seId = seId;
         this.seHour = seHour;

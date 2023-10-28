@@ -277,6 +277,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private Text textMainDoctor121;
     List<LocalTime> horasAgregadas = new ArrayList<>();
+    @FXML
+    private TextField code;
 
     /**
      * Initializes the controller class.
@@ -336,11 +338,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
 
     private void fillAppoiment() {
-
         Respuesta r = null;
         AppointmentService service = new AppointmentService();
         this.userDto = (UserDto) AppContext.getInstance().get("Usuario");
         if (userDto != null && patientDto != null) {
+            appointmentDto.setAtCode(code.getText());
             appointmentDto.setAtPatient(patientDto);
             appointmentDto.setAtUserregister(userDto);
             appointmentDto.setAtReason(reason.getText());
@@ -360,6 +362,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
         if (r.getEstado()) {
             appointmentDto = (AppointmentDto) r.getResultado("Appointments");
+            System.out.println("id: " + appointmentDto.getAtId());
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita Registrada");
         } else {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita No se pudo Registrar");
@@ -374,20 +377,17 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         SpaceService service = new SpaceService();
         try {
             espacios = Integer.parseInt(spaces.getValue());
-        } catch (NumberFormatException e) {
-        }
-        
+        } catch (NumberFormatException e) {}
+
         for (int i = 0; i < espacios; i++) {
             spacesDto = new SpaceDto();
+            spacesDto.setSeId(0);
             spacesDto.setSeAppointment(appointmentDto);
             String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
             spacesDto.setSeHour(horaFormateada);
-            
-            System.out.println("id: "+appointmentDto.getAtId());
-            System.out.println("hora: "+horaFormateada);
-            
+            System.out.println("id: " + appointmentDto.getAtId());
+            System.out.println("hora: " + horaFormateada);
             respuesta = service.saveSpace(spacesDto);
-            
             if (respuesta.getEstado()) {
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Espacio Registrada");
             } else {
@@ -395,7 +395,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 return;
             }
         }
-        
     }
 
     @FXML

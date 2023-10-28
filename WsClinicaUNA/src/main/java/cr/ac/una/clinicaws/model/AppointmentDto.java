@@ -18,10 +18,9 @@ public class AppointmentDto {
     private Long atTelephone;
     private String atEmail;
     private String atState;
-    private List<Space> spaceList;
     private Patient atPatient;
     private Users atUserregister;
-  
+    private String atCode;
 
     public AppointmentDto(Appointment appointment) {
         this.atId = appointment.getAtId();
@@ -32,6 +31,14 @@ public class AppointmentDto {
         this.atPatient = appointment.getAtPatient();
         this.atUserregister = appointment.getAtUserregister();
      
+    }
+
+    public String getAtCode() {
+        return atCode;
+    }
+
+    public void setAtCode(String atCode) {
+        this.atCode = atCode;
     }
 
     public AppointmentDto() {

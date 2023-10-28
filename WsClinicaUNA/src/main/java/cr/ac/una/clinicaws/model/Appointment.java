@@ -22,7 +22,7 @@ import jakarta.validation.constraints.Size;
 
 /**
  *
- * @author dilan
+ * @author jomav
  */
 @Entity
 @Table(name = "CL_APPOINTMENT")
@@ -32,7 +32,8 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Appointment.findByAtReason", query = "SELECT a FROM Appointment a WHERE a.atReason = :atReason"),
     @NamedQuery(name = "Appointment.findByAtTelephone", query = "SELECT a FROM Appointment a WHERE a.atTelephone = :atTelephone"),
     @NamedQuery(name = "Appointment.findByAtEmail", query = "SELECT a FROM Appointment a WHERE a.atEmail = :atEmail"),
-    @NamedQuery(name = "Appointment.findByAtState", query = "SELECT a FROM Appointment a WHERE a.atState = :atState")})
+    @NamedQuery(name = "Appointment.findByAtState", query = "SELECT a FROM Appointment a WHERE a.atState = :atState"),
+    @NamedQuery(name = "Appointment.findByAtCode", query = "SELECT a FROM Appointment a WHERE a.atCode = :atCode")})
 public class Appointment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,18 +55,15 @@ public class Appointment implements Serializable {
     @Size(min = 1, max = 15)
     @Column(name = "AT_STATE")
     private String atState;
-   /* @OneToMany(cascade = CascadeType.ALL, mappedBy = "seAppointment")
-    private List<Space> spaceList;
-    */
+    @Size(max = 10)
+    @Column(name = "AT_CODE")
+    private String atCode;
     @JoinColumn(name = "AT_PATIENT", referencedColumnName = "PT_ID")
     @ManyToOne(optional = false)
     private Patient atPatient;
     @JoinColumn(name = "AT_USERREGISTER", referencedColumnName = "US_ID")
     @ManyToOne(optional = false)
     private Users atUserregister;
-    /*
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rtAppointment")
-    private List<Report> reportList;*/
 
     public Appointment() {
     }
@@ -84,10 +82,8 @@ public class Appointment implements Serializable {
         this.atState = appointmentDto.getAtState();
         this.atTelephone = appointmentDto.getAtTelephone();
         this.atUserregister = appointmentDto.getAtUserregister();
-    
+        this.atCode = appointmentDto.getAtCode();
     }
-    
-    
     public Appointment(Integer atId, String atState) {
         this.atId = atId;
         this.atState = atState;
@@ -132,15 +128,14 @@ public class Appointment implements Serializable {
     public void setAtState(String atState) {
         this.atState = atState;
     }
-/*
-    public List<Space> getSpaceList() {
-        return spaceList;
+
+    public String getAtCode() {
+        return atCode;
     }
 
-    public void setSpaceList(List<Space> spaceList) {
-        this.spaceList = spaceList;
+    public void setAtCode(String atCode) {
+        this.atCode = atCode;
     }
-*/
     public Patient getAtPatient() {
         return atPatient;
     }
@@ -156,15 +151,6 @@ public class Appointment implements Serializable {
     public void setAtUserregister(Users atUserregister) {
         this.atUserregister = atUserregister;
     }
-/*
-    public List<Report> getReportList() {
-        return reportList;
-    }
-
-    public void setReportList(List<Report> reportList) {
-        this.reportList = reportList;
-    }*/
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -189,5 +175,5 @@ public class Appointment implements Serializable {
     public String toString() {
         return "cr.ac.una.clinicaws.model.Appointment[ atId=" + atId + " ]";
     }
-    
+
 }
