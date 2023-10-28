@@ -711,6 +711,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         Respuesta r = service.saveSpace(spacesDto);
         if (r.getEstado()) {
 
+            
+            
         } else {
             System.out.println("Error");
         }

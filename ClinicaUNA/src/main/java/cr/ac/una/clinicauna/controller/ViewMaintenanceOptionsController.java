@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package cr.ac.una.clinicauna.controller;
 
 import com.jfoenix.controls.JFXDatePicker;
@@ -903,7 +899,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
         if (r.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Paciente Guardado");
-            //limpiar los campos 
+            cleanUpPatient();
         } else {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Error al guardar paciente");
         }
@@ -1068,8 +1064,13 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         }
     }
     private void cleanUpDoctor(){
-        
-        
+        codeDocMainField.clear();
+        licenseDocMainField.clear();
+        folioDocMainField.clear();
+        SpacesDocMainField1.clear();
+        breaksMainField.clear();
+        timepickerIniWork.setValue(null);
+        timepickerFinWork.setValue(null);
     }
 
     @FXML
@@ -1079,7 +1080,13 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         }
     }
     private void cleanUpUser(){
-        
+        userMainField.clear();
+        psurnameMainField.clear();
+        ssurnameMainField.clear();
+        usernameMainField.clear();
+        emailMainField.clear();
+        identMainField.clear();
+        choiceBoxJobsTypes.setValue(null);
     }
 
     @FXML
