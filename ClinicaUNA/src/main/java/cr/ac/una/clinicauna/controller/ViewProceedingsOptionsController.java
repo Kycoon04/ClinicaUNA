@@ -212,7 +212,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TextField textFieldPatientBirthday;
 
 
-    List<AppointmentDto> reportList = new ArrayList<>();
+    //List<AppointmentDto> reportList = new ArrayList<>();
 
     /**
      * Initializes the controller class.
@@ -283,9 +283,9 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         if (patientDto != null) {
             textProcName.setText(patientDto.getPtName());
             textFieldPatientIdent.setText(patientDto.getPtIdentification());
-            userLog.setText(patientDto.getPtBirthdate().toString());
-            numberP.setText(patientDto.getPtGender());
-            email.setText(patientDto.getPtEmail());
+            textFieldPatientBirthday.setText(patientDto.getPtBirthdate().toString());
+           textFieldPatientGender.setText(patientDto.getPtGender());
+            textFieldPatientEmail.setText(patientDto.getPtEmail());
         }
     }
 
