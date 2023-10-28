@@ -1054,6 +1054,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void openProceeding(ActionEvent event) {
+        AppContext.getInstance().set("Patient", patientDto);
         FlowController.getInstance().goMain("ViewProceedingsOptions");
     }
 

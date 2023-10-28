@@ -6,7 +6,9 @@ package cr.ac.una.clinicauna.controller;
 
 import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
+import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
+import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
@@ -159,13 +161,15 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TextField textFieldPatientIdent;
     @FXML
     private LineChart<?, ?> lineChartBodyMass;
-    private boolean deleteDisease= false;
-    
+    private boolean deleteDisease = false;
 
-    DiseaseDto diseaseDto= new DiseaseDto();
-    
+    PatientDto patientDto = new PatientDto();
+
+    DiseaseDto diseaseDto = new DiseaseDto();
+
     List<DiseaseDto> diseaseList = new ArrayList<>();
     private ObservableList<DiseaseDto> diseaseObservableList;
+
     
     List<AppointmentDto> reportList=new ArrayList<>();
     @FXML
@@ -207,22 +211,27 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldPatientBirthday;
 
-    
+
+    List<AppointmentDto> reportList = new ArrayList<>();
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-         OptionsProceedingsView.toFront();
-         
+        OptionsProceedingsView.toFront();
+
+        patientDto = (PatientDto) AppContext.getInstance().get("Patient");
+
+        System.out.println(patientDto.getPtName());
+
         this.tableColDeseaseId.setCellValueFactory(new PropertyValueFactory("DsId"));
         this.tableColDeseaseName.setCellValueFactory(new PropertyValueFactory("DsName"));
-     
-        
+        bindPatient();
         fillTableDiseases();
         nameDistMainField.setTextFormatter(Formato.getInstance().letrasFormat(10));
-    }    
+    }
 
     @FXML
     private void searchPat_Name(KeyEvent event) {
@@ -235,7 +244,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private void searchPat_identification(KeyEvent event) {
     }
-
 
     @FXML
     private void ContinueDetail(ActionEvent event) {
@@ -258,7 +266,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     public void initialize() {
     }
 
-    
     private void fillTableDiseases() {
 
         DiseaseService service = new DiseaseService();
@@ -272,8 +279,16 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         this.tableViewDisease.setItems(diseaseObservableList);
     }
 
+    private void bindPatient() {
+        if (patientDto != null) {
+            textProcName.setText(patientDto.getPtName());
+            textFieldPatientIdent.setText(patientDto.getPtIdentification());
+            userLog.setText(patientDto.getPtBirthdate().toString());
+            numberP.setText(patientDto.getPtGender());
+            email.setText(patientDto.getPtEmail());
+        }
+    }
 
-    
     @FXML
     private void AddDesease(ActionEvent event) {
         DiseaseService service = new DiseaseService();
@@ -297,12 +312,12 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         }
 
         fillTableDiseases();
-        
+
     }
 
     @FXML
     private void searchDesease_Id(KeyEvent event) {
-         FilteredList<DiseaseDto> filteredDisease = new FilteredList<>(diseaseObservableList, f -> true);
+        FilteredList<DiseaseDto> filteredDisease = new FilteredList<>(diseaseObservableList, f -> true);
         textFieldSearchDesease_ID.textProperty().addListener((observable, value, newValue) -> {
             filteredDisease.setPredicate(DiseaseDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -322,15 +337,15 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         filteredDisease(filteredDisease);
     }
 
-      private void filteredDisease(FilteredList<DiseaseDto> list) {
+    private void filteredDisease(FilteredList<DiseaseDto> list) {
         SortedList<DiseaseDto> sorted = new SortedList<>(list);
         sorted.comparatorProperty().bind(tableViewDisease.comparatorProperty());
         tableViewDisease.setItems(sorted);
     }
-      
+
     @FXML
     private void searchDesease_Name(KeyEvent event) {
-                FilteredList<DiseaseDto> filteredDisease = new FilteredList<>(diseaseObservableList, f -> true);
+        FilteredList<DiseaseDto> filteredDisease = new FilteredList<>(diseaseObservableList, f -> true);
         textFieldSearchDesease_Name.textProperty().addListener((observable, value, newValue) -> {
             filteredDisease.setPredicate(DiseaseDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -349,13 +364,13 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void deleteDeseaseClicked(MouseEvent event) {
-          deleteDisease = true;
+        deleteDisease = true;
     }
 
     @FXML
     private void deseaseClicked(MouseEvent event) {
-        
-  DiseaseService service = new DiseaseService();
+
+        DiseaseService service = new DiseaseService();
         Respuesta r;
         if (event.getClickCount() == 1) {
             if (deleteDisease) {
@@ -383,10 +398,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         }
     }
 
-      private void fillDisease(DiseaseDto diseaseDto) {
+    private void fillDisease(DiseaseDto diseaseDto) {
         nameDistMainField.setText(diseaseDto.getDsName());
 
     }
+
     @FXML
     private void updateExam(ActionEvent event) {
     }
@@ -398,7 +414,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private void personalBgClicked(MouseEvent event) {
     }
-
 
     @FXML
     private void updateFamilyBg(ActionEvent event) {
@@ -424,7 +439,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void selectDisease(MouseEvent event) {
-         OptionsMainDesease.toFront();
+        OptionsMainDesease.toFront();
     }
 
     @FXML
@@ -447,15 +462,14 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             }
         });*/
     }
-    
-    private void loadAppoinmentList(){
+
+    private void loadAppoinmentList() {
         reportList.clear();
     }
 
     @FXML
     private void cleanUpProcceding(ActionEvent event) {
-        
-        
+
     }
 
     @FXML
