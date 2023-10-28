@@ -56,12 +56,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private Text textMainDoctor11;
     @FXML
-    private TextField numberP;
-    @FXML
-    private TextField email;
-    @FXML
-    private TextField userLog;
-    @FXML
     private TextField textFieldNameExam;
     @FXML
     private TextField textFieldDoctor;
@@ -164,8 +158,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldPatientIdent;
     @FXML
-    private TextField userLog1;
-    @FXML
     private LineChart<?, ?> lineChartBodyMass;
     private boolean deleteDisease= false;
     
@@ -176,6 +168,44 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private ObservableList<DiseaseDto> diseaseObservableList;
     
     List<AppointmentDto> reportList=new ArrayList<>();
+    @FXML
+    private BorderPane searchSelectDoctor;
+    @FXML
+    private TextField textFieldSearchDoc_Name;
+    @FXML
+    private TextField textFieldSearchDoc_Pusername;
+    @FXML
+    private TextField textFieldSearchDoc_Code;
+    @FXML
+    private TextField textFieldSearchDoc_Folio;
+    @FXML
+    private TextField textFieldSearchDoc_License;
+    @FXML
+    private TextField textFieldSearchDoc_State;
+    @FXML
+    private TableView<?> tableViewDoctors;
+    @FXML
+    private TableColumn<?, ?> tableColDocCode;
+    @FXML
+    private TableColumn<?, ?> tableColDocFolio;
+    @FXML
+    private TableColumn<?, ?> tableColDocName;
+    @FXML
+    private TableColumn<?, ?> tableColDocId;
+    @FXML
+    private TableColumn<?, ?> tableColDocLicense;
+    @FXML
+    private TableColumn<?, ?> tableColDocIniWork;
+    @FXML
+    private TableColumn<?, ?> tableColDocFinishWork;
+    @FXML
+    private TableColumn<?, ?> tableColDocBreaks;
+    @FXML
+    private TextField textFieldPatientGender;
+    @FXML
+    private TextField textFieldPatientEmail;
+    @FXML
+    private TextField textFieldPatientBirthday;
 
     
     /**
@@ -426,6 +456,42 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void cleanUpProcceding(ActionEvent event) {
         
         
+    }
+
+    @FXML
+    private void searchDoctor_Name(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchDoctor_Pusername(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchDoctor_code(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchDoctor_Folio(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchDoctor_License(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchDoctor_State(KeyEvent event) {
+    }
+
+    @FXML
+    private void doctorClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void backSearchDoctor(ActionEvent event) {
+    }
+
+    @FXML
+    private void selectDoctor(ActionEvent event) {
     }
     
 }
