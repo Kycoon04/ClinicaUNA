@@ -367,12 +367,12 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
         DoctorService service = new DoctorService();
         doctorList = service.getDoctor();
-        if (doctorList.isEmpty()) {
+        if (doctorList == null) {
         } else {
             doctorObservableList = FXCollections.observableArrayList(doctorList);
+            this.tableViewDoctors.refresh();
+            this.tableViewDoctors.setItems(doctorObservableList);
         }
-        this.tableViewDoctors.refresh();
-        this.tableViewDoctors.setItems(doctorObservableList);
     }
 
     private void fillTablePatient() {
@@ -422,7 +422,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             UserDto us = new UserDto();
             UserService service = new UserService();
             service.saveUser(bindNewUser());
-            
+
             // hacer la respuesta
         } else {
             userDoctor = true;
@@ -640,7 +640,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
             doctorDto.setDrIniworking(timepickerIniWork.getValue().toString());
             doctorDto.setDrFinisworking(timepickerFinWork.getValue().toString());
-            
+
             doctorDto.toString();
             userDto.toString();
 
@@ -674,7 +674,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         return (short) Math.round(x);
     }
 
-    
     @FXML
     private void UpdateDoctor(ActionEvent event) {
         if (userDoctor) {
@@ -854,7 +853,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 doctorDto = new DoctorDto();
                 userDto = new UserDto();
                 if (r.getEstado()) {
-                    
+
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Usuario eliminado");
                 } else {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Error aleliminar usuario");
@@ -1060,6 +1059,43 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private void openProceeding(ActionEvent event) {
         FlowController.getInstance().goMain("ViewProceedingsOptions");
+    }
+
+    @FXML
+    private void cleanUpMantDoctors(ActionEvent event) {
+        if (new Mensaje().showConfirmation("Limpiar Doctor", getStage(), "¿Esta seguro que desea limpiar el registro?")) {
+            cleanUpDoctor();
+        }
+    }
+    private void cleanUpDoctor(){
+        
+        
+    }
+
+    @FXML
+    private void cleanUpMantUser(ActionEvent event) {
+       if (new Mensaje().showConfirmation("Limpiar Usuario", getStage(), "¿Esta seguro que desea limpiar el registro?")) {
+            cleanUpUser();
+        }
+    }
+    private void cleanUpUser(){
+        
+    }
+
+    @FXML
+    private void cleanUpMantPatient(ActionEvent event) {
+        if (new Mensaje().showConfirmation("Limpiar Paciente", getStage(), "¿Esta seguro que desea limpiar el registro?")) {
+            cleanUpPatient();
+        }
+    }
+    private void cleanUpPatient(){
+        namePatMainField.clear();
+        firstNamePatMainField.clear();
+        lastNamePatMainField.clear();
+        emailPatMainField.clear();
+        datePickerBirthdayPat.setValue(null);
+        identPatMainField.clear();
+        gender.selectToggle(null);
     }
 
 }
