@@ -6,6 +6,7 @@ package cr.ac.una.clinicauna.controller;
 
 import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
+import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.util.AppContext;
@@ -43,7 +44,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
-import javafx.util.StringConverter;
+
 
 /**
  * FXML Controller class
@@ -62,8 +63,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private Text textMainDoctor11;
     @FXML
     private TextField textFieldNameExam;
-    @FXML
-    private TextField textFieldDoctor;
     @FXML
     private TextField textFieldSearchExam_Doctor;
     @FXML
@@ -190,7 +189,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldSearchDoc_State;
     @FXML
-    private TableView<?> tableViewDoctors;
+    private TableView<DoctorDto> tableViewDoctors;
     @FXML
     private TableColumn<?, ?> tableColDocCode;
     @FXML
@@ -213,6 +212,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TextField textFieldPatientEmail;
     @FXML
     private TextField textFieldPatientBirthday;
+        List<DoctorDto> doctorList = new ArrayList<>();
+    private ObservableList<DoctorDto> doctorObservableList;
 
 
     //List<AppointmentDto> reportList = new ArrayList<>();
@@ -240,9 +241,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void searchPat_Name(KeyEvent event) {
     }
 
-    @FXML
-    private void searchPat_Pusername(KeyEvent event) {
-    }
 
     @FXML
     private void searchPat_identification(KeyEvent event) {
@@ -482,26 +480,113 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void searchDoctor_Name(KeyEvent event) {
+         FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        textFieldSearchDoc_Name.textProperty().addListener((observable, value, newValue) -> {
+            filteredDoctor.setPredicate(DoctorDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (DoctorDto.getDoctorName().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDoctors(filteredDoctor);
     }
 
     @FXML
     private void searchDoctor_Pusername(KeyEvent event) {
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        textFieldSearchDoc_Pusername.textProperty().addListener((observable, value, newValue) -> {
+            filteredDoctor.setPredicate(DoctorDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (DoctorDto.getDoctorPsurname().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDoctors(filteredDoctor);
     }
 
     @FXML
     private void searchDoctor_code(KeyEvent event) {
+         FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        textFieldSearchDoc_Code.textProperty().addListener((observable, value, newValue) -> {
+            filteredDoctor.setPredicate(DoctorDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                String doctorPsurnameAsString = String.valueOf(DoctorDto.getDrCode());
+
+                if (doctorPsurnameAsString.indexOf(search) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDoctors(filteredDoctor);
     }
 
     @FXML
     private void searchDoctor_Folio(KeyEvent event) {
+         FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        textFieldSearchDoc_Folio.textProperty().addListener((observable, value, newValue) -> {
+            filteredDoctor.setPredicate(DoctorDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                String doctorPsurnameAsString = String.valueOf(DoctorDto.getDrFol());
+
+                if (doctorPsurnameAsString.indexOf(search) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDoctors(filteredDoctor);
     }
 
     @FXML
     private void searchDoctor_License(KeyEvent event) {
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        textFieldSearchDoc_License.textProperty().addListener((observable, value, newValue) -> {
+            filteredDoctor.setPredicate(DoctorDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                String doctorPsurnameAsString = String.valueOf(DoctorDto.getDrLicense());
+
+                if (doctorPsurnameAsString.indexOf(search) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredDoctors(filteredDoctor);
     }
 
     @FXML
     private void searchDoctor_State(KeyEvent event) {
+    }
+    
+     private void filteredDoctors(FilteredList<DoctorDto> list) {
+        SortedList<DoctorDto> sorted = new SortedList<>(list);
+        sorted.comparatorProperty().bind(tableViewDoctors.comparatorProperty());
+        tableViewDoctors.setItems(sorted);
     }
 
     @FXML
@@ -510,10 +595,12 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void backSearchDoctor(ActionEvent event) {
+        OptionsProceedingsView.toFront();
     }
 
     @FXML
-    private void selectDoctor(ActionEvent event) {
+    private void selectDoctor(MouseEvent event) {
+        searchSelectDoctor.toFront();
     }
     
 }

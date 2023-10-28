@@ -508,7 +508,7 @@
                                                             <Font name="Tw Cen MT" size="21.0" />
                                                          </font>
                                                       </Text>
-                                                      <TextField fx:id="textFieldNameExam" editable="false" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                                      <TextField fx:id="textFieldNameExam" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
                                                          <font>
                                                             <Font name="Tw Cen MT" size="23.0" />
                                                          </font>
@@ -518,7 +518,7 @@
                                                             <Font name="Tw Cen MT" size="21.0" />
                                                          </font>
                                                       </Text>
-                                                      <TextField fx:id="textFieldDoctor" onAction="#selectDoctor" onKeyPressed="#searchPat_Pusername" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" text="%Seleccionar" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                      <TextField editable="false" onMouseClicked="#selectDoctor" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" text="%Seleccionar" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                          <font>
                                                             <Font name="Tw Cen MT" size="23.0" />
                                                          </font>
