@@ -30,7 +30,7 @@ public class AppointmentDto {
         this.atState = appointment.getAtState();
         this.atPatient = appointment.getAtPatient();
         this.atUserregister = appointment.getAtUserregister();
-     
+        this.atCode = appointment.getAtCode();
     }
 
     public String getAtCode() {
