@@ -437,6 +437,16 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "ユーザーを保存する", getStage(), "保存されたユーザー");
                 }
                 cleanUpUser();
+            } else {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Usuario", getStage(), "Error al guardar");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Save User", getStage(), "Error when saving");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Enregistrer l'utilisateur", getStage(), "Erreur lors de l'enregistrement");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "ユーザーを保存する", getStage(), "保存時のエラー");
+                }
             }
 
             // hacer la respuesta
@@ -730,12 +740,22 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Doctor guardado");
             } else if (usrIdiom.getUsLenguage().equals("English")) {
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Doctor", getStage(), "Saved doctor");
-            } else if (usrIdiom.getUsLenguage().equals("French") ) {
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "Sauver le docteur", getStage(), "Docteur sauvé");
             } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "医者を救う", getStage(), "救われた医師");
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "医者を救う", getStage(), "救われた医師");
             }
             cleanUpDoctor();
+        } else {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Doctor", getStage(), "Error al guardar");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Save Doctor", getStage(), "Error when saving");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Sauver le docteur", getStage(), "Erreur lors de l'enregistrement");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "医者を救う", getStage(), "保存時のエラー");
+            }
         }
     }
 
@@ -957,8 +977,18 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "患者を救う", getStage(), "救われた患者");
             }
             cleanUpPatient();
+            patientDto = null;
+        } else {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Paciente", getStage(), "Error al guardar");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Save Patient", getStage(), "Error when saving");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Sauver un patient", getStage(), "Erreur lors de l'enregistrement");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "患者を救う", getStage(), "保存時のエラー");
+            }
         }
-        patientDto = null;
 
     }
 
