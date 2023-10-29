@@ -52,6 +52,21 @@ public class ProceedingsService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Proceedings.", "getProceedings " + ex.getMessage());
         }
     }
+        public Respuesta getProceedingsbyPatId(Integer fpId) {
+        try {
+            Query qryProceedings = em.createNamedQuery("Proceedings.findByPatientId", Proceedings.class);
+            qryProceedings.setParameter("patientId", fpId);
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Proceedings", new ProceedingsDto((Proceedings) qryProceedings.getSingleResult()));
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getProceedings NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el Proceedings.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Proceedings.", "getProceedings NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el Proceedings.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Proceedings.", "getProceedings " + ex.getMessage());
+        }
+    }
     public Respuesta saveProceedings(ProceedingsDto proceedingsDto) {
         try {
             Proceedings proceedings = new Proceedings();
@@ -74,6 +89,7 @@ public class ProceedingsService {
         }
     }
 
+    
     public Respuesta deleteProceedings(Integer id) {
         try {
             Proceedings proceedings;
@@ -116,4 +132,8 @@ public class ProceedingsService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el tipo de Proceedings.", "getTipoProceedings " + ex.getMessage());
         }
     }
+    
+ 
+    
+    
 }

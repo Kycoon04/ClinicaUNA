@@ -15,11 +15,13 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  *
  * @author dilan
@@ -27,13 +29,11 @@ import java.util.logging.Logger;
 @Stateless
 @LocalBean
 public class ExamService {
- 
+
     private static final Logger LOG = Logger.getLogger(ExamService.class.getName());
     @PersistenceContext(unitName = "my_persistence_unit")
     private EntityManager em;
-    
-    
-    
+
     public Respuesta getExam(Long emId) {
         try {
             Query qryusuario = em.createNamedQuery("Exam.findByEmId", Exam.class);
@@ -52,12 +52,10 @@ public class ExamService {
         }
     }
 
-
-
     public Respuesta saveExam(ExamDto examDto) {
         try {
             Exam exam = new Exam();
-            if (examDto.getEmId()!= null && examDto.getEmId()> 0) {
+            if (examDto.getEmId() != null && examDto.getEmId() > 0) {
                 exam = em.find(Exam.class, examDto.getEmId());
                 if (exam == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encrontró el examen a modificar.", "guardarExam NoResultException");
@@ -99,12 +97,11 @@ public class ExamService {
         }
     }
 
-    
     public Respuesta getExam() {
         try {
             Query qryUsers = em.createNamedQuery("Exam.findAll", Exam.class);
             List<Exam> exam = (List<Exam>) qryUsers.getResultList();
-             List<ExamDto> ListExam = new ArrayList<>();
+            List<ExamDto> ListExam = new ArrayList<>();
             for (Exam tipo : exam) {
                 ExamDto examDto = new ExamDto(tipo);
                 ListExam.add(examDto);
@@ -120,6 +117,33 @@ public class ExamService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar Examenes.", "getExamen " + ex.getMessage());
         }
     }
+
+    public Respuesta getExamsByPatientId(Long pacienteId) {
+    try {
+       
+        Query qryExams = em.createQuery("SELECT e FROM Exam e JOIN e.emProceedings p JOIN p.psPatient pt WHERE pt.ptId = :patientId", ExamDto.class);
+        qryExams.setParameter("patientId", pacienteId);
+        List<Exam> exams = (List<Exam>) qryExams.getResultList();
+      
+
     
+        List<ExamDto> listExamsDto = new ArrayList<>();
+        for (Exam exam : exams) {
+            ExamDto examDto = new ExamDto(exam);
+            listExamsDto.add(examDto);
+        }
+
+       
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Exams", listExamsDto);
+    } catch (NoResultException ex) {
+        return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontraron exámenes para el paciente con el ID proporcionado.", "getExamsByPatientId NoResultException");
+    } catch (NonUniqueResultException ex) {
+        LOG.log(Level.SEVERE, "Ocurrió un error al consultar los exámenes para el paciente.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los exámenes para el paciente.", "getExamsByPatientId NonUniqueResultException");
+    } catch (Exception ex) {
+        LOG.log(Level.SEVERE, "Ocurrió un error al consultar los exámenes para el paciente.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los exámenes para el paciente.", "getExamsByPatientId " + ex.getMessage());
+    }
+}
 
 }

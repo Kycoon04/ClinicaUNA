@@ -7,8 +7,13 @@ package cr.ac.una.clinicauna.controller;
 import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
+import cr.ac.una.clinicauna.model.ExamDto;
 import cr.ac.una.clinicauna.model.PatientDto;
+import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
+import cr.ac.una.clinicauna.service.DoctorService;
+import cr.ac.una.clinicauna.service.ExamService;
+import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Formato;
@@ -45,7 +50,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
-
 /**
  * FXML Controller class
  *
@@ -68,11 +72,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldSearchExam_Name;
     @FXML
-    private TableView<?> tableViewExamns;
+    private TableView<ExamDto> tableViewExamns;
     @FXML
-    private TableColumn<?, ?> tableColExamName;
+    private TableColumn<ExamDto, String> tableColExamName;
     @FXML
-    private TableColumn<?, ?> tableColExamDoctor;
+    private TableColumn<ExamDto, String> tableColExamDoctor;
     @FXML
     private BorderPane OptionsMainDesease;
     @FXML
@@ -165,15 +169,19 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private LineChart<?, ?> lineChartBodyMass;
     private boolean deleteDisease = false;
 
+    List<ExamDto> patiExams = new ArrayList<ExamDto>();
+
     PatientDto patientDto = new PatientDto();
 
     DiseaseDto diseaseDto = new DiseaseDto();
+    ExamDto examDto = new ExamDto();
+
+    ProceedingsDto proceedingsDto = new ProceedingsDto();
 
     List<DiseaseDto> diseaseList = new ArrayList<>();
     private ObservableList<DiseaseDto> diseaseObservableList;
 
-    
-    List<AppointmentDto> reportList=new ArrayList<>();
+    List<AppointmentDto> reportList = new ArrayList<>();
     @FXML
     private BorderPane searchSelectDoctor;
     @FXML
@@ -188,36 +196,39 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TextField textFieldSearchDoc_License;
     @FXML
     private TextField textFieldSearchDoc_State;
+
     @FXML
     private TableView<DoctorDto> tableViewDoctors;
     @FXML
-    private TableColumn<?, ?> tableColDocCode;
+    private TableColumn<DoctorDto, String> tableColDocCode;
     @FXML
-    private TableColumn<?, ?> tableColDocFolio;
+    private TableColumn<DoctorDto, String> tableColDocFolio;
     @FXML
-    private TableColumn<?, ?> tableColDocName;
+    private TableColumn<DoctorDto, String> tableColDocName;
     @FXML
-    private TableColumn<?, ?> tableColDocId;
+    private TableColumn<DoctorDto, String> tableColDocLicense;
     @FXML
-    private TableColumn<?, ?> tableColDocLicense;
+    private TableColumn<DoctorDto, String> tableColDocId;
     @FXML
-    private TableColumn<?, ?> tableColDocIniWork;
+    private TableColumn<DoctorDto, String> tableColDocIniWork;
     @FXML
-    private TableColumn<?, ?> tableColDocFinishWork;
+    private TableColumn<DoctorDto, String> tableColDocFinishWork;
     @FXML
-    private TableColumn<?, ?> tableColDocBreaks;
+    private TableColumn<DoctorDto, String> tableColDocBreaks;
+    DoctorDto doctorDto = new DoctorDto();
     @FXML
     private TextField textFieldPatientGender;
     @FXML
     private TextField textFieldPatientEmail;
     @FXML
     private TextField textFieldPatientBirthday;
-        List<DoctorDto> doctorList = new ArrayList<>();
-    private ObservableList<DoctorDto> doctorObservableList;
+    List<DoctorDto> doctorList = new ArrayList<>();
 
+    List<ExamDto> examList = new ArrayList<>();
+    private ObservableList<DoctorDto> doctorObservableList;
+    private ObservableList<ExamDto> examsObservableList;
 
     //List<AppointmentDto> reportList = new ArrayList<>();
-
     /**
      * Initializes the controller class.
      */
@@ -230,17 +241,60 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
         System.out.println(patientDto.getPtName());
 
+        this.tableColDocBreaks.setCellValueFactory(new PropertyValueFactory("DrBreak"));
+        this.tableColDocFinishWork.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
+        this.tableColDocLicense.setCellValueFactory(new PropertyValueFactory("DrLicense"));
+        this.tableColDocId.setCellValueFactory(new PropertyValueFactory("DoctorPsurname"));
+        this.tableColDocName.setCellValueFactory(new PropertyValueFactory("DoctorName"));
+        this.tableColDocFolio.setCellValueFactory(new PropertyValueFactory("DrFol"));
+        this.tableColDocIniWork.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
+        this.tableColDocCode.setCellValueFactory(new PropertyValueFactory("DrCode"));
+
+        this.tableColExamName.setCellValueFactory(new PropertyValueFactory("EmName"));
+        this.tableColExamDoctor.setCellValueFactory(new PropertyValueFactory("EmDoctorName"));
+
         this.tableColDeseaseId.setCellValueFactory(new PropertyValueFactory("DsId"));
         this.tableColDeseaseName.setCellValueFactory(new PropertyValueFactory("DsName"));
+
         bindPatient();
+        fillTableExams();
+        fillTableDoctors();
         fillTableDiseases();
         nameDistMainField.setTextFormatter(Formato.getInstance().letrasFormat(10));
+    }
+
+    private void fillTableDoctors() {
+        DoctorService service = new DoctorService();
+        doctorList = service.getDoctor();
+        if (doctorList == null) {
+        } else {
+            doctorObservableList = FXCollections.observableArrayList(doctorList);
+            this.tableViewDoctors.refresh();
+            this.tableViewDoctors.setItems(doctorObservableList);
+        }
+    }
+
+    private void fillTableExams() {
+        ExamService service = new ExamService();
+
+        System.out.println(patientDto.getPtId());
+        Respuesta r = service.getExamsByPatientId(patientDto.getPtId());
+
+        if (r.getEstado()) {
+            examList = (List<ExamDto>) r.getResultado("Exams");
+
+            if (examList == null) {
+            } else {
+                examsObservableList = FXCollections.observableArrayList(examList);
+                this.tableViewExamns.refresh();
+                this.tableViewExamns.setItems(examsObservableList);
+            }
+        }
     }
 
     @FXML
     private void searchPat_Name(KeyEvent event) {
     }
-
 
     @FXML
     private void searchPat_identification(KeyEvent event) {
@@ -286,10 +340,10 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             textFieldPatientIdent.setText(patientDto.getPtIdentification());
             Date fecha = patientDto.getPtBirthdate();
             LocalDate localDate = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            String date= localDate.getDayOfMonth()+"/"+localDate.getMonthValue()+"/"+localDate.getYear();
+            String date = localDate.getDayOfMonth() + "/" + localDate.getMonthValue() + "/" + localDate.getYear();
             System.out.println(date);
             textFieldPatientBirthday.setText(date);
-           textFieldPatientGender.setText(patientDto.getPtGender());
+            textFieldPatientGender.setText(patientDto.getPtGender());
             textFieldPatientEmail.setText(patientDto.getPtEmail());
         }
     }
@@ -307,11 +361,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             diseaseDto.setDsId(diseaseDto.getDsId());
             diseaseDto.setDsName(nameDistMainField.getText());
             r = service.saveDisease(diseaseDto);
-           // diseaseDto = new DiseaseDto();
+            // diseaseDto = new DiseaseDto();
         }
         if (r.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Enfermedad guardada");
-           // textFieldFamBgDisease.setText(diseaseDto.);
+            // textFieldFamBgDisease.setText(diseaseDto.);
         } else {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Error al Guardar Enfermedad");
         }
@@ -411,6 +465,33 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void updateExam(ActionEvent event) {
+
+        ProceedingsService serviceProced = new ProceedingsService();
+        //proceedingsDto.setPsId(0);
+        proceedingsDto.setPsPatient(patientDto);
+        System.out.println(proceedingsDto.getPsPatient().getPtName());
+        Respuesta resp = serviceProced.saveProcedings(proceedingsDto);
+
+        if (resp.getEstado()) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), " Expediente Guardado Correctamente");
+        }
+        resp = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
+        proceedingsDto = (ProceedingsDto) resp.getResultado("Proceedings");
+
+        ExamService serviceExam = new ExamService();
+        examDto.setEmId(0);
+        examDto.setEmName(textFieldNameExam.getText());
+        examDto.setEmDoctornote(textAreaDoctorNotes.getText());
+        examDto.setEmDoctor(doctorDto);
+        examDto.setEmProceedings(proceedingsDto);
+        resp = serviceExam.saveExam(examDto);
+
+        if (resp.getEstado()) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Examen Guardado Correctamente");
+        } else {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Examen no guardado ");
+        }
+
     }
 
     @FXML
@@ -480,7 +561,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void searchDoctor_Name(KeyEvent event) {
-         FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
         textFieldSearchDoc_Name.textProperty().addListener((observable, value, newValue) -> {
             filteredDoctor.setPredicate(DoctorDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -518,7 +599,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void searchDoctor_code(KeyEvent event) {
-         FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
         textFieldSearchDoc_Code.textProperty().addListener((observable, value, newValue) -> {
             filteredDoctor.setPredicate(DoctorDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -539,7 +620,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void searchDoctor_Folio(KeyEvent event) {
-         FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
         textFieldSearchDoc_Folio.textProperty().addListener((observable, value, newValue) -> {
             filteredDoctor.setPredicate(DoctorDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -582,8 +663,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private void searchDoctor_State(KeyEvent event) {
     }
-    
-     private void filteredDoctors(FilteredList<DoctorDto> list) {
+
+    private void filteredDoctors(FilteredList<DoctorDto> list) {
         SortedList<DoctorDto> sorted = new SortedList<>(list);
         sorted.comparatorProperty().bind(tableViewDoctors.comparatorProperty());
         tableViewDoctors.setItems(sorted);
@@ -591,6 +672,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void doctorClicked(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
+            OptionsProceedingsView.toFront();
+        }
+
     }
 
     @FXML
@@ -602,5 +688,5 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void selectDoctor(MouseEvent event) {
         searchSelectDoctor.toFront();
     }
-    
+
 }

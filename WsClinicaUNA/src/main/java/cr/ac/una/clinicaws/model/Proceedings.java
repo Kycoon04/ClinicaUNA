@@ -25,6 +25,8 @@ import jakarta.validation.constraints.NotNull;
 @NamedQueries({
     @NamedQuery(name = "Proceedings.findAll", query = "SELECT p FROM Proceedings p"),
     @NamedQuery(name = "Proceedings.findByPsId", query = "SELECT p FROM Proceedings p WHERE p.psId = :psId")})
+    @NamedQuery(name = "Proceedings.findByPatientId", query = "SELECT p FROM Proceedings p WHERE p.psPatient.ptId = :patientId")
+
 public class Proceedings implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,6 +48,7 @@ public class Proceedings implements Serializable {
     
     public Proceedings(ProceedingsDto proceedingsDto) {
         this.psId = proceedingsDto.getPsId();
+        this.psPatient= proceedingsDto.getPsPatient();
     }
     public void update(ProceedingsDto proceedings) {
         this.psPatient = proceedings.getPsPatient();

@@ -100,4 +100,25 @@ public class ModuleExam {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Examen").build();
         }
     }
+    
+    
+    @GET
+    @Path("/examPat/{id}")
+    public Response getDoctorsPati(@PathParam("id") long PatientId) {
+        try {
+   
+            Respuesta res = examService.getExamsByPatientId(PatientId); 
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            List<ExamDto> examDtoList = (List<ExamDto>) res.getResultado("Exams");
+
+            return Response.ok(new GenericEntity<List<ExamDto>>(examDtoList) {
+            }).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ExamService.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Examen").build();
+        }
+    }
+
 }

@@ -54,6 +54,21 @@ public class ModuleProceedings {
         }
     }
 
+    @GET
+    @Path("/proceedingsPat/{id}")
+    public Response getProceedingsByPati(@PathParam("id") Integer id) {
+        try {
+            Respuesta res = proceedingsService.getProceedingsbyPatId(id);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(res.getResultado("Proceedings")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleProceedings.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Proceedings").build();
+        }
+    }
+    
     @POST
     @Path("/proceedings")
     public Response saveProceedings(ProceedingsDto proceedingsDto) {

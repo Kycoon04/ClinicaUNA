@@ -26,6 +26,7 @@ public class ExamDto {
         this.emProceedings= new ProceedingsDto();
     }
 
+
     public Integer getEmId() {
         return emId.get();
     }
@@ -54,6 +55,10 @@ public class ExamDto {
         return emDoctor;
     }
 
+    public String getEmDoctorName() {
+        return emDoctor.getDoctorName();
+    }
+       
     public void setEmDoctor(DoctorDto emDoctor) {
         this.emDoctor = emDoctor;
     }

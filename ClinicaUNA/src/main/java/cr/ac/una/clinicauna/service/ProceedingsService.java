@@ -36,6 +36,23 @@ public class ProceedingsService {
             return new Respuesta(false, "Error obteniendo las Actas .", "getActas " + ex.getMessage());
         }
     }
+      
+    public Respuesta getProcedingsIdPatient(Integer id) {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("id", id);
+            Request request = new Request("ModuleProceedings/proceedingsPat", "/{id}", parametros);
+            request.get();
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            ProceedingsDto procedingsDto = (ProceedingsDto) request.readEntity(ProceedingsDto.class);
+            return new Respuesta(true, "", "", "Proceedings", procedingsDto);
+        } catch (Exception ex) {
+            Logger.getLogger(ProceedingsService.class.getName()).log(Level.SEVERE, "Error obteniendo las Actas [" + id + "]", ex);
+            return new Respuesta(false, "Error obteniendo las Actas .", "getActas " + ex.getMessage());
+        }
+    }
 
     public Respuesta saveProcedings(ProceedingsDto proceedingsDto) {
         try {

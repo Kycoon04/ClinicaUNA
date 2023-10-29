@@ -828,15 +828,17 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         return diferenciaHoras;
     }
 
-  private void handleCellClick(GridPane gridPane, Label cellLabel, String min[], int hour) throws ParseException {
+    private void handleCellClick(GridPane gridPane, Label cellLabel, String min[], int hour) throws ParseException {
         int maxCitas = Integer.parseInt(spaces.getValue());
 
         gridPane.getChildren().removeAll(citasAgregadasList);
         citasAgregadasList.clear();
 
+        horasAgregadas = new ArrayList<>();
+
         int citasAgregadas = 0;
         int startColumn = GridPane.getColumnIndex(cellLabel);
-        int columnIdx = startColumn; // Start from the clicked column
+        int columnIdx = 1;
         int rowIndex = GridPane.getRowIndex(cellLabel);
 
         while (citasAgregadas < maxCitas) {
@@ -859,7 +861,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             citasAgregadas++;
 
             if (columnIdx + 1 >= gridPane.getColumnConstraints().size()) {
-                if (rowIndex + 1 >= gridPane.getRowConstraints().size()) {
+                if (rowIndex >= gridPane.getRowConstraints().size()) {
+
                     break;
                 }
 
@@ -869,31 +872,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 columnIdx++;
             }
         }
-
-        while (citasAgregadas < maxCitas && rowIndex < gridPane.getRowConstraints().size()) {
-            rowIndex++;
-            columnIdx = 1;
-
-            Label label = new Label("Cita");
-            label.setStyle("-fx-font-size: 15");
-            GridPane.setColumnSpan(label, 1);
-            GridPane.setRowSpan(label, 1);
-            GridPane.setColumnIndex(label, columnIdx);
-            GridPane.setRowIndex(label, rowIndex);
-
-            gridPane.getChildren().add(label);
-            citasAgregadasList.add(label);
-
-            LocalTime horaActual = null;
-            if (citasAgregadas < min.length) {
-                horaActual = LocalTime.of(hour, Integer.parseInt(min[citasAgregadas]));
-                horasAgregadas.add(horaActual);
-            }
-
-            citasAgregadas++;
+        for (LocalTime horaAgregada : horasAgregadas) {
+            String horaFormateada = horaAgregada.format(timeFormatter);
+            System.out.println("Hora agregada: " + horaFormateada);
         }
     }
-
 
     @Override
     public void initialize() {

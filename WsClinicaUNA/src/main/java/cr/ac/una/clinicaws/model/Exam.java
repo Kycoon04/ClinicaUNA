@@ -27,7 +27,10 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Exam.findAll", query = "SELECT e FROM Exam e"),
     @NamedQuery(name = "Exam.findByEmId", query = "SELECT e FROM Exam e WHERE e.emId = :emId"),
     @NamedQuery(name = "Exam.findByEmName", query = "SELECT e FROM Exam e WHERE e.emName = :emName"),
-    @NamedQuery(name = "Exam.findByEmDoctornote", query = "SELECT e FROM Exam e WHERE e.emDoctornote = :emDoctornote")})
+    @NamedQuery(name = "Exam.findByEmDoctornote", query = "SELECT e FROM Exam e WHERE e.emDoctornote = :emDoctornote"),
+  })
+    
+
 public class Exam implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,18 +62,19 @@ public class Exam implements Serializable {
     public Exam(Integer emId) {
         this.emId = emId;
     }
-        public Exam(ExamDto examDto) {
-       this.emId = examDto.getEmId();
+
+    public Exam(ExamDto examDto) {
+        this.emId = examDto.getEmId();
         update(examDto);
     }
-    public void update(ExamDto examDto) {   
-      
+
+    public void update(ExamDto examDto) {
+
         this.emDoctor = examDto.getEmDoctor();
         this.emDoctornote = examDto.getEmDoctornote();
         this.emName = examDto.getEmName();
         this.emProceedings = examDto.getEmProceedings();
-        
- ;
+        ;
     }
 
     public Exam(Integer emId, String emName, String emDoctornote) {
@@ -143,5 +147,5 @@ public class Exam implements Serializable {
     public String toString() {
         return "cr.ac.una.clinicaws.model.Exam[ emId=" + emId + " ]";
     }
-    
+
 }
