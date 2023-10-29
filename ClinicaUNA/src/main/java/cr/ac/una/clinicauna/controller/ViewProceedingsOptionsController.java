@@ -465,13 +465,16 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void updateExam(ActionEvent event) {
-
         ProceedingsService serviceProced = new ProceedingsService();
-        //proceedingsDto.setPsId(0);
-        proceedingsDto.setPsPatient(patientDto);
-        System.out.println(proceedingsDto.getPsPatient().getPtName());
-        Respuesta resp = serviceProced.saveProcedings(proceedingsDto);
+        Respuesta hasProc = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
 
+        if (hasProc.getEstado()) {
+            proceedingsDto = (ProceedingsDto) hasProc.getResultado("Proceedings");
+        } else {
+            proceedingsDto.setPsId(0);
+            proceedingsDto.setPsPatient(patientDto);
+        }
+        Respuesta resp = serviceProced.saveProcedings(proceedingsDto);
         if (resp.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), " Expediente Guardado Correctamente");
         }
@@ -488,10 +491,10 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
         if (resp.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Examen Guardado Correctamente");
+            fillTableExams();
         } else {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Examen no guardado ");
         }
-
     }
 
     @FXML

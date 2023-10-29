@@ -449,7 +449,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 }
             }
 
-            // hacer la respuesta
+        
         } else {
             userDoctor = true;
             if (usrIdiom.getUsLenguage().equals("Spanish")) {

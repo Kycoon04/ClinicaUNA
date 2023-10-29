@@ -52,7 +52,8 @@ public class ProceedingsService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Proceedings.", "getProceedings " + ex.getMessage());
         }
     }
-        public Respuesta getProceedingsbyPatId(Integer fpId) {
+
+    public Respuesta getProceedingsbyPatId(Integer fpId) {
         try {
             Query qryProceedings = em.createNamedQuery("Proceedings.findByPatientId", Proceedings.class);
             qryProceedings.setParameter("patientId", fpId);
@@ -67,6 +68,7 @@ public class ProceedingsService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Proceedings.", "getProceedings " + ex.getMessage());
         }
     }
+
     public Respuesta saveProceedings(ProceedingsDto proceedingsDto) {
         try {
             Proceedings proceedings = new Proceedings();
@@ -89,7 +91,6 @@ public class ProceedingsService {
         }
     }
 
-    
     public Respuesta deleteProceedings(Integer id) {
         try {
             Proceedings proceedings;
@@ -112,11 +113,28 @@ public class ProceedingsService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el Proceedings.", "eliminarProceedings " + ex.getMessage());
         }
     }
+
+public Respuesta hasProccedings(Integer patientId) {
+    try {
+            Query qryProceedings = em.createNamedQuery("Proceedings.findByPatientId", Proceedings.class);
+            qryProceedings.setParameter("patientId", patientId);
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Proceedings", new ProceedingsDto((Proceedings) qryProceedings.getSingleResult()));
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getProceedings NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el Proceedings.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Proceedings.", "getProceedings NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el Proceedings.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Proceedings.", "getProceedings " + ex.getMessage());
+        }
+}
+
     public Respuesta getProceedings() {
         try {
             Query qryUsers = em.createNamedQuery("Proceedings.findAll", Proceedings.class);
             List<Proceedings> proceedings = (List<Proceedings>) qryUsers.getResultList();
-             List<ProceedingsDto> ListproceedingsDto = new ArrayList<>();
+            List<ProceedingsDto> ListproceedingsDto = new ArrayList<>();
             for (Proceedings tipo : proceedings) {
                 ProceedingsDto usersDto = new ProceedingsDto(tipo);
                 ListproceedingsDto.add(usersDto);
@@ -132,8 +150,5 @@ public class ProceedingsService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el tipo de Proceedings.", "getTipoProceedings " + ex.getMessage());
         }
     }
-    
- 
-    
-    
+
 }

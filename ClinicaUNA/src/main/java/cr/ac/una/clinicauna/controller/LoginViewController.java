@@ -7,7 +7,7 @@ import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
-import cr.ac.una.clinicauna.util.Email;
+
 import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
@@ -100,7 +100,8 @@ public class LoginViewController extends Controller implements Initializable {
     List<Node> required = new ArrayList<>();
     List<Node> required1 = new ArrayList<>();
     List<Node> required2 = new ArrayList<>();
-    private boolean pass= false; 
+    private boolean pass = false;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         choiceBoxIdioms.getItems().addAll(Spanish);
@@ -155,16 +156,17 @@ public class LoginViewController extends Controller implements Initializable {
     }
 
     private void saveUser(UserDto userDtop) {
-       Respuesta respuesta= new Respuesta();
+        Respuesta respuesta = new Respuesta();
         try {
             UserService service = new UserService();
-            if(pass==true){
-            respuesta = service.saveUser(userDtop);
-              }
+            if (pass == true) {
+                respuesta = service.saveUser(userDtop);
+            }
             this.userDto = (UserDto) respuesta.getResultado("User");
             if (userDtop != null) {
                 if (userDto.getUsLenguage() != "") {
-                    multiLenguage("ユーザーが正常に保存されました。","Usuario guardado correctamente.","User saved successfully.","Utilisateur enregistré avec succès.");
+                    multiLenguage("ユーザーが正常に保存されました。", "Usuario guardado correctamente.", "User saved successfully.", "Utilisateur enregistré avec succès.");
+            //email
                 } else {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Usuario", getStage(), "Usuario guardado correctamente.");
                 }
@@ -175,20 +177,20 @@ public class LoginViewController extends Controller implements Initializable {
         }
     }
 
-    private void multiLenguage(String l1,String l2, String l3, String l4) {
-        if(userDto.getUsLenguage()!=""){
-        if ( userDto.getUsLenguage().equals("Japanese") ) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "ユーザー保存", getStage(), l1);
-        }
-        if ( userDto.getUsLenguage() .equals("Spanish") ) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Usuario", getStage(),  l2);
-        }
-        if ( userDto.getUsLenguage().equals("English") ) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save User", getStage(),  l3);
-        }
-        if ( userDto.getUsLenguage() .equals("French") ) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer l'utilisateur", getStage(), l4);
-        }
+    private void multiLenguage(String l1, String l2, String l3, String l4) {
+        if (userDto.getUsLenguage() != "") {
+            if (userDto.getUsLenguage().equals("Japanese")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "ユーザー保存", getStage(), l1);
+            }
+            if (userDto.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Usuario", getStage(), l2);
+            }
+            if (userDto.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save User", getStage(), l3);
+            }
+            if (userDto.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer l'utilisateur", getStage(), l4);
+            }
         }
     }
 
@@ -207,11 +209,11 @@ public class LoginViewController extends Controller implements Initializable {
                         if (service.isAdmin(name, password)) {
                             getUsLenguage();
                         } else {
-                             getUsLenguage();
+                            getUsLenguage();
                         }
                     }
                 } else {
-                    ChoiceIdiom(this.userDto.getUsLenguage(),"L'utilisateur n'est pas actif","The user is not active", "El usuario no esta activo","ユーザーはアクティブではありません" );
+                    ChoiceIdiom(this.userDto.getUsLenguage(), "L'utilisateur n'est pas actif", "The user is not active", "El usuario no esta activo", "ユーザーはアクティブではありません");
                 }
             } else {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "Validación Usuario", getStage(), respuesta.getMensaje());
@@ -226,15 +228,15 @@ public class LoginViewController extends Controller implements Initializable {
 
     private void getUsLenguage() {
         if (this.userDto.getUsLenguage().equals("Spanish")) {
-         
+
             FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Spanish"));
             FlowController.getInstance().goMain("ViewMaintenanceOptions");
         } else if (this.userDto.getUsLenguage().equals("English")) {
-          
+
             FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/English"));
             FlowController.getInstance().goMain("ViewMaintenanceOptions");
         } else if (this.userDto.getUsLenguage().equals("French")) {
-          
+
             FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/French"));
             FlowController.getInstance().goMain("ViewMaintenanceOptions");
         } else if (this.userDto.getUsLenguage().equals("Japanese")) {
@@ -260,8 +262,8 @@ public class LoginViewController extends Controller implements Initializable {
 
     @FXML
     private void AcceptLoginEnter(KeyEvent event) {
-          if (event.getCode() == KeyCode.ENTER) {
-           login(usernameField.getText(), passwordField.getText());
+        if (event.getCode() == KeyCode.ENTER) {
+            login(usernameField.getText(), passwordField.getText());
         }
 
     }
@@ -291,19 +293,19 @@ public class LoginViewController extends Controller implements Initializable {
         if (!validateRequired(required)) {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "campos inccompletos");
         } else {
-          
+
             saveUser(bindNewUser());
-            
+
         }
     }
 
-      private void ChoiceIdiom(String idiom, String l1,String l2,String l3,String l4) {
-          System.out.println("sfddfsdfsdfsdfsfsdfsdfs");
-          System.out.println("");
+    private void ChoiceIdiom(String idiom, String l1, String l2, String l3, String l4) {
+        System.out.println("sfddfsdfsdfsdfsfsdfsdfs");
+        System.out.println("");
         if (idiom != "") {
             if (idiom == "French") {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "v", getStage(), l1);
-                  System.out.println(idiom);
+                System.out.println(idiom);
             }
             if (idiom == "English") {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "v", getStage(), l2);
@@ -319,8 +321,7 @@ public class LoginViewController extends Controller implements Initializable {
         }
 
     }
-      
-      
+
     UserDto bindNewUser() {
         String idiom = "";
         UserDto user = new UserDto();
@@ -332,35 +333,36 @@ public class LoginViewController extends Controller implements Initializable {
         user.setUsState("I");
         user.setUsType("Default");
         user.setUsRecover("N");
+        
+        
         String code = CodeRamdon();
         user.setUsCode(code);
-        if (choiceBoxIdioms.getValue().equals("Espagnol") || choiceBoxIdioms.getValue().equals("Spanish") || choiceBoxIdioms.getValue().equals("Español")|| choiceBoxIdioms.getValue().equals("スペイン語")) {
+
+        if (choiceBoxIdioms.getValue().equals("Espagnol") || choiceBoxIdioms.getValue().equals("Spanish") || choiceBoxIdioms.getValue().equals("Español") || choiceBoxIdioms.getValue().equals("スペイン語")) {
             idiom = "Spanish";
             user.setUsLenguage(idiom);
         }
-        if (choiceBoxIdioms.getValue().equals("Anglais") || choiceBoxIdioms.getValue().equals("English") || choiceBoxIdioms.getValue().equals("Inglés")|| choiceBoxIdioms.getValue().equals("英語")) {
+        if (choiceBoxIdioms.getValue().equals("Anglais") || choiceBoxIdioms.getValue().equals("English") || choiceBoxIdioms.getValue().equals("Inglés") || choiceBoxIdioms.getValue().equals("英語")) {
             idiom = "English";
             user.setUsLenguage(idiom);
         }
-        if (choiceBoxIdioms.getValue().equals("Francais") || choiceBoxIdioms.getValue().equals("France") || choiceBoxIdioms.getValue().equals("Francés")|| choiceBoxIdioms.getValue().equals("フランス語")) {
+        if (choiceBoxIdioms.getValue().equals("Francais") || choiceBoxIdioms.getValue().equals("France") || choiceBoxIdioms.getValue().equals("Francés") || choiceBoxIdioms.getValue().equals("フランス語")) {
             idiom = "French";
             user.setUsLenguage(idiom);
         }
-         if (choiceBoxIdioms.getValue().equals("Japonais") || choiceBoxIdioms.getValue().equals("Japonese") || choiceBoxIdioms.getValue().equals("Japonés")|| choiceBoxIdioms.getValue().equals("日本語")) {
+        if (choiceBoxIdioms.getValue().equals("Japonais") || choiceBoxIdioms.getValue().equals("Japonese") || choiceBoxIdioms.getValue().equals("Japonés") || choiceBoxIdioms.getValue().equals("日本語")) {
             idiom = "Japonese";
             user.setUsLenguage(idiom);
         }
         user.setUsIdentification(idRegisField.getText());
         if (passwordRegisField.getText().equals(password2RegisField.getText())) {
             user.setUsPassword(passwordRegisField.getText());
-            pass=true; 
+            pass = true;
         } else {
-          ChoiceIdiom(idiom,"Différents mots de passe","Different passwords","Contraseña Distinta","異なるパスワード");
-          pass=false; 
+            ChoiceIdiom(idiom, "Différents mots de passe", "Different passwords", "Contraseña Distinta", "異なるパスワード");
+            pass = false;
         }
-        Email email;
-        email = new Email(emailRegisField.getText(), userRegisField.getText() + " " + surname1RegisField.getText(), "Activacion de usuario");
-        email.envioDeCorreos("http://localhost:8080/WsClinicaUNA/Activacion.html?Code=" + code);
+
         return user;
     }
 
@@ -470,9 +472,7 @@ public class LoginViewController extends Controller implements Initializable {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "campos incompletos");
         } else {
             service.ResetTemp(emailRecoverField.getText(), pass);
-            Email email;
-            email = new Email(emailRecoverField.getText(), userRegisField.getText() + " " + surname1RegisField.getText(), "Recuperar contrañesa");
-            email.envioCmbClave(pass);
+
         }
     }
 

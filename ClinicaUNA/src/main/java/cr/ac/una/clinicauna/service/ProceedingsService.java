@@ -41,7 +41,7 @@ public class ProceedingsService {
         try {
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("id", id);
-            Request request = new Request("ModuleProceedings/proceedingsPat", "/{id}", parametros);
+            Request request = new Request("ModuleProceedings/patientHasProcceddings", "/{id}", parametros);
             request.get();
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
