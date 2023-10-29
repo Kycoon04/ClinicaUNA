@@ -292,7 +292,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         gender = new ToggleGroup();
         this.radioBtnMale.setToggleGroup(gender);
         this.radioBtnFemale.setToggleGroup(gender);
-        userActive=new ToggleGroup();
+        userActive = new ToggleGroup();
         this.rdBtnUserActive.setToggleGroup(userActive);
         this.rdBtnUserInactive.setToggleGroup(userActive);
         this.tableColAct.setCellValueFactory(new PropertyValueFactory("UsSState"));
@@ -421,10 +421,23 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void UpdateUser(ActionEvent event) {
+        Respuesta response;
         if (userDto != null && !choiceBoxJobsTypes.getValue().equals("Doctor")) {
             UserDto us = new UserDto();
             UserService service = new UserService();
-            service.saveUser(bindNewUser());
+            response = service.saveUser(bindNewUser());
+            if (response.getEstado()) {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Usuario", getStage(), "Usuario guardado");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save User", getStage(), "Saved user");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer l'utilisateur", getStage(), "Utilisateur enregistré");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "ユーザーを保存する", getStage(), "保存されたユーザー");
+                }
+                cleanUpUser();
+            }
 
             // hacer la respuesta
         } else {
@@ -638,7 +651,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             rdBtnUserActive.setSelected(true);
         } else {
             if (user.getUsState().equals("I")) {
-                 rdBtnUserInactive.setSelected(true);
+                rdBtnUserInactive.setSelected(true);
             }
         }
     }
@@ -694,11 +707,12 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void UpdateDoctor(ActionEvent event) {
+        Respuesta response = null;
         if (userDoctor) {
             UserService service = new UserService();
             service.saveUser(bindNewUser());
             DoctorService serviceD = new DoctorService();
-            serviceD.saveDoctor(bindNewDoctor());
+            response = serviceD.saveDoctor(bindNewDoctor());
             fillTableUsers();
             fillTableDoctors();
             userDoctor = false;
@@ -706,10 +720,22 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         } else {
             if (doctorDto != null) {
                 DoctorService serviceD = new DoctorService();
-                serviceD.saveDoctor(bindNewDoctor());
+                response = serviceD.saveDoctor(bindNewDoctor());
                 fillTableDoctors();
                 doctorDto = new DoctorDto();
             }
+        }
+        if (response.getEstado()) {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Doctor guardado");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Doctor", getStage(), "Saved doctor");
+            } else if (usrIdiom.getUsLenguage().equals("French") ) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Sauver le docteur", getStage(), "Docteur sauvé");
+            } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "医者を救う", getStage(), "救われた医師");
+            }
+            cleanUpDoctor();
         }
     }
 
@@ -921,12 +947,19 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         }
 
         if (r.getEstado()) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Paciente Guardado");
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Paciente", getStage(), "Paciente guardado");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Patient", getStage(), "Saved patient");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Sauver un patient", getStage(), "Patient sauvé");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "患者を救う", getStage(), "救われた患者");
+            }
             cleanUpPatient();
-        } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Error al guardar paciente");
         }
         patientDto = null;
+
     }
 
     @FXML
@@ -1088,7 +1121,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             cleanUpDoctor();
         }
     }
-    private void cleanUpDoctor(){
+
+    private void cleanUpDoctor() {
         codeDocMainField.clear();
         licenseDocMainField.clear();
         folioDocMainField.clear();
@@ -1100,11 +1134,12 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void cleanUpMantUser(ActionEvent event) {
-       if (new Mensaje().showConfirmation("Limpiar Usuario", getStage(), "¿Esta seguro que desea limpiar el registro?")) {
+        if (new Mensaje().showConfirmation("Limpiar Usuario", getStage(), "¿Esta seguro que desea limpiar el registro?")) {
             cleanUpUser();
         }
     }
-    private void cleanUpUser(){
+
+    private void cleanUpUser() {
         userMainField.clear();
         psurnameMainField.clear();
         ssurnameMainField.clear();
@@ -1122,7 +1157,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             cleanUpPatient();
         }
     }
-    private void cleanUpPatient(){
+
+    private void cleanUpPatient() {
         namePatMainField.clear();
         firstNamePatMainField.clear();
         lastNamePatMainField.clear();
