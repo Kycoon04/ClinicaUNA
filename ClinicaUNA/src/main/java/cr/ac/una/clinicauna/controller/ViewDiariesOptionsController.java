@@ -5,10 +5,8 @@
 package cr.ac.una.clinicauna.controller;
 
 import com.jfoenix.controls.JFXDatePicker;
-import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiaryDto;
-import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.SpaceDto;
@@ -20,44 +18,32 @@ import cr.ac.una.clinicauna.service.PatientService;
 import cr.ac.una.clinicauna.service.SpaceService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
-import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Year;
-import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -76,7 +62,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Text;
 
@@ -89,10 +74,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private BorderPane MenuView;
-    @FXML
     private BorderPane OptionsMainDiary;
-    @FXML
-    private TabPane tabPaneMantWorkers11;
     @FXML
     private TextField textFieldSearchPat_Name1;
     @FXML
@@ -120,49 +102,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private TableColumn<PatientDto, String> tableColPatEmail1;
     @FXML
-    private TextField textFieldSearchDoc_Name1;
-    @FXML
-    private TextField textFieldSearchDoc_Pusername1;
-    @FXML
-    private TextField textFieldSearchDoc_Code1;
-    @FXML
-    private TextField textFieldSearchDoc_Folio1;
-    @FXML
-    private TextField textFieldSearchDoc_License1;
-    @FXML
-    private TextField textFieldSearchDoc_State1;
-    @FXML
-    private TableView<DoctorDto> tableViewDoctorsDiary;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocCode1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocFolio1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocName1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocId1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocLicense1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocIniWork1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocFinishWork1;
-    @FXML
-    private TableColumn<DoctorDto, String> tableColDocBreaks1;
-    @FXML
-    private Text textMainDoctor1;
-    @FXML
-    private GridPane grid;
-    @FXML
-    private RadioButton amRadio;
-    @FXML
-    private RadioButton pmRadio;
-    @FXML
     private Tab tabPatient;
-    @FXML
-    private Tab tabDoc;
-    @FXML
-    private Tab tabDiary;
     @FXML
     private Text textMainDoctor11;
     @FXML
@@ -258,9 +198,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     ToggleGroup Tou = new ToggleGroup();
     AppointmentDto appointmentDto = new AppointmentDto();
-    private UserDto userDto;
-    private DoctorDto doctorDto;
-    private PatientDto patientDto;
+    private UserDto userDto = new UserDto();
+    private DoctorDto doctorDto = new DoctorDto();
+    private PatientDto patientDto = new PatientDto();
     private DiaryDto diaryDto = new DiaryDto();
     GridPane DiaryPane;
     SpaceDto spacesDto = new SpaceDto();
@@ -286,15 +226,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         this.tableColPatGender1.setCellValueFactory(new PropertyValueFactory("PtGender"));
         this.tableColPatEmail1.setCellValueFactory(new PropertyValueFactory("PtEmail"));
         this.tableColId1.setCellValueFactory(new PropertyValueFactory("PtId"));
-
-        this.tableColDocBreaks1.setCellValueFactory(new PropertyValueFactory("DrBreak"));
-        this.tableColDocFinishWork1.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
-        this.tableColDocLicense1.setCellValueFactory(new PropertyValueFactory("DrLicense"));
-        this.tableColDocId1.setCellValueFactory(new PropertyValueFactory("DoctorPsurname"));
-        this.tableColDocName1.setCellValueFactory(new PropertyValueFactory("DoctorName"));
-        this.tableColDocFolio1.setCellValueFactory(new PropertyValueFactory("DrFol"));
-        this.tableColDocIniWork1.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
-        this.tableColDocCode1.setCellValueFactory(new PropertyValueFactory("DrCode"));
 
         this.tableColDocBreaks11.setCellValueFactory(new PropertyValueFactory("DrBreak"));
         this.tableColDocFinishWork11.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
@@ -401,12 +332,10 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
     }
 
-    @FXML
     private void openAppoimentRegister(MouseEvent event) {
         OptionsMainDiary1.toFront();
     }
 
-    @FXML
     private void openDiaryV(MouseEvent event) {
         OptionsMainDiary.toFront();
     }
@@ -416,7 +345,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         FlowController.getInstance().goMain("ViewMaintenanceOptions");
     }
 
-    @FXML
     private void completeAppointment(MouseEvent event) {
         CreateAppointment.toFront();
     }
@@ -425,11 +353,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private void UpdatePatient(ActionEvent event) {
         PatientService patient = new PatientService();
         Respuesta r = null;
-        if (patientDto != null) {
             r = patient.savePatient(bindNewPatient());
             fillTablePatient();
             patientDto = new PatientDto();
-        }
 
         if (r.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Paciente Guardado");
@@ -503,8 +429,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
         this.tableViewDoctorsDiary1.refresh();
         this.tableViewDoctorsDiary1.setItems(doctorObservableList);
-        this.tableViewDoctorsDiary.refresh();
-        this.tableViewDoctorsDiary.setItems(doctorObservableList);
     }
 
     @FXML
@@ -619,38 +543,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         });
         filteredPatient(filteredPatient);
     }
-
-    /*
-    @FXML
-    private void patientClicked(MouseEvent event) {
-        PatientService patient = new PatientService();
-        Respuesta r;
-        if (event.getClickCount() == 1) {
-            if (deletePatient) {
-                patientDto = tableViewPatient.getSelectionModel().getSelectedItem();
-                if (patientDto != null) {
-                    r = patient.deletePatient(patientDto.getPtId());
-                    deletePatient = false;
-                    patientList.clear();
-                    patientObservableList.clear();
-                    fillTablePatient();
-                    patientDto = new PatientDto();
-                    if (r.getEstado()) {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Paciente Eliminado Correctamente");
-                    } else {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Error al eliminar paciente");
-                    }
-                }
-            }
-        }
-        if (event.getClickCount() == 2) {
-            patientDto = tableViewPatient.getSelectionModel().getSelectedItem();
-            if (patientDto != null) {
-                fillPatient(patientDto);
-            }
-        }
-    }
-     */
     @FXML
     private void searchDoctor_Name(KeyEvent event) {
     }
@@ -708,7 +600,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         rootDocDiary.getChildren().add(DiaryPane);
     }
 
-    @FXML
     private void updateAgenda(ActionEvent event) {
 
         SpaceService service = new SpaceService();
@@ -880,10 +771,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     public void initialize() {
     }
 
-    @FXML
-    private void selectDiary(MouseEvent event) {
-
-    }
 
     Predicate<DiaryDto> pDoctor = x -> x.getDyDoctor().getDoctorName().equals(doctorDto.getDoctorName());
 
@@ -955,7 +842,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 for (int i = 0; i < AgendaCompleta.size(); i++) {
                     fila = findFila(AgendaCompleta.get(i), iniHora, finHora);
                     columna = findColumna(AgendaCompleta.get(i));
-                    Label label = new Label("Cita de " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtPatient().getPtName());
+                    Label label = new Label("Cita de " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                     label.setStyle("-fx-font-size: 15");
                     DiaryPane.setColumnSpan(label, 1);
                     DiaryPane.setRowSpan(label, 1);
@@ -966,5 +853,10 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 }
             }
         }
+    }
+
+    @FXML
+    private void back(ActionEvent event) {
+        CreateAppointment.toFront();
     }
 }
