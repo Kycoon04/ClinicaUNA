@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package cr.ac.una.clinicauna.util;
+package cr.ac.una.clinicaws.util;
 
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -22,7 +22,6 @@ public class Email {
     private String asunt;
     private String archive;
     private String link;
-    private String archiveName;
     private String password;
     private String name;
     private String info;
@@ -34,10 +33,18 @@ public class Email {
      * @param usuario Dirección de correo electrónico del remitente.
      * @param asunto Asunto del correo electrónico.
      */
-    public Email(String destino, String usuario, String asunto) {
+    public Email(String destino, String asunto, String linkGen) {
         this.sourceMail = "clinicauna10@gmail.com";
         this.destinationMail = destino;
         this.asunt = asunto;
+        this.link = linkGen;
+        this.password = "";
+        this.name = "";
+        this.info = "";
+        this.archive = "";
+    }
+
+    public Email() {
     }
 
     /**
@@ -45,10 +52,9 @@ public class Email {
      *
      * @param link Enlace que se incluirá en el cuerpo del correo.
      */
-    public void envioDeCorreos(String link) {
-        enviarCorreoReporte(link);
+    public void envioDeCorreos(Email acti) {
+        enviarCorreoReporte(acti);
     }
-
     /**
      * Método para enviar correos electrónicos relacionados con informes.
      *
@@ -58,7 +64,7 @@ public class Email {
         enviarClave(link);
     }
 
-    public void enviarCorreoReporte(String enlace) {
+    public void enviarCorreoReporte(Email acti) {
    
             System.out.println("Vacia");
             sourceMail = "clinicauna10@gmail.com";
@@ -147,7 +153,7 @@ public class Email {
                     + "<h2>" + info + "</h2>\n"
                     + "</header>\n"
                     + "<div class='container'>\n"
-                    + "<p class='center'><a id='activeButton' href='" + enlace + "'>Continuar</a></p>\n"
+                    + "<p class='center'><a id='activeButton' href='" + acti.getLink() + "'>Continuar</a></p>\n"
                     + "</div>\n"
                     + "</body>\n"
                     + "</html>";
@@ -175,7 +181,7 @@ public class Email {
         }
     }
 
-    private void enviarClave(String link) {
+    public void enviarClave(String link) {
 
       
             sourceMail = "clinicauna10@gmail.com";
@@ -229,4 +235,74 @@ public class Email {
             System.out.println(e.toString());
         }
     }
+
+    public String getSourceMail() {
+        return sourceMail;
+    }
+
+    public void setSourceMail(String sourceMail) {
+        this.sourceMail = sourceMail;
+    }
+
+    public String getDestinationMail() {
+        return destinationMail;
+    }
+
+    public void setDestinationMail(String destinationMail) {
+        this.destinationMail = destinationMail;
+    }
+
+    public String getAsunt() {
+        return asunt;
+    }
+
+    public void setAsunt(String asunt) {
+        this.asunt = asunt;
+    }
+
+    public String getArchive() {
+        return archive;
+    }
+
+    public void setArchive(String archive) {
+        this.archive = archive;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+    
+    
+    
+    
 }

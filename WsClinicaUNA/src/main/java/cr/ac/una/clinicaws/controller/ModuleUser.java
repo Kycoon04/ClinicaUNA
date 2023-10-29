@@ -3,6 +3,7 @@ package cr.ac.una.clinicaws.controller;
 import cr.ac.una.clinicaws.model.UsersDto;
 import cr.ac.una.clinicaws.service.UserService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
+import cr.ac.una.clinicaws.util.Email;
 import cr.ac.una.clinicaws.util.JwTokenHelper;
 import cr.ac.una.clinicaws.util.Respuesta;
 import cr.ac.una.clinicaws.util.Secure;
@@ -240,6 +241,21 @@ public class ModuleUser {
             Logger.getLogger(ModuleUser.class
                     .getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo los usuarios").build();
+        }
+    }
+    
+    @POST
+    @Path("/userEmail")
+    public Response sendUserEmail(Email email) {
+        try {
+            Respuesta res = userService.sendEmail(email);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+             return Response.ok(res.getResultado("")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error ").build();
         }
     }
 }

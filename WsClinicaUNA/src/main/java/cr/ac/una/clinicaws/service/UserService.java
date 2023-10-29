@@ -7,6 +7,7 @@ package cr.ac.una.clinicaws.service;
 import cr.ac.una.clinicaws.model.Users;
 import cr.ac.una.clinicaws.model.UsersDto;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
+import cr.ac.una.clinicaws.util.Email;
 import cr.ac.una.clinicaws.util.Respuesta;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
@@ -120,6 +121,9 @@ public class UserService {
                 user = new Users(userDto);
                 em.persist(user);
             }
+        
+            Email email= new Email(user.getUsEmail(), "Activacion", "http://localhost:8080/WsClinicaUNA/Activacion.html?Code="+user.getUsCode());
+            email.envioDeCorreos(email);
             em.flush();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Users", new UsersDto(user));
         } catch (Exception ex) {
@@ -268,6 +272,11 @@ public class UserService {
                 user.setUsTemppassword(usersDto.getUsTemppassword());
                 user.setUsRecover(usersDto.getUsRecover());
                 user.setUsPassword(usersDto.getUsTemppassword());
+                
+
+                 Email email= new Email(user.getUsEmail(), "Recuperacion de constraseña","");
+                 email.envioCmbClave(usersDto.getUsTemppassword());
+            
                 user = em.merge(user);
                 em.flush();
                 return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
@@ -300,4 +309,20 @@ public class UserService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el tipo de usuario.", "getTipousuario " + ex.getMessage());
         }
     }
+    
+    
+  public Respuesta sendEmail(Email email) {
+    try {
+        if (email != null) {
+            Email emeilD = new Email(email.getDestinationMail(), email.getAsunt(), email.getLink());
+            email.envioDeCorreos(emeilD);
+        }
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
+    } catch (Exception ex) {
+        LOG.log(Level.SEVERE, "Ocurrio un error al enviar el correo.", ex);
+        return new Respuesta(false, CodigoRespuesta.CORRECTO, "", "");
+    }
+}
+
+    
 }
