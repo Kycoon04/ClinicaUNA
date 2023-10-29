@@ -28,6 +28,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -57,8 +58,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -202,14 +207,20 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     SpaceDto spacesDto = new SpaceDto();
     private List<Label> citasAgregadasList = new ArrayList<>();
     private List<Label> citasAgregadaDBsList = new ArrayList<>();
+    private List<Label> citasPosiblesDBsList = new ArrayList<>();
     private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
     List<LocalTime> horasAgregadas = new ArrayList<>();
+    List<LocalTime> horasModificadas = new ArrayList<>();
     private String matrizAgenda[][] = new String[15][8];
     List<DoctorDto> doctorList = new ArrayList<>();
     private ObservableList<DoctorDto> doctorObservableList;
     List<PatientDto> patientList = new ArrayList<>();
     private ObservableList<PatientDto> patientObservableList;
     private boolean modificarCita = false;
+    private int movespace = 0;
+    private String[] mint;
+    int HoraSelecionada = 0;
+    List<Integer> horasTotales = new ArrayList<>();
     @FXML
     private BorderPane OptionsViewDiary;
     @FXML
@@ -468,7 +479,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         DoctorService service = new DoctorService();
         doctorList = service.getDoctor();
         if (doctorList == null) {
-            System.out.println("fdf");
         } else {
             doctorObservableList = FXCollections.observableArrayList(doctorList);
         }
@@ -639,6 +649,115 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         AnchorPane.setTopAnchor(DiaryPane, (rootDocDiary.getHeight() - DiaryPane.getPrefHeight()) / 2);
         AnchorPane.setLeftAnchor(DiaryPane, (rootDocDiary.getWidth() - DiaryPane.getPrefWidth()) / 2);
 
+        DiaryPane.setOnDragOver(event -> {
+            if (event.getGestureSource() != DiaryPane && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        DiaryPane.setOnDragDropped(event -> {
+
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+
+            if (db.hasString()) {
+                double dropX = event.getX();
+                double dropY = event.getY();
+
+                int dropColumn = (int) (dropX / (DiaryPane.getWidth() / DiaryPane.getColumnConstraints().size()));
+                int dropRow = (int) (dropY / (DiaryPane.getHeight() / DiaryPane.getRowConstraints().size()));
+                HoraSelecionada = horasTotales.get(dropRow - 1);
+                int citasAgregadas = 0;
+                while (citasAgregadas < movespace) {
+                    if (isCellLabelEmpty(DiaryPane, dropRow, dropColumn)) {
+                        ActionEvent events = new ActionEvent();
+                        lookday(events);
+                        movespace = 0;
+                        return;
+                    }
+                    citasAgregadas++;
+                    if (dropColumn + 1 >= DiaryPane.getColumnConstraints().size()) {
+                        if (dropRow >= DiaryPane.getRowConstraints().size()) {
+                            break;
+                        }
+                        dropColumn = 1;
+                        dropRow++;
+                    } else {
+                        dropColumn++;
+                    }
+                }
+                citasAgregadas = 1;
+                dropColumn = (int) (dropX / (DiaryPane.getWidth() / DiaryPane.getColumnConstraints().size()));
+                dropRow = (int) (dropY / (DiaryPane.getHeight() / DiaryPane.getRowConstraints().size()));
+                LocalTime horaActual = null;
+                Label draggedLabel = (Label) event.getGestureSource();
+                SpaceDto referente = (SpaceDto) draggedLabel.getUserData();
+                DiaryPane.getChildren().remove(draggedLabel);
+                DiaryPane.add(draggedLabel, dropColumn, dropRow);
+                if (citasAgregadas <= mint.length) {
+                    horaActual = LocalTime.of(HoraSelecionada, Integer.parseInt(mint[dropColumn - 1]));
+                    horasModificadas.add(horaActual);
+                }
+                citasPosiblesDBsList.add(draggedLabel);
+
+                while (citasAgregadas < movespace) {
+                    if (dropColumn + 1 >= DiaryPane.getColumnConstraints().size()) {
+                        if (dropRow >= DiaryPane.getRowConstraints().size()) {
+                            break;
+                        }
+                        dropColumn = 1;
+                        dropRow++;
+                        HoraSelecionada++;
+                    } else {
+                        dropColumn++;
+                    }
+                    Label label = new Label(draggedLabel.getText());
+                    label.setStyle(draggedLabel.getStyle());
+                    GridPane.setColumnSpan(label, 1);
+                    GridPane.setRowSpan(label, 1);
+                    GridPane.setColumnIndex(label, dropColumn);
+                    GridPane.setRowIndex(label, dropRow);
+
+                    DiaryPane.getChildren().add(label);
+                    citasPosiblesDBsList.add(label);
+                    horaActual = null;
+                    if (citasAgregadas <= mint.length) {
+                        horaActual = LocalTime.of(HoraSelecionada, Integer.parseInt(mint[dropColumn - 1]));
+                        horasModificadas.add(horaActual);
+                    }
+                    citasAgregadas++;
+                }
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Modificar Cita");
+                alert.setHeaderText(null);
+                alert.setContentText("¿Quieres modificar esta cita?");
+                ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
+                if (result == ButtonType.OK) {
+                    SpaceService service = new SpaceService();
+                    List<SpaceDto> actualizados = service.getSpace();
+                    actualizados = actualizados.stream().filter(x -> x.getSeAppointment().getAtId() == referente.getSeAppointment().getAtId()).toList();
+                    int k = 0;
+                    for (SpaceDto p : actualizados) {
+                        spacesDto = p;
+                        spacesDto.setSeHour(horasModificadas.get(k).format(timeFormatter));
+                        Respuesta respuesta = service.saveSpace(spacesDto);
+                        k++;
+                    }
+                    ActionEvent events = new ActionEvent();
+                    lookday(events);
+                } else {
+                    ActionEvent events = new ActionEvent();
+                    lookday(events);
+                }
+                movespace = 0;
+                horasModificadas.clear();
+                success = true;
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
         rootDocDiary.heightProperty().addListener((obs, oldVal, newVal)
                 -> AnchorPane.setTopAnchor(DiaryPane, (newVal.doubleValue() - DiaryPane.getPrefHeight()) / 2));
 
@@ -646,18 +765,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 -> AnchorPane.setLeftAnchor(DiaryPane, (newVal.doubleValue() - DiaryPane.getPrefWidth()) / 2));
 
         rootDocDiary.getChildren().add(DiaryPane);
-    }
-
-    private void updateAgenda(ActionEvent event) {
-
-        SpaceService service = new SpaceService();
-        Respuesta r = service.saveSpace(spacesDto);
-        if (r.getEstado()) {
-
-        } else {
-            System.out.println("Error");
-        }
-
     }
 
     @FXML
@@ -670,7 +777,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         gridPane.setHgap(1);
         gridPane.setVgap(1);
 
-        String[] mint = new String[v];
+        mint = new String[v];
         int doctoSpaces = v;
 
         if (doctoSpaces == 2) {
@@ -724,7 +831,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 GridPane.setFillHeight(cellLabel, true);
 
                 final int finalHour = hour;
-
+                horasTotales.add(hour);
                 cellLabel.setOnMouseClicked(event -> {
                     try {
                         handleCellClick(gridPane, cellLabel, mint, finalHour);
@@ -770,6 +877,20 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         return diferenciaHoras;
     }
 
+    private boolean isCellLabelEmpty(GridPane gridPane, int rowIndex, int columnIdx) {
+        for (Node child : gridPane.getChildren()) {
+            if (child instanceof Label
+                    && GridPane.getRowIndex(child) == rowIndex
+                    && GridPane.getColumnIndex(child) == columnIdx) {
+                Label label = (Label) child;
+                if (label.getText() == null || !label.getText().isEmpty()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private void handleCellClick(GridPane gridPane, Label cellLabel, String min[], int hour) throws ParseException {
         int maxCitas = Integer.parseInt(spaces.getValue());
 
@@ -782,6 +903,28 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         int startColumn = GridPane.getColumnIndex(cellLabel);
         int columnIdx = startColumn;
         int rowIndex = GridPane.getRowIndex(cellLabel);
+
+        while (citasAgregadas < maxCitas) {
+            if (isCellLabelEmpty(gridPane, rowIndex, columnIdx)) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Error", getStage(), "No se pueden registrar los campos");
+                return;
+            }
+            citasAgregadas++;
+            if (columnIdx + 1 >= gridPane.getColumnConstraints().size()) {
+                if (rowIndex >= gridPane.getRowConstraints().size()) {
+                    break;
+                }
+                columnIdx = 1;
+                rowIndex++;
+            } else {
+                columnIdx++;
+            }
+        }
+
+        citasAgregadas = 0;
+        startColumn = GridPane.getColumnIndex(cellLabel);
+        columnIdx = startColumn;
+        rowIndex = GridPane.getRowIndex(cellLabel);
 
         while (citasAgregadas < maxCitas) {
             Label label = new Label("Cita");
@@ -804,7 +947,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
             if (columnIdx + 1 >= gridPane.getColumnConstraints().size()) {
                 if (rowIndex >= gridPane.getRowConstraints().size()) {
-
                     break;
                 }
                 columnIdx = 1;
@@ -820,8 +962,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @Override
     public void initialize() {
     }
-
-
 
     public Node getNodeFromGridPane(GridPane gridPane, int row, int col) {
         for (Node node : gridPane.getChildren()) {
@@ -863,6 +1003,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
     Predicate<DiaryDto> pDoctor = x -> x.getDyDoctor().getDoctorName().equals(doctorDto.getDoctorName());
     Predicate<DiaryDto> pCancelada = x -> !x.getDySpace().getSeAppointment().getAtState().equals("Cancelada");
+
     @FXML
     private void lookday(ActionEvent event) {
         if (DiaryPane != null) {
@@ -870,6 +1011,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             citasAgregadasList.clear();
             DiaryPane.getChildren().removeAll(citasAgregadaDBsList);
             citasAgregadaDBsList.clear();
+            DiaryPane.getChildren().removeAll(citasPosiblesDBsList);
+            citasPosiblesDBsList.clear();
         }
         String horaInicio = doctorDto.getDrIniworking();
         String horaFin = doctorDto.getDrFinisworking();
@@ -890,16 +1033,60 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 AgendaCompleta = AgendaCompleta.stream().filter(pCancelada.and(pDoctor.and(x -> x.getDyDate().equals(DayPicker.getValue())))).toList();
 
                 for (int i = 0; i < AgendaCompleta.size(); i++) {
+
                     fila = findFila(AgendaCompleta.get(i), iniHora, finHora);
                     columna = findColumna(AgendaCompleta.get(i));
+
                     Label label = new Label("Cita / " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                     CargarColor(label, AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
-                    label.setUserData(AgendaCompleta.get(i).getDySpace().getSeAppointment());
+                    label.setUserData(AgendaCompleta.get(i).getDySpace());
 
                     label.setOnMouseClicked(eventClicked -> {
-                        ModificarCita((AppointmentDto) label.getUserData());
+                        SpaceDto spaceAux = (SpaceDto) label.getUserData();
+                        ModificarCita(spaceAux.getSeAppointment());
                     });
 
+                    label.setOnDragDetected(eventx -> {
+                        Dragboard db = label.startDragAndDrop(TransferMode.ANY);
+                        ClipboardContent content = new ClipboardContent();
+                        content.putString(label.getText());
+
+                        DiaryPane.getChildren().removeAll(citasPosiblesDBsList);
+                        SpaceDto spaceAux = (SpaceDto) label.getUserData();
+                        AppointmentDto aux = spaceAux.getSeAppointment();
+                        String targetCode = aux.getAtCode();
+                        Iterator<Label> iterator = citasAgregadaDBsList.iterator();
+                        while (iterator.hasNext()) {
+                            Label currentLabel = iterator.next();
+                            SpaceDto currentAppointment = (SpaceDto) currentLabel.getUserData();
+                            if (targetCode.equals(currentAppointment.getSeAppointment().getAtCode())) {
+                                movespace++;
+                                DiaryPane.getChildren().remove(currentLabel);
+                                iterator.remove();
+                            }
+                        }
+                        db.setContent(content);
+                        event.consume();
+                    });
+                    label.setOnDragOver(eventz -> {
+                        if (eventz.getGestureSource() != label && eventz.getDragboard().hasString()) {
+                            eventz.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                        }
+                        event.consume();
+                    });
+                    label.setOnDragDropped(eventf -> {
+                        Dragboard db = eventf.getDragboard();
+                        boolean success = false;
+                        if (db.hasString()) {
+                            ActionEvent events = new ActionEvent();
+                            lookday(events);
+                            movespace = 0;
+                            success = true;
+                        }
+                        eventf.setDropCompleted(success);
+                        eventf.consume();
+                    });
+                    label.setOnDragDone(DragEvent::consume);
                     DiaryPane.setColumnSpan(label, 1);
                     DiaryPane.setRowSpan(label, 1);
                     DiaryPane.setColumnIndex(label, columna);
@@ -919,7 +1106,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
         if (result == ButtonType.OK) {
             appointmentDtoModi = cita;
-            modificarCita = true;System.out.println(appointmentDtoModi.getAtCode());
+            modificarCita = true;
             nameP.setText(appointmentDtoModi.getAtPatient().getPtName());
             userLog.setText(appointmentDtoModi.getAtUserregister().getUsName());
             numberP.setText(String.valueOf(appointmentDtoModi.getAtTelephone()));

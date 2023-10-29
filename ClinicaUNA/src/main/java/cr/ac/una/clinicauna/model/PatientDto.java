@@ -22,6 +22,7 @@ public class PatientDto {
     public SimpleStringProperty ptEmail;
     public SimpleIntegerProperty ptId;
     public Date ptBirthdate;
+    public SimpleStringProperty ptTelephone;
 
     public PatientDto() {
         ptName = new SimpleStringProperty();
@@ -31,6 +32,7 @@ public class PatientDto {
         ptGender = new SimpleStringProperty();
         ptEmail = new SimpleStringProperty();
         ptId = new SimpleIntegerProperty();
+        ptTelephone = new SimpleStringProperty();
     }
 
     public String getPtName() {
@@ -47,6 +49,14 @@ public class PatientDto {
 
     public void setPtPlastname(String ptPlastname) {
         this.ptPlastname.set(ptPlastname);
+    }
+    
+    public String getPtTelephone() {
+        return ptTelephone.get();
+    }
+
+    public void setPtTelephone(String ptTelephone) {
+        this.ptTelephone.set(ptTelephone);
     }
 
     public String getPtSlastname() {

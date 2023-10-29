@@ -16,7 +16,7 @@ public class PatientDto {
     private String ptEmail;
     private Date ptBirthdate;
     private Integer ptId;
-
+    private String ptTelephone;
     public PatientDto() {
     }
 
@@ -29,10 +29,19 @@ public class PatientDto {
         ptEmail = patient.getPtEmail();
         ptBirthdate = patient.getPtBirthdate();
         ptId = patient.getPtId();
+        ptTelephone = patient.getPtTelephone();
     }
     
     public String getPtName() {
         return ptName;
+    }
+
+    public String getPtTelephone() {
+        return ptTelephone;
+    }
+
+    public void setPtTelephone(String ptTelephone) {
+        this.ptTelephone = ptTelephone;
     }
 
     public void setPtName(String ptName) {

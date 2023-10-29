@@ -23,7 +23,7 @@ import jakarta.validation.constraints.Size;
 
 /**
  *
- * @author dilan
+ * @author jomav
  */
 @Entity
 @Table(name = "CL_PATIENT")
@@ -36,7 +36,8 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Patient.findByPtGender", query = "SELECT p FROM Patient p WHERE p.ptGender = :ptGender"),
     @NamedQuery(name = "Patient.findByPtEmail", query = "SELECT p FROM Patient p WHERE p.ptEmail = :ptEmail"),
     @NamedQuery(name = "Patient.findByPtBirthdate", query = "SELECT p FROM Patient p WHERE p.ptBirthdate = :ptBirthdate"),
-    @NamedQuery(name = "Patient.findByPtId", query = "SELECT p FROM Patient p WHERE p.ptId = :ptId")})
+    @NamedQuery(name = "Patient.findByPtId", query = "SELECT p FROM Patient p WHERE p.ptId = :ptId"),
+    @NamedQuery(name = "Patient.findByPtTelephone", query = "SELECT p FROM Patient p WHERE p.ptTelephone = :ptTelephone")})
 public class Patient implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -76,6 +77,9 @@ public class Patient implements Serializable {
     @NotNull
     @Column(name = "PT_ID")
     private Integer ptId;
+    @Size(max = 30)
+    @Column(name = "PT_TELEPHONE")
+    private String ptTelephone;
 
     public Patient() {
     }
@@ -83,7 +87,6 @@ public class Patient implements Serializable {
     public Patient(Integer ptId) {
         this.ptId = ptId;
     }
-
     public Patient(PatientDto patientDto) {
         this.ptId = patientDto.getPtId();
         update(patientDto);
@@ -97,6 +100,16 @@ public class Patient implements Serializable {
         ptGender = patientDto.getPtGender();
         ptEmail = patientDto.getPtEmail();
         ptBirthdate = patientDto.getPtBirthdate();
+        ptTelephone = patientDto.getPtTelephone();
+    }
+   
+    public Patient(Integer ptId, String ptName, String ptPlastname, String ptIdentification, String ptGender, String ptEmail) {
+        this.ptId = ptId;
+        this.ptName = ptName;
+        this.ptPlastname = ptPlastname;
+        this.ptIdentification = ptIdentification;
+        this.ptGender = ptGender;
+        this.ptEmail = ptEmail;
     }
 
     public String getPtName() {
@@ -161,6 +174,14 @@ public class Patient implements Serializable {
 
     public void setPtId(Integer ptId) {
         this.ptId = ptId;
+    }
+
+    public String getPtTelephone() {
+        return ptTelephone;
+    }
+
+    public void setPtTelephone(String ptTelephone) {
+        this.ptTelephone = ptTelephone;
     }
 
     @Override
