@@ -9,6 +9,7 @@ import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 
 /**
  * JavaFX App
@@ -18,6 +19,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FlowController.getInstance().InitializeFlow(stage,ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Spanish"));
+        stage.getIcons().add(new Image(App.class.getResourceAsStream("/cr/ac/una/clinicauna/resources/LogoMedicalClinic.png")));
         FlowController.getInstance().goMain("LoginView");
         /*FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("LoginView.fxml"));

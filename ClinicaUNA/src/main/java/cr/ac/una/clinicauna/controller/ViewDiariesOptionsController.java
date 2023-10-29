@@ -74,7 +74,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private BorderPane MenuView;
-    private BorderPane OptionsMainDiary;
     @FXML
     private TextField textFieldSearchPat_Name1;
     @FXML
@@ -102,8 +101,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private TableColumn<PatientDto, String> tableColPatEmail1;
     @FXML
-    private Tab tabPatient;
-    @FXML
     private Text textMainDoctor11;
     @FXML
     private TextField nameP;
@@ -124,11 +121,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private RadioButton Absent;
     @FXML
-    private BorderPane OptionsMainDiary1;
-    @FXML
     private TabPane tabPaneMantWorkers112;
-    @FXML
-    private Tab tabDiary2;
     @FXML
     private Tab tabDoc1;
     @FXML
@@ -178,8 +171,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private JFXDatePicker datePickerBirthdayPat1;
     @FXML
-    private Tab newPatientAppoiment;
-    @FXML
     private BorderPane CreateAppointment;
     @FXML
     private AnchorPane rootDocDiary;
@@ -197,6 +188,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     ComboBox<String> spaces = new ComboBox();
 
     ToggleGroup Tou = new ToggleGroup();
+    ToggleGroup gender = new ToggleGroup();
     AppointmentDto appointmentDto = new AppointmentDto();
     private UserDto userDto = new UserDto();
     private DoctorDto doctorDto = new DoctorDto();
@@ -213,12 +205,21 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private ObservableList<DoctorDto> doctorObservableList;
     List<PatientDto> patientList = new ArrayList<>();
     private ObservableList<PatientDto> patientObservableList;
+    @FXML
+    private BorderPane OptionsViewDiary;
+    @FXML
+    private BorderPane OptionsMantPatient;
+    @FXML
+    private BorderPane OptionsSelectPatient;
+    @FXML
+    private BorderPane OptionsAppoinmentInfo;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         MenuView.toFront();
+        CreateAppointment.toFront();
         this.tableColPatIdentif1.setCellValueFactory(new PropertyValueFactory("PtIdentification"));
         this.tableColPatName1.setCellValueFactory(new PropertyValueFactory("PtName"));
         this.tableColPatPsurname1.setCellValueFactory(new PropertyValueFactory("PtPlastname"));
@@ -240,6 +241,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         Cancelled.setToggleGroup(Tou);
         Attended.setToggleGroup(Tou);
         Scheduled.setToggleGroup(Tou);
+        
+        this.radioBtnFemale1.setToggleGroup(gender);
+        this.radioBtnMale1.setToggleGroup(gender);
 
         ObservableList<String> items = FXCollections.observableArrayList(
                 "1",
@@ -331,22 +335,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             lookday(event);
         }
     }
-
-    private void openAppoimentRegister(MouseEvent event) {
-        OptionsMainDiary1.toFront();
-    }
-
-    private void openDiaryV(MouseEvent event) {
-        OptionsMainDiary.toFront();
-    }
-
     @FXML
     private void backDiary(MouseEvent event) {
         FlowController.getInstance().goMain("ViewMaintenanceOptions");
-    }
-
-    private void completeAppointment(MouseEvent event) {
-        CreateAppointment.toFront();
     }
 
     @FXML
@@ -360,10 +351,20 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         if (r.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Paciente Guardado");
             //limpiar los campos 
+            OptionsSelectPatient.toFront();
         } else {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Error al guardar paciente");
         }
         patientDto = new PatientDto();
+    }
+        private void cleanUpPatient() {
+        namePatMainField1.clear();
+        firstNamePatMainField1.clear();
+        lastNamePatMainField1.clear();
+        emailPatMainField1.clear();
+        datePickerBirthdayPat1.setValue(null);
+        identPatMainField1.clear();
+        gender.selectToggle(null);
     }
 
     PatientDto bindNewPatient() {
@@ -394,7 +395,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         alert.setContentText("¿Quieres crear un nuevo paciente?");
         ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
         if (result == ButtonType.OK) {
-            OptionsMainDiary1.toFront();
+            OptionsMantPatient.toFront();
         } else {
         }
     }
@@ -439,6 +440,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             if (patientDto != null) {
                 nameP.setText(patientDto.getPtName());
                 userLog.setText(userDto.getUsName());
+                OptionsAppoinmentInfo.toFront();
             }
         }
     }
@@ -572,6 +574,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         if (event.getClickCount() == 2) {
             doctorDto = tableViewDoctorsDiary1.getSelectionModel().getSelectedItem();
             textMainDoctor12.setText(doctorDto.getDoctorName());
+            OptionsViewDiary.toFront();
         }
     }
 
@@ -858,6 +861,41 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void back(ActionEvent event) {
+        CreateAppointment.toFront();
+    }
+
+    private void openDiary(ActionEvent event) {
+        OptionsViewDiary.toFront();
+    }
+
+    @FXML
+    private void selectPatient(MouseEvent event) {
+        OptionsSelectPatient.toFront();
+    }
+
+    @FXML
+    private void openAppoinment(ActionEvent event) {
+        OptionsAppoinmentInfo.toFront();
+    }
+
+    @FXML
+    private void backAppointment(ActionEvent event) {
+        OptionsViewDiary.toFront();
+    }
+
+    @FXML
+    private void cleanUpAppointment(ActionEvent event) {
+        nameP.clear();
+        numberP.clear();
+        userLog.clear();
+        email.clear();
+        code.clear();
+        reason.clear();
+        Tou.selectToggle(null);
+    }
+
+    @FXML
+    private void backDiary(ActionEvent event) {
         CreateAppointment.toFront();
     }
 }
