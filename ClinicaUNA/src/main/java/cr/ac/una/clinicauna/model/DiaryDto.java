@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicauna.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 import javafx.beans.property.SimpleIntegerProperty;
 
@@ -15,13 +16,13 @@ public class DiaryDto {
     
     
     public SimpleIntegerProperty dyId;
-    public Date dyDate;
+    public LocalDate dyDate;
     public DoctorDto dyDoctor;
     public SpaceDto dySpace;
 
     public DiaryDto() {
         this.dyId = new SimpleIntegerProperty();
-        this.dyDate = new Date();
+        
         this.dyDoctor = new DoctorDto();
         this.dySpace = new SpaceDto();
     }
@@ -35,11 +36,11 @@ public class DiaryDto {
         this.dyId.set(dyId);
     }
 
-    public Date getDyDate() {
+    public LocalDate getDyDate() {
         return dyDate;
     }
 
-    public void setDyDate(Date dyDate) {
+    public void setDyDate(LocalDate dyDate) {
         this.dyDate = dyDate;
     }
 

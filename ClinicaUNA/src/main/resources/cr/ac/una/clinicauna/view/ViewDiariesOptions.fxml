@@ -479,39 +479,37 @@
                                              <content>
                                                 <BorderPane>
                                                    <center>
-                                                      <AnchorPane fx:id="rootDocDiary" minHeight="0.0" minWidth="0.0" onKeyPressed="#UpdateWorkerEnter" prefHeight="502.0" prefWidth="849.0" />
+                                                      <AnchorPane fx:id="rootDocDiary" minHeight="0.0" minWidth="0.0" onKeyPressed="#UpdateWorkerEnter" prefHeight="502.0" prefWidth="849.0">
+                                                         <children>
+                                                            <ComboBox fx:id="spaces" layoutX="145.0" layoutY="26.0" prefWidth="150.0" />
+                                                            <Text id="Text" fill="#000359" layoutX="14.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Espacios" wrappingWidth="121.12813425064087">
+                                                               <font>
+                                                                  <Font name="Tw Cen MT" size="29.0" />
+                                                               </font>
+                                                            </Text>
+                                                         </children></AnchorPane>
                                                    </center>
                                                    <top>
-                                                      <HBox BorderPane.alignment="CENTER">
+                                                      <HBox alignment="CENTER" prefHeight="52.0" prefWidth="793.0" BorderPane.alignment="CENTER">
                                                          <children>
                                                             <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Medico" wrappingWidth="121.12813425064087">
                                                                <font>
                                                                   <Font name="Tw Cen MT" size="29.0" />
                                                                </font>
                                                             </Text>
-                                                            <Text id="Text" fx:id="textMainDoctor12" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="86.12810373306274">
+                                                            <Text id="Text" fx:id="textMainDoctor12" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="176.12810373306274">
                                                                <font>
                                                                   <Font name="Tw Cen MT" size="29.0" />
                                                                </font>
                                                             </Text>
-                                                            <ComboBox fx:id="spaces" prefWidth="150.0" />
                                                             <HBox alignment="CENTER" />
                                                             <Text id="Text" fx:id="textMainDoctor121" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="62.128103733062744">
                                                                <font>
                                                                   <Font name="Tw Cen MT" size="29.0" />
                                                                </font>
                                                             </Text>
-                                                            <JFXDatePicker />
-                                                         </children>
-                                                      </HBox>
-                                                   </top>
-                                                   <bottom>
-                                                      <HBox BorderPane.alignment="CENTER">
-                                                         <children>
-                                                            <RadioButton fx:id="amRadio1" mnemonicParsing="false" text="AM" />
-                                                            <RadioButton fx:id="pmRadio1" mnemonicParsing="false" text="PM" />
-                                                            <Separator orientation="VERTICAL" prefHeight="9.0" prefWidth="219.0" />
-                                                            <Button mnemonicParsing="false" onAction="#updateAgenda" prefHeight="35.0" prefWidth="123.0" text="%ManActualizar">
+                                                            <JFXDatePicker fx:id="DayPicker" />
+                                                            <Button mnemonicParsing="false" onAction="#lookday" prefHeight="35.0" prefWidth="123.0" text="%ManBuscarDia">
                                                                <font>
                                                                   <Font name="Tw Cen MT" size="16.0" />
                                                                </font>
@@ -521,7 +519,7 @@
                                                             </Button>
                                                          </children>
                                                       </HBox>
-                                                   </bottom>
+                                                   </top>
                                                 </BorderPane>
                                              </content>
                                           </Tab>
