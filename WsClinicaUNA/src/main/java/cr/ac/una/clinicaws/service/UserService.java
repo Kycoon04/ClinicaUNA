@@ -53,27 +53,26 @@ public class UserService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.", "getusuario " + ex.getMessage());
         }
     }
-    
- public Respuesta getUserDoc(Integer drId) {
-    try {
-        Query qryusuario = em.createNamedQuery("Users.findUserByDoctorId", Users.class);
-        qryusuario.setParameter("doctorId", drId);
 
-        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Users", new UsersDto((Users) qryusuario.getSingleResult()));
+    public Respuesta getUserDoc(Integer drId) {
+        try {
+            Query qryusuario = em.createNamedQuery("Users.findUserByDoctorId", Users.class);
+            qryusuario.setParameter("doctorId", drId);
 
-    } catch (NoResultException ex) {//sin resultado
-        return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getusuario NoResultException");
-    } catch (NonUniqueResultException ex) {//mas de un resultado 
-        LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
-        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.", "getusuario NonUniqueResultException");
-    } catch (Exception ex) {// codig de erro en el server 
-        LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
-        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.", "getusuario " + ex.getMessage());
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Users", new UsersDto((Users) qryusuario.getSingleResult()));
+
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getusuario NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.", "getusuario NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.", "getusuario " + ex.getMessage());
+        }
     }
-}
 
-
-     public Respuesta getUserEmail(String usUsername) {
+    public Respuesta getUserEmail(String usUsername) {
         try {
             Query qryusuario = em.createNamedQuery("Users.findByUsUsername", Users.class);
             qryusuario.setParameter("usUsername", usUsername);
@@ -90,6 +89,7 @@ public class UserService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el usuario.", "getusuario " + ex.getMessage());
         }
     }
+
     public Respuesta validateUser(String usuario, String clave) {
         try {
             Query qryActividad = em.createNamedQuery("Users.findByUsuClave", Users.class);
@@ -117,13 +117,15 @@ public class UserService {
                 }
                 user.update(userDto);
                 user = em.merge(user);
+
+            
             } else {
                 user = new Users(userDto);
                 em.persist(user);
+                    Email email = new Email(user.getUsEmail(), "Activacion", "http://localhost:8080/WsClinicaUNA/Activacion.html?Code=" + user.getUsCode());
+                email.envioDeCorreos(email);
             }
-        
-            Email email= new Email(user.getUsEmail(), "Activacion", "http://localhost:8080/WsClinicaUNA/Activacion.html?Code="+user.getUsCode());
-            email.envioDeCorreos(email);
+
             em.flush();
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Users", new UsersDto(user));
         } catch (Exception ex) {
@@ -197,8 +199,7 @@ public class UserService {
         }
     }
 
-    
-       public Respuesta isAdmin(String usuario, String clave) {
+    public Respuesta isAdmin(String usuario, String clave) {
         Users users;
         try {
             if (usuario != null && !clave.isEmpty()) {
@@ -218,7 +219,7 @@ public class UserService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el usuario.", "eliminarusuario " + ex.getMessage());
         }
     }
-        
+
     public Respuesta isTempPas(String usuario, String clave) {
         Users users;
         try {
@@ -240,7 +241,7 @@ public class UserService {
         }
     }
 
-   public Respuesta updatebyEmail(UsersDto usersDto) {
+    public Respuesta updatebyEmail(UsersDto usersDto) {
         Users user;
         try {
             if (usersDto.getUsEmail() != null || usersDto.getUsPassword() != null) {
@@ -261,6 +262,7 @@ public class UserService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el usuario.", "eliminarusuario " + ex.getMessage());
         }
     }
+
     // user.setUsRecover(usersDto.getUsRecover());
     public Respuesta updaterecovery(UsersDto usersDto) {
         Users user;
@@ -272,11 +274,10 @@ public class UserService {
                 user.setUsTemppassword(usersDto.getUsTemppassword());
                 user.setUsRecover(usersDto.getUsRecover());
                 user.setUsPassword(usersDto.getUsTemppassword());
-                
 
-                 Email email= new Email(user.getUsEmail(), "Recuperacion de constraseña","");
-                 email.envioCmbClave(usersDto.getUsTemppassword());
-            
+                Email email = new Email(user.getUsEmail(), "Recuperacion de constraseña", "");
+                email.envioCmbClave(usersDto.getUsTemppassword());
+
                 user = em.merge(user);
                 em.flush();
                 return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
@@ -309,20 +310,18 @@ public class UserService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el tipo de usuario.", "getTipousuario " + ex.getMessage());
         }
     }
-    
-    
-  public Respuesta sendEmail(Email email) {
-    try {
-        if (email != null) {
-            Email emeilD = new Email(email.getDestinationMail(), email.getAsunt(), email.getLink());
-            email.envioDeCorreos(emeilD);
-        }
-        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
-    } catch (Exception ex) {
-        LOG.log(Level.SEVERE, "Ocurrio un error al enviar el correo.", ex);
-        return new Respuesta(false, CodigoRespuesta.CORRECTO, "", "");
-    }
-}
 
-    
+    public Respuesta sendEmail(Email email) {
+        try {
+            if (email != null) {
+                Email emeilD = new Email(email.getDestinationMail(), email.getAsunt(), email.getLink());
+                email.envioDeCorreos(emeilD);
+            }
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al enviar el correo.", ex);
+            return new Respuesta(false, CodigoRespuesta.CORRECTO, "", "");
+        }
+    }
+
 }
