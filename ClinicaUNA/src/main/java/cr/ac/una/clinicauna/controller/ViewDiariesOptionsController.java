@@ -44,6 +44,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -186,10 +187,13 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private TextField code;
     @FXML
     ComboBox<String> spaces = new ComboBox();
+    @FXML
+    private Button btnAgendar;
 
     ToggleGroup Tou = new ToggleGroup();
     ToggleGroup gender = new ToggleGroup();
     AppointmentDto appointmentDto = new AppointmentDto();
+    AppointmentDto appointmentDtoModi = new AppointmentDto();
     private UserDto userDto = new UserDto();
     private DoctorDto doctorDto = new DoctorDto();
     private PatientDto patientDto = new PatientDto();
@@ -205,6 +209,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private ObservableList<DoctorDto> doctorObservableList;
     List<PatientDto> patientList = new ArrayList<>();
     private ObservableList<PatientDto> patientObservableList;
+    private boolean modificarCita = false;
     @FXML
     private BorderPane OptionsViewDiary;
     @FXML
@@ -213,11 +218,13 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private BorderPane OptionsSelectPatient;
     @FXML
     private BorderPane OptionsAppoinmentInfo;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        btnAgendar.setDisable(true);
         MenuView.toFront();
         CreateAppointment.toFront();
         this.tableColPatIdentif1.setCellValueFactory(new PropertyValueFactory("PtIdentification"));
@@ -241,7 +248,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         Cancelled.setToggleGroup(Tou);
         Attended.setToggleGroup(Tou);
         Scheduled.setToggleGroup(Tou);
-        
+
         this.radioBtnFemale1.setToggleGroup(gender);
         this.radioBtnMale1.setToggleGroup(gender);
 
@@ -300,41 +307,77 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void ContinueDetail(ActionEvent event) {
-        List<SpaceDto> espaciosReservados = new ArrayList<>();
-        Respuesta respuesta = null;
-        if (fillAppoiment() && doctorDto != null && DayPicker.getValue() != null) {
-            int espacios = 1;
-            SpaceService service = new SpaceService();
-            DiaryService servicediary = new DiaryService();
-            try {
-                espacios = Integer.parseInt(spaces.getValue());
-            } catch (NumberFormatException e) {
-            }
-            for (int i = 0; i < espacios; i++) {
-                spacesDto = new SpaceDto();
-                spacesDto.setSeId(0);
-                spacesDto.setSeAppointment(appointmentDto);
-                String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
-                spacesDto.setSeHour(horaFormateada);
-                respuesta = service.saveSpace(spacesDto);
-            }
-            espaciosReservados = service.getSpace();
-            espaciosReservados = espaciosReservados.stream().filter(x -> x.getSeAppointment().getAtId() == appointmentDto.getAtId()).toList();
-            for (int i = 0; i < espacios; i++) {
-                diaryDto.setDyId(0);
-                diaryDto.setDyDoctor(doctorDto);
-                diaryDto.setDyDate(DayPicker.getValue());
-                diaryDto.setDySpace(espaciosReservados.get(i));
-                respuesta = servicediary.saveDiary(diaryDto);
-                if (respuesta.getEstado()) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "diario Registrada");
-                } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "diario No se pudo Registrar");
+        if (!modificarCita) {
+            List<SpaceDto> espaciosReservados = new ArrayList<>();
+            Respuesta respuesta = null;
+            if (fillAppoiment() && doctorDto != null && DayPicker.getValue() != null) {
+                int espacios = 1;
+                SpaceService service = new SpaceService();
+                DiaryService servicediary = new DiaryService();
+                try {
+                    espacios = Integer.parseInt(spaces.getValue());
+                } catch (NumberFormatException e) {
                 }
+                for (int i = 0; i < espacios; i++) {
+                    spacesDto = new SpaceDto();
+                    spacesDto.setSeId(0);
+                    spacesDto.setSeAppointment(appointmentDto);
+                    String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
+                    spacesDto.setSeHour(horaFormateada);
+                    respuesta = service.saveSpace(spacesDto);
+                }
+                espaciosReservados = service.getSpace();
+                espaciosReservados = espaciosReservados.stream().filter(x -> x.getSeAppointment().getAtId() == appointmentDto.getAtId()).toList();
+                for (int i = 0; i < espacios; i++) {
+                    diaryDto.setDyId(0);
+                    diaryDto.setDyDoctor(doctorDto);
+                    diaryDto.setDyDate(DayPicker.getValue());
+                    diaryDto.setDySpace(espaciosReservados.get(i));
+                    respuesta = servicediary.saveDiary(diaryDto);
+                    if (respuesta.getEstado()) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "diario Registrada");
+                    } else {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "diario No se pudo Registrar");
+                    }
+                }
+                lookday(event);
+                appointmentDto = new AppointmentDto();
+                spacesDto = new SpaceDto();
+                diaryDto = new DiaryDto();
             }
-            lookday(event);
+        } else {
+            AppointmentService service = new AppointmentService();
+            Respuesta respuesta = null;
+
+            appointmentDtoModi.setAtReason(reason.getText());
+            Long numLong = Long.parseLong(numberP.getText());
+            appointmentDtoModi.setAtTelephone(numLong);
+            appointmentDtoModi.setAtEmail(email.getText());
+            if (Scheduled.isSelected()) {
+                appointmentDtoModi.setAtState("Programada");
+            } else if (Attended.isSelected()) {
+                appointmentDtoModi.setAtState("Atendida");
+            } else if (Cancelled.isSelected()) {
+                appointmentDtoModi.setAtState("Cancelada");
+            } else {
+                appointmentDtoModi.setAtState("Ausente");
+            }
+            respuesta = service.saveAppointment(appointmentDtoModi);
+            if (respuesta.getEstado()) {
+                lookday(event);
+                cleanUpAppointment(event);
+                modificarCita = false;
+                nameP.setDisable(false);
+                userLog.setDisable(false);
+                code.setDisable(false);
+                OptionsViewDiary.toFront();
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita modificada");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita No modificada");
+            }
         }
     }
+
     @FXML
     private void backDiary(MouseEvent event) {
         FlowController.getInstance().goMain("ViewMaintenanceOptions");
@@ -344,9 +387,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private void UpdatePatient(ActionEvent event) {
         PatientService patient = new PatientService();
         Respuesta r = null;
-            r = patient.savePatient(bindNewPatient());
-            fillTablePatient();
-            patientDto = new PatientDto();
+        r = patient.savePatient(bindNewPatient());
+        fillTablePatient();
+        patientDto = new PatientDto();
 
         if (r.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Paciente Guardado");
@@ -357,7 +400,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
         patientDto = new PatientDto();
     }
-        private void cleanUpPatient() {
+
+    private void cleanUpPatient() {
         namePatMainField1.clear();
         firstNamePatMainField1.clear();
         lastNamePatMainField1.clear();
@@ -545,6 +589,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         });
         filteredPatient(filteredPatient);
     }
+
     @FXML
     private void searchDoctor_Name(KeyEvent event) {
     }
@@ -769,6 +814,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 columnIdx++;
             }
         }
+        btnAgendar.setDisable(false);
     }
 
     @Override
@@ -776,7 +822,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
 
 
-    Predicate<DiaryDto> pDoctor = x -> x.getDyDoctor().getDoctorName().equals(doctorDto.getDoctorName());
 
     public Node getNodeFromGridPane(GridPane gridPane, int row, int col) {
         for (Node node : gridPane.getChildren()) {
@@ -816,7 +861,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
         return 0;
     }
-
+    Predicate<DiaryDto> pDoctor = x -> x.getDyDoctor().getDoctorName().equals(doctorDto.getDoctorName());
+    Predicate<DiaryDto> pCancelada = x -> !x.getDySpace().getSeAppointment().getAtState().equals("Cancelada");
     @FXML
     private void lookday(ActionEvent event) {
         if (DiaryPane != null) {
@@ -841,13 +887,19 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             List<DiaryDto> AgendaCompleta = diario.getDiary();
             eventAgendDoct();
             if (AgendaCompleta != null) {
-                AgendaCompleta = AgendaCompleta.stream().filter(pDoctor.and(x -> x.getDyDate().equals(DayPicker.getValue()))).toList();
+                AgendaCompleta = AgendaCompleta.stream().filter(pCancelada.and(pDoctor.and(x -> x.getDyDate().equals(DayPicker.getValue())))).toList();
 
                 for (int i = 0; i < AgendaCompleta.size(); i++) {
                     fila = findFila(AgendaCompleta.get(i), iniHora, finHora);
                     columna = findColumna(AgendaCompleta.get(i));
-                    Label label = new Label("Cita de " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
-                    label.setStyle("-fx-font-size: 15");
+                    Label label = new Label("Cita / " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
+                    CargarColor(label, AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
+                    label.setUserData(AgendaCompleta.get(i).getDySpace().getSeAppointment());
+
+                    label.setOnMouseClicked(eventClicked -> {
+                        ModificarCita((AppointmentDto) label.getUserData());
+                    });
+
                     DiaryPane.setColumnSpan(label, 1);
                     DiaryPane.setRowSpan(label, 1);
                     DiaryPane.setColumnIndex(label, columna);
@@ -856,6 +908,57 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                     citasAgregadaDBsList.add(label);
                 }
             }
+        }
+    }
+
+    public void ModificarCita(AppointmentDto cita) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Modificar Cita");
+        alert.setHeaderText(null);
+        alert.setContentText("¿Quieres modificar esta cita?");
+        ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
+        if (result == ButtonType.OK) {
+            appointmentDtoModi = cita;
+            modificarCita = true;System.out.println(appointmentDtoModi.getAtCode());
+            nameP.setText(appointmentDtoModi.getAtPatient().getPtName());
+            userLog.setText(appointmentDtoModi.getAtUserregister().getUsName());
+            numberP.setText(String.valueOf(appointmentDtoModi.getAtTelephone()));
+            email.setText(appointmentDtoModi.getAtEmail());
+            code.setText(appointmentDtoModi.getAtCode());
+            reason.setText(appointmentDtoModi.getAtReason());
+            switch (appointmentDtoModi.getAtState()) {
+                case "Programada":
+                    Scheduled.setSelected(true);
+                    break;
+                case "Atendida":
+                    Attended.setSelected(true);
+                    break;
+                case "Ausente":
+                    Absent.setSelected(true);
+                    break;
+                case "Cancelada":
+                    Cancelled.setSelected(true);
+                    break;
+            }
+            nameP.setDisable(true);
+            userLog.setDisable(true);
+            code.setDisable(true);
+            OptionsAppoinmentInfo.toFront();
+        } else {
+        }
+    }
+
+    public void CargarColor(Label label, String estado) {
+        switch (estado) {
+            case "Programada":
+                label.setStyle("-fx-font-size: 15; -fx-background-color: yellow;");
+                break;
+            case "Atendida":
+                label.setStyle("-fx-font-size: 15; -fx-background-color: green;");
+                break;
+            case "Ausente":
+                label.setStyle("-fx-font-size: 15; -fx-background-color: red;");
+                break;
         }
     }
 
@@ -875,11 +978,17 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void openAppoinment(ActionEvent event) {
+        modificarCita = false;
         OptionsAppoinmentInfo.toFront();
     }
 
     @FXML
     private void backAppointment(ActionEvent event) {
+        cleanUpAppointment(event);
+        modificarCita = false;
+        nameP.setDisable(false);
+        userLog.setDisable(false);
+        code.setDisable(false);
         OptionsViewDiary.toFront();
     }
 
