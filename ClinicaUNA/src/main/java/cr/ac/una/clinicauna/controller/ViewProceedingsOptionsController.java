@@ -9,10 +9,12 @@ import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.ExamDto;
 import cr.ac.una.clinicauna.model.PatientDto;
+import cr.ac.una.clinicauna.model.PersonalbackgroundDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.ExamService;
+import cr.ac.una.clinicauna.service.PersonalbackgroundService;
 import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
@@ -102,11 +104,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldSearchPersBg_Context;
     @FXML
-    private TableView<?> tableViewPersonalBg;
+    private TableView<PersonalbackgroundDto> tableViewPersonalBg;
     @FXML
-    private TableColumn<?, ?> tableColPersBgType;
+    private TableColumn<PersonalbackgroundDto, String> tableColPersBgType;
     @FXML
-    private TableColumn<?, ?> tableColPersBgContext;
+    private TableColumn<PersonalbackgroundDto, String> tableColPersBgContext;
     @FXML
     private TextField textFieldFamBgRelationship;
     @FXML
@@ -227,7 +229,12 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     List<ExamDto> examList = new ArrayList<>();
     private ObservableList<DoctorDto> doctorObservableList;
     private ObservableList<ExamDto> examsObservableList;
-
+    
+    PersonalbackgroundDto personalBkDto= new PersonalbackgroundDto();
+    List<PersonalbackgroundDto> personalBaList = new ArrayList<>();
+    private ObservableList<PersonalbackgroundDto> personalBackObservableList;
+ 
+    
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**
      * Initializes the controller class.
@@ -256,10 +263,18 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         this.tableColDeseaseId.setCellValueFactory(new PropertyValueFactory("DsId"));
         this.tableColDeseaseName.setCellValueFactory(new PropertyValueFactory("DsName"));
 
+        this.tableColPersBgType.setCellValueFactory(new PropertyValueFactory("PbType"));
+        this.tableColPersBgContext.setCellValueFactory(new PropertyValueFactory("PbContext"));
+        
+
+    
+    
+    
         bindPatient();
         fillTableExams();
         fillTableDoctors();
         fillTableDiseases();
+        fillTablePersonalBack();
         nameDistMainField.setTextFormatter(Formato.getInstance().letrasFormat(10));
     }
 
@@ -290,6 +305,20 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                 this.tableViewExamns.setItems(examsObservableList);
             }
         }
+    }
+    
+     private void fillTablePersonalBack() {
+        PersonalbackgroundService service = new PersonalbackgroundService();
+         personalBaList= service.getPersonalbackgrounds();
+       
+        if (personalBaList == null) {
+            System.out.println("nula");
+        } else {
+            personalBackObservableList = FXCollections.observableArrayList(personalBaList);
+            this.tableViewPersonalBg.refresh();
+            this.tableViewPersonalBg.setItems(personalBackObservableList);
+        }
+       
     }
 
     @FXML
@@ -499,8 +528,40 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void updatePersonalBg(ActionEvent event) {
+       //traer el expeduiente actual
+        ProceedingsService serviceProced = new ProceedingsService();
+        Respuesta proceding = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
+        proceedingsDto= (ProceedingsDto) proceding.getResultado("Proceedings");
+        
+        if(proceedingsDto!=null){
+        savePersonalBackground();
+        }else{
+            
+        }
+        
+        System.out.println("Hola");
     }
 
+    private void savePersonalBackground(){
+        PersonalbackgroundService service= new PersonalbackgroundService();
+       
+        personalBkDto.setPbId(0);
+        // se debe cragar esto textFieldPersBgType.getText()
+        //debe ser un tipo choicebox
+        personalBkDto.setPbType("Pathological");
+        personalBkDto.setPbContext(textAreaPersBgContext.getText());
+        Respuesta personalBac= service.savePersonalbackground(personalBkDto);
+        
+        if(personalBac.getEstado()){
+            System.out.println("Se guardo");
+            fillTablePersonalBack();
+        }else{
+            System.out.println("Error");
+        }
+        
+    }
+    
+    
     @FXML
     private void personalBgClicked(MouseEvent event) {
     }

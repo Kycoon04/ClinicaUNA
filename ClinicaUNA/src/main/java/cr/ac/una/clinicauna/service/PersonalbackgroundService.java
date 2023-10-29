@@ -74,10 +74,10 @@ public class PersonalbackgroundService {
     public List<PersonalbackgroundDto> getPersonalbackgrounds() {
         try {
             Map<String, Object> parametros = new HashMap<>();
-            Request request = new Request("ModulePBackground/pBackground", "", parametros);
+            Request request = new Request("ModulePBackground/pBackgrounds", "", parametros);
             request.get();
             if (request.isError()) {
-                System.out.println(request.getError());
+               
                 return null;
             }
             return (List<PersonalbackgroundDto>) request.readEntity(new GenericType<List<PersonalbackgroundDto>>() {
@@ -87,6 +87,7 @@ public class PersonalbackgroundService {
             return null;
         }
     }
+    
     
     
 }

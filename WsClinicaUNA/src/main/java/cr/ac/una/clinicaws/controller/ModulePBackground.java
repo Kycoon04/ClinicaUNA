@@ -32,6 +32,7 @@ import java.util.logging.Logger;
  *
  * @author jomav
  */
+
 @Path("/ModulePBackground")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -86,6 +87,7 @@ public class ModulePBackground {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Personal Background").build();
         }
     }
+    
     @GET
     @Path("/pBackgrounds")
     public Response getPBackgrounds() {

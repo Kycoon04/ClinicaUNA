@@ -18,9 +18,9 @@ public class PProceedingsDto {
     }
 
     public PProceedingsDto(PProceedings PProceedings) {
-    ppId = PProceedings.getPpId();
-    ppPersonalback = PProceedings.getPpPersonalback();
-    ppProceedings = PProceedings.getPpProceedings();
+        ppId = PProceedings.getPpId();
+        ppPersonalback = PProceedings.getPpPersonalback();
+        ppProceedings = PProceedings.getPpProceedings();
     }
 
     public Integer getPpId() {
