@@ -18,6 +18,7 @@ import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 /**
  *
@@ -40,8 +41,8 @@ public class Diary implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "DY_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dyDate;
+    //@Temporal(TemporalType.TIMESTAMP)
+    private LocalDate dyDate;
     @JoinColumn(name = "DY_DOCTOR", referencedColumnName = "DR_ID")
     @ManyToOne(optional = false)
     private Doctor dyDoctor;
@@ -66,7 +67,7 @@ public class Diary implements Serializable {
    
     }
 
-    public Diary(Integer dyId, Date dyDate) {
+    public Diary(Integer dyId, LocalDate dyDate) {
         this.dyId = dyId;
         this.dyDate = dyDate;
     }
@@ -79,11 +80,11 @@ public class Diary implements Serializable {
         this.dyId = dyId;
     }
 
-    public Date getDyDate() {
+    public LocalDate getDyDate() {
         return dyDate;
     }
 
-    public void setDyDate(Date dyDate) {
+    public void setDyDate(LocalDate dyDate) {
         this.dyDate = dyDate;
     }
 

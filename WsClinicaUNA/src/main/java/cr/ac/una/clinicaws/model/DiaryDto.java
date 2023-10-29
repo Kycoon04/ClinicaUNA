@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicaws.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -14,7 +15,7 @@ public class DiaryDto {
 
     private Integer dyId;
  
-    private Date dyDate;
+    private LocalDate dyDate;
 
     private Doctor dyDoctor;
 
@@ -37,11 +38,11 @@ public class DiaryDto {
         this.dyId = dyId;
     }
 
-    public Date getDyDate() {
+    public LocalDate getDyDate() {
         return dyDate;
     }
 
-    public void setDyDate(Date dyDate) {
+    public void setDyDate(LocalDate dyDate) {
         this.dyDate = dyDate;
     }
 

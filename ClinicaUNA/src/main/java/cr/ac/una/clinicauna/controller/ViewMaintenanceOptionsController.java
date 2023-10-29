@@ -73,8 +73,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private BorderPane OptionsMainUsersView;
     @FXML
-    private TabPane tabPaneMantWorkers;
-    @FXML
     private TextField userMainField;
     @FXML
     private TextField psurnameMainField;
@@ -118,8 +116,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private Button BtndeleteWorker;
     @FXML
     private Tab tabMantUsers;
-    @FXML
-    private TabPane tabPaneMantWorkers1;
     @FXML
     private Tab tabManDoctors;
     @FXML
@@ -206,8 +202,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private BorderPane OptionsMainPatientView;
     @FXML
-    private TabPane tabPaneMantWorkers2;
-    @FXML
     private Tab tabMantPatient;
     @FXML
     private RadioButton radioBtnMale;
@@ -269,6 +263,17 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     UserDto usrIdiom = (UserDto) AppContext.getInstance().get("Usuario");
     @FXML
     private TextField SpacesDocMainField1;
+    @FXML
+    private TabPane tabPaneMantPatient;
+    @FXML
+    private TabPane tabPaneMantUsers;
+    @FXML
+    private TabPane tabPaneMantDoctors;
+    @FXML
+    private RadioButton rdBtnUserActive;
+    @FXML
+    private RadioButton rdBtnUserInactive;
+    public static ToggleGroup userActive;
 
     /**
      * Initializes the controller class.
@@ -287,6 +292,9 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         gender = new ToggleGroup();
         this.radioBtnMale.setToggleGroup(gender);
         this.radioBtnFemale.setToggleGroup(gender);
+        userActive = new ToggleGroup();
+        this.rdBtnUserActive.setToggleGroup(userActive);
+        this.rdBtnUserInactive.setToggleGroup(userActive);
         this.tableColAct.setCellValueFactory(new PropertyValueFactory("UsSState"));
         this.tableColIdentif.setCellValueFactory(new PropertyValueFactory("UsIdentification"));
         this.tableColName.setCellValueFactory(new PropertyValueFactory("UsName"));
@@ -350,7 +358,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         UserService service = new UserService();
         userList = service.getUsers();
         if (userList.isEmpty()) {
-
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "No hay ningun Usuario", getStage(), "");
         } else {
             userObservableList = FXCollections.observableArrayList(userList);
@@ -414,10 +421,33 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void UpdateUser(ActionEvent event) {
+        Respuesta response;
         if (userDto != null && !choiceBoxJobsTypes.getValue().equals("Doctor")) {
             UserDto us = new UserDto();
             UserService service = new UserService();
-            service.saveUser(bindNewUser());
+            response = service.saveUser(bindNewUser());
+            if (response.getEstado()) {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Usuario", getStage(), "Usuario guardado");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save User", getStage(), "Saved user");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer l'utilisateur", getStage(), "Utilisateur enregistré");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "ユーザーを保存する", getStage(), "保存されたユーザー");
+                }
+                cleanUpUser();
+            } else {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Usuario", getStage(), "Error al guardar");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Save User", getStage(), "Error when saving");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Enregistrer l'utilisateur", getStage(), "Erreur lors de l'enregistrement");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "ユーザーを保存する", getStage(), "保存時のエラー");
+                }
+            }
 
             // hacer la respuesta
         } else {
@@ -447,6 +477,13 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         userDto.setUsState(userDto.getUsState());
         userDto.setUsType(choiceBoxJobsTypes.getValue());
         userDto.setUsIdentification(identMainField.getText());
+        if (rdBtnUserActive.isSelected()) {
+            userDto.setUsState("A");
+        } else {
+            if (rdBtnUserInactive.isSelected()) {
+                userDto.setUsState("I");
+            }
+        }
         return userDto;
     }
 
@@ -607,6 +644,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         if (event.getClickCount() == 2) {
             userDto = tableViewUser.getSelectionModel().getSelectedItem();
             fillUser(userDto);
+            tabPaneMantUsers.getSelectionModel().select(tabMantUsers);
             System.out.println(userDto.getUsName());
         }
     }
@@ -619,6 +657,13 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         emailMainField.setText(user.getUsUsername());
         identMainField.setText(user.getUsIdentification());
         choiceBoxJobsTypes.setValue(user.getUsType());
+        if (user.getUsState().equals("A")) {
+            rdBtnUserActive.setSelected(true);
+        } else {
+            if (user.getUsState().equals("I")) {
+                rdBtnUserInactive.setSelected(true);
+            }
+        }
     }
 
     DoctorDto bindNewDoctor() {
@@ -672,11 +717,12 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void UpdateDoctor(ActionEvent event) {
+        Respuesta response = null;
         if (userDoctor) {
             UserService service = new UserService();
             service.saveUser(bindNewUser());
             DoctorService serviceD = new DoctorService();
-            serviceD.saveDoctor(bindNewDoctor());
+            response = serviceD.saveDoctor(bindNewDoctor());
             fillTableUsers();
             fillTableDoctors();
             userDoctor = false;
@@ -684,9 +730,31 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         } else {
             if (doctorDto != null) {
                 DoctorService serviceD = new DoctorService();
-                serviceD.saveDoctor(bindNewDoctor());
+                response = serviceD.saveDoctor(bindNewDoctor());
                 fillTableDoctors();
                 doctorDto = new DoctorDto();
+            }
+        }
+        if (response.getEstado()) {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Doctor guardado");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Doctor", getStage(), "Saved doctor");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Sauver le docteur", getStage(), "Docteur sauvé");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "医者を救う", getStage(), "救われた医師");
+            }
+            cleanUpDoctor();
+        } else {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Doctor", getStage(), "Error al guardar");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Save Doctor", getStage(), "Error when saving");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Sauver le docteur", getStage(), "Erreur lors de l'enregistrement");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "医者を救う", getStage(), "保存時のエラー");
             }
         }
     }
@@ -858,6 +926,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         } else if (event.getClickCount() == 2) {
             doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
             fillDoctors(doctorDto);
+            tabPaneMantDoctors.getSelectionModel().select(tabManDoctors);
 
         }
     }
@@ -898,12 +967,29 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         }
 
         if (r.getEstado()) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Paciente Guardado");
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Paciente", getStage(), "Paciente guardado");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Patient", getStage(), "Saved patient");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Sauver un patient", getStage(), "Patient sauvé");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "患者を救う", getStage(), "救われた患者");
+            }
             cleanUpPatient();
+            patientDto = null;
         } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Error al guardar paciente");
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Paciente", getStage(), "Error al guardar");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Save Patient", getStage(), "Error when saving");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Sauver un patient", getStage(), "Erreur lors de l'enregistrement");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "患者を救う", getStage(), "保存時のエラー");
+            }
         }
-        patientDto = null;
+
     }
 
     @FXML
@@ -1033,6 +1119,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             patientDto = tableViewPatient.getSelectionModel().getSelectedItem();
             if (patientDto != null) {
                 fillPatient(patientDto);
+                tabPaneMantPatient.getSelectionModel().select(tabMantPatient);
             }
         }
     }
@@ -1094,6 +1181,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         emailMainField.clear();
         identMainField.clear();
         choiceBoxJobsTypes.setValue(null);
+        rdBtnUserActive.setSelected(false);
+        rdBtnUserInactive.setSelected(false);
     }
 
     @FXML

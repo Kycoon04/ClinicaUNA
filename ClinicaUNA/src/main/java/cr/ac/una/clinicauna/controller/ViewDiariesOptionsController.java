@@ -7,12 +7,14 @@ package cr.ac.una.clinicauna.controller;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.AppointmentDto;
+import cr.ac.una.clinicauna.model.DiaryDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.SpaceDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.AppointmentService;
+import cr.ac.una.clinicauna.service.DiaryService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.PatientService;
 import cr.ac.una.clinicauna.service.SpaceService;
@@ -155,13 +157,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private RadioButton amRadio;
     @FXML
     private RadioButton pmRadio;
-    private String matrizAgenda[][] = new String[15][8];
-
-    List<DoctorDto> doctorList = new ArrayList<>();
-    private ObservableList<DoctorDto> doctorObservableList;
-
-    List<PatientDto> patientList = new ArrayList<>();
-    private ObservableList<PatientDto> patientObservableList;
     @FXML
     private Tab tabPatient;
     @FXML
@@ -170,12 +165,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private Tab tabDiary;
     @FXML
     private Text textMainDoctor11;
-    AppointmentDto appointmentDto = new AppointmentDto();
-    private UserDto userDto = new UserDto();
-    private DoctorDto doctorDto = new DoctorDto();
-    private PatientDto patientDto = new PatientDto();
-    private DiseaseDto diseaseDto = new DiseaseDto();
-
     @FXML
     private TextField nameP;
     @FXML
@@ -194,11 +183,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private RadioButton Cancelled;
     @FXML
     private RadioButton Absent;
-    ToggleGroup Hour = new ToggleGroup();
-    ToggleGroup Tou = new ToggleGroup();
-    @FXML
-    ComboBox<String> spaces = new ComboBox();
-
     @FXML
     private BorderPane OptionsMainDiary1;
     @FXML
@@ -257,29 +241,38 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private Tab newPatientAppoiment;
     @FXML
     private BorderPane CreateAppointment;
-    private YearMonth currentYearMonth;
-    private JFXTimePicker iniHour;
-    private JFXTimePicker endHour;
     @FXML
     private AnchorPane rootDocDiary;
     @FXML
     private Text textMainDoctor12;
     @FXML
-    private RadioButton amRadio1;
-    @FXML
-    private RadioButton pmRadio1;
-
+    private JFXDatePicker DayPicker;
     @FXML
     private TableColumn<DoctorDto, String> tableColDocSpaces11;
-    private List<Label> citasAgregadasList = new ArrayList<>();
-    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-    SpaceDto spacesDto = new SpaceDto();
     @FXML
     private Text textMainDoctor121;
-    List<LocalTime> horasAgregadas = new ArrayList<>();
     @FXML
     private TextField code;
+    @FXML
+    ComboBox<String> spaces = new ComboBox();
 
+    ToggleGroup Tou = new ToggleGroup();
+    AppointmentDto appointmentDto = new AppointmentDto();
+    private UserDto userDto;
+    private DoctorDto doctorDto;
+    private PatientDto patientDto;
+    private DiaryDto diaryDto = new DiaryDto();
+    GridPane DiaryPane;
+    SpaceDto spacesDto = new SpaceDto();
+    private List<Label> citasAgregadasList = new ArrayList<>();
+    private List<Label> citasAgregadaDBsList = new ArrayList<>();
+    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    List<LocalTime> horasAgregadas = new ArrayList<>();
+    private String matrizAgenda[][] = new String[15][8];
+    List<DoctorDto> doctorList = new ArrayList<>();
+    private ObservableList<DoctorDto> doctorObservableList;
+    List<PatientDto> patientList = new ArrayList<>();
+    private ObservableList<PatientDto> patientObservableList;
     /**
      * Initializes the controller class.
      */
@@ -311,14 +304,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         this.tableColDocFolio11.setCellValueFactory(new PropertyValueFactory("DrFol"));
         this.tableColDocIniWork11.setCellValueFactory(new PropertyValueFactory("DrIniworking"));
         this.tableColDocCode11.setCellValueFactory(new PropertyValueFactory("DrCode"));
-        // this.tableColDocSpaces11.setCellFactory(new PropertyValueFactory("DrSpaces"));
 
         Absent.setToggleGroup(Tou);
         Cancelled.setToggleGroup(Tou);
         Attended.setToggleGroup(Tou);
         Scheduled.setToggleGroup(Tou);
-        amRadio1.setToggleGroup(Hour);
-        pmRadio1.setToggleGroup(Hour);
 
         ObservableList<String> items = FXCollections.observableArrayList(
                 "1",
@@ -337,11 +327,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         return IntStream.rangeClosed(startYear, endYear).boxed().toArray(Integer[]::new);
     }
 
-    private void fillAppoiment() {
+    private boolean fillAppoiment() {
         Respuesta r = null;
         AppointmentService service = new AppointmentService();
         this.userDto = (UserDto) AppContext.getInstance().get("Usuario");
-        if (userDto != null && patientDto != null) {
+        if (userDto != null && patientDto != null && !code.getText().isEmpty()) {
             appointmentDto.setAtCode(code.getText());
             appointmentDto.setAtPatient(patientDto);
             appointmentDto.setAtUserregister(userDto);
@@ -359,41 +349,55 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 appointmentDto.setAtState("Ausente");
             }
             r = service.saveAppointment(appointmentDto);
-        }
-        if (r.getEstado()) {
-            appointmentDto = (AppointmentDto) r.getResultado("Appointments");
-            System.out.println("id: " + appointmentDto.getAtId());
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita Registrada");
+            if (r.getEstado()) {
+                appointmentDto = (AppointmentDto) r.getResultado("Appointments");
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita Registrada");
+                return true;
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita No se pudo Registrar");
+                return false;
+            }
         } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita No se pudo Registrar");
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Complete la informacion");
+            return false;
         }
     }
 
     @FXML
     private void ContinueDetail(ActionEvent event) {
+        List<SpaceDto> espaciosReservados = new ArrayList<>();
         Respuesta respuesta = null;
-        fillAppoiment();
-        int espacios = 1;
-        SpaceService service = new SpaceService();
-        try {
-            espacios = Integer.parseInt(spaces.getValue());
-        } catch (NumberFormatException e) {}
-
-        for (int i = 0; i < espacios; i++) {
-            spacesDto = new SpaceDto();
-            spacesDto.setSeId(0);
-            spacesDto.setSeAppointment(appointmentDto);
-            String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
-            spacesDto.setSeHour(horaFormateada);
-            System.out.println("id: " + appointmentDto.getAtId());
-            System.out.println("hora: " + horaFormateada);
-            respuesta = service.saveSpace(spacesDto);
-            if (respuesta.getEstado()) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Espacio Registrada");
-            } else {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Espacio No se pudo Registrar");
-                return;
+        if (fillAppoiment() && doctorDto != null && DayPicker.getValue() != null) {
+            int espacios = 1;
+            SpaceService service = new SpaceService();
+            DiaryService servicediary = new DiaryService();
+            try {
+                espacios = Integer.parseInt(spaces.getValue());
+            } catch (NumberFormatException e) {
             }
+            for (int i = 0; i < espacios; i++) {
+                spacesDto = new SpaceDto();
+                spacesDto.setSeId(0);
+                spacesDto.setSeAppointment(appointmentDto);
+                String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
+                spacesDto.setSeHour(horaFormateada);
+                respuesta = service.saveSpace(spacesDto);
+            }
+            espaciosReservados = service.getSpace();
+            espaciosReservados = espaciosReservados.stream().filter(x -> x.getSeAppointment().getAtId() == appointmentDto.getAtId()).toList();
+            for (int i = 0; i < espacios; i++) {
+                diaryDto.setDyId(0);
+                diaryDto.setDyDoctor(doctorDto);
+                diaryDto.setDyDate(DayPicker.getValue());
+                diaryDto.setDySpace(espaciosReservados.get(i));
+                respuesta = servicediary.saveDiary(diaryDto);
+                if (respuesta.getEstado()) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "diario Registrada");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "diario No se pudo Registrar");
+                }
+            }
+            lookday(event);
         }
     }
 
@@ -675,7 +679,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private void doctorDiaryClicked(MouseEvent event) {
         if (event.getClickCount() == 2) {
             doctorDto = tableViewDoctorsDiary1.getSelectionModel().getSelectedItem();
-            eventAgendDoct();
             textMainDoctor12.setText(doctorDto.getDoctorName());
         }
     }
@@ -688,11 +691,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         int horaInicioInt = Integer.parseInt(partesInicio[0]);
         int horaFinInt = Integer.parseInt(partesFin[0]);
-
-        GridPane DiaryPane = createWeekCalendarWithHeaders(horaInicioInt, horaFinInt, doctorDto.getDrSpaces());
+        DiaryPane = createWeekCalendarWithHeaders(horaInicioInt, horaFinInt, doctorDto.getDrSpaces());
         DiaryPane.setPrefSize(rootDocDiary.getPrefWidth() / 2 + 500, rootDocDiary.getPrefHeight() / 2 + 180);
         DiaryPane.setGridLinesVisible(true);
-
+        DiaryPane.getChildren().removeAll(citasAgregadasList);
+        citasAgregadasList.clear();
         AnchorPane.setTopAnchor(DiaryPane, (rootDocDiary.getHeight() - DiaryPane.getPrefHeight()) / 2);
         AnchorPane.setLeftAnchor(DiaryPane, (rootDocDiary.getWidth() - DiaryPane.getPrefWidth()) / 2);
 
@@ -838,7 +841,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         int citasAgregadas = 0;
         int startColumn = GridPane.getColumnIndex(cellLabel);
-        int columnIdx = 1;
+        int columnIdx = startColumn;
         int rowIndex = GridPane.getRowIndex(cellLabel);
 
         while (citasAgregadas < maxCitas) {
@@ -853,8 +856,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             citasAgregadasList.add(label);
 
             LocalTime horaActual = null;
-            if (citasAgregadas < min.length) {
-                horaActual = LocalTime.of(hour, Integer.parseInt(min[citasAgregadas]));
+            if (citasAgregadas <= min.length) {
+                horaActual = LocalTime.of(hour, Integer.parseInt(min[columnIdx - 1]));
                 horasAgregadas.add(horaActual);
             }
 
@@ -865,26 +868,104 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
                     break;
                 }
-
                 columnIdx = 1;
                 rowIndex++;
+                hour++;
             } else {
                 columnIdx++;
             }
-        }
-        for (LocalTime horaAgregada : horasAgregadas) {
-            String horaFormateada = horaAgregada.format(timeFormatter);
-            System.out.println("Hora agregada: " + horaFormateada);
         }
     }
 
     @Override
     public void initialize() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @FXML
     private void selectDiary(MouseEvent event) {
+
     }
 
+    Predicate<DiaryDto> pDoctor = x -> x.getDyDoctor().getDoctorName().equals(doctorDto.getDoctorName());
+
+    public Node getNodeFromGridPane(GridPane gridPane, int row, int col) {
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == col) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    public int findColumna(DiaryDto p) {
+        for (int i = 1; i <= doctorDto.getDrSpaces(); i++) {
+            Node node = getNodeFromGridPane(DiaryPane, 0, i);
+
+            if (node instanceof Label) {
+                Label label = (Label) node;
+                String labelText = label.getText();
+                if (p.getDySpace().getSeHour().substring(3, 5).equals(labelText)) {
+                    return i;
+                }
+            }
+        }
+        return 0;
+    }
+
+    public int findFila(DiaryDto p, int iniHora, int finHora) {
+        for (int i = iniHora; i <= finHora; i++) {
+            Node node = getNodeFromGridPane(DiaryPane, i - iniHora + 1, 0);
+
+            if (node instanceof Label) {
+                Label label = (Label) node;
+                String labelText = label.getText().substring(0, 2);
+                if (p.getDySpace().getSeHour().substring(0, 2).equals(labelText)) {
+                    return i - iniHora + 1;
+                }
+            }
+        }
+        return 0;
+    }
+
+    @FXML
+    private void lookday(ActionEvent event) {
+        if (DiaryPane != null) {
+            DiaryPane.getChildren().removeAll(citasAgregadasList);
+            citasAgregadasList.clear();
+            DiaryPane.getChildren().removeAll(citasAgregadaDBsList);
+            citasAgregadaDBsList.clear();
+        }
+        String horaInicio = doctorDto.getDrIniworking();
+        String horaFin = doctorDto.getDrFinisworking();
+        String[] partesInicio = horaInicio.split(":");
+        String[] partesFin = horaFin.split(":");
+        int iniHora = Integer.parseInt(partesInicio[0]);
+        int finHora = Integer.parseInt(partesFin[0]);
+
+        int fila = 0;
+        int columna = 0;
+        if (DayPicker.getValue() == null) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Error", getStage(), "Debes Seleccionar un dia");
+        } else {
+            DiaryService diario = new DiaryService();
+            List<DiaryDto> AgendaCompleta = diario.getDiary();
+            eventAgendDoct();
+            if (AgendaCompleta != null) {
+                AgendaCompleta = AgendaCompleta.stream().filter(pDoctor.and(x -> x.getDyDate().equals(DayPicker.getValue()))).toList();
+
+                for (int i = 0; i < AgendaCompleta.size(); i++) {
+                    fila = findFila(AgendaCompleta.get(i), iniHora, finHora);
+                    columna = findColumna(AgendaCompleta.get(i));
+                    Label label = new Label("Cita de " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtPatient().getPtName());
+                    label.setStyle("-fx-font-size: 15");
+                    DiaryPane.setColumnSpan(label, 1);
+                    DiaryPane.setRowSpan(label, 1);
+                    DiaryPane.setColumnIndex(label, columna);
+                    DiaryPane.setRowIndex(label, fila);
+                    DiaryPane.getChildren().add(label);
+                    citasAgregadaDBsList.add(label);
+                }
+            }
+        }
+    }
 }
