@@ -49,6 +49,23 @@ public class PBackgroundService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el PBackground.", "getPBackground " + ex.getMessage());
         }
     }
+    
+       public Respuesta getPBackgroundCode(Integer pbFilecode) {
+        try {
+            Query qryPBackground = em.createNamedQuery("Personalbackground.findByPbFilecode", Personalbackground.class);
+            qryPBackground.setParameter("pbFilecode", pbFilecode);
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "PBackground", new PersonalbackgroundDto((Personalbackground) qryPBackground.getSingleResult()));
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getPBackground NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el PBackground.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el PBackground.", "getPBackground NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el PBackground.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el PBackground.", "getPBackground " + ex.getMessage());
+        }
+    }
+
 
     public Respuesta savePBackground(PersonalbackgroundDto personalbackgroundDto) {
         try {

@@ -8,12 +8,14 @@ import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.ExamDto;
+import cr.ac.una.clinicauna.model.PProceedingsDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.PersonalbackgroundDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.ExamService;
+import cr.ac.una.clinicauna.service.PProceedingsService;
 import cr.ac.una.clinicauna.service.PersonalbackgroundService;
 import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.util.AppContext;
@@ -233,6 +235,10 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     PersonalbackgroundDto personalBkDto = new PersonalbackgroundDto();
     List<PersonalbackgroundDto> personalBaList = new ArrayList<>();
     private ObservableList<PersonalbackgroundDto> personalBackObservableList;
+    
+    PProceedingsDto PProceedingsDto = new PProceedingsDto();
+
+
 
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**
@@ -533,33 +539,61 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             proceedingsDto.setPsId(0);
             proceedingsDto.setPsPatient(patientDto);
         }
-
         if (proceedingsDto != null) {
             savePersonalBackground();
         } else {
 
         }
 
-        System.out.println("Hola");
     }
 
     private void savePersonalBackground() {
         PersonalbackgroundService service = new PersonalbackgroundService();
-
+        PProceedingsService serviceProP = new PProceedingsService();
+        int codigo= codeRandom();
         personalBkDto.setPbId(0);
         // se debe cragar esto textFieldPersBgType.getText()
         //debe ser un tipo choicebox
         personalBkDto.setPbType("Pathological");
         personalBkDto.setPbContext(textAreaPersBgContext.getText());
+        personalBkDto.setPbFilecode(codigo);
+        System.out.println(codigo);
         Respuesta personalBac = service.savePersonalbackground(personalBkDto);
 
         if (personalBac.getEstado()) {
             System.out.println("Se guardo");
             fillTablePersonalBack();
+            personalBac= service.getPersonalbackgroundCode(codigo);
+            personalBkDto= (PersonalbackgroundDto) personalBac.getResultado("PersonalBackground");
+            if(personalBac.getEstado()){
+                PProceedingsDto.setPpId(0);
+                PProceedingsDto.setPpPersonalback(personalBkDto);
+                PProceedingsDto.setPpProceedings(proceedingsDto);
+                Respuesta procedings= serviceProP.savePProceedings(PProceedingsDto);
+                if(procedings.getEstado())
+                {
+                    System.out.println("Se guardo relacion");
+                }else{
+                    System.out.println("no se guardo relacion");
+            }
+            }
         } else {
             System.out.println("Error");
         }
 
+    }
+    
+     int codeRandom() { 
+        int i, r;
+        for (i = 0; i < 6; i++) {
+            r = (int) (Math.random() * (90 - 48 + 1) + 48);
+            if ((r > 47 && r < 58) || (r > 64 && r < 91)) {
+               return r;
+            } else {
+                i--;
+            }
+        }
+        return 0;
     }
 
     @FXML

@@ -12,8 +12,8 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -25,7 +25,8 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Personalbackground.findAll", query = "SELECT p FROM Personalbackground p"),
     @NamedQuery(name = "Personalbackground.findByPbId", query = "SELECT p FROM Personalbackground p WHERE p.pbId = :pbId"),
     @NamedQuery(name = "Personalbackground.findByPbType", query = "SELECT p FROM Personalbackground p WHERE p.pbType = :pbType"),
-    @NamedQuery(name = "Personalbackground.findByPbContext", query = "SELECT p FROM Personalbackground p WHERE p.pbContext = :pbContext")})
+    @NamedQuery(name = "Personalbackground.findByPbContext", query = "SELECT p FROM Personalbackground p WHERE p.pbContext = :pbContext"),
+    @NamedQuery(name = "Personalbackground.findByPbFilecode", query = "SELECT p FROM Personalbackground p WHERE p.pbFilecode = :pbFilecode")})
 public class Personalbackground implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,6 +45,10 @@ public class Personalbackground implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "PB_CONTEXT")
     private String pbContext;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "PB_FILECODE")
+    private int pbFilecode;
 
     public Personalbackground() {
     }
@@ -51,16 +56,25 @@ public class Personalbackground implements Serializable {
     public Personalbackground(Integer pbId) {
         this.pbId = pbId;
     }
-    
+
+    public Personalbackground(Integer pbId, String pbType, String pbContext, int pbFilecode) {
+        this.pbId = pbId;
+        this.pbType = pbType;
+        this.pbContext = pbContext;
+        this.pbFilecode = pbFilecode;
+    }
+
     public Personalbackground(PersonalbackgroundDto personalbackground) {
         this.pbId = personalbackground.getPbId();
         update(personalbackground);
     }
-    
+
     public void update(PersonalbackgroundDto personalbackground) {
         pbType = personalbackground.getPbType();
         pbContext = personalbackground.getPbContext();
+        pbFilecode= personalbackground.getPbFilecode();
     }
+
     public Integer getPbId() {
         return pbId;
     }
@@ -83,6 +97,14 @@ public class Personalbackground implements Serializable {
 
     public void setPbContext(String pbContext) {
         this.pbContext = pbContext;
+    }
+
+    public int getPbFilecode() {
+        return pbFilecode;
+    }
+
+    public void setPbFilecode(int pbFilecode) {
+        this.pbFilecode = pbFilecode;
     }
 
     @Override
@@ -109,5 +131,5 @@ public class Personalbackground implements Serializable {
     public String toString() {
         return "cr.ac.una.clinicaws.model.Personalbackground[ pbId=" + pbId + " ]";
     }
-    
+
 }
