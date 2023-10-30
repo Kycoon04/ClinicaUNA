@@ -14,6 +14,7 @@ import cr.ac.una.clinicauna.model.PProceedingsDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.PersonalbackgroundDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
+import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.ExamService;
@@ -44,6 +45,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
@@ -103,8 +105,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TableColumn<DiseaseDto, String> tableColDeseaseName;
     @FXML
     private Text textProcName;
-    @FXML
-    private TextField textFieldPersBgType;
     @FXML
     private TextField textFieldSearchPersBg_Type;
     @FXML
@@ -230,6 +230,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TextField textFieldPatientEmail;
     @FXML
     private TextField textFieldPatientBirthday;
+     @FXML
+    private ChoiceBox<String> choiceBoxPersBgType;
     List<DoctorDto> doctorList = new ArrayList<>();
 
     List<ExamDto> examList = new ArrayList<>();
@@ -241,6 +243,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private ObservableList<PersonalbackgroundDto> personalBackObservableList;
 
     PProceedingsDto PProceedingsDto = new PProceedingsDto();
+    String[] typeSpanish={"Patológicos","Hospitalización","Cirugias","Alergias","Tratamientos"};
+    String[] typeEnglish={"Pathological","Hospitalization","Surgery","Allergies","Treatments"};
+    String[] typeJaponese={"病理的","入院" ,"手術" ,"アレルギー" ,"治療"};
+    String[] typeFrench={"Pathologiques","Hospitalisation","Chirurgies","Allergies","Traitements"};
+    UserDto userDto;
 
     FProceedingsDto FProceedingsDto = new FProceedingsDto();
 
@@ -258,7 +265,21 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         OptionsProceedingsView.toFront();
 
         patientDto = (PatientDto) AppContext.getInstance().get("Patient");
-        proceedingsDto = (ProceedingsDto) AppContext.getInstance().get("Proceding");
+        proceedingsDto= (ProceedingsDto) AppContext.getInstance().get("Proceding");
+        userDto = (UserDto) AppContext.getInstance().get("Usuario");
+        if(userDto.getUsLenguage().equals("Spanish")){
+            choiceBoxPersBgType.getItems().addAll(typeSpanish);
+        }
+        if(userDto.getUsLenguage().equals("English")){
+            choiceBoxPersBgType.getItems().addAll(typeEnglish);
+        }
+        if(userDto.getUsLenguage().equals("France")){
+            choiceBoxPersBgType.getItems().addAll(typeFrench);
+        }
+        if(userDto.getUsLenguage().equals("Japonese")){
+            choiceBoxPersBgType.getItems().addAll(typeJaponese);
+        }
+    
         this.tableColDocBreaks.setCellValueFactory(new PropertyValueFactory("DrBreak"));
         this.tableColDocFinishWork.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
         this.tableColDocLicense.setCellValueFactory(new PropertyValueFactory("DrLicense"));
@@ -560,9 +581,25 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         PProceedingsService serviceProP = new PProceedingsService();
         int codigo = codeRandom();
         personalBkDto.setPbId(0);
-        // se debe cragar esto textFieldPersBgType.getText()
-        //debe ser un tipo choicebox
-        personalBkDto.setPbType("Pathological");
+        String typeSelected=choiceBoxPersBgType.getValue();
+        String type="";
+        if(typeSelected.equals("Patológicos")||typeSelected.equals("Pathological")||typeSelected.equals("病理的")||typeSelected.equals("Pathologiques")){
+            type="Pathological";
+        }
+        if(typeSelected.equals("Hospitalización")||typeSelected.equals("Hospitalization")||typeSelected.equals("入院")||typeSelected.equals("Hospitalisation")){
+            type="Hospitalization";
+        }
+        if(typeSelected.equals("Cirugias")||typeSelected.equals("Surgery")||typeSelected.equals("手術")||typeSelected.equals("Chirurgies")){
+            type="Surgery";
+        }
+         if(typeSelected.equals("Alergias")||typeSelected.equals("Allergies")||typeSelected.equals("アレルギー")||typeSelected.equals("Allergies")){
+            type="Allergies";
+        }  
+        if(typeSelected.equals("Tratamientos")||typeSelected.equals("Treatments")||typeSelected.equals("治療")||typeSelected.equals("Traitements")){
+            type="Treatments";
+        } 
+           
+        personalBkDto.setPbType(type);
         personalBkDto.setPbContext(textAreaPersBgContext.getText());
         personalBkDto.setPbFilecode(codigo);
         System.out.println(codigo);
