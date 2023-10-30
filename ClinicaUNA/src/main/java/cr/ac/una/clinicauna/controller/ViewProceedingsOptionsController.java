@@ -28,7 +28,9 @@ import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
+import java.math.RoundingMode;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -369,10 +371,46 @@ public class ViewProceedingsOptionsController extends Controller implements Init
        
     @FXML
     private void searchPat_Name(KeyEvent event) {
+        FilteredList<PersonalbackgroundDto> filteredUser = new FilteredList<>(personalBackObservableList, f -> true);
+        textFieldSearchPersBg_Type.textProperty().addListener((observable, value, newValue) -> {
+            filteredUser.setPredicate(PersonalbackgroundDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (PersonalbackgroundDto.getPbType().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredUsers(filteredUser);
+        
     }
-
+  private void filteredUsers(FilteredList<PersonalbackgroundDto> list) {
+        SortedList<PersonalbackgroundDto> sorted = new SortedList<>(list);
+        sorted.comparatorProperty().bind(tableViewPersonalBg.comparatorProperty());
+        tableViewPersonalBg.setItems(sorted);
+    }
+    
     @FXML
     private void searchPat_identification(KeyEvent event) {
+           FilteredList<PersonalbackgroundDto> filteredUser = new FilteredList<>(personalBackObservableList, f -> true);
+        textFieldSearchPersBg_Context.textProperty().addListener((observable, value, newValue) -> {
+            filteredUser.setPredicate(PersonalbackgroundDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (PersonalbackgroundDto.getPbContext().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredUsers(filteredUser);
     }
 
     @FXML
@@ -724,6 +762,17 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void calculateBodyMass(ActionEvent event) {
+        
+        double height=0; 
+        double weight=0;
+         
+        if(textFieldRep_Height.getText()!="" && textFieldRep_Weight.getText()!="" ){
+             height= Double.parseDouble(textFieldRep_Height.getText());
+             weight= Double.parseDouble(textFieldRep_Weight.getText());
+             double IMC= weight/(height*height)*10000;
+             double roundedIMC= Math.round(IMC* 10.0)/10.0;
+             textFieldRep_BodyMass.setText(roundedIMC+"");
+        }  
     }
 
     @FXML

@@ -15,6 +15,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +50,8 @@ public class PBackgroundService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el PBackground.", "getPBackground " + ex.getMessage());
         }
     }
-    
-       public Respuesta getPBackgroundCode(Integer pbFilecode) {
+
+    public Respuesta getPBackgroundCode(Integer pbFilecode) {
         try {
             Query qryPBackground = em.createNamedQuery("Personalbackground.findByPbFilecode", Personalbackground.class);
             qryPBackground.setParameter("pbFilecode", pbFilecode);
@@ -65,7 +66,6 @@ public class PBackgroundService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el PBackground.", "getPBackground " + ex.getMessage());
         }
     }
-
 
     public Respuesta savePBackground(PersonalbackgroundDto personalbackgroundDto) {
         try {
@@ -111,12 +111,12 @@ public class PBackgroundService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el PBackground.", "eliminarPBackground " + ex.getMessage());
         }
     }
-    
+
     public Respuesta getPBackground() {
         try {
             Query qryUsers = em.createNamedQuery("Personalbackground.findAll", Personalbackground.class);
             List<Personalbackground> personalbackground = (List<Personalbackground>) qryUsers.getResultList();
-             List<PersonalbackgroundDto> ListpersonalbackgroundDto = new ArrayList<>();
+            List<PersonalbackgroundDto> ListpersonalbackgroundDto = new ArrayList<>();
             for (Personalbackground tipo : personalbackground) {
                 PersonalbackgroundDto usersDto = new PersonalbackgroundDto(tipo);
                 ListpersonalbackgroundDto.add(usersDto);
@@ -132,4 +132,7 @@ public class PBackgroundService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el tipo de PBackground.", "getTipoPBackground " + ex.getMessage());
         }
     }
+
+
+
 }

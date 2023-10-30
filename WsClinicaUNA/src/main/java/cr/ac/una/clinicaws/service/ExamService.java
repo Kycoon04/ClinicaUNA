@@ -124,8 +124,6 @@ public class ExamService {
         Query qryExams = em.createQuery("SELECT e FROM Exam e JOIN e.emProceedings p JOIN p.psPatient pt WHERE pt.ptId = :patientId", ExamDto.class);
         qryExams.setParameter("patientId", pacienteId);
         List<Exam> exams = (List<Exam>) qryExams.getResultList();
-      
-
     
         List<ExamDto> listExamsDto = new ArrayList<>();
         for (Exam exam : exams) {
