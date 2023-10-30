@@ -52,6 +52,11 @@ public class FamilybackgroundDto {
         return fbDisease;
     }
 
+    
+    public String getFbDiseaseName() {
+        return fbDisease.getDsName();
+    }
+    
     public void setFbDisease(DiseaseDto fbDisease) {
         this.fbDisease = fbDisease;
     }

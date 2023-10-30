@@ -28,7 +28,9 @@ import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
+import java.math.RoundingMode;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -299,7 +301,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         this.tableColPersBgContext.setCellValueFactory(new PropertyValueFactory("PbContext"));
 
         this.tableColFamBgRelation.setCellValueFactory(new PropertyValueFactory("FbRelationship"));
-        this.tableColFamBgDisease.setCellValueFactory(new PropertyValueFactory("FbDisease"));
+        this.tableColFamBgDisease.setCellValueFactory(new PropertyValueFactory("FbDiseaseName"));
         
         
         bindPatient();
@@ -369,10 +371,46 @@ public class ViewProceedingsOptionsController extends Controller implements Init
        
     @FXML
     private void searchPat_Name(KeyEvent event) {
+        FilteredList<PersonalbackgroundDto> filteredUser = new FilteredList<>(personalBackObservableList, f -> true);
+        textFieldSearchPersBg_Type.textProperty().addListener((observable, value, newValue) -> {
+            filteredUser.setPredicate(PersonalbackgroundDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (PersonalbackgroundDto.getPbType().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredUsers(filteredUser);
+        
     }
-
+  private void filteredUsers(FilteredList<PersonalbackgroundDto> list) {
+        SortedList<PersonalbackgroundDto> sorted = new SortedList<>(list);
+        sorted.comparatorProperty().bind(tableViewPersonalBg.comparatorProperty());
+        tableViewPersonalBg.setItems(sorted);
+    }
+    
     @FXML
     private void searchPat_identification(KeyEvent event) {
+           FilteredList<PersonalbackgroundDto> filteredUser = new FilteredList<>(personalBackObservableList, f -> true);
+        textFieldSearchPersBg_Context.textProperty().addListener((observable, value, newValue) -> {
+            filteredUser.setPredicate(PersonalbackgroundDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (PersonalbackgroundDto.getPbContext().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredUsers(filteredUser);
     }
 
     @FXML
@@ -426,9 +464,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private void AddDesease(ActionEvent event) {
        //crear boton seleccionar y guardar
-        
-        
-        /*DiseaseService service = new DiseaseService();
+
+        DiseaseService service = new DiseaseService();
         Respuesta r = null;
 
         if (diseaseDto == null) {
@@ -439,7 +476,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             diseaseDto.setDsId(diseaseDto.getDsId());
             diseaseDto.setDsName(nameDistMainField.getText());
             r = service.saveDisease(diseaseDto);
-            // diseaseDto = new DiseaseDto();
+             diseaseDto = new DiseaseDto();
         }
         if (r.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Enfermedad guardada");
@@ -449,8 +486,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         }
 
         fillTableDiseases();
-         */
-        OptionsProceedingsView.toFront();
+         
+       // OptionsProceedingsView.toFront();
     }
 
     @FXML
@@ -533,6 +570,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             diseaseDto = tableViewDisease.getSelectionModel().getSelectedItem();
             if (diseaseDto != null) {
                 fillDisease(diseaseDto);
+                OptionsProceedingsView.toFront();
+                textFieldFamBgDisease.setText(diseaseDto.getDsName());
             }
         }
     }
@@ -608,7 +647,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             type="Pathological";
         }
         if(typeSelected.equals("Hospitalización")||typeSelected.equals("Hospitalization")||typeSelected.equals("入院")||typeSelected.equals("Hospitalisation")){
-            type="Hospitalization";
+            type="Hospitalizations";
         }
         if(typeSelected.equals("Cirugias")||typeSelected.equals("Surgery")||typeSelected.equals("手術")||typeSelected.equals("Chirurgies")){
             type="Surgery";
@@ -691,6 +730,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                 Respuesta procedings = serviceProP.savefProceedings(FProceedingsDto);
                 if (procedings.getEstado()) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo en su expediente");
+                    fillTableFamilyBack();
                 } else {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "no se guardo en su expediente");
                 }
@@ -724,6 +764,17 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void calculateBodyMass(ActionEvent event) {
+        
+        double height=0; 
+        double weight=0;
+         
+        if(textFieldRep_Height.getText()!="" && textFieldRep_Weight.getText()!="" ){
+             height= Double.parseDouble(textFieldRep_Height.getText());
+             weight= Double.parseDouble(textFieldRep_Weight.getText());
+             double IMC= weight/(height*height)*10000;
+             double roundedIMC= Math.round(IMC* 10.0)/10.0;
+             textFieldRep_BodyMass.setText(roundedIMC+"");
+        }  
     }
 
     @FXML
@@ -894,6 +945,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private void selectDoctor(MouseEvent event) {
         searchSelectDoctor.toFront();
+    }
+
+    @FXML
+    private void updateReportAp(ActionEvent event) {
+        
     }
 
 }

@@ -75,6 +75,8 @@ public class ModulePBackground {
         }
     }
     
+  
+    
     @POST
     @Path("/pBackground")
     public Response savePBackground(PersonalbackgroundDto personalbackgroundDto) {
@@ -119,4 +121,8 @@ public class ModulePBackground {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo los Personal Backgrounds").build();
         }
     }
+    
+    
+    
+    
 }
