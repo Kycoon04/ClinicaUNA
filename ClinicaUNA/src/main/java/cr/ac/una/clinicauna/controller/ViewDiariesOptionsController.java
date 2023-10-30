@@ -194,33 +194,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     ComboBox<String> spaces = new ComboBox();
     @FXML
     private Button btnAgendar;
-
-    ToggleGroup Tou = new ToggleGroup();
-    ToggleGroup gender = new ToggleGroup();
-    AppointmentDto appointmentDto = new AppointmentDto();
-    AppointmentDto appointmentDtoModi = new AppointmentDto();
-    private UserDto userDto = new UserDto();
-    private DoctorDto doctorDto = new DoctorDto();
-    private PatientDto patientDto = new PatientDto();
-    private DiaryDto diaryDto = new DiaryDto();
-    GridPane DiaryPane;
-    SpaceDto spacesDto = new SpaceDto();
-    private List<Label> citasAgregadasList = new ArrayList<>();
-    private List<Label> citasAgregadaDBsList = new ArrayList<>();
-    private List<Label> citasPosiblesDBsList = new ArrayList<>();
-    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-    List<LocalTime> horasAgregadas = new ArrayList<>();
-    List<LocalTime> horasModificadas = new ArrayList<>();
-    private String matrizAgenda[][] = new String[15][8];
-    List<DoctorDto> doctorList = new ArrayList<>();
-    private ObservableList<DoctorDto> doctorObservableList;
-    List<PatientDto> patientList = new ArrayList<>();
-    private ObservableList<PatientDto> patientObservableList;
-    private boolean modificarCita = false;
-    private int movespace = 0;
-    private String[] mint;
-    int HoraSelecionada = 0;
-    List<Integer> horasTotales = new ArrayList<>();
     @FXML
     private BorderPane OptionsViewDiary;
     @FXML
@@ -230,12 +203,48 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private BorderPane OptionsAppoinmentInfo;
 
+    private ToggleGroup Tou = new ToggleGroup();
+    private ToggleGroup gender = new ToggleGroup();
+    private AppointmentDto appointmentDto = new AppointmentDto();
+    private AppointmentDto appointmentDtoModi = new AppointmentDto();
+    private UserDto userDto = new UserDto();
+    private DoctorDto doctorDto = new DoctorDto();
+    private PatientDto patientDto = new PatientDto();
+    private DiaryDto diaryDto = new DiaryDto();
+    private GridPane DiaryPane;
+    private SpaceDto spacesDto = new SpaceDto();
+    private List<Label> citasAgregadasList = new ArrayList<>();
+    private List<Label> citasAgregadaDBsList = new ArrayList<>();
+    private List<Label> citasPosiblesDBsList = new ArrayList<>();
+    private DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    private List<LocalTime> horasAgregadas = new ArrayList<>();
+    private List<LocalTime> horasModificadas = new ArrayList<>();
+    private String matrizAgenda[][] = new String[15][8];
+    private List<DoctorDto> doctorList = new ArrayList<>();
+    private ObservableList<DoctorDto> doctorObservableList;
+    private List<PatientDto> patientList = new ArrayList<>();
+    private ObservableList<PatientDto> patientObservableList;
+    private boolean modificarCita = false;
+    private int movespace = 0;
+    private String[] mint;
+    private int HoraSelecionada = 0;
+    private List<Integer> horasTotales = new ArrayList<>();
+    private boolean canupdate = false;
+    @FXML
+    private Button UpdateEmailAppointment;
+    @FXML
+    private Button UpdateTelephoneAppointment;
+    @FXML
+    private Button btnRecordatorio;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         btnAgendar.setDisable(true);
+        UpdateEmailAppointment.setDisable(true);
+        UpdateTelephoneAppointment.setDisable(true);
         MenuView.toFront();
         CreateAppointment.toFront();
         this.tableColPatIdentif1.setCellValueFactory(new PropertyValueFactory("PtIdentification"));
@@ -318,13 +327,13 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void ContinueDetail(ActionEvent event) {
+        DiaryService servicediary = new DiaryService();
         if (!modificarCita) {
             List<SpaceDto> espaciosReservados = new ArrayList<>();
             Respuesta respuesta = null;
             if (fillAppoiment() && doctorDto != null && DayPicker.getValue() != null) {
                 int espacios = 1;
                 SpaceService service = new SpaceService();
-                DiaryService servicediary = new DiaryService();
                 try {
                     espacios = Integer.parseInt(spaces.getValue());
                 } catch (NumberFormatException e) {
@@ -354,8 +363,10 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 lookday(event);
                 appointmentDto = new AppointmentDto();
                 spacesDto = new SpaceDto();
+                respuesta = servicediary.emailDiary(diaryDto);
                 diaryDto = new DiaryDto();
             }
+
         } else {
             AppointmentService service = new AppointmentService();
             Respuesta respuesta = null;
@@ -492,6 +503,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             this.userDto = (UserDto) AppContext.getInstance().get("Usuario");
             patientDto = tableViewPatient1.getSelectionModel().getSelectedItem();
             if (patientDto != null) {
+                UpdateEmailAppointment.setDisable(false);
+                UpdateTelephoneAppointment.setDisable(false);
                 nameP.setText(patientDto.getPtName());
                 userLog.setText(userDto.getUsName());
                 OptionsAppoinmentInfo.toFront();
@@ -1193,5 +1206,37 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private void backDiary(ActionEvent event) {
         CreateAppointment.toFront();
+    }
+
+    @FXML
+    private void UpdateEmailAppointment(ActionEvent event) {
+        if (!email.getText().isEmpty()) {
+            PatientService patient = new PatientService();
+            patientDto.setPtEmail(email.getText());
+            Respuesta respuesta = patient.savePatient(patientDto);
+            if (respuesta.getEstado()) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Actualizar paciente", getStage(), "Paciente Actualizar");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Actualizar paciente", getStage(), "Error al Actualizar paciente");
+            }
+        }
+    }
+
+    @FXML
+    private void UpdateTelephoneAppointment(ActionEvent event) {
+        if (!numberP.getText().isEmpty()) {
+            PatientService patient = new PatientService();
+            patientDto.setPtTelephone(numberP.getText());
+            Respuesta respuesta = patient.savePatient(patientDto);
+            if (respuesta.getEstado()) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Actualizar paciente", getStage(), "Paciente Actualizar");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Actualizar paciente", getStage(), "Error al Actualizar paciente");
+            }
+        }
+    }
+
+    @FXML
+    private void Recordatorio(ActionEvent event) {
     }
 }

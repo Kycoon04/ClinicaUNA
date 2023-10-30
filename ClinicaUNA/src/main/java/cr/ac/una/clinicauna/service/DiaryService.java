@@ -37,7 +37,20 @@ public class DiaryService {
             return new Respuesta(false, "Error obteniendo  agenda.", "getAgenda " + ex.getMessage());
         }
     }
-
+     
+    public Respuesta emailDiary(DiaryDto diaryDtos) {
+        try {
+            Request request = new Request("ModuleDiary/diaryemail");
+            request.post(diaryDtos);
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            return new Respuesta(true, "", "");
+        } catch (Exception ex) {
+            Logger.getLogger(DiaryService.class.getName()).log(Level.SEVERE, "Error guardando agenda.", ex);
+            return new Respuesta(false, "Error guardando agenda.", "guardarAgenda" + ex.getMessage());
+        }
+    }
 
     public Respuesta saveDiary(DiaryDto diaryDtos) {
         try {

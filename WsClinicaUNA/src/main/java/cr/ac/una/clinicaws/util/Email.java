@@ -181,7 +181,62 @@ public class Email {
         }
     }
 
-    public void enviarClave(String link) {
+    public void enviarConfirmacion(String dia,String nombre) {
+
+      
+            sourceMail = "clinicauna10@gmail.com";
+            name = "ClinicaUNA";
+            info = "La mejor en salud";
+            password = "xvezelgtwkeuhawv";
+        
+
+        try {
+            Properties p = new Properties();
+            p.put("mail.smtp.host", "smtp.gmail.com");
+            p.setProperty("mail.smtp.starttls.enable", "true");
+            p.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+            p.setProperty("mail.smtp.port", "587");
+            p.setProperty("mail.smtp.user", sourceMail);
+            p.setProperty("mail.smtp.auth", "true");
+            Session s = Session.getDefaultInstance(p);
+
+            String mensajeHTML = "<html>"
+                    + "<head>"
+                    + "<style>"
+                    + "body { font-family: Arial, sans-serif; background-color: #f2f2f2; }"
+                    + "h1 { color: #333; background-color: grey;  text-align: center; }"
+                    + "p { color: #666; }"
+                    + "</style>"
+                    + "</head>"
+                    + "<body>"
+                    + "<h1>Confirmación de cita</h1>"
+                    + "<p>Hola "+nombre+"!</p>"
+                    + "<p>Te confirmamos tu cita para el dia "+dia+"</p>"
+                    + "<p>Te esperamos!</p>"
+                    + "<p><strong>" + destinationMail + "</strong></p>"
+                    + "</body>"
+                    + "</html>";
+
+            MimeMessage mensaje = new MimeMessage(s);
+            mensaje.setFrom(new InternetAddress(sourceMail));
+            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinationMail));
+            mensaje.setSubject("Confirmación");
+
+            mensaje.setContent(mensajeHTML, "text/html");
+
+            Transport t = s.getTransport("smtp");
+            t.connect(sourceMail, password);
+            if (t.isConnected()) {
+                t.sendMessage(mensaje, mensaje.getAllRecipients());
+                t.close();
+            }
+            System.out.printf("Mensaje enviado");
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+
+        public void enviarClave(String link) {
 
       
             sourceMail = "clinicauna10@gmail.com";
@@ -235,7 +290,7 @@ public class Email {
             System.out.println(e.toString());
         }
     }
-
+    
     public String getSourceMail() {
         return sourceMail;
     }
