@@ -124,11 +124,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldSearchFamBg_Disease;
     @FXML
-    private TableView<?> tableViewFamilyBg;
+    private TableView<FamilybackgroundDto> tableViewFamilyBg;
     @FXML
-    private TableColumn<?, ?> tableColFamBgRelation;
+    private TableColumn<FamilybackgroundDto, String> tableColFamBgRelation;
     @FXML
-    private TableColumn<?, ?> tableColFamBgDisease;
+    private TableColumn<FamilybackgroundDto, String> tableColFamBgDisease;
     @FXML
     private BorderPane ReportView;
     @FXML
@@ -253,7 +253,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     FamilybackgroundDto familyBkDto = new FamilybackgroundDto();
     List<FamilybackgroundDto> familyBaList = new ArrayList<>();
-    private ObservableList<PersonalbackgroundDto> familyBackObservableList;
+    private ObservableList<FamilybackgroundDto> familyBackObservableList;
 
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**
@@ -298,11 +298,16 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         this.tableColPersBgType.setCellValueFactory(new PropertyValueFactory("PbType"));
         this.tableColPersBgContext.setCellValueFactory(new PropertyValueFactory("PbContext"));
 
+        this.tableColFamBgRelation.setCellValueFactory(new PropertyValueFactory("FbRelationship"));
+        this.tableColFamBgDisease.setCellValueFactory(new PropertyValueFactory("FbDisease"));
+        
+        
         bindPatient();
         fillTableExams();
         fillTableDoctors();
         fillTableDiseases();
         fillTablePersonalBack();
+        fillTableFamilyBack();
         nameDistMainField.setTextFormatter(Formato.getInstance().letrasFormat(10));
     }
 
@@ -349,6 +354,19 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     }
 
+    private void fillTableFamilyBack() {
+       FamilybackgroundService service = new FamilybackgroundService();
+        familyBaList = service.getFamilybackground();
+
+        if (familyBaList == null) {
+            System.out.println("nula");
+        } else {
+            familyBackObservableList = FXCollections.observableArrayList(familyBaList);
+            this.tableViewFamilyBg.refresh();
+            this.tableViewFamilyBg.setItems(familyBackObservableList);
+        }
+    }
+       
     @FXML
     private void searchPat_Name(KeyEvent event) {
     }
@@ -407,7 +425,10 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void AddDesease(ActionEvent event) {
-        /*  DiseaseService service = new DiseaseService();
+       //crear boton seleccionar y guardar
+        
+        
+        /*DiseaseService service = new DiseaseService();
         Respuesta r = null;
 
         if (diseaseDto == null) {
@@ -606,7 +627,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         Respuesta personalBac = service.savePersonalbackground(personalBkDto);
 
         if (personalBac.getEstado()) {
-            System.out.println("Se guardo");
+          new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo el antecedente");
             fillTablePersonalBack();
             personalBac = service.getPersonalbackgroundCode(codigo);
             personalBkDto = (PersonalbackgroundDto) personalBac.getResultado("PersonalBackground");
@@ -660,7 +681,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         familyBkDto.setFbDisease(diseaseDto);
         Respuesta familyBac = service.saveFamilybackground(familyBkDto);
         if (familyBac.getEstado()) {
-            System.out.println("Se guardo");
+             new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo el antecedente");
             familyBac = service.getFamilybackgroundCode(codigo);
             familyBkDto = (FamilybackgroundDto) familyBac.getResultado("Familybackground");
             if (familyBac.getEstado()) {
