@@ -31,9 +31,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -230,6 +234,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private int HoraSelecionada = 0;
     private List<Integer> horasTotales = new ArrayList<>();
     private boolean canupdate = false;
+    UserDto usrIdiom = (UserDto) AppContext.getInstance().get("Usuario");
     @FXML
     private Button UpdateEmailAppointment;
     @FXML
@@ -243,6 +248,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         btnAgendar.setDisable(true);
+        btnRecordatorio.setDisable(true);
         UpdateEmailAppointment.setDisable(true);
         UpdateTelephoneAppointment.setDisable(true);
         MenuView.toFront();
@@ -313,14 +319,38 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             r = service.saveAppointment(appointmentDto);
             if (r.getEstado()) {
                 appointmentDto = (AppointmentDto) r.getResultado("Appointments");
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita Registrada");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "Cita Registrada");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "Registered Appointment");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "Rendez-vous enregistré");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "登録済みの予約");
+                }
                 return true;
             } else {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita No se pudo Registrar");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Aviso", getStage(), "Error registrando cita");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Warning", getStage(), "Error registering appointment");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Avertissement", getStage(), "Erreur lors de l'enregistrement du rendez-vous");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "リマインダーが送信されました", getStage(), "予定の登録エラー");
+                }
                 return false;
             }
         } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Complete la informacion");
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "Informacion incompleta");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "incomplete information");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "information incomplète");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "情報を完成させる");
+            }
             return false;
         }
     }
@@ -354,10 +384,26 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                     diaryDto.setDyDate(DayPicker.getValue());
                     diaryDto.setDySpace(espaciosReservados.get(i));
                     respuesta = servicediary.saveDiary(diaryDto);
-                    if (respuesta.getEstado()) {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "diario Registrada");
+                }
+                if (respuesta.getEstado()) {
+                    if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "Agenda Registrada");
+                    } else if (usrIdiom.getUsLenguage().equals("English")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "Registered Agenda");
+                    } else if (usrIdiom.getUsLenguage().equals("French")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "Ordre du jour enregistré");
                     } else {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "diario No se pudo Registrar");
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "登録済みの議題");
+                    }
+                } else {
+                    if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                        new Mensaje().showModal(Alert.AlertType.ERROR, "Aviso", getStage(), "Error al registrar agenda");
+                    } else if (usrIdiom.getUsLenguage().equals("English")) {
+                        new Mensaje().showModal(Alert.AlertType.ERROR, "Warning", getStage(), "Error when registering agenda");
+                    } else if (usrIdiom.getUsLenguage().equals("French")) {
+                        new Mensaje().showModal(Alert.AlertType.ERROR, "Avertissement", getStage(), "Erreur lors de l'enregistrement de l'agenda");
+                    } else {
+                        new Mensaje().showModal(Alert.AlertType.ERROR, "リマインダーが送信されました", getStage(), "議題登録時のエラー");
                     }
                 }
                 lookday(event);
@@ -393,9 +439,25 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 userLog.setDisable(false);
                 code.setDisable(false);
                 OptionsViewDiary.toFront();
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita modificada");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "Cita actualizada");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "Updated quote");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "Devis mis à jour");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "見積書を更新しました");
+                }
             } else {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Cita No modificada");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Aviso", getStage(), "Error actualizando la cita");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Warning", getStage(), "Error updating appointment");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Avertissement", getStage(), "Erreur lors de la mise à jour du rendez-vous");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "リマインダーが送信されました", getStage(), "予定の更新中にエラーが発生しました");
+                }
             }
         }
     }
@@ -414,11 +476,26 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         patientDto = new PatientDto();
 
         if (r.getEstado()) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Paciente Guardado");
-            //limpiar los campos 
             OptionsSelectPatient.toFront();
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "paciente actualizada");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "patient quote");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "Devis mis à jour");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "見積書を更新しました");
+            }
         } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar paciente", getStage(), "Error al guardar paciente");
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Aviso", getStage(), "Error actualizando la paciente");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Warning", getStage(), "Error updating patient");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Avertissement", getStage(), "Erreur lors de la mise à jour du rendez-vous");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "リマインダーが送信されました", getStage(), "予定の更新中にエラーが発生しました");
+            }
         }
         patientDto = new PatientDto();
     }
@@ -458,7 +535,15 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Nuevo Paciente");
         alert.setHeaderText(null);
-        alert.setContentText("¿Quieres crear un nuevo paciente?");
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            alert.setContentText("¿Quieres crear un nuevo paciente?");
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            alert.setContentText("Do you want to create a new patient?");
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            alert.setContentText("Voulez-vous créer un nouveau patient?");
+        } else {
+            alert.setContentText("新しい患者を作成しますか？");
+        }
         ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
         if (result == ButtonType.OK) {
             OptionsMantPatient.toFront();
@@ -646,6 +731,36 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
     }
 
+    private int getColumnFromX(double x, GridPane gridPane) {
+        double widthSoFar = 0.0;
+        int col;
+        double totalWidth = gridPane.getWidth();
+        for (col = 0; col < gridPane.getColumnConstraints().size(); col++) {
+            double columnPercentage = gridPane.getColumnConstraints().get(col).getPercentWidth();
+            double columnWidth = totalWidth * (columnPercentage / 80.0);
+            widthSoFar += columnWidth;
+            if (x < widthSoFar) {
+                break;
+            }
+        }
+        return col;
+    }
+
+    private int getRowFromY(double y, GridPane gridPane) {
+        double heightSoFar = 0.0;
+        int row;
+        double totalHeight = gridPane.getHeight();
+        for (row = 0; row < gridPane.getRowConstraints().size(); row++) {
+            double rowPercentage = gridPane.getRowConstraints().get(row).getPercentHeight();
+            double rowHeight = totalHeight * (rowPercentage / 80.0);
+            heightSoFar += rowHeight;
+            if (y < heightSoFar) {
+                break;
+            }
+        }
+        return row;
+    }
+
     public void eventAgendDoct() {
         String horaInicio = doctorDto.getDrIniworking();
         String horaFin = doctorDto.getDrFinisworking();
@@ -678,8 +793,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 double dropX = event.getX();
                 double dropY = event.getY();
 
-                int dropColumn = (int) (dropX / (DiaryPane.getWidth() / DiaryPane.getColumnConstraints().size()));
-                int dropRow = (int) (dropY / (DiaryPane.getHeight() / DiaryPane.getRowConstraints().size()));
+                int dropColumn = getColumnFromX(dropX, DiaryPane);
+                int dropRow = getRowFromY(dropY, DiaryPane);
+
                 HoraSelecionada = horasTotales.get(dropRow - 1);
                 int citasAgregadas = 0;
                 while (citasAgregadas < movespace) {
@@ -741,11 +857,19 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                     }
                     citasAgregadas++;
                 }
-
+                Respuesta respuesta = new Respuesta();
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Modificar Cita");
                 alert.setHeaderText(null);
-                alert.setContentText("¿Quieres modificar esta cita?");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    alert.setContentText("¿Quieres modificar esta cita?");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    alert.setContentText("Do you want to modify this appointment?");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    alert.setContentText("Voulez-vous modifier ce rendez-vous?");
+                } else {
+                    alert.setContentText("この予定を変更しますか？");
+                }
                 ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
                 if (result == ButtonType.OK) {
                     SpaceService service = new SpaceService();
@@ -755,8 +879,29 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                     for (SpaceDto p : actualizados) {
                         spacesDto = p;
                         spacesDto.setSeHour(horasModificadas.get(k).format(timeFormatter));
-                        Respuesta respuesta = service.saveSpace(spacesDto);
+                        respuesta = service.saveSpace(spacesDto);
                         k++;
+                    }
+                    if (respuesta.getEstado()) {
+                        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "Cita actualizada");
+                        } else if (usrIdiom.getUsLenguage().equals("English")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "Updated quote");
+                        } else if (usrIdiom.getUsLenguage().equals("French")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "Devis mis à jour");
+                        } else {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "見積書を更新しました");
+                        }
+                    } else {
+                        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                            new Mensaje().showModal(Alert.AlertType.ERROR, "Aviso", getStage(), "Error actualizando la cita");
+                        } else if (usrIdiom.getUsLenguage().equals("English")) {
+                            new Mensaje().showModal(Alert.AlertType.ERROR, "Warning", getStage(), "Error updating appointment");
+                        } else if (usrIdiom.getUsLenguage().equals("French")) {
+                            new Mensaje().showModal(Alert.AlertType.ERROR, "Avertissement", getStage(), "Erreur lors de la mise à jour du rendez-vous");
+                        } else {
+                            new Mensaje().showModal(Alert.AlertType.ERROR, "リマインダーが送信されました", getStage(), "予定の更新中にエラーが発生しました");
+                        }
                     }
                     ActionEvent events = new ActionEvent();
                     lookday(events);
@@ -785,10 +930,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
 
     public GridPane createWeekCalendarWithHeaders(int iniHora, int finHora, int v) {
+        System.out.println("asdasdasdasdsadsaas");
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setHgap(1);
-        gridPane.setVgap(1);
 
         mint = new String[v];
         int doctoSpaces = v;
@@ -857,19 +1001,16 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             }
         }
 
-        for (int i = 0; i < mint.length + 1; i++) {
+        for (int col = 0; col <= mint.length; col++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
-            columnConstraints.setFillWidth(true);
-            columnConstraints.setHgrow(javafx.scene.layout.Priority.ALWAYS);
             columnConstraints.setPercentWidth(80.0 / (mint.length + 1));
             gridPane.getColumnConstraints().add(columnConstraints);
         }
 
-        for (int i = 0; i < calcularNumeroHoras(iniHora, finHora) + 1; i++) {
+        int totalRows = finHora - iniHora + 2;
+        for (int row = 0; row < totalRows; row++) {
             RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setFillHeight(true);
-            rowConstraints.setVgrow(javafx.scene.layout.Priority.ALWAYS);
-            rowConstraints.setPercentHeight(100.0 / (15 + 1));
+            rowConstraints.setPercentHeight(80.0 / totalRows);
             gridPane.getRowConstraints().add(rowConstraints);
         }
 
@@ -919,7 +1060,15 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         while (citasAgregadas < maxCitas) {
             if (isCellLabelEmpty(gridPane, rowIndex, columnIdx)) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Error", getStage(), "No se pueden registrar los campos");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "No se pueden registrar los campos");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "Fields cannot be registered");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "Les champs ne peuvent pas être enregistrés");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "見積書を更新しました");
+                }
                 return;
             }
             citasAgregadas++;
@@ -1019,6 +1168,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void lookday(ActionEvent event) {
+        btnRecordatorio.setDisable(false);
         if (DiaryPane != null) {
             DiaryPane.getChildren().removeAll(citasAgregadasList);
             citasAgregadasList.clear();
@@ -1026,6 +1176,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             citasAgregadaDBsList.clear();
             DiaryPane.getChildren().removeAll(citasPosiblesDBsList);
             citasPosiblesDBsList.clear();
+        }else{
+        eventAgendDoct();
         }
         String horaInicio = doctorDto.getDrIniworking();
         String horaFin = doctorDto.getDrFinisworking();
@@ -1037,11 +1189,19 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         int fila = 0;
         int columna = 0;
         if (DayPicker.getValue() == null) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Error", getStage(), "Debes Seleccionar un dia");
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "Seleccione un dia ");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "Select a day");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "Sélectionnez un jour");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "日を選択してください");
+            }
         } else {
             DiaryService diario = new DiaryService();
             List<DiaryDto> AgendaCompleta = diario.getDiary();
-            eventAgendDoct();
+            
             if (AgendaCompleta != null) {
                 AgendaCompleta = AgendaCompleta.stream().filter(pCancelada.and(pDoctor.and(x -> x.getDyDate().equals(DayPicker.getValue())))).toList();
 
@@ -1100,8 +1260,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                         eventf.consume();
                     });
                     label.setOnDragDone(DragEvent::consume);
-                    DiaryPane.setColumnSpan(label, 1);
-                    DiaryPane.setRowSpan(label, 1);
                     DiaryPane.setColumnIndex(label, columna);
                     DiaryPane.setRowIndex(label, fila);
                     DiaryPane.getChildren().add(label);
@@ -1115,6 +1273,15 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Modificar Cita");
         alert.setHeaderText(null);
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            alert.setContentText("¿Quieres modificar esta cita?");
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            alert.setContentText("Do you want to modify this appointment?");
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            alert.setContentText("Voulez-vous modifier ce rendez-vous?");
+        } else {
+            alert.setContentText("この予定を変更しますか？");
+        }
         alert.setContentText("¿Quieres modificar esta cita?");
         ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
         if (result == ButtonType.OK) {
@@ -1215,9 +1382,25 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             patientDto.setPtEmail(email.getText());
             Respuesta respuesta = patient.savePatient(patientDto);
             if (respuesta.getEstado()) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Actualizar paciente", getStage(), "Paciente Actualizar");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "Email actualizado");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "Updated Email");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "Email mis à jour");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "更新された電話機");
+                }
             } else {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Actualizar paciente", getStage(), "Error al Actualizar paciente");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Aviso", getStage(), "Error al actualizar Email");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Warning", getStage(), "Error updating Email");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Avertissement", getStage(), "Erreur lors de la mise à jour du Email");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "リマインダーが送信されました", getStage(), "電話の更新エラー");
+                }
             }
         }
     }
@@ -1229,14 +1412,72 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             patientDto.setPtTelephone(numberP.getText());
             Respuesta respuesta = patient.savePatient(patientDto);
             if (respuesta.getEstado()) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Actualizar paciente", getStage(), "Paciente Actualizar");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "Telefono actualizado");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "Updated phone");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "Téléphone mis à jour");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "更新された電話機");
+                }
             } else {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Actualizar paciente", getStage(), "Error al Actualizar paciente");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Aviso", getStage(), "Error al actualizar teléfono");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Warning", getStage(), "Error updating phone");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Avertissement", getStage(), "Erreur lors de la mise à jour du téléphone");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "リマインダーが送信されました", getStage(), "電話の更新エラー");
+                }
             }
         }
     }
 
     @FXML
     private void Recordatorio(ActionEvent event) {
+        DiaryService diario = new DiaryService();
+        List<DiaryDto> lista = new ArrayList<>();
+        Respuesta respuesta = new Respuesta();
+        lista = diario.getDiary();
+
+        List<DiaryDto> filteredList = lista.stream()
+                .filter(distinctByKey(x -> x.getDySpace().getSeAppointment().getAtId()))
+                .collect(Collectors.toList());
+
+        filteredList = filteredList.stream()
+                .filter(x -> DayPicker.getValue().equals(x.getDyDate()))
+                .collect(Collectors.toList());
+
+        for (DiaryDto p : filteredList) {
+            respuesta = diario.emailDiaryRecordatorio(p);
+        }
+        if (respuesta.getEstado()) {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "Recordatorios enviados");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "Reminders sent");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "Rappels envoyés");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "保存されたユーザー");
+            }
+        } else {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Aviso", getStage(), "Error al enviar recordatorio");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Warning", getStage(), "Error sending reminder");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Avertissement", getStage(), "Erreur lors de l'envoi du rappel");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "リマインダーが送信されました", getStage(), "保存時のエラー");
+            }
+        }
+    }
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 }
