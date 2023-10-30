@@ -301,7 +301,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         this.tableColPersBgContext.setCellValueFactory(new PropertyValueFactory("PbContext"));
 
         this.tableColFamBgRelation.setCellValueFactory(new PropertyValueFactory("FbRelationship"));
-        this.tableColFamBgDisease.setCellValueFactory(new PropertyValueFactory("FbDisease"));
+        this.tableColFamBgDisease.setCellValueFactory(new PropertyValueFactory("FbDiseaseName"));
         
         
         bindPatient();
@@ -465,7 +465,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void AddDesease(ActionEvent event) {
        //crear boton seleccionar y guardar
 
-        /*DiseaseService service = new DiseaseService();
+        DiseaseService service = new DiseaseService();
         Respuesta r = null;
 
         if (diseaseDto == null) {
@@ -476,7 +476,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             diseaseDto.setDsId(diseaseDto.getDsId());
             diseaseDto.setDsName(nameDistMainField.getText());
             r = service.saveDisease(diseaseDto);
-            // diseaseDto = new DiseaseDto();
+             diseaseDto = new DiseaseDto();
         }
         if (r.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Enfermedad guardada");
@@ -486,8 +486,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         }
 
         fillTableDiseases();
-         */
-        OptionsProceedingsView.toFront();
+         
+       // OptionsProceedingsView.toFront();
     }
 
     @FXML
@@ -570,6 +570,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             diseaseDto = tableViewDisease.getSelectionModel().getSelectedItem();
             if (diseaseDto != null) {
                 fillDisease(diseaseDto);
+                OptionsProceedingsView.toFront();
+                textFieldFamBgDisease.setText(diseaseDto.getDsName());
             }
         }
     }
@@ -645,7 +647,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             type="Pathological";
         }
         if(typeSelected.equals("Hospitalización")||typeSelected.equals("Hospitalization")||typeSelected.equals("入院")||typeSelected.equals("Hospitalisation")){
-            type="Hospitalization";
+            type="Hospitalizations";
         }
         if(typeSelected.equals("Cirugias")||typeSelected.equals("Surgery")||typeSelected.equals("手術")||typeSelected.equals("Chirurgies")){
             type="Surgery";
@@ -728,6 +730,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                 Respuesta procedings = serviceProP.savefProceedings(FProceedingsDto);
                 if (procedings.getEstado()) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo en su expediente");
+                    fillTableFamilyBack();
                 } else {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "no se guardo en su expediente");
                 }
