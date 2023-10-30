@@ -87,7 +87,19 @@ public class ModuleDiary {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando la agenda").build();
         }
     }
-    
+    @POST
+    @Path("/diaryEmailRecordatorio")
+    public Response sentEmailRecordatorio(DiaryDto diaryDto) {
+        try {
+           Email email = new Email();
+           email.setDestinationMail(diaryDto.getDySpace().getSeAppointment().getAtEmail());
+           email.enviarRecordatorio(diaryDto.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), diaryDto.getDySpace().getSeAppointment().getAtPatient().getPtName());
+           return Response.ok().build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleDiary.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando la agenda").build();
+        }
+    }
     @DELETE
     @Path("/diary/{id}")
     public Response deleteDiary(@PathParam("id") Integer id) {

@@ -20,7 +20,8 @@ import java.util.logging.Logger;
  * @author dilan
  */
 public class DiaryService {
-     public Respuesta getDiaryId(Integer id) {
+
+    public Respuesta getDiaryId(Integer id) {
         try {
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("id", id);
@@ -31,16 +32,30 @@ public class DiaryService {
             }
             DiaryDto diaryDto = (DiaryDto) request.readEntity(DiaryDto.class);
             System.out.println(diaryDto.getDyDoctor().getDrId());
-            return new Respuesta(true, "", "", "Diary",diaryDto);
+            return new Respuesta(true, "", "", "Diary", diaryDto);
         } catch (Exception ex) {
             Logger.getLogger(DiaryService.class.getName()).log(Level.SEVERE, "Error obteniendo  agenda [" + id + "]", ex);
             return new Respuesta(false, "Error obteniendo  agenda.", "getAgenda " + ex.getMessage());
         }
     }
-     
+
     public Respuesta emailDiary(DiaryDto diaryDtos) {
         try {
             Request request = new Request("ModuleDiary/diaryemail");
+            request.post(diaryDtos);
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            return new Respuesta(true, "", "");
+        } catch (Exception ex) {
+            Logger.getLogger(DiaryService.class.getName()).log(Level.SEVERE, "Error guardando agenda.", ex);
+            return new Respuesta(false, "Error guardando agenda.", "guardarAgenda" + ex.getMessage());
+        }
+    }
+
+    public Respuesta emailDiaryRecordatorio(DiaryDto diaryDtos) {
+        try {
+            Request request = new Request("ModuleDiary/diaryEmailRecordatorio");
             request.post(diaryDtos);
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
@@ -67,6 +82,7 @@ public class DiaryService {
         }
     }
 //
+
     public Respuesta deleteDiary(Integer id) {
         try {
             Map<String, Object> parametros = new HashMap<>();
