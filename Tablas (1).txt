@@ -191,7 +191,6 @@ alter table CL_DOCTOR
   add constraint FK_USER foreign key (DR_USER)
   references CL_USERS (US_ID);
 
-
 -- Create table
 create table CL_PATIENT
 (
@@ -202,7 +201,8 @@ create table CL_PATIENT
   pt_gender         VARCHAR2(1) not null,
   pt_email          VARCHAR2(30) not null,
   pt_birthdate      DATE,
-  pt_id             NUMBER(5) not null
+  pt_id             NUMBER(5) not null,
+  pt_telephone      VARCHAR2(30)
 )
 tablespace USERS
   pctfree 10
@@ -258,7 +258,8 @@ alter table CL_PATIENT
     minextents 1
     maxextents unlimited
   );
-
+  
+  
 -- Create table
 create table CL_APPOINTMENT
 (
@@ -389,18 +390,25 @@ alter table CL_DIARY
   add constraint FK_SPACE foreign key (DY_SPACE)
   references CL_SPACE (SE_ID);
 
-
 -- Create table
 create table CL_PERSONALBACKGROUND
 (
-  pb_id      NUMBER(5) not null,
-  pb_type    VARCHAR2(20) not null,
-  pb_context VARCHAR2(200) not null
+  pb_id       NUMBER(5) not null,
+  pb_type     VARCHAR2(20) not null,
+  pb_context  VARCHAR2(200) not null,
+  pb_filecode NUMBER(5) not null
 )
 tablespace USERS
   pctfree 10
   initrans 1
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 -- Create/Recreate primary, unique and foreign key constraints 
 alter table CL_PERSONALBACKGROUND
   add constraint PK_PBID primary key (PB_ID)
@@ -408,7 +416,14 @@ alter table CL_PERSONALBACKGROUND
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 -- Create/Recreate check constraints 
 alter table CL_PERSONALBACKGROUND
   add constraint PB_TYPECONSTRAINT
