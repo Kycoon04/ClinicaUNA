@@ -5,10 +5,12 @@ import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.PatientDto;
+import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.PatientService;
+import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
@@ -274,6 +276,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private RadioButton rdBtnUserInactive;
     public static ToggleGroup userActive;
+    ProceedingsDto proceedingsDto = new ProceedingsDto();
 
     /**
      * Initializes the controller class.
@@ -449,7 +452,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 }
             }
 
-        
         } else {
             userDoctor = true;
             if (usrIdiom.getUsLenguage().equals("Spanish")) {
@@ -1141,11 +1143,32 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void openProceeding(ActionEvent event) {
-        if (patientDto.getPtId()!=0) {
+        if (patientDto.getPtId() != 0) {
+
+            ProceedingsService serviceProced = new ProceedingsService();
+            Respuesta hasProc = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
+
+            if (hasProc.getEstado()) {
+                proceedingsDto = (ProceedingsDto) hasProc.getResultado("Proceedings");
+                AppContext.getInstance().set("Proceding", proceedingsDto);
+            } else {
+                proceedingsDto.setPsId(0);
+                proceedingsDto.setPsPatient(patientDto);
+                 Respuesta resp = serviceProced.saveProcedings(proceedingsDto);
+                if (resp.getEstado()) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), " Expediente Guardado Correctamente");
+                }
+                hasProc = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
+                proceedingsDto = (ProceedingsDto) hasProc.getResultado("Proceedings");
+                AppContext.getInstance().set("Proceding", proceedingsDto);
+
+               
+            }
+
             AppContext.getInstance().set("Patient", patientDto);
             FlowController.getInstance().goMain("ViewProceedingsOptions");
-        }else{
-             new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Debes cargar un paciente ");
+        } else {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Debes cargar un paciente ");
         }
     }
 

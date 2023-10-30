@@ -8,11 +8,16 @@ import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.ExamDto;
+import cr.ac.una.clinicauna.model.PProceedingsDto;
 import cr.ac.una.clinicauna.model.PatientDto;
+import cr.ac.una.clinicauna.model.PersonalbackgroundDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
+import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.ExamService;
+import cr.ac.una.clinicauna.service.PProceedingsService;
+import cr.ac.una.clinicauna.service.PersonalbackgroundService;
 import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
@@ -36,6 +41,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
@@ -96,17 +102,15 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private Text textProcName;
     @FXML
-    private TextField textFieldPersBgType;
-    @FXML
     private TextField textFieldSearchPersBg_Type;
     @FXML
     private TextField textFieldSearchPersBg_Context;
     @FXML
-    private TableView<?> tableViewPersonalBg;
+    private TableView<PersonalbackgroundDto> tableViewPersonalBg;
     @FXML
-    private TableColumn<?, ?> tableColPersBgType;
+    private TableColumn<PersonalbackgroundDto, String> tableColPersBgType;
     @FXML
-    private TableColumn<?, ?> tableColPersBgContext;
+    private TableColumn<PersonalbackgroundDto, String> tableColPersBgContext;
     @FXML
     private TextField textFieldFamBgRelationship;
     @FXML
@@ -222,11 +226,26 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TextField textFieldPatientEmail;
     @FXML
     private TextField textFieldPatientBirthday;
+     @FXML
+    private ChoiceBox<String> choiceBoxPersBgType;
     List<DoctorDto> doctorList = new ArrayList<>();
 
     List<ExamDto> examList = new ArrayList<>();
     private ObservableList<DoctorDto> doctorObservableList;
     private ObservableList<ExamDto> examsObservableList;
+
+    PersonalbackgroundDto personalBkDto = new PersonalbackgroundDto();
+    List<PersonalbackgroundDto> personalBaList = new ArrayList<>();
+    private ObservableList<PersonalbackgroundDto> personalBackObservableList;
+    
+    PProceedingsDto PProceedingsDto = new PProceedingsDto();
+    String[] typeSpanish={"Patológicos","Hospitalización","Cirugias","Alergias","Tratamientos"};
+    String[] typeEnglish={"Pathological","Hospitalization","Surgery","Allergies","Treatments"};
+    String[] typeJaponese={"病理的","入院" ,"手術" ,"アレルギー" ,"治療"};
+    String[] typeFrench={"Pathologiques","Hospitalisation","Chirurgies","Allergies","Traitements"};
+    UserDto userDto;
+
+
 
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**
@@ -238,9 +257,21 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         OptionsProceedingsView.toFront();
 
         patientDto = (PatientDto) AppContext.getInstance().get("Patient");
-
-        System.out.println(patientDto.getPtName());
-
+        proceedingsDto= (ProceedingsDto) AppContext.getInstance().get("Proceding");
+        userDto = (UserDto) AppContext.getInstance().get("Usuario");
+        if(userDto.getUsLenguage().equals("Spanish")){
+            choiceBoxPersBgType.getItems().addAll(typeSpanish);
+        }
+        if(userDto.getUsLenguage().equals("English")){
+            choiceBoxPersBgType.getItems().addAll(typeEnglish);
+        }
+        if(userDto.getUsLenguage().equals("France")){
+            choiceBoxPersBgType.getItems().addAll(typeFrench);
+        }
+        if(userDto.getUsLenguage().equals("Japonese")){
+            choiceBoxPersBgType.getItems().addAll(typeJaponese);
+        }
+    
         this.tableColDocBreaks.setCellValueFactory(new PropertyValueFactory("DrBreak"));
         this.tableColDocFinishWork.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
         this.tableColDocLicense.setCellValueFactory(new PropertyValueFactory("DrLicense"));
@@ -256,10 +287,14 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         this.tableColDeseaseId.setCellValueFactory(new PropertyValueFactory("DsId"));
         this.tableColDeseaseName.setCellValueFactory(new PropertyValueFactory("DsName"));
 
+        this.tableColPersBgType.setCellValueFactory(new PropertyValueFactory("PbType"));
+        this.tableColPersBgContext.setCellValueFactory(new PropertyValueFactory("PbContext"));
+
         bindPatient();
         fillTableExams();
         fillTableDoctors();
         fillTableDiseases();
+        fillTablePersonalBack();
         nameDistMainField.setTextFormatter(Formato.getInstance().letrasFormat(10));
     }
 
@@ -290,6 +325,20 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                 this.tableViewExamns.setItems(examsObservableList);
             }
         }
+    }
+
+    private void fillTablePersonalBack() {
+        PersonalbackgroundService service = new PersonalbackgroundService();
+        personalBaList = service.getPersonalbackgrounds();
+
+        if (personalBaList == null) {
+            System.out.println("nula");
+        } else {
+            personalBackObservableList = FXCollections.observableArrayList(personalBaList);
+            this.tableViewPersonalBg.refresh();
+            this.tableViewPersonalBg.setItems(personalBackObservableList);
+        }
+
     }
 
     @FXML
@@ -474,6 +523,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             proceedingsDto.setPsId(0);
             proceedingsDto.setPsPatient(patientDto);
         }
+        
         Respuesta resp = serviceProced.saveProcedings(proceedingsDto);
         if (resp.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), " Expediente Guardado Correctamente");
@@ -499,6 +549,87 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void updatePersonalBg(ActionEvent event) {
+        //traer el expeduiente actual
+        ProceedingsService serviceProced = new ProceedingsService();
+        Respuesta hasProc = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
+
+        if (hasProc.getEstado()) {
+            proceedingsDto = (ProceedingsDto) hasProc.getResultado("Proceedings");
+        } else {
+            proceedingsDto.setPsId(0);
+            proceedingsDto.setPsPatient(patientDto);
+        }
+        if (proceedingsDto != null) {
+            savePersonalBackground();
+        } else {
+
+        }
+
+    }
+
+    private void savePersonalBackground() {
+        PersonalbackgroundService service = new PersonalbackgroundService();
+        PProceedingsService serviceProP = new PProceedingsService();
+        int codigo= codeRandom();
+        personalBkDto.setPbId(0);
+        String typeSelected=choiceBoxPersBgType.getValue();
+        String type="";
+        if(typeSelected.equals("Patológicos")||typeSelected.equals("Pathological")||typeSelected.equals("病理的")||typeSelected.equals("Pathologiques")){
+            type="Pathological";
+        }
+        if(typeSelected.equals("Hospitalización")||typeSelected.equals("Hospitalization")||typeSelected.equals("入院")||typeSelected.equals("Hospitalisation")){
+            type="Hospitalization";
+        }
+        if(typeSelected.equals("Cirugias")||typeSelected.equals("Surgery")||typeSelected.equals("手術")||typeSelected.equals("Chirurgies")){
+            type="Surgery";
+        }
+         if(typeSelected.equals("Alergias")||typeSelected.equals("Allergies")||typeSelected.equals("アレルギー")||typeSelected.equals("Allergies")){
+            type="Allergies";
+        }  
+        if(typeSelected.equals("Tratamientos")||typeSelected.equals("Treatments")||typeSelected.equals("治療")||typeSelected.equals("Traitements")){
+            type="Treatments";
+        } 
+           
+        personalBkDto.setPbType(type);
+        personalBkDto.setPbContext(textAreaPersBgContext.getText());
+        personalBkDto.setPbFilecode(codigo);
+        System.out.println(codigo);
+        Respuesta personalBac = service.savePersonalbackground(personalBkDto);
+
+        if (personalBac.getEstado()) {
+            System.out.println("Se guardo");
+            fillTablePersonalBack();
+            personalBac= service.getPersonalbackgroundCode(codigo);
+            personalBkDto= (PersonalbackgroundDto) personalBac.getResultado("PersonalBackground");
+            if(personalBac.getEstado()){
+                PProceedingsDto.setPpId(0);
+                PProceedingsDto.setPpPersonalback(personalBkDto);
+                PProceedingsDto.setPpProceedings(proceedingsDto);
+                Respuesta procedings= serviceProP.savePProceedings(PProceedingsDto);
+                if(procedings.getEstado())
+                {
+                    System.out.println("Se guardo relacion");
+                }else{
+                    System.out.println("no se guardo relacion");
+            }
+            }
+        } else {
+            System.out.println("Error");
+        }
+
+    }
+    
+     int codeRandom() { 
+        int i, r;
+        for (i = 0; i < 6; i++) {
+            r = (int) (Math.random() * (90 - 48 + 1) + 48);
+            if ((r > 47 && r < 58) || (r > 64 && r < 91)) {
+               return r;
+            } else {
+                i--;
+            }
+        }
+        return 0;
     }
 
     @FXML

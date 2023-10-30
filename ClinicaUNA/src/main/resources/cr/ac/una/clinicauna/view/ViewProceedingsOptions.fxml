@@ -6,6 +6,7 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Spinner?>
@@ -687,17 +688,13 @@
                                                             <Font name="Tw Cen MT" size="21.0" />
                                                          </font>
                                                       </Text>
-                                                      <TextField fx:id="textFieldPersBgType" editable="false" onKeyPressed="#searchPat_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
-                                                         <font>
-                                                            <Font name="Tw Cen MT" size="23.0" />
-                                                         </font>
-                                                      </TextField>
                                                       <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Contexto" textAlignment="RIGHT" wrappingWidth="206.13658714294434" GridPane.rowIndex="2">
                                                          <font>
                                                             <Font name="Tw Cen MT" size="21.0" />
                                                          </font>
                                                       </Text>
                                                       <TextArea fx:id="textAreaPersBgContext" prefHeight="83.0" prefWidth="249.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                      <ChoiceBox fx:id="choiceBoxPersBgType" prefHeight="30.0" prefWidth="274.0" GridPane.columnIndex="1" />
                                                    </children>
                                                 </GridPane>
                                                 <Button mnemonicParsing="false" onAction="#updatePersonalBg" prefHeight="30.0" prefWidth="177.0" text="%ManActualizar">

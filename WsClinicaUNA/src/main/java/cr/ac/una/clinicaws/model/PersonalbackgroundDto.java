@@ -13,6 +13,7 @@ public class PersonalbackgroundDto {
     private Integer pbId;
     private String pbType;
     private String pbContext;
+     private int pbFilecode;
 
     public PersonalbackgroundDto() {
     }
@@ -21,7 +22,17 @@ public class PersonalbackgroundDto {
         pbId = personalbackground.getPbId();
         pbType = personalbackground.getPbType();
         pbContext = personalbackground.getPbContext();
+        pbFilecode = personalbackground.getPbFilecode();
     }
+
+    public int getPbFilecode() {
+        return pbFilecode;
+    }
+
+    public void setPbFilecode(int pbFilecode) {
+        this.pbFilecode = pbFilecode;
+    }
+
     public Integer getPbId() {
         return pbId;
     }

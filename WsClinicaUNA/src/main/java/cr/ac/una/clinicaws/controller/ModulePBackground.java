@@ -32,6 +32,7 @@ import java.util.logging.Logger;
  *
  * @author jomav
  */
+
 @Path("/ModulePBackground")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -48,6 +49,22 @@ public class ModulePBackground {
     public Response getPBackground(@PathParam("id") Integer id) {
         try {
             Respuesta res = pBackgroundService.getPBackground(id);
+            if (!res.getEstado()) {//retorna el codigo de respuesta del server 
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(res.getResultado("PBackground")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModulePBackground.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Personal Background").build();
+        }
+    }
+    
+    
+    @GET
+    @Path("/pBackgroundCode/{id}")
+    public Response getPBackgroundCode(@PathParam("id") Integer id) {
+        try {
+            Respuesta res = pBackgroundService.getPBackgroundCode(id);
             if (!res.getEstado()) {//retorna el codigo de respuesta del server 
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
@@ -86,6 +103,7 @@ public class ModulePBackground {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Personal Background").build();
         }
     }
+    
     @GET
     @Path("/pBackgrounds")
     public Response getPBackgrounds() {

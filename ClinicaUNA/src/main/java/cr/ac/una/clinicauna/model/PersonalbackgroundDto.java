@@ -17,11 +17,21 @@ public class PersonalbackgroundDto {
     public SimpleIntegerProperty pbId;
     public SimpleStringProperty pbType;
     public SimpleStringProperty pbContext;
+    public SimpleIntegerProperty pbFilecode;
 
     public PersonalbackgroundDto() {
         pbId= new SimpleIntegerProperty();
         pbType= new SimpleStringProperty();
         pbContext= new SimpleStringProperty();
+        pbFilecode= new SimpleIntegerProperty();
+    }
+
+    public int getPbFilecode() {
+        return pbFilecode.get();
+    }
+
+    public void setPbFilecode(int pbFilecode) {
+        this.pbFilecode.set(pbFilecode);
     }
 
     

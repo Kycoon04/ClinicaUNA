@@ -39,6 +39,24 @@ public class PersonalbackgroundService {
         }
     }
 
+        public Respuesta getPersonalbackgroundCode(Integer id) {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("id", id);
+            Request request = new Request("ModulePBackground/pBackgroundCode", "/{id}", parametros);
+            request.get();
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            PersonalbackgroundDto diseaseDto = (PersonalbackgroundDto) request.readEntity(PersonalbackgroundDto.class);
+    
+            return new Respuesta(true, "", "", "PersonalBackground",diseaseDto);
+        } catch (Exception ex) {
+            Logger.getLogger(PersonalbackgroundService.class.getName()).log(Level.SEVERE, "Error obteniendo  [" + id + "]", ex);
+            return new Respuesta(false, "Error obteniendo .", " " + ex.getMessage());
+        }
+    }
+
 
     public Respuesta savePersonalbackground(PersonalbackgroundDto personalbackgroundDto) {
         try {
@@ -74,10 +92,10 @@ public class PersonalbackgroundService {
     public List<PersonalbackgroundDto> getPersonalbackgrounds() {
         try {
             Map<String, Object> parametros = new HashMap<>();
-            Request request = new Request("ModulePBackground/pBackground", "", parametros);
+            Request request = new Request("ModulePBackground/pBackgrounds", "", parametros);
             request.get();
             if (request.isError()) {
-                System.out.println(request.getError());
+               
                 return null;
             }
             return (List<PersonalbackgroundDto>) request.readEntity(new GenericType<List<PersonalbackgroundDto>>() {
@@ -87,6 +105,7 @@ public class PersonalbackgroundService {
             return null;
         }
     }
+    
     
     
 }
