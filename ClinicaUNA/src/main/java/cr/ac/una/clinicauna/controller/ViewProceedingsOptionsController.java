@@ -464,8 +464,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private void AddDesease(ActionEvent event) {
        //crear boton seleccionar y guardar
-        
-        
+
         /*DiseaseService service = new DiseaseService();
         Respuesta r = null;
 
