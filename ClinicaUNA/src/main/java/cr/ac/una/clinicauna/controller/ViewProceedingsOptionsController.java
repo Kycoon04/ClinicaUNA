@@ -229,12 +229,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     List<ExamDto> examList = new ArrayList<>();
     private ObservableList<DoctorDto> doctorObservableList;
     private ObservableList<ExamDto> examsObservableList;
-    
-    PersonalbackgroundDto personalBkDto= new PersonalbackgroundDto();
+
+    PersonalbackgroundDto personalBkDto = new PersonalbackgroundDto();
     List<PersonalbackgroundDto> personalBaList = new ArrayList<>();
     private ObservableList<PersonalbackgroundDto> personalBackObservableList;
- 
-    
+
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**
      * Initializes the controller class.
@@ -245,9 +244,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         OptionsProceedingsView.toFront();
 
         patientDto = (PatientDto) AppContext.getInstance().get("Patient");
-
-        System.out.println(patientDto.getPtName());
-
+        proceedingsDto= (ProceedingsDto) AppContext.getInstance().get("Proceding");
+    
         this.tableColDocBreaks.setCellValueFactory(new PropertyValueFactory("DrBreak"));
         this.tableColDocFinishWork.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
         this.tableColDocLicense.setCellValueFactory(new PropertyValueFactory("DrLicense"));
@@ -265,11 +263,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
         this.tableColPersBgType.setCellValueFactory(new PropertyValueFactory("PbType"));
         this.tableColPersBgContext.setCellValueFactory(new PropertyValueFactory("PbContext"));
-        
 
-    
-    
-    
         bindPatient();
         fillTableExams();
         fillTableDoctors();
@@ -306,11 +300,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             }
         }
     }
-    
-     private void fillTablePersonalBack() {
+
+    private void fillTablePersonalBack() {
         PersonalbackgroundService service = new PersonalbackgroundService();
-         personalBaList= service.getPersonalbackgrounds();
-       
+        personalBaList = service.getPersonalbackgrounds();
+
         if (personalBaList == null) {
             System.out.println("nula");
         } else {
@@ -318,7 +312,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             this.tableViewPersonalBg.refresh();
             this.tableViewPersonalBg.setItems(personalBackObservableList);
         }
-       
+
     }
 
     @FXML
@@ -503,6 +497,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             proceedingsDto.setPsId(0);
             proceedingsDto.setPsPatient(patientDto);
         }
+        
         Respuesta resp = serviceProced.saveProcedings(proceedingsDto);
         if (resp.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), " Expediente Guardado Correctamente");
@@ -528,40 +523,45 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void updatePersonalBg(ActionEvent event) {
-       //traer el expeduiente actual
+        //traer el expeduiente actual
         ProceedingsService serviceProced = new ProceedingsService();
-        Respuesta proceding = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
-        proceedingsDto= (ProceedingsDto) proceding.getResultado("Proceedings");
-        
-        if(proceedingsDto!=null){
-        savePersonalBackground();
-        }else{
-            
+        Respuesta hasProc = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
+
+        if (hasProc.getEstado()) {
+            proceedingsDto = (ProceedingsDto) hasProc.getResultado("Proceedings");
+        } else {
+            proceedingsDto.setPsId(0);
+            proceedingsDto.setPsPatient(patientDto);
         }
-        
+
+        if (proceedingsDto != null) {
+            savePersonalBackground();
+        } else {
+
+        }
+
         System.out.println("Hola");
     }
 
-    private void savePersonalBackground(){
-        PersonalbackgroundService service= new PersonalbackgroundService();
-       
+    private void savePersonalBackground() {
+        PersonalbackgroundService service = new PersonalbackgroundService();
+
         personalBkDto.setPbId(0);
         // se debe cragar esto textFieldPersBgType.getText()
         //debe ser un tipo choicebox
         personalBkDto.setPbType("Pathological");
         personalBkDto.setPbContext(textAreaPersBgContext.getText());
-        Respuesta personalBac= service.savePersonalbackground(personalBkDto);
-        
-        if(personalBac.getEstado()){
+        Respuesta personalBac = service.savePersonalbackground(personalBkDto);
+
+        if (personalBac.getEstado()) {
             System.out.println("Se guardo");
             fillTablePersonalBack();
-        }else{
+        } else {
             System.out.println("Error");
         }
-        
+
     }
-    
-    
+
     @FXML
     private void personalBgClicked(MouseEvent event) {
     }
