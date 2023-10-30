@@ -232,7 +232,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TextField textFieldPatientEmail;
     @FXML
     private TextField textFieldPatientBirthday;
-     @FXML
+    @FXML
     private ChoiceBox<String> choiceBoxPersBgType;
     List<DoctorDto> doctorList = new ArrayList<>();
 
@@ -245,10 +245,10 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private ObservableList<PersonalbackgroundDto> personalBackObservableList;
 
     PProceedingsDto PProceedingsDto = new PProceedingsDto();
-    String[] typeSpanish={"Patológicos","Hospitalización","Cirugias","Alergias","Tratamientos"};
-    String[] typeEnglish={"Pathological","Hospitalization","Surgery","Allergies","Treatments"};
-    String[] typeJaponese={"病理的","入院" ,"手術" ,"アレルギー" ,"治療"};
-    String[] typeFrench={"Pathologiques","Hospitalisation","Chirurgies","Allergies","Traitements"};
+    String[] typeSpanish = {"Patológicos", "Hospitalización", "Cirugias", "Alergias", "Tratamientos"};
+    String[] typeEnglish = {"Pathological", "Hospitalization", "Surgery", "Allergies", "Treatments"};
+    String[] typeJaponese = {"病理的", "入院", "手術", "アレルギー", "治療"};
+    String[] typeFrench = {"Pathologiques", "Hospitalisation", "Chirurgies", "Allergies", "Traitements"};
     UserDto userDto;
 
     FProceedingsDto FProceedingsDto = new FProceedingsDto();
@@ -267,21 +267,22 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         OptionsProceedingsView.toFront();
 
         patientDto = (PatientDto) AppContext.getInstance().get("Patient");
-        proceedingsDto= (ProceedingsDto) AppContext.getInstance().get("Proceding");
+        proceedingsDto = (ProceedingsDto) AppContext.getInstance().get("Proceding");
         userDto = (UserDto) AppContext.getInstance().get("Usuario");
-        if(userDto.getUsLenguage().equals("Spanish")){
+        if (userDto.getUsLenguage().equals("Spanish")) {
             choiceBoxPersBgType.getItems().addAll(typeSpanish);
         }
-        if(userDto.getUsLenguage().equals("English")){
+        if (userDto.getUsLenguage().equals("English")) {
             choiceBoxPersBgType.getItems().addAll(typeEnglish);
         }
-        if(userDto.getUsLenguage().equals("France")){
+        if (userDto.getUsLenguage().equals("France")) {
             choiceBoxPersBgType.getItems().addAll(typeFrench);
         }
-        if(userDto.getUsLenguage().equals("Japonese")){
+        if (userDto.getUsLenguage().equals("Japonese")) {
             choiceBoxPersBgType.getItems().addAll(typeJaponese);
         }
-    
+        choiceBoxPersBgType.setValue("Pathological");
+
         this.tableColDocBreaks.setCellValueFactory(new PropertyValueFactory("DrBreak"));
         this.tableColDocFinishWork.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
         this.tableColDocLicense.setCellValueFactory(new PropertyValueFactory("DrLicense"));
@@ -302,8 +303,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
         this.tableColFamBgRelation.setCellValueFactory(new PropertyValueFactory("FbRelationship"));
         this.tableColFamBgDisease.setCellValueFactory(new PropertyValueFactory("FbDiseaseName"));
-        
-        
+
         bindPatient();
         fillTableExams();
         fillTableDoctors();
@@ -357,7 +357,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     }
 
     private void fillTableFamilyBack() {
-       FamilybackgroundService service = new FamilybackgroundService();
+        FamilybackgroundService service = new FamilybackgroundService();
         familyBaList = service.getFamilybackground();
 
         if (familyBaList == null) {
@@ -368,7 +368,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             this.tableViewFamilyBg.setItems(familyBackObservableList);
         }
     }
-       
+
     @FXML
     private void searchPat_Name(KeyEvent event) {
         FilteredList<PersonalbackgroundDto> filteredUser = new FilteredList<>(personalBackObservableList, f -> true);
@@ -386,17 +386,18 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             });
         });
         filteredUsers(filteredUser);
-        
+
     }
-  private void filteredUsers(FilteredList<PersonalbackgroundDto> list) {
+
+    private void filteredUsers(FilteredList<PersonalbackgroundDto> list) {
         SortedList<PersonalbackgroundDto> sorted = new SortedList<>(list);
         sorted.comparatorProperty().bind(tableViewPersonalBg.comparatorProperty());
         tableViewPersonalBg.setItems(sorted);
     }
-    
+
     @FXML
     private void searchPat_identification(KeyEvent event) {
-           FilteredList<PersonalbackgroundDto> filteredUser = new FilteredList<>(personalBackObservableList, f -> true);
+        FilteredList<PersonalbackgroundDto> filteredUser = new FilteredList<>(personalBackObservableList, f -> true);
         textFieldSearchPersBg_Context.textProperty().addListener((observable, value, newValue) -> {
             filteredUser.setPredicate(PersonalbackgroundDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -463,7 +464,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void AddDesease(ActionEvent event) {
-       //crear boton seleccionar y guardar
+        //crear boton seleccionar y guardar
 
         DiseaseService service = new DiseaseService();
         Respuesta r = null;
@@ -476,7 +477,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             diseaseDto.setDsId(diseaseDto.getDsId());
             diseaseDto.setDsName(nameDistMainField.getText());
             r = service.saveDisease(diseaseDto);
-             diseaseDto = new DiseaseDto();
+            diseaseDto = new DiseaseDto();
         }
         if (r.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Enfermedad guardada");
@@ -486,8 +487,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         }
 
         fillTableDiseases();
-         
-       // OptionsProceedingsView.toFront();
+
+        // OptionsProceedingsView.toFront();
     }
 
     @FXML
@@ -601,19 +602,21 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         proceedingsDto = (ProceedingsDto) resp.getResultado("Proceedings");
 
         ExamService serviceExam = new ExamService();
-        examDto.setEmId(0);
-        examDto.setEmName(textFieldNameExam.getText());
-        examDto.setEmDoctornote(textAreaDoctorNotes.getText());
-        examDto.setEmDoctor(doctorDto);
-        examDto.setEmProceedings(proceedingsDto);
-        resp = serviceExam.saveExam(examDto);
-
-        if (resp.getEstado()) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Examen Guardado Correctamente");
-            fillTableExams();
-        } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Examen no guardado ");
+        if (textFieldNameExam.getText() != "" && doctorDto != null) {
+            examDto.setEmId(0);
+            examDto.setEmName(textFieldNameExam.getText());
+            examDto.setEmDoctornote(textAreaDoctorNotes.getText());
+            examDto.setEmDoctor(doctorDto);
+            examDto.setEmProceedings(proceedingsDto);
+            resp = serviceExam.saveExam(examDto);
+            if (resp.getEstado()) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Examen Guardado Correctamente");
+                fillTableExams();
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Examen no guardado ");
+            }
         }
+
     }
 
     @FXML
@@ -640,45 +643,47 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         PersonalbackgroundService service = new PersonalbackgroundService();
         PProceedingsService serviceProP = new PProceedingsService();
         int codigo = codeRandom();
-        personalBkDto.setPbId(0);
-        String typeSelected=choiceBoxPersBgType.getValue();
-        String type="";
-        if(typeSelected.equals("Patológicos")||typeSelected.equals("Pathological")||typeSelected.equals("病理的")||typeSelected.equals("Pathologiques")){
-            type="Pathological";
+        personalBkDto.setPbId(personalBkDto.getPbId());
+        String typeSelected = choiceBoxPersBgType.getValue();
+        String type = "";
+        if (typeSelected.equals("Patológicos") || typeSelected.equals("Pathological") || typeSelected.equals("病理的") || typeSelected.equals("Pathologiques")) {
+            type = "Pathological";
         }
-        if(typeSelected.equals("Hospitalización")||typeSelected.equals("Hospitalization")||typeSelected.equals("入院")||typeSelected.equals("Hospitalisation")){
-            type="Hospitalizations";
+        if (typeSelected.equals("Hospitalización") || typeSelected.equals("Hospitalization") || typeSelected.equals("入院") || typeSelected.equals("Hospitalisation")) {
+            type = "Hospitalizations";
         }
-        if(typeSelected.equals("Cirugias")||typeSelected.equals("Surgery")||typeSelected.equals("手術")||typeSelected.equals("Chirurgies")){
-            type="Surgery";
+        if (typeSelected.equals("Cirugias") || typeSelected.equals("Surgery") || typeSelected.equals("手術") || typeSelected.equals("Chirurgies")) {
+            type = "Surgery";
         }
-         if(typeSelected.equals("Alergias")||typeSelected.equals("Allergies")||typeSelected.equals("アレルギー")||typeSelected.equals("Allergies")){
-            type="Allergies";
-        }  
-        if(typeSelected.equals("Tratamientos")||typeSelected.equals("Treatments")||typeSelected.equals("治療")||typeSelected.equals("Traitements")){
-            type="Treatments";
-        } 
-           
+        if (typeSelected.equals("Alergias") || typeSelected.equals("Allergies") || typeSelected.equals("アレルギー") || typeSelected.equals("Allergies")) {
+            type = "Allergies";
+        }
+        if (typeSelected.equals("Tratamientos") || typeSelected.equals("Treatments") || typeSelected.equals("治療") || typeSelected.equals("Traitements")) {
+            type = "Treatments";
+        }
+
         personalBkDto.setPbType(type);
         personalBkDto.setPbContext(textAreaPersBgContext.getText());
         personalBkDto.setPbFilecode(codigo);
         System.out.println(codigo);
-        Respuesta personalBac = service.savePersonalbackground(personalBkDto);
+        if (personalBkDto.getPbContext() != "") {
+            Respuesta personalBac = service.savePersonalbackground(personalBkDto);
 
-        if (personalBac.getEstado()) {
-          new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo el antecedente");
-            fillTablePersonalBack();
-            personalBac = service.getPersonalbackgroundCode(codigo);
-            personalBkDto = (PersonalbackgroundDto) personalBac.getResultado("PersonalBackground");
             if (personalBac.getEstado()) {
-                PProceedingsDto.setPpId(0);
-                PProceedingsDto.setPpPersonalback(personalBkDto);
-                PProceedingsDto.setPpProceedings(proceedingsDto);
-                Respuesta procedings = serviceProP.savePProceedings(PProceedingsDto);
-                if (procedings.getEstado()) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo en su expediente");
-                } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "no se guardo en su expediente");
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo el antecedente");
+                fillTablePersonalBack();
+                personalBac = service.getPersonalbackgroundCode(codigo);
+                personalBkDto = (PersonalbackgroundDto) personalBac.getResultado("PersonalBackground");
+                if (personalBac.getEstado()) {
+                    PProceedingsDto.setPpId(0);
+                    PProceedingsDto.setPpPersonalback(personalBkDto);
+                    PProceedingsDto.setPpProceedings(proceedingsDto);
+                    Respuesta procedings = serviceProP.savePProceedings(PProceedingsDto);
+                    if (procedings.getEstado()) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo en su expediente");
+                    } else {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "no se guardo en su expediente");
+                    }
                 }
             }
         } else {
@@ -703,6 +708,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void personalBgClicked(MouseEvent event) {
+        if(event.getClickCount()==2){
+            personalBkDto= tableViewPersonalBg.getSelectionModel().getSelectedItem();
+            textAreaPersBgContext.setText(personalBkDto.getPbContext());
+        }
+        
     }
 
     @FXML
@@ -714,13 +724,13 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         FamilybackgroundService service = new FamilybackgroundService();
         FProceedingsService serviceProP = new FProceedingsService();
         int codigo = codeRandom();
-        familyBkDto.setFbId(0);
+        familyBkDto.setFbId(familyBkDto.getFbId());
         familyBkDto.setFbFilecode(codigo);
         familyBkDto.setFbRelationship(textFieldFamBgRelationship.getText());
         familyBkDto.setFbDisease(diseaseDto);
         Respuesta familyBac = service.saveFamilybackground(familyBkDto);
         if (familyBac.getEstado()) {
-             new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo el antecedente");
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo el antecedente");
             familyBac = service.getFamilybackgroundCode(codigo);
             familyBkDto = (FamilybackgroundDto) familyBac.getResultado("Familybackground");
             if (familyBac.getEstado()) {
@@ -742,6 +752,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void familiyBgClicked(MouseEvent event) {
+         if(event.getClickCount()==2){
+            familyBkDto= tableViewFamilyBg.getSelectionModel().getSelectedItem();
+            textFieldFamBgRelationship.setText(familyBkDto.getFbDiseaseName());
+            textFieldFamBgDisease.setText(familyBkDto.getFbDiseaseName());
+        } 
     }
 
     @FXML
@@ -764,17 +779,17 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void calculateBodyMass(ActionEvent event) {
-        
-        double height=0; 
-        double weight=0;
-         
-        if(textFieldRep_Height.getText()!="" && textFieldRep_Weight.getText()!="" ){
-             height= Double.parseDouble(textFieldRep_Height.getText());
-             weight= Double.parseDouble(textFieldRep_Weight.getText());
-             double IMC= weight/(height*height)*10000;
-             double roundedIMC= Math.round(IMC* 10.0)/10.0;
-             textFieldRep_BodyMass.setText(roundedIMC+"");
-        }  
+
+        double height = 0;
+        double weight = 0;
+
+        if (textFieldRep_Height.getText() != "" && textFieldRep_Weight.getText() != "") {
+            height = Double.parseDouble(textFieldRep_Height.getText());
+            weight = Double.parseDouble(textFieldRep_Weight.getText());
+            double IMC = weight / (height * height) * 10000;
+            double roundedIMC = Math.round(IMC * 10.0) / 10.0;
+            textFieldRep_BodyMass.setText(roundedIMC + "");
+        }
     }
 
     @FXML
@@ -949,7 +964,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void updateReportAp(ActionEvent event) {
-        
+
     }
 
 }
