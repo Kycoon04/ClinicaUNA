@@ -21,6 +21,9 @@ public class ReportDto {
     private String rtDoctorReason;
     private Appointment rtAppointment;
 
+    public ReportDto(){
+        
+    }
     public ReportDto(Report report) {
         this.rtId = report.getRtId();
         this.rtPressure = report.getRtPressure();

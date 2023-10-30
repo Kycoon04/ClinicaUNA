@@ -9,12 +9,14 @@ import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiaryDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.PatientDto;
+import cr.ac.una.clinicauna.model.ReportDto;
 import cr.ac.una.clinicauna.model.SpaceDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.AppointmentService;
 import cr.ac.una.clinicauna.service.DiaryService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.PatientService;
+import cr.ac.una.clinicauna.service.ReportService;
 import cr.ac.una.clinicauna.service.SpaceService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
@@ -235,6 +237,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private List<Integer> horasTotales = new ArrayList<>();
     private boolean canupdate = false;
     UserDto usrIdiom = (UserDto) AppContext.getInstance().get("Usuario");
+    boolean flagBtnAttenControl = false;
     @FXML
     private Button UpdateEmailAppointment;
     @FXML
@@ -259,6 +262,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private TextArea textAreaRep_Reason;
     @FXML
     private TextArea textAreaRep_Notes;
+    @FXML
+    private Button btnAttentionControl;
 
     /**
      * Initializes the controller class.
@@ -482,6 +487,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void backDiary(MouseEvent event) {
+        btnAttentionControl.setVisible(true);
         FlowController.getInstance().goMain("ViewMaintenanceOptions");
     }
 
@@ -811,9 +817,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 //si mueve de derecha a izquierda creo que ya mueve mejor entre mas le sume mas fino va 
                 //si mueve de arriba a abajo tambien 
                 //el problema esta cuando quiere pasar las citas en una casilla diagonal
-                
-                double dropX = event.getX()+30;
-                double dropY = event.getY()+5;
+
+                double dropX = event.getX() + 30;
+                double dropY = event.getY() + 5;
 
                 int dropColumn = getColumnFromX(dropX, DiaryPane);
                 int dropRow = getRowFromY(dropY, DiaryPane);
@@ -898,6 +904,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                     List<SpaceDto> actualizados = service.getSpace();
                     actualizados = actualizados.stream().filter(x -> x.getSeAppointment().getAtId() == referente.getSeAppointment().getAtId()).toList();
                     int k = 0;
+                    btnAttentionControl.setVisible(true);
                     for (SpaceDto p : actualizados) {
                         spacesDto = p;
                         spacesDto.setSeHour(horasModificadas.get(k).format(timeFormatter));
@@ -1198,8 +1205,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             citasAgregadaDBsList.clear();
             DiaryPane.getChildren().removeAll(citasPosiblesDBsList);
             citasPosiblesDBsList.clear();
-        }else{
-        eventAgendDoct();
+        } else {
+            eventAgendDoct();
         }
         String horaInicio = doctorDto.getDrIniworking();
         String horaFin = doctorDto.getDrFinisworking();
@@ -1223,7 +1230,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         } else {
             DiaryService diario = new DiaryService();
             List<DiaryDto> AgendaCompleta = diario.getDiary();
-            
+
             if (AgendaCompleta != null) {
                 AgendaCompleta = AgendaCompleta.stream().filter(pCancelada.and(pDoctor.and(x -> x.getDyDate().equals(DayPicker.getValue())))).toList();
 
@@ -1315,6 +1322,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             email.setText(appointmentDtoModi.getAtEmail());
             code.setText(appointmentDtoModi.getAtCode());
             reason.setText(appointmentDtoModi.getAtReason());
+            btnAttentionControl.setVisible(true);
             switch (appointmentDtoModi.getAtState()) {
                 case "Programada":
                     Scheduled.setSelected(true);
@@ -1368,6 +1376,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private void openAppoinment(ActionEvent event) {
         modificarCita = false;
+        btnAttentionControl.setVisible(false);
         OptionsAppoinmentInfo.toFront();
     }
 
@@ -1510,6 +1519,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void backAttentionControl(ActionEvent event) {
+        btnAttentionControl.setVisible(true);
         OptionsAppoinmentInfo.toFront();
     }
 
@@ -1529,6 +1539,38 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void updateReportAp(ActionEvent event) {
+        System.out.println("" + appointmentDtoModi.getAtPatient().getPtName());
+        ReportDto reportDto = new ReportDto();
+        reportDto.setRtAppointment(appointmentDtoModi);
+        reportDto.setRtPressure(Short.parseShort(textFieldRep_Pressure.getText()));
+        reportDto.setRtHeartRate(Short.parseShort(textFieldRep_HeartRate.getText()));
+
+        reportDto.setRtHeight(Short.parseShort(textFieldRep_Height.getText()));
+        reportDto.setRtWeight(Short.parseShort(textFieldRep_Weight.getText()));
+        reportDto.setRtTemperature(Short.parseShort(textFieldRep_Temperature.getText()));
+        reportDto.setRtBodyMass(Short.parseShort("23"));
+        if (textAreaRep_Reason.getText().isEmpty()) {
+            reportDto.setRtDoctorReason("N/C");
+        } else {
+            reportDto.setRtDoctorReason(textAreaRep_Reason.getText());
+        }
+        if (textAreaRep_Reason.getText().isEmpty()) {
+            reportDto.setRtNotesNursing("N/C");
+        } else {
+            reportDto.setRtNotesNursing(textAreaRep_Notes.getText());
+        }
         
+        ReportService service = new ReportService();
+        Respuesta response = null;
+
+        if (reportDto != null) {
+            response = service.saveReport(reportDto);
+        }
+        if (response.getEstado()) {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Control de Atención guardada");
+        } else {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Error al guardar el Control de Atención");
+        }
+
     }
 }
