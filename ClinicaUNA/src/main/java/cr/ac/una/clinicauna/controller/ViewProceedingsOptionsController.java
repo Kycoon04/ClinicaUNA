@@ -944,4 +944,9 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         searchSelectDoctor.toFront();
     }
 
+    @FXML
+    private void updateReportAp(ActionEvent event) {
+        
+    }
+
 }
