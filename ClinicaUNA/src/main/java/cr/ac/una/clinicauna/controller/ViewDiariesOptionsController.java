@@ -790,8 +790,12 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             boolean success = false;
 
             if (db.hasString()) {
-                double dropX = event.getX();
-                double dropY = event.getY();
+                //si mueve de derecha a izquierda creo que ya mueve mejor entre mas le sume mas fino va 
+                //si mueve de arriba a abajo tambien 
+                //el problema esta cuando quiere pasar las citas en una casilla diagonal
+                
+                double dropX = event.getX()+30;
+                double dropY = event.getY()+5;
 
                 int dropColumn = getColumnFromX(dropX, DiaryPane);
                 int dropRow = getRowFromY(dropY, DiaryPane);
