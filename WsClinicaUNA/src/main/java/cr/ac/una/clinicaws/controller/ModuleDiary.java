@@ -7,6 +7,7 @@ package cr.ac.una.clinicaws.controller;
 import cr.ac.una.clinicaws.model.DiaryDto;
 import cr.ac.una.clinicaws.service.DiaryService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
+import cr.ac.una.clinicaws.util.Email;
 import cr.ac.una.clinicaws.util.Respuesta;
 import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +24,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,7 +74,20 @@ public class ModuleDiary {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando la agenda").build();
         }
     }
-
+    @POST
+    @Path("/diaryemail")
+    public Response sentemail(DiaryDto diaryDto) {
+        try {
+           Email email = new Email();
+           email.setDestinationMail(diaryDto.getDySpace().getSeAppointment().getAtEmail());
+           email.enviarConfirmacion(diaryDto.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), diaryDto.getDySpace().getSeAppointment().getAtPatient().getPtName());
+           return Response.ok().build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleDiary.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando la agenda").build();
+        }
+    }
+    
     @DELETE
     @Path("/diary/{id}")
     public Response deleteDiary(@PathParam("id") Integer id) {
