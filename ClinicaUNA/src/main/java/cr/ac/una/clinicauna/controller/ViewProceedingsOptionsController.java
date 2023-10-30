@@ -8,6 +8,8 @@ import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.ExamDto;
+import cr.ac.una.clinicauna.model.FProceedingsDto;
+import cr.ac.una.clinicauna.model.FamilybackgroundDto;
 import cr.ac.una.clinicauna.model.PProceedingsDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.PersonalbackgroundDto;
@@ -15,6 +17,8 @@ import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.ExamService;
+import cr.ac.una.clinicauna.service.FProceedingsService;
+import cr.ac.una.clinicauna.service.FamilybackgroundService;
 import cr.ac.una.clinicauna.service.PProceedingsService;
 import cr.ac.una.clinicauna.service.PersonalbackgroundService;
 import cr.ac.una.clinicauna.service.ProceedingsService;
@@ -235,10 +239,14 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     PersonalbackgroundDto personalBkDto = new PersonalbackgroundDto();
     List<PersonalbackgroundDto> personalBaList = new ArrayList<>();
     private ObservableList<PersonalbackgroundDto> personalBackObservableList;
-    
+
     PProceedingsDto PProceedingsDto = new PProceedingsDto();
 
+    FProceedingsDto FProceedingsDto = new FProceedingsDto();
 
+    FamilybackgroundDto familyBkDto = new FamilybackgroundDto();
+    List<FamilybackgroundDto> familyBaList = new ArrayList<>();
+    private ObservableList<PersonalbackgroundDto> familyBackObservableList;
 
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**
@@ -250,8 +258,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         OptionsProceedingsView.toFront();
 
         patientDto = (PatientDto) AppContext.getInstance().get("Patient");
-        proceedingsDto= (ProceedingsDto) AppContext.getInstance().get("Proceding");
-    
+        proceedingsDto = (ProceedingsDto) AppContext.getInstance().get("Proceding");
         this.tableColDocBreaks.setCellValueFactory(new PropertyValueFactory("DrBreak"));
         this.tableColDocFinishWork.setCellValueFactory(new PropertyValueFactory("DrFinisworking"));
         this.tableColDocLicense.setCellValueFactory(new PropertyValueFactory("DrLicense"));
@@ -379,7 +386,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void AddDesease(ActionEvent event) {
-        DiseaseService service = new DiseaseService();
+        /*  DiseaseService service = new DiseaseService();
         Respuesta r = null;
 
         if (diseaseDto == null) {
@@ -400,7 +407,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         }
 
         fillTableDiseases();
-
+         */
+        OptionsProceedingsView.toFront();
     }
 
     @FXML
@@ -503,7 +511,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             proceedingsDto.setPsId(0);
             proceedingsDto.setPsPatient(patientDto);
         }
-        
+
         Respuesta resp = serviceProced.saveProcedings(proceedingsDto);
         if (resp.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), " Expediente Guardado Correctamente");
@@ -529,7 +537,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void updatePersonalBg(ActionEvent event) {
-        //traer el expeduiente actual
+
         ProceedingsService serviceProced = new ProceedingsService();
         Respuesta hasProc = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
 
@@ -542,7 +550,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         if (proceedingsDto != null) {
             savePersonalBackground();
         } else {
-
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "No existe un expediente para este paciente");
         }
 
     }
@@ -550,7 +558,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void savePersonalBackground() {
         PersonalbackgroundService service = new PersonalbackgroundService();
         PProceedingsService serviceProP = new PProceedingsService();
-        int codigo= codeRandom();
+        int codigo = codeRandom();
         personalBkDto.setPbId(0);
         // se debe cragar esto textFieldPersBgType.getText()
         //debe ser un tipo choicebox
@@ -563,32 +571,32 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         if (personalBac.getEstado()) {
             System.out.println("Se guardo");
             fillTablePersonalBack();
-            personalBac= service.getPersonalbackgroundCode(codigo);
-            personalBkDto= (PersonalbackgroundDto) personalBac.getResultado("PersonalBackground");
-            if(personalBac.getEstado()){
+            personalBac = service.getPersonalbackgroundCode(codigo);
+            personalBkDto = (PersonalbackgroundDto) personalBac.getResultado("PersonalBackground");
+            if (personalBac.getEstado()) {
                 PProceedingsDto.setPpId(0);
                 PProceedingsDto.setPpPersonalback(personalBkDto);
                 PProceedingsDto.setPpProceedings(proceedingsDto);
-                Respuesta procedings= serviceProP.savePProceedings(PProceedingsDto);
-                if(procedings.getEstado())
-                {
-                    System.out.println("Se guardo relacion");
-                }else{
-                    System.out.println("no se guardo relacion");
-            }
+                Respuesta procedings = serviceProP.savePProceedings(PProceedingsDto);
+                if (procedings.getEstado()) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo en su expediente");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "no se guardo en su expediente");
+                }
             }
         } else {
-            System.out.println("Error");
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Ocurrio un error en el proceso");
+
         }
 
     }
-    
-     int codeRandom() { 
+
+    int codeRandom() {
         int i, r;
         for (i = 0; i < 6; i++) {
             r = (int) (Math.random() * (90 - 48 + 1) + 48);
             if ((r > 47 && r < 58) || (r > 64 && r < 91)) {
-               return r;
+                return r;
             } else {
                 i--;
             }
@@ -602,6 +610,36 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void updateFamilyBg(ActionEvent event) {
+        saveFamilyBackground();
+    }
+
+    private void saveFamilyBackground() {
+        FamilybackgroundService service = new FamilybackgroundService();
+        FProceedingsService serviceProP = new FProceedingsService();
+        int codigo = codeRandom();
+        familyBkDto.setFbId(0);
+        familyBkDto.setFbFilecode(codigo);
+        familyBkDto.setFbRelationship(textFieldFamBgRelationship.getText());
+        familyBkDto.setFbDisease(diseaseDto);
+        Respuesta familyBac = service.saveFamilybackground(familyBkDto);
+        if (familyBac.getEstado()) {
+            System.out.println("Se guardo");
+            familyBac = service.getFamilybackgroundCode(codigo);
+            familyBkDto = (FamilybackgroundDto) familyBac.getResultado("Familybackground");
+            if (familyBac.getEstado()) {
+                FProceedingsDto.setFpId(0);
+                FProceedingsDto.setFpFamilyback(familyBkDto);
+                FProceedingsDto.setFpProceedings(proceedingsDto);
+                Respuesta procedings = serviceProP.savefProceedings(FProceedingsDto);
+                if (procedings.getEstado()) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo en su expediente");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "no se guardo en su expediente");
+                }
+            }
+        } else {
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Ocurrio un error en el proceso");
+        }
     }
 
     @FXML
@@ -610,7 +648,20 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void backReport(ActionEvent event) {
-        OptionsProceedingsView.toFront();
+        ProceedingsService serviceProced = new ProceedingsService();
+        Respuesta hasProc = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
+
+        if (hasProc.getEstado()) {
+            proceedingsDto = (ProceedingsDto) hasProc.getResultado("Proceedings");
+        } else {
+            proceedingsDto.setPsId(0);
+            proceedingsDto.setPsPatient(patientDto);
+        }
+        if (proceedingsDto != null) {
+            saveFamilyBackground();
+        } else {
+
+        }
     }
 
     @FXML

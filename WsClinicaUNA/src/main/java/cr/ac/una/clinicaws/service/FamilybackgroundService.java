@@ -57,6 +57,23 @@ public class FamilybackgroundService {
         }
     }
 
+      public Respuesta getFamilybackgroundCode(Long code) {
+         try {
+            Query qryusuario = em.createNamedQuery("Familybackground.findByFbFilecode", Familybackground.class);
+            qryusuario.setParameter("fbFilecode", code);
+
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Familybackground", new FamilybackgroundDto((Familybackground) qryusuario.getSingleResult()));
+
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un antecedente heredo familiar código ingresado.", "getFamilybackground NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar  antecedentes heredo familiare.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar antecedentes heredo familiares.", "getFamilybackground NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar antecedentes heredo familiare.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar  antecedentes heredo familiare.", "getFamilybackground " + ex.getMessage());
+        }
+    }
 
 
     public Respuesta saveFamilybackground(FamilybackgroundDto familybackgrounddto) {

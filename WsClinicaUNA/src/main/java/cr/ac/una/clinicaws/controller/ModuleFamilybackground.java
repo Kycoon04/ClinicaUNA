@@ -54,6 +54,21 @@ public class ModuleFamilybackground {
         }
     }
 
+        @GET
+    @Path("/familybackgroundCode/{id}")
+    public Response getFamilybackgroundcode(@PathParam("id") Long id) {
+        try {
+            Respuesta res = familybackgroundService.getFamilybackgroundCode(id);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(res.getResultado("Familybackground")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleFamilybackground.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("antecedentes heredo familiares").build();
+        }
+    }
+
 
     @POST
     @Path("/familybackground")

@@ -38,6 +38,23 @@ public class FamilybackgroundService {
         }
     }
     
+       public Respuesta getFamilybackgroundCode(Integer id) {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("id", id);
+            Request request = new Request("ModuleFamilybackground/familybackgroundCode", "/{id}", parametros);
+            request.get();
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            FamilybackgroundDto familybackgroundDto = (FamilybackgroundDto) request.readEntity(FamilybackgroundDto.class);
+            return new Respuesta(true, "", "", "Familybackground", familybackgroundDto);
+        } catch (Exception ex) {
+            Logger.getLogger(FamilybackgroundService.class.getName()).log(Level.SEVERE, "Error obteniendo  [" + id + "]", ex);
+            return new Respuesta(false, "Error obteniendo ", "getFamilybackground " + ex.getMessage());
+        }
+    }
+       
     public Respuesta saveFamilybackground(FamilybackgroundDto familybackgroundDto) {
         try {
             Request request = new Request("ModuleFamilybackground/familybackground");

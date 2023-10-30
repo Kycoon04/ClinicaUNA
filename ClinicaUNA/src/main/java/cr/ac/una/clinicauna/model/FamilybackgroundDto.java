@@ -15,11 +15,21 @@ public class FamilybackgroundDto {
     public SimpleIntegerProperty fbId;
     public SimpleStringProperty fbRelationship;
     public DiseaseDto fbDisease;
+    public SimpleIntegerProperty fbFilecode;
 
     public FamilybackgroundDto() {
         this.fbDisease= new DiseaseDto();
         this.fbId= new SimpleIntegerProperty();
         this.fbRelationship = new SimpleStringProperty();
+        this.fbFilecode= new SimpleIntegerProperty();
+    }
+
+    public int getFbFilecode() {
+        return fbFilecode.get();
+    }
+
+    public void setFbFilecode(int fbFilecode) {
+        this.fbFilecode.set(fbFilecode);
     }
 
     public Integer getFbId() {

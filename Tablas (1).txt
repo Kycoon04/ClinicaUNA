@@ -389,6 +389,7 @@ alter table CL_DIARY
   add constraint FK_SPACE foreign key (DY_SPACE)
   references CL_SPACE (SE_ID);
 
+
 -- Create table
 create table CL_PERSONALBACKGROUND
 (
@@ -492,7 +493,8 @@ create table CL_FAMILYBACKGROUND
 (
   fb_id           NUMBER(5) not null,
   fb_disease      NUMBER(5) not null,
-  fb_relationship NVARCHAR2(30) not null
+  fb_relationship NVARCHAR2(30) not null,
+  fb_filecode     NUMBER(5) not null
 )
 tablespace USERS
   pctfree 10
@@ -509,7 +511,6 @@ alter table CL_FAMILYBACKGROUND
 alter table CL_FAMILYBACKGROUND
   add constraint FK_FBDISEASE foreign key (FB_DISEASE)
   references CL_DISEASE (DS_ID);
-
 
 -- Create table
 create table CL_F_PROCEEDINGS

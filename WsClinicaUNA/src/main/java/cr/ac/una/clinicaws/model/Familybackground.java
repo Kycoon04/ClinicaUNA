@@ -5,7 +5,6 @@
 package cr.ac.una.clinicaws.model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,12 +12,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import java.util.List;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -29,7 +26,8 @@ import jakarta.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Familybackground.findAll", query = "SELECT f FROM Familybackground f"),
     @NamedQuery(name = "Familybackground.findByFbId", query = "SELECT f FROM Familybackground f WHERE f.fbId = :fbId"),
-    @NamedQuery(name = "Familybackground.findByFbRelationship", query = "SELECT f FROM Familybackground f WHERE f.fbRelationship = :fbRelationship")})
+    @NamedQuery(name = "Familybackground.findByFbRelationship", query = "SELECT f FROM Familybackground f WHERE f.fbRelationship = :fbRelationship"),
+    @NamedQuery(name = "Familybackground.findByFbFilecode", query = "SELECT f FROM Familybackground f WHERE f.fbFilecode = :fbFilecode")})
 public class Familybackground implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,32 +41,37 @@ public class Familybackground implements Serializable {
     @Size(min = 1, max = 30)
     @Column(name = "FB_RELATIONSHIP")
     private String fbRelationship;
-   /* @OneToMany(cascade = CascadeType.ALL, mappedBy = "fpFamilyback")
-    private List<FProceedings> fProceedingsList;*/
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "FB_FILECODE")
+    private int fbFilecode;
     @JoinColumn(name = "FB_DISEASE", referencedColumnName = "DS_ID")
     @ManyToOne(optional = false)
     private Disease fbDisease;
 
     public Familybackground() {
     }
-    
-     public Familybackground(FamilybackgroundDto familybackgroundDto) {
-       this.fbId = familybackgroundDto.getFbId();
-        update(familybackgroundDto);
-    }
-    public void update(FamilybackgroundDto familybackgroundDto) {   
-      
-        this.fbDisease = familybackgroundDto.getFbDisease();
-        this.fbRelationship = familybackgroundDto.getFbRelationship();    
-    }
 
     public Familybackground(Integer fbId) {
         this.fbId = fbId;
     }
 
-    public Familybackground(Integer fbId, String fbRelationship) {
+    public Familybackground(FamilybackgroundDto familybackgroundDto) {
+        this.fbId = familybackgroundDto.getFbId();
+        update(familybackgroundDto);
+    }
+
+    public void update(FamilybackgroundDto familybackgroundDto) {
+
+        this.fbDisease = familybackgroundDto.getFbDisease();
+        this.fbRelationship = familybackgroundDto.getFbRelationship();
+        this.fbFilecode= familybackgroundDto.getFbFilecode();
+    }
+
+    public Familybackground(Integer fbId, String fbRelationship, int fbFilecode) {
         this.fbId = fbId;
         this.fbRelationship = fbRelationship;
+        this.fbFilecode = fbFilecode;
     }
 
     public Integer getFbId() {
@@ -87,13 +90,13 @@ public class Familybackground implements Serializable {
         this.fbRelationship = fbRelationship;
     }
 
-  /*  public List<FProceedings> getFProceedingsList() {
-        return fProceedingsList;
+    public int getFbFilecode() {
+        return fbFilecode;
     }
 
-    public void setFProceedingsList(List<FProceedings> fProceedingsList) {
-        this.fProceedingsList = fProceedingsList;
-    }*/
+    public void setFbFilecode(int fbFilecode) {
+        this.fbFilecode = fbFilecode;
+    }
 
     public Disease getFbDisease() {
         return fbDisease;
@@ -127,5 +130,5 @@ public class Familybackground implements Serializable {
     public String toString() {
         return "cr.ac.una.clinicaws.model.Familybackground[ fbId=" + fbId + " ]";
     }
-    
+
 }
