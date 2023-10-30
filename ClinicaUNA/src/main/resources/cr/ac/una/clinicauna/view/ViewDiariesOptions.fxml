@@ -395,11 +395,93 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
+                                          <Button layoutX="465.0" layoutY="465.0" mnemonicParsing="false" onAction="#openAttentionControl" prefHeight="35.0" prefWidth="123.0" text="%AttentionControl">
+                                             <font>
+                                                <Font name="Tw Cen MT" size="16.0" />
+                                             </font>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </Button>
                                        </children>
                                     </AnchorPane>
                                  </children>
                               </HBox>
                            </center>
+                        </BorderPane>
+                        <BorderPane fx:id="OptionsViewDiary" prefHeight="567.0" prefWidth="793.0">
+                           <center>
+                              <HBox prefHeight="445.0" prefWidth="793.0" style="-fx-background-color: white;">
+                                 <children>
+                                    <AnchorPane fx:id="rootDocDiary" minHeight="0.0" minWidth="0.0" onKeyPressed="#UpdateWorkerEnter" prefHeight="502.0" prefWidth="849.0">
+                                       <children>
+                                          <Text id="Text" fill="#000359" layoutX="14.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Espacios" wrappingWidth="137.12813425064087">
+                                             <font>
+                                                <Font name="Tw Cen MT" size="29.0" />
+                                             </font>
+                                          </Text>
+                                          <ComboBox fx:id="spaces" layoutX="145.0" layoutY="26.0" prefWidth="150.0" />
+                                          <Button fx:id="btnAgendar" layoutX="622.0" layoutY="21.0" mnemonicParsing="false" onAction="#openAppoinment" prefHeight="35.0" prefWidth="123.0" text="%Schedule">
+                                             <font>
+                                                <Font name="Tw Cen MT" size="16.0" />
+                                             </font>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </Button>
+                                          <Button fx:id="btnRecordatorio" layoutX="476.0" layoutY="21.0" mnemonicParsing="false" onAction="#Recordatorio" prefHeight="35.0" prefWidth="123.0" text="%Recordatorio">
+                                             <font>
+                                                <Font name="Tw Cen MT" size="16.0" />
+                                             </font>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                          </Button>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </HBox>
+                           </center>
+                           <top>
+                              <HBox alignment="CENTER" prefHeight="99.0" prefWidth="793.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#backDiary" prefHeight="70.0" prefWidth="63.0" style="-fx-background-color: transparent;">
+                                       <graphic>
+                                          <ImageView fitHeight="59.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../resources/IconBack.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Medico" wrappingWidth="121.12813425064087">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <Text id="Text" fx:id="textMainDoctor12" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="176.12810373306274">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <HBox alignment="CENTER" />
+                                    <Text id="Text" fx:id="textMainDoctor121" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="62.128103733062744">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="29.0" />
+                                       </font>
+                                    </Text>
+                                    <JFXDatePicker fx:id="DayPicker" defaultColor="#000033" />
+                                    <Button mnemonicParsing="false" onAction="#lookday" prefHeight="35.0" prefWidth="123.0" text="%ManBuscarDia">
+                                       <font>
+                                          <Font name="Tw Cen MT" size="16.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </top>
                         </BorderPane>
                         <BorderPane fx:id="OptionsSelectPatient" layoutX="10.0" layoutY="10.0" prefHeight="567.0" prefWidth="793.0">
                            <center>
@@ -513,79 +595,154 @@
                               </HBox>
                            </center>
                         </BorderPane>
-                        <BorderPane fx:id="OptionsViewDiary" prefHeight="567.0" prefWidth="793.0">
+                        <BorderPane fx:id="AttentionControlView" prefHeight="600.0" prefWidth="838.0">
                            <center>
-                              <HBox prefHeight="445.0" prefWidth="793.0" style="-fx-background-color: white;">
+                              <HBox prefHeight="600.0" prefWidth="830.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
                                  <children>
-                                    <AnchorPane fx:id="rootDocDiary" minHeight="0.0" minWidth="0.0" onKeyPressed="#UpdateWorkerEnter" prefHeight="502.0" prefWidth="849.0">
+                                    <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="57.0" visible="false" />
+                                    <VBox prefHeight="600.0" prefWidth="386.0">
                                        <children>
-                                          <Text id="Text" fill="#000359" layoutX="14.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Espacios" wrappingWidth="137.12813425064087">
-                                             <font>
-                                                <Font name="Tw Cen MT" size="29.0" />
-                                             </font>
-                                          </Text>
-                                          <ComboBox fx:id="spaces" layoutX="145.0" layoutY="26.0" prefWidth="150.0" />
-                                          <Button fx:id="btnAgendar" layoutX="622.0" layoutY="21.0" mnemonicParsing="false" onAction="#openAppoinment" prefHeight="35.0" prefWidth="123.0" text="%Schedule">
-                                             <font>
-                                                <Font name="Tw Cen MT" size="16.0" />
-                                             </font>
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
-                                          </Button>
-                                          <Button fx:id="btnRecordatorio" layoutX="476.0" layoutY="21.0" mnemonicParsing="false" onAction="#Recordatorio" prefHeight="35.0" prefWidth="123.0" text="%Recordatorio">
-                                             <font>
-                                                <Font name="Tw Cen MT" size="16.0" />
-                                             </font>
-                                             <cursor>
-                                                <Cursor fx:constant="HAND" />
-                                             </cursor>
+                                          <HBox prefHeight="100.0" prefWidth="200.0">
+                                             <children>
+                                                <Button mnemonicParsing="false" onAction="#backAttentionControl" prefHeight="24.0" prefWidth="113.0" style="-fx-background-color: transparent;">
+                                                   <graphic>
+                                                      <ImageView fitHeight="59.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../resources/IconBack.png" />
+                                                         </image>
+                                                      </ImageView>
+                                                   </graphic>
+                                                   <HBox.margin>
+                                                      <Insets top="8.0" />
+                                                   </HBox.margin>
+                                                </Button>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Reporte" wrappingWidth="346.73670768737793">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="34.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets top="25.0" />
+                                                   </HBox.margin>
+                                                </Text>
+                                             </children>
+                                          </HBox>
+                                          <Separator prefHeight="33.0" prefWidth="503.0" visible="false" />
+                                          <HBox prefHeight="38.0" prefWidth="397.0">
+                                             <children>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 23;" text="%Presion" wrappingWidth="161.13667106628418">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="28.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="textFieldRep_Pressure" prefHeight="26.0" prefWidth="208.0" />
+                                             </children>
+                                          </HBox>
+                                          <Separator prefHeight="34.0" prefWidth="503.0" visible="false" />
+                                          <HBox layoutX="10.0" layoutY="144.0" prefHeight="47.0" prefWidth="393.0">
+                                             <children>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%FrecuenciaCardiaca" wrappingWidth="157.13667106628418">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="28.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="textFieldRep_HeartRate" prefHeight="51.0" prefWidth="208.0" />
+                                             </children>
+                                          </HBox>
+                                          <Separator layoutX="10.0" layoutY="181.0" prefHeight="36.0" prefWidth="503.0" visible="false" />
+                                          <HBox layoutX="10.0" layoutY="200.0" prefHeight="37.0" prefWidth="503.0">
+                                             <children>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Altura" wrappingWidth="157.13667106628418">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="28.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="textFieldRep_Height" prefHeight="51.0" prefWidth="208.0" />
+                                             </children>
+                                          </HBox>
+                                          <Separator layoutX="10.0" layoutY="248.0" prefHeight="40.0" prefWidth="503.0" visible="false" />
+                                          <HBox layoutX="10.0" layoutY="267.0" prefHeight="37.0" prefWidth="503.0">
+                                             <children>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Peso" wrappingWidth="157.13667106628418">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="28.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="textFieldRep_Weight" prefHeight="51.0" prefWidth="208.0" />
+                                             </children>
+                                          </HBox>
+                                          <Separator layoutX="10.0" layoutY="304.0" prefHeight="38.0" prefWidth="503.0" visible="false" />
+                                          <HBox layoutX="10.0" layoutY="324.0" prefHeight="37.0" prefWidth="503.0">
+                                             <children>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Temperatura" wrappingWidth="157.13667106628418">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="28.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="textFieldRep_Temperature" prefHeight="51.0" prefWidth="208.0" />
+                                             </children>
+                                          </HBox>
+                                          <Separator layoutX="10.0" layoutY="361.0" prefHeight="51.0" prefWidth="503.0" visible="false" />
+                                          <HBox layoutX="10.0" layoutY="380.0" prefHeight="37.0" prefWidth="503.0">
+                                             <children>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%MasaCorporal" wrappingWidth="157.13667106628418">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="28.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextField fx:id="textFieldRep_BodyMass" editable="false" prefHeight="38.0" prefWidth="170.0" />
+                                                <Button mnemonicParsing="false" onAction="#calculateBodyMass" prefHeight="30.0" prefWidth="110.0" text="%Calcular">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" />
+                                                   </HBox.margin>
+                                                </Button>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="15.0" visible="false" />
+                                    <VBox prefHeight="600.0" prefWidth="450.0">
+                                       <children>
+                                          <Separator prefHeight="139.0" prefWidth="353.0" visible="false" />
+                                          <HBox layoutX="10.0" layoutY="101.0" prefHeight="139.0" prefWidth="353.0">
+                                             <children>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%RazonConsulta" wrappingWidth="158.73664665222168">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="28.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextArea fx:id="textAreaRep_Reason" prefHeight="127.0" prefWidth="183.0">
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </TextArea>
+                                             </children>
+                                          </HBox>
+                                          <Separator layoutX="10.0" layoutY="10.0" prefHeight="63.0" prefWidth="353.0" visible="false" />
+                                          <HBox prefHeight="131.0" prefWidth="353.0">
+                                             <children>
+                                                <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Observaciones" wrappingWidth="164.33662223815918">
+                                                   <font>
+                                                      <Font name="Tw Cen MT" size="28.0" />
+                                                   </font>
+                                                </Text>
+                                                <TextArea fx:id="textAreaRep_Notes" prefHeight="110.0" prefWidth="206.0">
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </TextArea>
+                                             </children>
+                                          </HBox>
+                                          <Separator prefHeight="59.0" prefWidth="353.0" visible="false" />
+                                          <Button mnemonicParsing="false" onAction="#updateReportAp" text="%Actualizar">
+                                             <VBox.margin>
+                                                <Insets left="200.0" />
+                                             </VBox.margin>
                                           </Button>
                                        </children>
-                                    </AnchorPane>
+                                    </VBox>
                                  </children>
                               </HBox>
                            </center>
-                           <top>
-                              <HBox alignment="CENTER" prefHeight="99.0" prefWidth="793.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
-                                 <children>
-                                    <Button mnemonicParsing="false" onAction="#backDiary" prefHeight="70.0" prefWidth="63.0" style="-fx-background-color: transparent;">
-                                       <graphic>
-                                          <ImageView fitHeight="59.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../resources/IconBack.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </Button>
-                                    <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Medico" wrappingWidth="121.12813425064087">
-                                       <font>
-                                          <Font name="Tw Cen MT" size="29.0" />
-                                       </font>
-                                    </Text>
-                                    <Text id="Text" fx:id="textMainDoctor12" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="176.12810373306274">
-                                       <font>
-                                          <Font name="Tw Cen MT" size="29.0" />
-                                       </font>
-                                    </Text>
-                                    <HBox alignment="CENTER" />
-                                    <Text id="Text" fx:id="textMainDoctor121" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="62.128103733062744">
-                                       <font>
-                                          <Font name="Tw Cen MT" size="29.0" />
-                                       </font>
-                                    </Text>
-                                    <JFXDatePicker fx:id="DayPicker" defaultColor="#000033" />
-                                    <Button mnemonicParsing="false" onAction="#lookday" prefHeight="35.0" prefWidth="123.0" text="%ManBuscarDia">
-                                       <font>
-                                          <Font name="Tw Cen MT" size="16.0" />
-                                       </font>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                    </Button>
-                                 </children>
-                              </HBox>
-                           </top>
                         </BorderPane>
                      </children>
                   </StackPane>

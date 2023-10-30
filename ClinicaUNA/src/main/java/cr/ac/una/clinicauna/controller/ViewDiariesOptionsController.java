@@ -241,6 +241,24 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private Button UpdateTelephoneAppointment;
     @FXML
     private Button btnRecordatorio;
+    @FXML
+    private BorderPane AttentionControlView;
+    @FXML
+    private TextField textFieldRep_Pressure;
+    @FXML
+    private TextField textFieldRep_HeartRate;
+    @FXML
+    private TextField textFieldRep_Height;
+    @FXML
+    private TextField textFieldRep_Weight;
+    @FXML
+    private TextField textFieldRep_Temperature;
+    @FXML
+    private TextField textFieldRep_BodyMass;
+    @FXML
+    private TextArea textAreaRep_Reason;
+    @FXML
+    private TextArea textAreaRep_Notes;
 
     /**
      * Initializes the controller class.
@@ -1483,5 +1501,34 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(keyExtractor.apply(t));
+    }
+
+    @FXML
+    private void openAttentionControl(ActionEvent event) {
+        AttentionControlView.toFront();
+    }
+
+    @FXML
+    private void backAttentionControl(ActionEvent event) {
+        OptionsAppoinmentInfo.toFront();
+    }
+
+    @FXML
+    private void calculateBodyMass(ActionEvent event) {
+        double height = 0;
+        double weight = 0;
+
+        if (textFieldRep_Height.getText() != "" && textFieldRep_Weight.getText() != "") {
+            height = Double.parseDouble(textFieldRep_Height.getText());
+            weight = Double.parseDouble(textFieldRep_Weight.getText());
+            double IMC = weight / (height * height) * 10000;
+            double roundedIMC = Math.round(IMC * 10.0) / 10.0;
+            textFieldRep_BodyMass.setText(roundedIMC + "");
+        }
+    }
+
+    @FXML
+    private void updateReportAp(ActionEvent event) {
+        
     }
 }

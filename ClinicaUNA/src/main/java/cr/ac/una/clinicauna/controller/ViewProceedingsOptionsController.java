@@ -256,6 +256,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     FamilybackgroundDto familyBkDto = new FamilybackgroundDto();
     List<FamilybackgroundDto> familyBaList = new ArrayList<>();
     private ObservableList<FamilybackgroundDto> familyBackObservableList;
+    @FXML
+    private TextField textFieldDoctorSelected;
 
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**
