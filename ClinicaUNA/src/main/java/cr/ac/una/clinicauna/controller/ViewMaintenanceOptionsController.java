@@ -408,6 +408,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         }
         datePickerBirthdayPat.setValue(patientsDto.getPtBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         identPatMainField.setText(patientsDto.getPtIdentification());
+        telephonePatMainField.setText(patientsDto.getPtTelephone());
     }
 
     @FXML

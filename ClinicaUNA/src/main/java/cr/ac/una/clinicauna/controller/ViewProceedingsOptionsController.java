@@ -4,6 +4,8 @@
  */
 package cr.ac.una.clinicauna.controller;
 
+import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
@@ -258,6 +260,18 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private ObservableList<FamilybackgroundDto> familyBackObservableList;
     @FXML
     private TextField textFieldDoctorSelected;
+    @FXML
+    private JFXDatePicker datePickerConsultDate;
+    @FXML
+    private JFXTimePicker timePickerConsultTime;
+    @FXML
+    private TextArea textAreaRep_NotesNursing;
+    @FXML
+    private TextArea textAreaRep_CarePlan;
+    @FXML
+    private TextArea textAreaRep_PhysicalExam;
+    @FXML
+    private TextArea textAreaRep_Treatments;
 
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**

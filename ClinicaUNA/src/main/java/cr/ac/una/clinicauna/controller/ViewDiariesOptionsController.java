@@ -5,6 +5,7 @@
 package cr.ac.una.clinicauna.controller;
 
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiaryDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
@@ -277,6 +278,18 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private AnchorPane rootDocDiary1;
     @FXML
     private ComboBox<?> spaces1;
+    @FXML
+    private JFXDatePicker datePickerConsultDate;
+    @FXML
+    private JFXTimePicker timePickerConsultTime;
+    @FXML
+    private TextArea textAreaRep_NotesNursing;
+    @FXML
+    private TextArea textAreaRep_CarePlan;
+    @FXML
+    private TextArea textAreaRep_PhysicalExam;
+    @FXML
+    private TextArea textAreaRep_Treatments;
 
     /**
      * Initializes the controller class.
@@ -457,7 +470,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             List<DiaryDto> agendadostotal = serviceDiary.getDiary();
             List<DiaryDto> agendadosNuevo = agendadostotal.stream().filter(x -> x.getDySpace().getSeAppointment().getAtId() == diaryDto.getDySpace().getSeAppointment().getAtId()).toList();
             List<DiaryDto> agendadosViejos = agendadostotal.stream().filter(x -> x.getDyDate().equals(DatePickerAppointment.getValue())).toList();
-            
+
             boolean choque = false;
             for (DiaryDto p : agendadosViejos) {
                 for (int j = 0; j < agendadosNuevo.size(); j++) {
@@ -525,12 +538,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 }
             }
         }
-    }
-
-    @FXML
-    private void backDiary(MouseEvent event) {
-        btnAttentionControl.setVisible(true);
-        FlowController.getInstance().goMain("ViewMaintenanceOptions");
     }
 
     @FXML
@@ -1565,7 +1572,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         AttentionControlView.toFront();
     }
 
-    @FXML
     private void backAttentionControl(ActionEvent event) {
         btnAttentionControl.setVisible(true);
         OptionsAppoinmentInfo.toFront();
@@ -1615,6 +1621,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
         if (response.getEstado()) {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Control de Atención guardada");
+            cleanAttentionControl();
         } else {
             new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Error al guardar el Control de Atención");
         }
@@ -1636,7 +1643,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private void Volver(ActionEvent event) {
         OptionsAppoinmentInfo.toFront();
     }
-        public void eventAgendDoctModi() {
+
+    public void eventAgendDoctModi() {
         String horaInicio = doctorDto.getDrIniworking();
         String horaFin = doctorDto.getDrFinisworking();
         String[] partesInicio = horaInicio.split(":");
@@ -1660,8 +1668,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         rootDocDiary1.getChildren().add(DiaryPaneModi);
     }
-        
-        private void lookdayModi(ActionEvent event) {
+
+    private void lookdayModi(ActionEvent event) {
         String horaInicio = doctorDto.getDrIniworking();
         String horaFin = doctorDto.getDrFinisworking();
         String[] partesInicio = horaInicio.split(":");
@@ -1670,75 +1678,107 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         int finHora = Integer.parseInt(partesFin[0]);
         int fila = 0;
         int columna = 0;
-            DiaryService diario = new DiaryService();
-            List<DiaryDto> AgendaCompleta = diario.getDiary();
+        DiaryService diario = new DiaryService();
+        List<DiaryDto> AgendaCompleta = diario.getDiary();
 
-            if (AgendaCompleta != null) {
-                AgendaCompleta = AgendaCompleta.stream().filter(pCancelada.and(pDoctor.and(x -> x.getDyDate().equals(DatePickerAppointment.getValue())))).toList();
+        if (AgendaCompleta != null) {
+            AgendaCompleta = AgendaCompleta.stream().filter(pCancelada.and(pDoctor.and(x -> x.getDyDate().equals(DatePickerAppointment.getValue())))).toList();
 
-                for (int i = 0; i < AgendaCompleta.size(); i++) {
+            for (int i = 0; i < AgendaCompleta.size(); i++) {
 
-                    fila = findFila(AgendaCompleta.get(i), iniHora, finHora);
-                    columna = findColumna(AgendaCompleta.get(i));
+                fila = findFila(AgendaCompleta.get(i), iniHora, finHora);
+                columna = findColumna(AgendaCompleta.get(i));
 
-                    Label label = new Label("Cita / " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
-                    CargarColor(label, AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
-                    label.setUserData(AgendaCompleta.get(i));
+                Label label = new Label("Cita / " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
+                CargarColor(label, AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
+                label.setUserData(AgendaCompleta.get(i));
 
-                    label.setOnMouseClicked(eventClicked -> {
-                        DiaryDto DiaryAux = (DiaryDto) label.getUserData();
-                        ModificarCita(DiaryAux.getDySpace().getSeAppointment());
-                        diaryDto = DiaryAux;
-                        DatePickerAppointment.setValue(DiaryAux.dyDate);
-                    });
+                label.setOnMouseClicked(eventClicked -> {
+                    DiaryDto DiaryAux = (DiaryDto) label.getUserData();
+                    ModificarCita(DiaryAux.getDySpace().getSeAppointment());
+                    diaryDto = DiaryAux;
+                    DatePickerAppointment.setValue(DiaryAux.dyDate);
+                });
 
-                    label.setOnDragDetected(eventx -> {
-                        Dragboard db = label.startDragAndDrop(TransferMode.ANY);
-                        ClipboardContent content = new ClipboardContent();
-                        content.putString(label.getText());
+                label.setOnDragDetected(eventx -> {
+                    Dragboard db = label.startDragAndDrop(TransferMode.ANY);
+                    ClipboardContent content = new ClipboardContent();
+                    content.putString(label.getText());
 
-                        DiaryPaneModi.getChildren().removeAll(citasPosiblesDBsList);
-                        DiaryDto DiaryAux = (DiaryDto) label.getUserData();
-                        AppointmentDto aux = DiaryAux.getDySpace().getSeAppointment();
-                        String targetCode = aux.getAtCode();
-                        Iterator<Label> iterator = citasAgregadaDBsList.iterator();
-                        while (iterator.hasNext()) {
-                            Label currentLabel = iterator.next();
-                            SpaceDto currentAppointment = (SpaceDto) currentLabel.getUserData();
-                            if (targetCode.equals(currentAppointment.getSeAppointment().getAtCode())) {
-                                movespace++;
-                                DiaryPaneModi.getChildren().remove(currentLabel);
-                                iterator.remove();
-                            }
+                    DiaryPaneModi.getChildren().removeAll(citasPosiblesDBsList);
+                    DiaryDto DiaryAux = (DiaryDto) label.getUserData();
+                    AppointmentDto aux = DiaryAux.getDySpace().getSeAppointment();
+                    String targetCode = aux.getAtCode();
+                    Iterator<Label> iterator = citasAgregadaDBsList.iterator();
+                    while (iterator.hasNext()) {
+                        Label currentLabel = iterator.next();
+                        SpaceDto currentAppointment = (SpaceDto) currentLabel.getUserData();
+                        if (targetCode.equals(currentAppointment.getSeAppointment().getAtCode())) {
+                            movespace++;
+                            DiaryPaneModi.getChildren().remove(currentLabel);
+                            iterator.remove();
                         }
-                        db.setContent(content);
-                        event.consume();
-                    });
-                    label.setOnDragOver(eventz -> {
-                        if (eventz.getGestureSource() != label && eventz.getDragboard().hasString()) {
-                            eventz.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                        }
-                        event.consume();
-                    });
-                    label.setOnDragDropped(eventf -> {
-                        Dragboard db = eventf.getDragboard();
-                        boolean success = false;
-                        if (db.hasString()) {
-                            ActionEvent events = new ActionEvent();
-                            lookday(events);
-                            movespace = 0;
-                            success = true;
-                        }
-                        eventf.setDropCompleted(success);
-                        eventf.consume();
-                    });
-                    label.setOnDragDone(DragEvent::consume);
-                    DiaryPaneModi.setColumnIndex(label, columna);
-                    DiaryPaneModi.setRowIndex(label, fila);
-                    DiaryPaneModi.getChildren().add(label);
-                    citasAgregadaDBsList.add(label);
-                }
+                    }
+                    db.setContent(content);
+                    event.consume();
+                });
+                label.setOnDragOver(eventz -> {
+                    if (eventz.getGestureSource() != label && eventz.getDragboard().hasString()) {
+                        eventz.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                    }
+                    event.consume();
+                });
+                label.setOnDragDropped(eventf -> {
+                    Dragboard db = eventf.getDragboard();
+                    boolean success = false;
+                    if (db.hasString()) {
+                        ActionEvent events = new ActionEvent();
+                        lookday(events);
+                        movespace = 0;
+                        success = true;
+                    }
+                    eventf.setDropCompleted(success);
+                    eventf.consume();
+                });
+                label.setOnDragDone(DragEvent::consume);
+                DiaryPaneModi.setColumnIndex(label, columna);
+                DiaryPaneModi.setRowIndex(label, fila);
+                DiaryPaneModi.getChildren().add(label);
+                citasAgregadaDBsList.add(label);
+            }
         }
     }
-        
+
+    @FXML
+    private void backCreateAppointment(MouseEvent event) {
+        btnAttentionControl.setVisible(true);
+        FlowController.getInstance().goMain("ViewMaintenanceOptions");
+    }
+
+    @FXML
+    private void backReport(ActionEvent event) {
+        OptionsAppoinmentInfo.toFront();
+    }
+
+    @FXML
+    private void cleanUpAttentionControl(ActionEvent event) {
+        cleanAttentionControl();
+    }
+
+    private void cleanAttentionControl() {
+        textFieldRep_Pressure.clear();
+        textFieldRep_HeartRate.clear();
+        textFieldRep_Height.clear();
+        textFieldRep_Weight.clear();
+        textFieldRep_Temperature.clear();
+        textFieldRep_BodyMass.clear();
+        textAreaRep_Reason.clear();
+        textAreaRep_Notes.clear();
+        datePickerConsultDate.setValue(null);
+        timePickerConsultTime.setValue(null);
+        textAreaRep_NotesNursing.clear();
+        textAreaRep_CarePlan.clear();
+        textAreaRep_PhysicalExam.clear();
+        textAreaRep_Treatments.clear();
+    }
 }
