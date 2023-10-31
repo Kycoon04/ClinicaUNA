@@ -277,6 +277,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private RadioButton rdBtnUserInactive;
     public static ToggleGroup userActive;
     ProceedingsDto proceedingsDto = new ProceedingsDto();
+    @FXML
+    private TextField telephonePatMainField;
 
     /**
      * Initializes the controller class.
@@ -955,6 +957,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         patientDto.setPtName(namePatMainField.getText());
         patientDto.setPtPlastname(firstNamePatMainField.getText());
         patientDto.setPtSlastname(lastNamePatMainField.getText());
+        patientDto.setPtTelephone(telephonePatMainField.getText());
         return patientDto;
     }
 
@@ -1223,6 +1226,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         datePickerBirthdayPat.setValue(null);
         identPatMainField.clear();
         gender.selectToggle(null);
+        telephonePatMainField.clear();
     }
 
 }
