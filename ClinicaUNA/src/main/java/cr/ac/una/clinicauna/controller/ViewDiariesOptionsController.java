@@ -467,7 +467,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 diaryDto = new DiaryDto();
             }
 
-} else {
+        } else {
+            List<SpaceDto> espaciosReservados = new ArrayList<>();
             AppointmentService service = new AppointmentService();
             DiaryService serviceDiary = new DiaryService();
             SpaceService serviceSpace = new SpaceService();
@@ -496,12 +497,42 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                                 respuesta = serviceDiary.deleteDiary(p.getDyId());
                                 respuesta = serviceSpace.deleteSpace(spacesDto.getSeId());
                             }
-                        }else{
-                        respuesta = serviceDiary.saveDiary(p);
+                        } else {
+                            respuesta = serviceDiary.saveDiary(p);
                         }
                         k++;
                     }
                 }
+                if (agendadosNuevo.size() < horasAgregadas.size()) {
+                    for (int i = agendadosNuevo.size(); i < horasAgregadas.size(); i++) {
+                        spacesDto = new SpaceDto();
+                        spacesDto.setSeId(0);
+                        spacesDto.setSeAppointment(agendadosNuevo.get(0).getDySpace().getSeAppointment());
+                        String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
+                        spacesDto.setSeHour(horaFormateada);
+                        respuesta = serviceSpace.saveSpace(spacesDto);
+                    }
+                    int espacios = 1;
+                    try {
+                        espacios = Integer.parseInt(spacesEdit.getValue());
+                    } catch (NumberFormatException e) {
+                    }
+                    espaciosReservados = serviceSpace.getSpace();
+                    espaciosReservados = espaciosReservados.stream().filter(x -> x.getSeAppointment().getAtId() == agendadosNuevo.get(0).getDySpace().getSeAppointment().getAtId()).toList();
+
+                    for (int i = 0; i < agendadosNuevo.size(); i++) {
+                        for (int j = 0; j < espaciosReservados.size(); j++) {
+                            if (!agendadosNuevo.get(i).getDySpace().getSeId().equals(espaciosReservados.get(j).getSeId())) {
+                                diaryDto.setDyId(0);
+                                diaryDto.setDyDoctor(agendadosNuevo.get(0).getDyDoctor());
+                                diaryDto.setDyDate(DatePickerAppointment.getValue());
+                                diaryDto.setDySpace(espaciosReservados.get(j));
+                                respuesta = servicediary.saveDiary(diaryDto);
+                            }
+                        }
+                    }
+                }
+
                 appointmentDtoModi.setAtReason(reason.getText());
                 Long numLong = Long.parseLong(numberP.getText());
                 appointmentDtoModi.setAtTelephone(numLong);
@@ -1024,7 +1055,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         rootDocDiary.getChildren().add(DiaryPane);
     }
 
-
     @FXML
     private void UpdateWorkerEnter(KeyEvent event) {
     }
@@ -1119,7 +1149,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         return gridPane;
     }
-
 
     public static int calcularNumeroHoras(int horaInicio, int horaFin) {
 
@@ -1346,7 +1375,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     Predicate<DiaryDto> pDoctor = x -> x.getDyDoctor().getDoctorName().equals(doctorDto.getDoctorName());
     Predicate<DiaryDto> pCancelada = x -> !x.getDySpace().getSeAppointment().getAtState().equals("Cancelada");
 
-   @FXML
+    @FXML
     private void lookday(ActionEvent event) {
         btnRecordatorio.setDisable(false);
         if (DiaryPane != null) {
@@ -1778,7 +1807,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         citasPosiblesDBsList.clear();
     }
 
-   public void eventAgendDoctModi() {
+    public void eventAgendDoctModi() {
         String horaInicio = doctorDto.getDrIniworking();
         String horaFin = doctorDto.getDrFinisworking();
         String[] partesInicio = horaInicio.split(":");
