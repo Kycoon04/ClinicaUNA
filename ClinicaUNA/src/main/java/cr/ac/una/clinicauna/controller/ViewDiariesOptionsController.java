@@ -478,7 +478,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             for (DiaryDto p : agendadosViejos) {
                 for (int j = 0; j < agendadosNuevo.size(); j++) {
                     if (p.getDySpace().getSeHour().equals(agendadosNuevo.get(j).getDySpace().getSeHour())) {
-                        System.out.println(agendadosNuevo.get(j).getDySpace().getSeHour());
                         choque = true;
                     }
                 }
@@ -504,13 +503,19 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                     }
                 }
                 if (agendadosNuevo.size() < horasAgregadas.size()) {
-                    for (int i = agendadosNuevo.size(); i < horasAgregadas.size(); i++) {
+                    for (int i = 0; i < horasAgregadas.size(); i++) {
                         spacesDto = new SpaceDto();
+                        if(i<agendadosNuevo.size()){
+                        String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
+                        agendadosNuevo.get(i).getDySpace().setSeHour(horaFormateada);
+                        respuesta = serviceSpace.saveSpace(agendadosNuevo.get(i).getDySpace());
+                        }else{
                         spacesDto.setSeId(0);
                         spacesDto.setSeAppointment(agendadosNuevo.get(0).getDySpace().getSeAppointment());
                         String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
                         spacesDto.setSeHour(horaFormateada);
                         respuesta = serviceSpace.saveSpace(spacesDto);
+                        }
                     }
                     int espacios = 1;
                     try {
@@ -520,14 +525,18 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                     espaciosReservados = serviceSpace.getSpace();
                     espaciosReservados = espaciosReservados.stream().filter(x -> x.getSeAppointment().getAtId() == agendadosNuevo.get(0).getDySpace().getSeAppointment().getAtId()).toList();
 
-                    for (int i = 0; i < agendadosNuevo.size(); i++) {
-                        for (int j = 0; j < espaciosReservados.size(); j++) {
-                            if (!agendadosNuevo.get(i).getDySpace().getSeId().equals(espaciosReservados.get(j).getSeId())) {
+                    for (int i = 0; i < espaciosReservados.size(); i++) {
+                        for (int j = 0; j < agendadosNuevo.size(); j++) {
+                            if (!agendadosNuevo.get(j).getDySpace().getSeId().equals(espaciosReservados.get(i).getSeId())) {
                                 diaryDto.setDyId(0);
                                 diaryDto.setDyDoctor(agendadosNuevo.get(0).getDyDoctor());
                                 diaryDto.setDyDate(DatePickerAppointment.getValue());
-                                diaryDto.setDySpace(espaciosReservados.get(j));
+                                diaryDto.setDySpace(espaciosReservados.get(i));
                                 respuesta = servicediary.saveDiary(diaryDto);
+                            }
+                            else{
+                            agendadosNuevo.get(j).setDyDate(DatePickerAppointment.getValue());
+                            respuesta = servicediary.saveDiary(agendadosNuevo.get(j));
                             }
                         }
                     }
@@ -949,7 +958,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 dropRow = (int) (dropY / (DiaryPane.getHeight() / DiaryPane.getRowConstraints().size()));
                 LocalTime horaActual = null;
                 Label draggedLabel = (Label) event.getGestureSource();
-                SpaceDto referente = (SpaceDto) draggedLabel.getUserData();
+                DiaryDto referente = (DiaryDto) draggedLabel.getUserData();
                 DiaryPane.getChildren().remove(draggedLabel);
                 DiaryPane.add(draggedLabel, dropColumn, dropRow);
                 if (citasAgregadas <= mint.length) {
@@ -1002,7 +1011,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 if (result == ButtonType.OK) {
                     SpaceService service = new SpaceService();
                     List<SpaceDto> actualizados = service.getSpace();
-                    actualizados = actualizados.stream().filter(x -> x.getSeAppointment().getAtId() == referente.getSeAppointment().getAtId()).toList();
+                    actualizados = actualizados.stream().filter(x -> x.getSeAppointment().getAtId() == referente.getDySpace().getSeAppointment().getAtId()).toList();
                     int k = 0;
                     DatePickerAppointment.setVisible(true);
                     btnAttentionControl.setVisible(true);
@@ -1327,6 +1336,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 columnIdx++;
             }
         }
+        for(LocalTime p :horasAgregadas){
+        
+            System.out.println(p.format(timeFormatter));
+            
+        }
         btnAgendar.setDisable(false);
     }
 
@@ -1447,8 +1461,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                         Iterator<Label> iterator = citasAgregadaDBsList.iterator();
                         while (iterator.hasNext()) {
                             Label currentLabel = iterator.next();
-                            SpaceDto currentAppointment = (SpaceDto) currentLabel.getUserData();
-                            if (targetCode.equals(currentAppointment.getSeAppointment().getAtCode())) {
+                            DiaryDto currentAppointment = (DiaryDto) currentLabel.getUserData();
+                            if (targetCode.equals(currentAppointment.getDySpace().getSeAppointment().getAtCode())) {
                                 movespace++;
                                 DiaryPane.getChildren().remove(currentLabel);
                                 iterator.remove();
