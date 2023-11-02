@@ -58,7 +58,13 @@ public class ModuleDiary {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la agenda").build();
         }
     }
+    public void setDiaryService(DiaryService diaryService) {
+        this.diaryService = diaryService;
+    }
 
+    public DiaryService getDiaryService() {
+        return diaryService;
+    }
 
     @POST
     @Path("/diary")
