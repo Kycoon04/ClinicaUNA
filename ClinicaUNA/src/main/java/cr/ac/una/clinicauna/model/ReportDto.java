@@ -14,12 +14,12 @@ import javafx.beans.property.SimpleStringProperty;
 public class ReportDto {
     
     private SimpleIntegerProperty rtId;
-    private short rtPressure;
-    private short rtHeartRate;
-    private short rtWeight;
-    private short rtHeight;
-    private short rtTemperature;
-    private short rtBodyMass;
+    private double rtPressure;
+    private double rtHeartRate;
+    private double rtWeight;
+    private double rtHeight;
+    private double rtTemperature;
+    private double rtBodyMass;
     private SimpleStringProperty rtNotesNursing;
     private SimpleStringProperty rtDoctorReason;
     private AppointmentDto rtAppointment;
@@ -34,54 +34,56 @@ public class ReportDto {
     public Integer getRtId() {
         return rtId.get();
     }
-    
-    public void setRtId(Integer rtId) {
-        this.rtId.set(rtId);
-    }
-    
-    public short getRtPressure() {
+
+    public double getRtPressure() {
         return rtPressure;
     }
-    
-    public void setRtPressure(short rtPressure) {
+
+    public void setRtPressure(double rtPressure) {
         this.rtPressure = rtPressure;
     }
-    
-    public short getRtHeartRate() {
+
+    public double getRtHeartRate() {
         return rtHeartRate;
     }
-    
-    public void setRtHeartRate(short rtHeartRate) {
+
+    public void setRtHeartRate(double rtHeartRate) {
         this.rtHeartRate = rtHeartRate;
     }
-    
-    public short getRtWeight() {
+
+    public double getRtWeight() {
         return rtWeight;
     }
-    
-    public void setRtWeight(short rtWeight) {
+
+    public void setRtWeight(double rtWeight) {
         this.rtWeight = rtWeight;
     }
-    
-    public short getRtHeight() {
+
+    public double getRtHeight() {
         return rtHeight;
     }
-    
-    public void setRtHeight(short rtHeight) {
+
+    public void setRtHeight(double rtHeight) {
         this.rtHeight = rtHeight;
     }
-    
-    public short getRtTemperature() {
+
+    public double getRtTemperature() {
         return rtTemperature;
     }
-    
-    public void setRtTemperature(short rtTemperature) {
+
+    public void setRtTemperature(double rtTemperature) {
         this.rtTemperature = rtTemperature;
     }
-    
-    public short getRtBodyMass() {
+
+    public double getRtBodyMass() {
         return rtBodyMass;
     }
+
+    public void setRtBodyMass(double rtBodyMass) {
+        this.rtBodyMass = rtBodyMass;
+    }
+    
+    
     
     public void setRtBodyMass(short rtBodyMass) {
         this.rtBodyMass = rtBodyMass;

@@ -556,16 +556,21 @@ alter table CL_F_PROCEEDINGS
 -- Create table
 create table CL_REPORT
 (
-  rt_id            NUMBER(5) not null,
-  rt_appointment   NUMBER(5) not null,
-  rt_pressure      NUMBER(4) not null,
-  rt_heart_rate    NUMBER(4) not null,
-  rt_weight        NUMBER(4) not null,
-  rt_height        NUMBER(4) not null,
-  rt_temperature   NUMBER(4) not null,
-  rt_body_mass     NUMBER(4) not null,
-  rt_notes_nursing NVARCHAR2(200) not null,
-  rt_doctor_reason NVARCHAR2(300) not null
+  rt_id               NUMBER(5) not null,
+  rt_appointment      NUMBER(5) not null,
+  rt_pressure         FLOAT not null,
+  rt_heart_rate       FLOAT not null,
+  rt_weight           FLOAT not null,
+  rt_height           FLOAT not null,
+  rt_temperature      FLOAT not null,
+  rt_body_mass        FLOAT not null,
+  rt_notes_nursing    NVARCHAR2(200),
+  rt_doctor_reason    NVARCHAR2(300),
+  rt_fisic_examen     NVARCHAR2(300),
+  rt_treatment_examen NVARCHAR2(300),
+  rt_care_plan        NVARCHAR2(300),
+  rt_observations     NVARCHAR2(300),
+  rt_date             DATE
 )
 tablespace USERS
   pctfree 10
@@ -582,7 +587,6 @@ alter table CL_REPORT
 alter table CL_REPORT
   add constraint FK_RTAPPOINTMENT foreign key (RT_APPOINTMENT)
   references CL_APPOINTMENT (AT_ID);
-
 
 -- Create table
 create table CL_EXAM

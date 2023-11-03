@@ -4,6 +4,8 @@
  */
 package cr.ac.una.clinicaws.model;
 
+import java.io.Serializable;
+import java.util.Date;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,10 +18,11 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 
 /**
  *
- * @author dilan
+ * @author jomav
  */
 @Entity
 @Table(name = "CL_REPORT")
@@ -33,7 +36,12 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Report.findByRtTemperature", query = "SELECT r FROM Report r WHERE r.rtTemperature = :rtTemperature"),
     @NamedQuery(name = "Report.findByRtBodyMass", query = "SELECT r FROM Report r WHERE r.rtBodyMass = :rtBodyMass"),
     @NamedQuery(name = "Report.findByRtNotesNursing", query = "SELECT r FROM Report r WHERE r.rtNotesNursing = :rtNotesNursing"),
-    @NamedQuery(name = "Report.findByRtDoctorReason", query = "SELECT r FROM Report r WHERE r.rtDoctorReason = :rtDoctorReason")})
+    @NamedQuery(name = "Report.findByRtDoctorReason", query = "SELECT r FROM Report r WHERE r.rtDoctorReason = :rtDoctorReason"),
+    @NamedQuery(name = "Report.findByRtFisicExamen", query = "SELECT r FROM Report r WHERE r.rtFisicExamen = :rtFisicExamen"),
+    @NamedQuery(name = "Report.findByRtTreatmentExamen", query = "SELECT r FROM Report r WHERE r.rtTreatmentExamen = :rtTreatmentExamen"),
+    @NamedQuery(name = "Report.findByRtCarePlan", query = "SELECT r FROM Report r WHERE r.rtCarePlan = :rtCarePlan"),
+    @NamedQuery(name = "Report.findByRtObservations", query = "SELECT r FROM Report r WHERE r.rtObservations = :rtObservations"),
+    @NamedQuery(name = "Report.findByRtDate", query = "SELECT r FROM Report r WHERE r.rtDate = :rtDate")})
 public class Report implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,37 +53,47 @@ public class Report implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "RT_PRESSURE")
-    private short rtPressure;
+    private double rtPressure;
     @Basic(optional = false)
     @NotNull
     @Column(name = "RT_HEART_RATE")
-    private short rtHeartRate;
+    private double rtHeartRate;
     @Basic(optional = false)
     @NotNull
     @Column(name = "RT_WEIGHT")
-    private short rtWeight;
+    private double rtWeight;
     @Basic(optional = false)
     @NotNull
     @Column(name = "RT_HEIGHT")
-    private short rtHeight;
+    private double rtHeight;
     @Basic(optional = false)
     @NotNull
     @Column(name = "RT_TEMPERATURE")
-    private short rtTemperature;
+    private double rtTemperature;
     @Basic(optional = false)
     @NotNull
     @Column(name = "RT_BODY_MASS")
-    private short rtBodyMass;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 200)
+    private double rtBodyMass;
+    @Size(max = 200)
     @Column(name = "RT_NOTES_NURSING")
     private String rtNotesNursing;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 300)
+    @Size(max = 300)
     @Column(name = "RT_DOCTOR_REASON")
     private String rtDoctorReason;
+    @Size(max = 300)
+    @Column(name = "RT_FISIC_EXAMEN")
+    private String rtFisicExamen;
+    @Size(max = 300)
+    @Column(name = "RT_TREATMENT_EXAMEN")
+    private String rtTreatmentExamen;
+    @Size(max = 300)
+    @Column(name = "RT_CARE_PLAN")
+    private String rtCarePlan;
+    @Size(max = 300)
+    @Column(name = "RT_OBSERVATIONS")
+    private String rtObservations;
+    @Column(name = "RT_DATE")
+    private LocalDate rtDate;
     @JoinColumn(name = "RT_APPOINTMENT", referencedColumnName = "AT_ID")
     @ManyToOne(optional = false)
     private Appointment rtAppointment;
@@ -86,7 +104,6 @@ public class Report implements Serializable {
     public Report(Integer rtId) {
         this.rtId = rtId;
     }
-    
     public Report(ReportDto reportDto) {
         this.rtId = reportDto.getRtId();
         update(reportDto);
@@ -102,8 +119,21 @@ public class Report implements Serializable {
         this.rtNotesNursing = report.getRtNotesNursing();
         this.rtDoctorReason = report.getRtDoctorReason();
         this.rtAppointment = report.getRtAppointment();
+        this.rtFisicExamen = report.getRtFisicExamen();
+        this.rtTreatmentExamen = report.getRtTreatmentExamen();
+        this.rtCarePlan = report.getRtCarePlan();
+        this.rtObservations = report.getRtObservations();
+        this.rtDate = report.getRtDate();
     }
     
+    public Appointment getRtAppointment() {
+        return rtAppointment;
+    }
+
+    public void setRtAppointment(Appointment rtAppointment) {
+        this.rtAppointment = rtAppointment;
+    }
+
     public Integer getRtId() {
         return rtId;
     }
@@ -112,51 +142,51 @@ public class Report implements Serializable {
         this.rtId = rtId;
     }
 
-    public short getRtPressure() {
+    public double getRtPressure() {
         return rtPressure;
     }
 
-    public void setRtPressure(short rtPressure) {
+    public void setRtPressure(double rtPressure) {
         this.rtPressure = rtPressure;
     }
 
-    public short getRtHeartRate() {
+    public double getRtHeartRate() {
         return rtHeartRate;
     }
 
-    public void setRtHeartRate(short rtHeartRate) {
+    public void setRtHeartRate(double rtHeartRate) {
         this.rtHeartRate = rtHeartRate;
     }
 
-    public short getRtWeight() {
+    public double getRtWeight() {
         return rtWeight;
     }
 
-    public void setRtWeight(short rtWeight) {
+    public void setRtWeight(double rtWeight) {
         this.rtWeight = rtWeight;
     }
 
-    public short getRtHeight() {
+    public double getRtHeight() {
         return rtHeight;
     }
 
-    public void setRtHeight(short rtHeight) {
+    public void setRtHeight(double rtHeight) {
         this.rtHeight = rtHeight;
     }
 
-    public short getRtTemperature() {
+    public double getRtTemperature() {
         return rtTemperature;
     }
 
-    public void setRtTemperature(short rtTemperature) {
+    public void setRtTemperature(double rtTemperature) {
         this.rtTemperature = rtTemperature;
     }
 
-    public short getRtBodyMass() {
+    public double getRtBodyMass() {
         return rtBodyMass;
     }
 
-    public void setRtBodyMass(short rtBodyMass) {
+    public void setRtBodyMass(double rtBodyMass) {
         this.rtBodyMass = rtBodyMass;
     }
 
@@ -176,12 +206,44 @@ public class Report implements Serializable {
         this.rtDoctorReason = rtDoctorReason;
     }
 
-    public Appointment getRtAppointment() {
-        return rtAppointment;
+    public String getRtFisicExamen() {
+        return rtFisicExamen;
     }
 
-    public void setRtAppointment(Appointment rtAppointment) {
-        this.rtAppointment = rtAppointment;
+    public void setRtFisicExamen(String rtFisicExamen) {
+        this.rtFisicExamen = rtFisicExamen;
+    }
+
+    public String getRtTreatmentExamen() {
+        return rtTreatmentExamen;
+    }
+
+    public void setRtTreatmentExamen(String rtTreatmentExamen) {
+        this.rtTreatmentExamen = rtTreatmentExamen;
+    }
+
+    public String getRtCarePlan() {
+        return rtCarePlan;
+    }
+
+    public void setRtCarePlan(String rtCarePlan) {
+        this.rtCarePlan = rtCarePlan;
+    }
+
+    public String getRtObservations() {
+        return rtObservations;
+    }
+
+    public void setRtObservations(String rtObservations) {
+        this.rtObservations = rtObservations;
+    }
+
+    public LocalDate getRtDate() {
+        return rtDate;
+    }
+
+    public void setRtDate(LocalDate rtDate) {
+        this.rtDate = rtDate;
     }
 
     @Override
@@ -208,5 +270,5 @@ public class Report implements Serializable {
     public String toString() {
         return "cr.ac.una.clinicaws.model.Report[ rtId=" + rtId + " ]";
     }
-    
+
 }

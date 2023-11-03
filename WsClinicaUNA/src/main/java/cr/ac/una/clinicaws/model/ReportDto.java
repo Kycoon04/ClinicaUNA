@@ -4,6 +4,9 @@
  */
 package cr.ac.una.clinicaws.model;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 /**
  *
  * @author dilan
@@ -11,16 +14,21 @@ package cr.ac.una.clinicaws.model;
 public class ReportDto {
     
     private Integer rtId;
-    private short rtPressure;
-    private short rtHeartRate;
-    private short rtWeight;
-    private short rtHeight;
-    private short rtTemperature;
-    private short rtBodyMass;
+    private double rtPressure;
+    private double rtHeartRate;
+    private double rtWeight;
+    private double rtHeight;
+    private double rtTemperature;
+    private double rtBodyMass;
     private String rtNotesNursing;
     private String rtDoctorReason;
     private Appointment rtAppointment;
-
+    private String rtFisicExamen;
+    private String rtTreatmentExamen;
+    private String rtCarePlan;
+    private String rtObservations;
+    private LocalDate rtDate;
+    
     public ReportDto(){
         
     }
@@ -35,6 +43,51 @@ public class ReportDto {
         this.rtNotesNursing = report.getRtNotesNursing();
         this.rtDoctorReason = report.getRtDoctorReason();
         this.rtAppointment = report.getRtAppointment();
+        this.rtFisicExamen = report.getRtFisicExamen();
+        this.rtTreatmentExamen = report.getRtTreatmentExamen();
+        this.rtCarePlan = report.getRtCarePlan();
+        this.rtObservations = report.getRtObservations();
+        this.rtDate = report.getRtDate();
+    }
+
+    public LocalDate getRtDate() {
+        return rtDate;
+    }
+
+    public void setRtDate(LocalDate rtDate) {
+        this.rtDate = rtDate;
+    }
+
+    public String getRtFisicExamen() {
+        return rtFisicExamen;
+    }
+
+    public void setRtFisicExamen(String rtFisicExamen) {
+        this.rtFisicExamen = rtFisicExamen;
+    }
+
+    public String getRtTreatmentExamen() {
+        return rtTreatmentExamen;
+    }
+
+    public void setRtTreatmentExamen(String rtTreatmentExamen) {
+        this.rtTreatmentExamen = rtTreatmentExamen;
+    }
+
+    public String getRtCarePlan() {
+        return rtCarePlan;
+    }
+
+    public void setRtCarePlan(String rtCarePlan) {
+        this.rtCarePlan = rtCarePlan;
+    }
+
+    public String getRtObservations() {
+        return rtObservations;
+    }
+
+    public void setRtObservations(String rtObservations) {
+        this.rtObservations = rtObservations;
     }
    
     public Integer getRtId() {
@@ -45,51 +98,51 @@ public class ReportDto {
         this.rtId = rtId;
     }
 
-    public short getRtPressure() {
+    public double getRtPressure() {
         return rtPressure;
     }
 
-    public void setRtPressure(short rtPressure) {
+    public void setRtPressure(double rtPressure) {
         this.rtPressure = rtPressure;
     }
 
-    public short getRtHeartRate() {
+    public double getRtHeartRate() {
         return rtHeartRate;
     }
 
-    public void setRtHeartRate(short rtHeartRate) {
+    public void setRtHeartRate(double rtHeartRate) {
         this.rtHeartRate = rtHeartRate;
     }
 
-    public short getRtWeight() {
+    public double getRtWeight() {
         return rtWeight;
     }
 
-    public void setRtWeight(short rtWeight) {
+    public void setRtWeight(double rtWeight) {
         this.rtWeight = rtWeight;
     }
 
-    public short getRtHeight() {
+    public double getRtHeight() {
         return rtHeight;
     }
 
-    public void setRtHeight(short rtHeight) {
+    public void setRtHeight(double rtHeight) {
         this.rtHeight = rtHeight;
     }
 
-    public short getRtTemperature() {
+    public double getRtTemperature() {
         return rtTemperature;
     }
 
-    public void setRtTemperature(short rtTemperature) {
+    public void setRtTemperature(double rtTemperature) {
         this.rtTemperature = rtTemperature;
     }
 
-    public short getRtBodyMass() {
+    public double getRtBodyMass() {
         return rtBodyMass;
     }
 
-    public void setRtBodyMass(short rtBodyMass) {
+    public void setRtBodyMass(double rtBodyMass) {
         this.rtBodyMass = rtBodyMass;
     }
 
@@ -116,9 +169,4 @@ public class ReportDto {
     public void setRtAppointment(Appointment rtAppointment) {
         this.rtAppointment = rtAppointment;
     }
-    
-    
-    
-    
-    
 }
