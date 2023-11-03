@@ -49,6 +49,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -505,16 +506,16 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 if (agendadosNuevo.size() < horasAgregadas.size()) {
                     for (int i = 0; i < horasAgregadas.size(); i++) {
                         spacesDto = new SpaceDto();
-                        if(i<agendadosNuevo.size()){
-                        String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
-                        agendadosNuevo.get(i).getDySpace().setSeHour(horaFormateada);
-                        respuesta = serviceSpace.saveSpace(agendadosNuevo.get(i).getDySpace());
-                        }else{
-                        spacesDto.setSeId(0);
-                        spacesDto.setSeAppointment(agendadosNuevo.get(0).getDySpace().getSeAppointment());
-                        String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
-                        spacesDto.setSeHour(horaFormateada);
-                        respuesta = serviceSpace.saveSpace(spacesDto);
+                        if (i < agendadosNuevo.size()) {
+                            String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
+                            agendadosNuevo.get(i).getDySpace().setSeHour(horaFormateada);
+                            respuesta = serviceSpace.saveSpace(agendadosNuevo.get(i).getDySpace());
+                        } else {
+                            spacesDto.setSeId(0);
+                            spacesDto.setSeAppointment(agendadosNuevo.get(0).getDySpace().getSeAppointment());
+                            String horaFormateada = horasAgregadas.get(i).format(timeFormatter);
+                            spacesDto.setSeHour(horaFormateada);
+                            respuesta = serviceSpace.saveSpace(spacesDto);
                         }
                     }
                     int espacios = 1;
@@ -533,10 +534,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                                 diaryDto.setDyDate(DatePickerAppointment.getValue());
                                 diaryDto.setDySpace(espaciosReservados.get(i));
                                 respuesta = servicediary.saveDiary(diaryDto);
-                            }
-                            else{
-                            agendadosNuevo.get(j).setDyDate(DatePickerAppointment.getValue());
-                            respuesta = servicediary.saveDiary(agendadosNuevo.get(j));
+                            } else {
+                                agendadosNuevo.get(j).setDyDate(DatePickerAppointment.getValue());
+                                respuesta = servicediary.saveDiary(agendadosNuevo.get(j));
                             }
                         }
                     }
@@ -1091,20 +1091,32 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         for (int i = 0; i < mint.length; i++) {
             Label dayLabel = new Label(mint[i]);
             dayLabel.setAlignment(Pos.CENTER);
-            dayLabel.setStyle("-fx-font-weight: bold");
+            dayLabel.setStyle("-fx-font-weight: bold; "
+                    + "-fx-background-color: #CC9900; ");
 
             dayLabel.setMaxWidth(Double.MAX_VALUE);
             dayLabel.setMaxHeight(Double.MAX_VALUE);
             GridPane.setFillWidth(dayLabel, true);
             GridPane.setFillHeight(dayLabel, true);
-
             gridPane.add(dayLabel, i + 1, 0);
         }
+
+        Label dayLabel = new Label("Agenda");
+        dayLabel.setAlignment(Pos.CENTER);
+        dayLabel.setStyle("-fx-font-weight: bold; "
+                + "-fx-background-color: #CC9900; ");
+
+        dayLabel.setMaxWidth(Double.MAX_VALUE);
+        dayLabel.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setFillWidth(dayLabel, true);
+        GridPane.setFillHeight(dayLabel, true);
+        gridPane.add(dayLabel, 0, 0);
 
         for (int i = iniHora; i <= finHora; i++) {
             Label hourLabel = new Label(String.format("%02d:00", i));
             hourLabel.setAlignment(Pos.CENTER);
-            hourLabel.setStyle("-fx-font-weight: bold");
+            hourLabel.setStyle("-fx-font-weight: bold; "
+                    + "-fx-background-color: #CC9900; ");
 
             hourLabel.setMaxWidth(Double.MAX_VALUE);
             hourLabel.setMaxHeight(Double.MAX_VALUE);
@@ -1231,8 +1243,15 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         rowIndex = GridPane.getRowIndex(cellLabel);
 
         while (citasAgregadas < maxCitas) {
-            Label label = new Label("Cita");
-            label.setStyle("-fx-font-size: 15");
+            Label label = new Label("Reservar campos");
+            label.setAlignment(Pos.CENTER);
+            label.setStyle("-fx-font-size: 15;"
+                    + "-fx-background-color: #073763;"
+                    + "-fx-background-radius: 10;"
+                    + "-fx-text-fill: #FFFFFF;");
+            label.setMaxWidth(Double.MAX_VALUE);
+            label.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setMargin(label, new Insets(5, 5, 5, 5));
             GridPane.setColumnSpan(label, 1);
             GridPane.setRowSpan(label, 1);
             GridPane.setColumnIndex(label, columnIdx);
@@ -1336,10 +1355,10 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 columnIdx++;
             }
         }
-        for(LocalTime p :horasAgregadas){
-        
+        for (LocalTime p : horasAgregadas) {
+
             System.out.println(p.format(timeFormatter));
-            
+
         }
         btnAgendar.setDisable(false);
     }
@@ -1436,7 +1455,10 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                     Label label = new Label("Cita / " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                     CargarColor(label, AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                     label.setUserData(AgendaCompleta.get(i));
-
+                    label.setAlignment(Pos.CENTER);
+                    label.setMaxWidth(Double.MAX_VALUE);
+                    label.setMaxHeight(Double.MAX_VALUE);
+                    GridPane.setMargin(label, new Insets(5, 5, 5, 5));
                     label.setOnMouseClicked(eventClicked -> {
                         DiaryDto DiaryAux = (DiaryDto) label.getUserData();
                         ModificarCita(DiaryAux.getDySpace().getSeAppointment());
@@ -1550,13 +1572,13 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     public void CargarColor(Label label, String estado) {
         switch (estado) {
             case "Programada":
-                label.setStyle("-fx-font-size: 15; -fx-background-color: yellow;");
+                label.setStyle("-fx-font-size: 15; -fx-background-color: yellow; -fx-background-radius: 10; -fx-text-fill: #FFFFFF; -fx-text-fill: #000000");
                 break;
             case "Atendida":
-                label.setStyle("-fx-font-size: 15; -fx-background-color: green;");
+                label.setStyle("-fx-font-size: 15; -fx-background-color: green; -fx-background-radius: 10; -fx-text-fill: #FFFFFF; -fx-text-fill: #000000");
                 break;
             case "Ausente":
-                label.setStyle("-fx-font-size: 15; -fx-background-color: red;");
+                label.setStyle("-fx-font-size: 15; -fx-background-color: red; -fx-background-radius: 10; -fx-text-fill: #FFFFFF; -fx-text-fill: #000000");
                 break;
         }
     }

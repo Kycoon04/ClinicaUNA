@@ -10,6 +10,7 @@ import cr.ac.una.clinicaws.util.Email;
 import cr.ac.una.clinicaws.util.Respuesta;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
@@ -38,7 +39,9 @@ public class AutomaticEmail {
 
     @Resource
     TimerService timerService;
-
+    
+    @EJB
+    private DiaryService diaryService;
     @PostConstruct
     public void init() {
         LOGGER.info("ScheduledTask iniciado");
@@ -49,14 +52,12 @@ public class AutomaticEmail {
         return t -> seen.add(keyExtractor.apply(t));
     }
 
-    @Schedule(hour = "23", minute = "16", persistent = false)
+    @Schedule(hour = "12", minute = "00", persistent = false)
     public void executeTask() {
 
-        ModuleDiary diario = new ModuleDiary();
-        diario.setDiaryService(new DiaryService());
         List<DiaryDto> lista = new ArrayList<>();
         
-        Respuesta respuesta = diario.diaryService.getDiaries();
+        Respuesta respuesta = diaryService.getDiaries();
 
         lista = (List<DiaryDto>) respuesta.getResultado("Diaries");
         
