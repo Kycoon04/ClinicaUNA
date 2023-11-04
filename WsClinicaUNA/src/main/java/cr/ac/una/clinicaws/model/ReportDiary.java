@@ -19,7 +19,7 @@ public class ReportDiary {
     public ReportDiary() {
     }
 
-    public ReportDiary(Diary agenda, Appointment cita) {
+    public ReportDiary(DiaryDto agenda, AppointmentDto cita) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime localTime = LocalTime.parse(agenda.getDySpace().getSeHour(), timeFormatter);
         LocalDateTime localDateTime = LocalDateTime.of(agenda.getDyDate(), localTime);

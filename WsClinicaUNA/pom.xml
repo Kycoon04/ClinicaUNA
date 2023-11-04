@@ -23,6 +23,16 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>6.20.6</version>
+        </dependency>  
+                <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.3</version>
+        </dependency>    
+        <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
             <version>2.27</version>
@@ -32,8 +42,8 @@
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-jaxrs2-jakarta</artifactId>
             <version>2.1.13</version>
-     </dependency>
-      <dependency>
+        </dependency>
+        <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
             <version>2.0.2</version>
@@ -44,7 +54,7 @@
             <version>2.0.1</version>
             <type>jar</type>
         </dependency>
-     <dependency>
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
             <version>0.10.7</version>
@@ -54,11 +64,11 @@
             <artifactId>jjwt-impl</artifactId>
             <version>0.10.7</version>
         </dependency>
-   <dependency>
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
             <version>0.10.7</version>
-    </dependency>
+        </dependency>
         <!--TODO-->
     </dependencies>
     
