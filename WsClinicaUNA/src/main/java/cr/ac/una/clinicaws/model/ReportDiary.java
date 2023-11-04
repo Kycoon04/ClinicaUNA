@@ -6,17 +6,25 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
 public class ReportDiary {
-    
-    private Date   dyDate;
-    private String atEmail;
+
+    private Date dyDate;
+    private String ptEmail;
     private String atState;
     private String atPatient;
     private String atUserregister;
     private String atCode;
 
     public ReportDiary() {
+        Calendar calendar = Calendar.getInstance();
+        this.dyDate = calendar.getTime();
+        this.ptEmail = "N/A";
+        this.atState =  "N/A";
+        this.atPatient =  "N/A";
+        this.atUserregister = "N/A";
+        this.atCode = "N/A";
     }
 
     public ReportDiary(DiaryDto agenda, AppointmentDto cita) {
@@ -24,12 +32,13 @@ public class ReportDiary {
         LocalTime localTime = LocalTime.parse(agenda.getDySpace().getSeHour(), timeFormatter);
         LocalDateTime localDateTime = LocalDateTime.of(agenda.getDyDate(), localTime);
         this.dyDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        this.atEmail = cita.getAtEmail();
+        this.ptEmail = cita.getAtEmail();
         this.atState = cita.getAtState();
-        this.atPatient = cita.getAtPatient().getPtName() + " "+ cita.getAtPatient().getPtPlastname();
-        this.atUserregister = cita.getAtUserregister().getUsName() + " "+ cita.getAtUserregister().getUsPlastname();
+        this.atPatient = cita.getAtPatient().getPtName() + " " + cita.getAtPatient().getPtPlastname();
+        this.atUserregister = cita.getAtUserregister().getUsName() + " " + cita.getAtUserregister().getUsPlastname();
         this.atCode = cita.getAtCode();
     }
+
     public void asignarFechaDesdeLocalDate(LocalDate fechaLocal) {
         this.dyDate = Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
@@ -42,12 +51,12 @@ public class ReportDiary {
         this.dyDate = dyDate;
     }
 
-    public String getAtEmail() {
-        return atEmail;
+    public String getPtEmail() {
+        return ptEmail;
     }
 
-    public void setAtEmail(String atEmail) {
-        this.atEmail = atEmail;
+    public void setPtEmail(String atEmail) {
+        this.ptEmail = atEmail;
     }
 
     public String getAtState() {

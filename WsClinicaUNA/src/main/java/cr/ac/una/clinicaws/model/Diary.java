@@ -13,10 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.util.Date;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -30,6 +27,7 @@ import java.time.LocalDate;
     @NamedQuery(name = "Diary.findAll", query = "SELECT d FROM Diary d"),
     @NamedQuery(name = "Diary.findByDyId", query = "SELECT d FROM Diary d WHERE d.dyId = :dyId"),
     @NamedQuery(name = "Diary.findByDyDate", query = "SELECT d FROM Diary d WHERE d.dyDate = :dyDate")})
+    @NamedQuery(name = "Diary.findByDateRange", query = "SELECT d FROM Diary d WHERE d.dyDate BETWEEN :startDate AND :endDate")
 public class Diary implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -11,6 +11,7 @@ import jakarta.servlet.ServletContext;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
@@ -19,6 +20,8 @@ import jakarta.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +35,7 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
@@ -50,24 +53,32 @@ public class ModuleJasperReports {
     AppointmentService appointmentService;
     @Context
     ServletContext context;
-private static final Logger LOGGER = Logger.getLogger(ModuleJasperReports.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ModuleJasperReports.class.getName());
 
     @GET
-    @Path("/export-pdf")
+    @Path("/ReportDiary/{date}/{dateTwo}")
     @Produces("application/pdf")
-    public Response exportPdf() throws JRException, FileNotFoundException {
-        List<AppointmentDto> citastotales = (List<AppointmentDto>) appointmentService.getAppointments().getResultado("Appointments");
-        List<DiaryDto> lista = (List<DiaryDto>) diaryService.getDiaries().getResultado("Diaries");
-        List<ReportDiary> reportesEmpleados = new ArrayList<>();
-        
-        for (int i = 0; i < citastotales.size(); i++) {
-            reportesEmpleados.add(new ReportDiary(lista.get(i), citastotales.get(i)));
-           LOGGER.log(Level.INFO,reportesEmpleados.get(i).getAtPatient());
+    public Response exportPdf(@PathParam("date") String date, @PathParam("dateTwo") String dateTwo) throws JRException, FileNotFoundException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate parsedDateTwo;
+        LocalDate parsedDate = LocalDate.parse(date, formatter);
+        if (dateTwo.equals("N/A")) {
+            parsedDateTwo = LocalDate.parse(date, formatter);
+        } else {
+            parsedDateTwo = LocalDate.parse(dateTwo, formatter);
         }
-        
+        List<DiaryDto> lista = (List<DiaryDto>) diaryService.getByDate(parsedDate, parsedDateTwo).getResultado("Diaries");
+
+        List<ReportDiary> reportesEmpleados = new ArrayList<>();
+        if (lista.size() == 0) {
+            reportesEmpleados.add(new ReportDiary());
+        } else {
+            for (int i = 0; i < lista.size(); i++) {
+                reportesEmpleados.add(new ReportDiary(lista.get(i), new AppointmentDto(lista.get(i).getDySpace().getSeAppointment())));
+            }
+        }
         byte[] pdfContent = exportToPdf(reportesEmpleados);
         String contentDisposition = "attachment; filename=\"petsReport.pdf\"";
-
         return Response.ok(pdfContent)
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .build();
@@ -77,12 +88,7 @@ private static final Logger LOGGER = Logger.getLogger(ModuleJasperReports.class.
     @Path("/export-xls")
     @Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     public Response exportXls() throws JRException, FileNotFoundException {
-        List<AppointmentDto> citastotales = (List<AppointmentDto>) appointmentService.getAppointments().getResultado("Appointments");
-        List<DiaryDto> lista = (List<DiaryDto>) diaryService.getDiaries().getResultado("Diaries");
         List<ReportDiary> reportesEmpleados = new ArrayList<>();
-        for (int i = 0; i < citastotales.size(); i++) {
-            reportesEmpleados.add(new ReportDiary(lista.get(i), citastotales.get(i)));
-        }
         byte[] xlsContent = exportToXls(reportesEmpleados); // Implementar este método para exportar el XLS
         String contentDisposition = "attachment; filename=\"petsReport.xls\"";
 
@@ -90,7 +96,7 @@ private static final Logger LOGGER = Logger.getLogger(ModuleJasperReports.class.
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .build();
     }
-    
+
     public byte[] exportToPdf(List<ReportDiary> list) throws JRException, FileNotFoundException {
         return JasperExportManager.exportReportToPdf(getReport(list));
     }
@@ -107,8 +113,13 @@ private static final Logger LOGGER = Logger.getLogger(ModuleJasperReports.class.
     }
 
     private JasperPrint getReport(List<ReportDiary> list) throws FileNotFoundException, JRException {
+        JRBeanArrayDataSource ds = new JRBeanArrayDataSource(list.toArray());
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("dsReportAgenda", new JRBeanCollectionDataSource(list));
+        InputStream LogoClinic = context.getResourceAsStream("/LogoMedicalClinic.png");
+        InputStream ImageBackground = context.getResourceAsStream("/LogoMedicalClinic.png");
+        params.put("ds", ds);
+        params.put("LogoClinic", LogoClinic);
+        params.put("Imagebackgroud", ImageBackground);
         InputStream reportStream = context.getResourceAsStream("/ReporteAgendaMedico.jrxml");
         JasperReport compiledReport = JasperCompileManager.compileReport(reportStream);
         JasperPrint report = JasperFillManager.fillReport(compiledReport, params, new JREmptyDataSource());

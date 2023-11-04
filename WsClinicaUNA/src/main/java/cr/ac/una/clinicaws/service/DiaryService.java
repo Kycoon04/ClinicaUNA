@@ -17,7 +17,9 @@ import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,7 +56,28 @@ public class DiaryService {
         }
     }
 
-
+    public Respuesta getByDate(LocalDate dia , LocalDate fin) {
+        try {
+            Query qryUsers = em.createNamedQuery("Diary.findByDateRange", Diary.class);
+            qryUsers.setParameter("startDate", dia);
+            qryUsers.setParameter("endDate", fin);
+            List<Diary> diary = (List<Diary>) qryUsers.getResultList();
+            List<DiaryDto> ListDiaries = new ArrayList<>();
+            for (Diary tipo : diary) {
+                DiaryDto diaryDto = new DiaryDto(tipo);
+                ListDiaries.add(diaryDto);
+            }
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Diaries", ListDiaries);
+        } catch (NoResultException ex) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existen agendas.", "getAgendas NoResultException");
+        } catch (NonUniqueResultException ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar las agendas.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar las agendas.", "getAgendas NonUniqueResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar las agendas.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar las agendas.", "getAgendas " + ex.getMessage());
+        }
+    }
 
     public Respuesta saveDiary(DiaryDto diaryDto) {
         try {

@@ -43,7 +43,7 @@
 	</subDataset>
 	<parameter name="LogoClinic" class="java.io.InputStream"/>
 	<parameter name="Imagebackgroud" class="java.io.InputStream"/>
-	<parameter name="ds" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="ds" class="net.sf.jasperreports.engine.data.JRBeanArrayDataSource"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
