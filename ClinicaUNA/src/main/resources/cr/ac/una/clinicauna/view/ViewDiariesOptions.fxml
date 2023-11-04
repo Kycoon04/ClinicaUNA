@@ -888,7 +888,7 @@
                                              </cursor>
                                           </Button>
                                           <JFXDatePicker fx:id="DatePickerAppointment" defaultColor="#666cd4" layoutX="518.0" layoutY="100.0" />
-                                          <Button fx:id="btnChangeAppointment" layoutX="541.0" layoutY="144.0" mnemonicParsing="false" onAction="#ChangeAppointment" prefHeight="35.0" prefWidth="123.0" text="%ChangeAppointment">
+                                          <Button fx:id="btnChangeAppointment" layoutX="509.0" layoutY="144.0" mnemonicParsing="false" onAction="#ChangeAppointment" prefHeight="35.0" prefWidth="202.0" text="%ChangeAppointment">
                                              <font>
                                                 <Font name="Tw Cen MT" size="16.0" />
                                              </font>

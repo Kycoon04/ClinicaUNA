@@ -100,4 +100,18 @@ public class ModuleReport {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo los Reports").build();
         }
     }
+     @GET
+    @Path("/reportAppoint/{id}")
+    public Response getReportbyAppoint(@PathParam("id") Integer id) {
+        try {
+            Respuesta res = reportService.getReportAppoint(id);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(res.getResultado("Report")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleReport.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Report").build();
+        }
+    }
 }

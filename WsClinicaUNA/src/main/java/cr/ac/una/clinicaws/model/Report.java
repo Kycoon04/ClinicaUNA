@@ -41,7 +41,10 @@ import java.time.LocalDate;
     @NamedQuery(name = "Report.findByRtTreatmentExamen", query = "SELECT r FROM Report r WHERE r.rtTreatmentExamen = :rtTreatmentExamen"),
     @NamedQuery(name = "Report.findByRtCarePlan", query = "SELECT r FROM Report r WHERE r.rtCarePlan = :rtCarePlan"),
     @NamedQuery(name = "Report.findByRtObservations", query = "SELECT r FROM Report r WHERE r.rtObservations = :rtObservations"),
-    @NamedQuery(name = "Report.findByRtDate", query = "SELECT r FROM Report r WHERE r.rtDate = :rtDate")})
+    @NamedQuery(name = "Report.findByRtDate", query = "SELECT r FROM Report r WHERE r.rtDate = :rtDate")
+    
+   })
+
 public class Report implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -93,7 +96,7 @@ public class Report implements Serializable {
     @Column(name = "RT_OBSERVATIONS")
     private String rtObservations;
     @Column(name = "RT_DATE")
-    private LocalDate rtDate;
+    private Date rtDate;
     @JoinColumn(name = "RT_APPOINTMENT", referencedColumnName = "AT_ID")
     @ManyToOne(optional = false)
     private Appointment rtAppointment;
@@ -238,11 +241,11 @@ public class Report implements Serializable {
         this.rtObservations = rtObservations;
     }
 
-    public LocalDate getRtDate() {
+    public Date getRtDate() {
         return rtDate;
     }
 
-    public void setRtDate(LocalDate rtDate) {
+    public void setRtDate(Date rtDate) {
         this.rtDate = rtDate;
     }
 

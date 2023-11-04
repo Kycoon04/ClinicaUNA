@@ -86,6 +86,23 @@ public class ReportService {
             return null;
         }
     }
+    public Respuesta getReportByIdAppoinment(Integer id) {
+        try {
+
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("id", id);
+            Request request = new Request("ModuleReport/reportAppoint", "/{id}", parametros);
+            request.get();
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            ReportDto reportDto = (ReportDto) request.readEntity(ReportDto.class);
+            return new Respuesta(true, "", "", "Report", reportDto);
+        } catch (Exception ex) {
+            Logger.getLogger(ReportService.class.getName()).log(Level.SEVERE, "Error obteniendo el reporte [" + id + "]", ex);
+            return new Respuesta(false, "Error obteniendo el reporte.", "getreport " + ex.getMessage());
+        }
+    } 
     
     
 }

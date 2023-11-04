@@ -27,7 +27,7 @@ public class ReportDto {
     private String rtTreatmentExamen;
     private String rtCarePlan;
     private String rtObservations;
-    private LocalDate rtDate;
+    private Date rtDate;
     
     public ReportDto(){
         
@@ -50,11 +50,11 @@ public class ReportDto {
         this.rtDate = report.getRtDate();
     }
 
-    public LocalDate getRtDate() {
+    public Date getRtDate() {
         return rtDate;
     }
 
-    public void setRtDate(LocalDate rtDate) {
+    public void setRtDate(Date rtDate) {
         this.rtDate = rtDate;
     }
 

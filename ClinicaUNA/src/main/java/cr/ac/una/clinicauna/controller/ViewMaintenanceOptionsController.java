@@ -252,9 +252,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private JFXDatePicker datePickerBirthdayPat;
     @FXML
     private TextField breaksMainField;
-    private TextField namePatMainField1;
-
-    private TextField nameDistMainField;
 
     private String matrizAgenda[][] = new String[15][8];
     //private Map<Node, Posicion> mapaPosiciones = new HashMap<>();
