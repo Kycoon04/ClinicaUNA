@@ -57,7 +57,8 @@ public class ReportDto {
 
     public Date getRtDateDate() {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalDateTime localDateTime = LocalDateTime.of(rtDate, null);
+        LocalTime localTime = LocalTime.parse("12:23", timeFormatter);
+        LocalDateTime localDateTime = LocalDateTime.of(rtDate, localTime);
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
     

@@ -49,6 +49,30 @@ public class PProceedingsService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el PProceedings.", "getPProceedings " + ex.getMessage());
         }
     }
+
+    public Respuesta getProceeding(Integer usId) {
+        try {
+            Query qryPProceedings = em.createNamedQuery("PProceedings.findByProceedingId", PProceedings.class);
+            qryPProceedings.setParameter("ProceedingId", usId);
+            List<PProceedings> pProceedings = (List<PProceedings>) qryPProceedings.getResultList();
+            List<PProceedingsDto> ListpProceedingsDto = new ArrayList<>();
+            for (PProceedings tipo : pProceedings) {
+                PProceedingsDto usersDto = new PProceedingsDto(tipo);
+                ListpProceedingsDto.add(usersDto);
+            }
+            
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "PProceeding", ListpProceedingsDto);
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getPProceedings NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el PProceedings.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el PProceedings.", "getPProceedings NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el PProceedings.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el PProceedings.", "getPProceedings " + ex.getMessage());
+        }
+    }
+
     public Respuesta savePProceedings(PProceedingsDto pProceedingsDto) {
         try {
             PProceedings pProceedings = new PProceedings();
@@ -93,12 +117,12 @@ public class PProceedingsService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al eliminar el PProceedings.", "eliminarPProceedings " + ex.getMessage());
         }
     }
-   
+
     public Respuesta gePProceedings() {
         try {
             Query qryUsers = em.createNamedQuery("PProceedings.findAll", PProceedings.class);
             List<PProceedings> pProceedings = (List<PProceedings>) qryUsers.getResultList();
-             List<PProceedingsDto> ListpProceedingsDto = new ArrayList<>();
+            List<PProceedingsDto> ListpProceedingsDto = new ArrayList<>();
             for (PProceedings tipo : pProceedings) {
                 PProceedingsDto usersDto = new PProceedingsDto(tipo);
                 ListpProceedingsDto.add(usersDto);

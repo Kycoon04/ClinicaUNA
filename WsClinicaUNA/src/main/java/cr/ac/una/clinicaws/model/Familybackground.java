@@ -67,7 +67,9 @@ public class Familybackground implements Serializable {
         this.fbRelationship = familybackgroundDto.getFbRelationship();
         this.fbFilecode= familybackgroundDto.getFbFilecode();
     }
-
+    public String getFbDiseaseString() {
+        return fbDisease.getDsName();
+    }
     public Familybackground(Integer fbId, String fbRelationship, int fbFilecode) {
         this.fbId = fbId;
         this.fbRelationship = fbRelationship;

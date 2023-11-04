@@ -5,7 +5,6 @@
 package cr.ac.una.clinicaws.model;
 
 import jakarta.persistence.Basic;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,10 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
-import java.util.List;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -33,6 +30,7 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Appointment.findByAtTelephone", query = "SELECT a FROM Appointment a WHERE a.atTelephone = :atTelephone"),
     @NamedQuery(name = "Appointment.findByAtEmail", query = "SELECT a FROM Appointment a WHERE a.atEmail = :atEmail"),
     @NamedQuery(name = "Appointment.findByAtState", query = "SELECT a FROM Appointment a WHERE a.atState = :atState"),
+    @NamedQuery(name = "Appointment.findByPatientId", query = "SELECT a FROM Appointment a WHERE a.atPatient.ptId = :PatientId"),
     @NamedQuery(name = "Appointment.findByAtCode", query = "SELECT a FROM Appointment a WHERE a.atCode = :atCode")})
 public class Appointment implements Serializable {
 

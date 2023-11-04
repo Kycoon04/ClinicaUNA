@@ -4,8 +4,6 @@
  */
 package cr.ac.una.clinicaws.model;
 
-import java.util.List;
-
 /**
  *
  * @author dilan

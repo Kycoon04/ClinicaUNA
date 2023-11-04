@@ -51,7 +51,27 @@ public class AppointmentService {
         }
     }
 
-
+    public Respuesta getAppointmentsPatient(Integer atId) {
+        try {
+            Query qryUsers = em.createNamedQuery("Appointment.findByPatientId", Appointment.class);
+            qryUsers.setParameter("PatientId", atId);
+            List<Appointment> appointments = (List<Appointment>) qryUsers.getResultList();
+             List<AppointmentDto> ListAppointments = new ArrayList<>();
+            for (Appointment tipo : appointments) {
+                AppointmentDto appointmentDto = new AppointmentDto(tipo);
+                ListAppointments.add(appointmentDto);
+            }
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Appointments", ListAppointments);
+        } catch (NoResultException ex) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existen citas.", "getCitas NoResultException");
+        } catch (NonUniqueResultException ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar las citas.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar las citas.", "getCitas NonUniqueResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar la citas.", "getCitas " + ex.getMessage());
+        }
+    }
 
     public Respuesta saveAppointments(AppointmentDto appointmentDto) {
         try {

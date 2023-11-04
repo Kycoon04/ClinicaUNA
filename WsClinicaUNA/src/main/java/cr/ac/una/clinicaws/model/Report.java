@@ -41,6 +41,7 @@ import java.time.LocalDate;
     @NamedQuery(name = "Report.findByRtTreatmentExamen", query = "SELECT r FROM Report r WHERE r.rtTreatmentExamen = :rtTreatmentExamen"),
     @NamedQuery(name = "Report.findByRtCarePlan", query = "SELECT r FROM Report r WHERE r.rtCarePlan = :rtCarePlan"),
     @NamedQuery(name = "Report.findByRtObservations", query = "SELECT r FROM Report r WHERE r.rtObservations = :rtObservations"),
+    @NamedQuery(name = "Report.findByAppointmentId", query = "SELECT r FROM Report r WHERE r.rtAppointment.atId = :AppointmentId"),
     @NamedQuery(name = "Report.findByRtDate", query = "SELECT r FROM Report r WHERE r.rtDate = :rtDate")})
 public class Report implements Serializable {
 

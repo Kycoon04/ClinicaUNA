@@ -49,7 +49,22 @@ public class ReportService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Report.", "getReport " + ex.getMessage());
         }
     }
-
+    public Respuesta getReports(Integer rtId) {
+        try {
+            Query qryReport = em.createNamedQuery("Report.findByAppointmentId", Report.class);
+            qryReport.setParameter("AppointmentId", rtId);
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Report", new ReportDto((Report) qryReport.getSingleResult()));
+        } catch (NoResultException ex) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un tipo de Report con el código ingresado.", "getTipoReport NoResultException");
+        } catch (NonUniqueResultException ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el tipo de Report.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el tipo de Report.", "getTipoReport NonUniqueResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el Report.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el tipo de Report.", "getTipoReport " + ex.getMessage());
+        }
+    }
+    
     public Respuesta saveReport(ReportDto reportDto) {
         try {
             Report report = new Report();

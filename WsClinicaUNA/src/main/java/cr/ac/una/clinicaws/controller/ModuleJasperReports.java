@@ -2,9 +2,17 @@ package cr.ac.una.clinicaws.controller;
 
 import cr.ac.una.clinicaws.model.AppointmentDto;
 import cr.ac.una.clinicaws.model.DiaryDto;
+import cr.ac.una.clinicaws.model.FProceedingsDto;
+import cr.ac.una.clinicaws.model.PProceedingsDto;
+import cr.ac.una.clinicaws.model.ProceedingsDto;
 import cr.ac.una.clinicaws.model.ReportDiary;
+import cr.ac.una.clinicaws.model.ReportDto;
 import cr.ac.una.clinicaws.service.AppointmentService;
 import cr.ac.una.clinicaws.service.DiaryService;
+import cr.ac.una.clinicaws.service.FProceedingsService;
+import cr.ac.una.clinicaws.service.PProceedingsService;
+import cr.ac.una.clinicaws.service.ProceedingsService;
+import cr.ac.una.clinicaws.service.ReportService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletContext;
@@ -51,9 +59,17 @@ public class ModuleJasperReports {
     DiaryService diaryService;
     @EJB
     AppointmentService appointmentService;
+    @EJB
+    ProceedingsService proceedingsService;
+    @EJB
+    PProceedingsService pProceedingsService;
+    @EJB
+    FProceedingsService fProceedingsService;
+    @EJB
+    ReportService reportService;
     @Context
     ServletContext context;
-    
+
     private static final Logger LOGGER = Logger.getLogger(ModuleJasperReports.class.getName());
 
     @GET
@@ -84,22 +100,30 @@ public class ModuleJasperReports {
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .build();
     }
-/*
+
     @GET
     @Path("/ReportPatient/{id}")
     @Produces("application/pdf")
     public Response exportPdfPatient(@PathParam("id") Integer id) throws JRException, FileNotFoundException {
-
+        ProceedingsDto expediente = (ProceedingsDto) proceedingsService.getProceedingsbyPatId(id).getResultado("Proceedings");
+        List<PProceedingsDto> personales = (List<PProceedingsDto>) pProceedingsService.getProceeding(expediente.getPsId()).getResultado("PProceeding");
+        List<FProceedingsDto> familiares = (List<FProceedingsDto>) fProceedingsService.getProceeding(expediente.getPsId()).getResultado("FProceeding");
+        List<AppointmentDto> citas = (List<AppointmentDto>) appointmentService.getAppointmentsPatient(id).getResultado("Appointments");
+        List<ReportDto> reportes = new ArrayList<>();
         
+        for(AppointmentDto p: citas){
+            if((ReportDto) reportService.getReports(p.getAtId()).getResultado("Report")!=null){
+            reportes.add((ReportDto) reportService.getReports(p.getAtId()).getResultado("Report"));
+            }
+        }
         
-        
-        byte[] pdfContent = exportToPdf(reportesEmpleados);
+        byte[] pdfContent = exportToPdfPatient(personales,familiares,reportes);
         String contentDisposition = "attachment; filename=\"petsReport.pdf\"";
         return Response.ok(pdfContent)
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .build();
-    }*/
-    
+    }
+
     @GET
     @Path("/export-xls")
     @Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
@@ -117,17 +141,6 @@ public class ModuleJasperReports {
         return JasperExportManager.exportReportToPdf(getReport(list));
     }
 
-    public byte[] exportToXls(List<ReportDiary> list) throws JRException, FileNotFoundException {
-        ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-        SimpleOutputStreamExporterOutput output = new SimpleOutputStreamExporterOutput(byteArray);
-        JRXlsExporter exporter = new JRXlsExporter();
-        exporter.setExporterInput(new SimpleExporterInput(getReport(list)));
-        exporter.setExporterOutput(output);
-        exporter.exportReport();
-        output.close();
-        return byteArray.toByteArray();
-    }
-
     private JasperPrint getReport(List<ReportDiary> list) throws FileNotFoundException, JRException {
         JRBeanArrayDataSource ds = new JRBeanArrayDataSource(list.toArray());
         Map<String, Object> params = new HashMap<String, Object>();
@@ -141,4 +154,39 @@ public class ModuleJasperReports {
         JasperPrint report = JasperFillManager.fillReport(compiledReport, params, new JREmptyDataSource());
         return report;
     }
+
+    public byte[] exportToPdfPatient(List<PProceedingsDto> listPP,List<FProceedingsDto> listFP,List<ReportDto> listReporte) throws JRException, FileNotFoundException {
+        return JasperExportManager.exportReportToPdf(getReportPatient(listPP,listFP,listReporte));
+    }
+
+    private JasperPrint getReportPatient(List<PProceedingsDto> listPP,List<FProceedingsDto> listFP,List<ReportDto> listReporte) throws FileNotFoundException, JRException {
+        JRBeanArrayDataSource ds = new JRBeanArrayDataSource(listPP.toArray());
+        JRBeanArrayDataSource dsFamily = new JRBeanArrayDataSource(listFP.toArray());
+        JRBeanArrayDataSource dsAppointment = new JRBeanArrayDataSource(listReporte.toArray());
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+        InputStream LogoClinic = context.getResourceAsStream("/LogoMedicalClinic.png");
+        InputStream ImageBackground = context.getResourceAsStream("/LogoMedicalClinic.png");
+        params.put("ds", ds);
+        params.put("dsAppointment", dsAppointment);
+        params.put("dsFamily", dsFamily);
+        params.put("LogoClinic", LogoClinic);
+        params.put("Imagebackgroud", ImageBackground);
+        InputStream reportStream = context.getResourceAsStream("/ReportPatient.jrxml");
+        JasperReport compiledReport = JasperCompileManager.compileReport(reportStream);
+        JasperPrint report = JasperFillManager.fillReport(compiledReport, params, new JREmptyDataSource());
+        return report;
+    }
+
+    public byte[] exportToXls(List<ReportDiary> list) throws JRException, FileNotFoundException {
+        ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+        SimpleOutputStreamExporterOutput output = new SimpleOutputStreamExporterOutput(byteArray);
+        JRXlsExporter exporter = new JRXlsExporter();
+        exporter.setExporterInput(new SimpleExporterInput(getReport(list)));
+        exporter.setExporterOutput(output);
+        exporter.exportReport();
+        output.close();
+        return byteArray.toByteArray();
+    }
+
 }

@@ -28,7 +28,12 @@ public class FProceedingsDto {
     public Integer getFpId() {
         return fpId;
     }
-
+    public String getFbRelationship() {
+        return fpFamilyback.getFbRelationship();
+    }
+    public String getFbDiseaseString() {
+        return fpFamilyback.getFbDiseaseString();
+    }
     public void setFpId(Integer fpId) {
         this.fpId = fpId;
     }

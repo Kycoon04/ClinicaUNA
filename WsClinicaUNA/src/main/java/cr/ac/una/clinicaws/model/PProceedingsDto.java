@@ -27,6 +27,13 @@ public class PProceedingsDto {
         return ppId;
     }
 
+    public String getPbType() {
+        return ppPersonalback.getPbType();
+    }
+    
+    public String getPbContext() {
+        return ppPersonalback.getPbContext();
+    }
     public void setPpId(Integer ppId) {
         this.ppId = ppId;
     }

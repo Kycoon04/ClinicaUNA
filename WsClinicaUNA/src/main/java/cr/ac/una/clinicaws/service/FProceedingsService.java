@@ -6,6 +6,8 @@ package cr.ac.una.clinicaws.service;
 
 import cr.ac.una.clinicaws.model.FProceedings;
 import cr.ac.una.clinicaws.model.FProceedingsDto;
+import cr.ac.una.clinicaws.model.PProceedings;
+import cr.ac.una.clinicaws.model.PProceedingsDto;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.Respuesta;
 import jakarta.ejb.Stateless;
@@ -52,6 +54,28 @@ public class FProceedingsService {
         }
     }
 
+    public Respuesta getProceeding(Integer usId) {
+        try {
+            Query qryPProceedings = em.createNamedQuery("FProceedings.findByProceedingId", PProceedings.class);
+            qryPProceedings.setParameter("ProceedingId", usId);
+            List<FProceedings> pProceedings = (List<FProceedings>) qryPProceedings.getResultList();
+            List<FProceedingsDto> ListpProceedingsDto = new ArrayList<>();
+            for (FProceedings tipo : pProceedings) {
+                FProceedingsDto usersDto = new FProceedingsDto(tipo);
+                ListpProceedingsDto.add(usersDto);
+            }
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "FProceeding", ListpProceedingsDto);
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getPProceedings NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el PProceedings.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el PProceedings.", "getPProceedings NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el PProceedings.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el PProceedings.", "getPProceedings " + ex.getMessage());
+        }
+    }
+    
     public Respuesta saveFProceedings(FProceedingsDto fProceedingsdto) {
         try {
             FProceedings fProceedings = new FProceedings();

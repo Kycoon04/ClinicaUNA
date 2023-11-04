@@ -25,10 +25,7 @@ public class FamilybackgroundDto {
         this.fbRelationship = familybackground.getFbRelationship();
         this.fbFilecode = familybackground.getFbFilecode();
     }
-
-    public String getFbDiseaseString() {
-        return fbDisease.getDsName();
-    }
+    
 
     public int getFbFilecode() {
         return fbFilecode;

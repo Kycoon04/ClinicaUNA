@@ -24,6 +24,7 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "CL_F_PROCEEDINGS")
 @NamedQueries({
     @NamedQuery(name = "FProceedings.findAll", query = "SELECT f FROM FProceedings f"),
+    @NamedQuery(name = "FProceedings.findByProceedingId", query = "SELECT p FROM FProceedings p WHERE p.fpProceedings.psId = :ProceedingId"),
     @NamedQuery(name = "FProceedings.findByFpId", query = "SELECT f FROM FProceedings f WHERE f.fpId = :fpId")})
 public class FProceedings implements Serializable {
 
