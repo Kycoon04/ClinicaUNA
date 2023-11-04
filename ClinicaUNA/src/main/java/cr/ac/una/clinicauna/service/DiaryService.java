@@ -5,7 +5,6 @@
 package cr.ac.una.clinicauna.service;
 
 import cr.ac.una.clinicauna.model.DiaryDto;
-import cr.ac.una.clinicauna.model.SpaceDto;
 import cr.ac.una.clinicauna.util.Request;
 import cr.ac.una.clinicauna.util.Respuesta;
 import jakarta.ws.rs.core.GenericType;

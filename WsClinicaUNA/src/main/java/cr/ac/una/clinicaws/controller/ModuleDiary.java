@@ -12,7 +12,6 @@ import cr.ac.una.clinicaws.util.Respuesta;
 import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -33,14 +32,13 @@ import java.util.logging.Logger;
  *
  * @author dilan
  */
-
 @Path("/ModuleDiary")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Diary", description = "Operations on Diary")
 //@Secure
 public class ModuleDiary {
-    
+
     @EJB
     DiaryService diaryService;
 
@@ -58,13 +56,6 @@ public class ModuleDiary {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la agenda").build();
         }
     }
-    public void setDiaryService(DiaryService diaryService) {
-        this.diaryService = diaryService;
-    }
-
-    public DiaryService getDiaryService() {
-        return diaryService;
-    }
 
     @POST
     @Path("/diary")
@@ -80,32 +71,35 @@ public class ModuleDiary {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando la agenda").build();
         }
     }
+
     @POST
     @Path("/diaryemail")
     public Response sentemail(DiaryDto diaryDto) {
         try {
-           Email email = new Email();
-           email.setDestinationMail(diaryDto.getDySpace().getSeAppointment().getAtEmail());
-           email.enviarConfirmacion(diaryDto.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), diaryDto.getDySpace().getSeAppointment().getAtPatient().getPtName());
-           return Response.ok().build();
+            Email email = new Email();
+            email.setDestinationMail(diaryDto.getDySpace().getSeAppointment().getAtEmail());
+            email.enviarConfirmacion(diaryDto.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), diaryDto.getDySpace().getSeAppointment().getAtPatient().getPtName());
+            return Response.ok().build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleDiary.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando la agenda").build();
         }
     }
+
     @POST
     @Path("/diaryEmailRecordatorio")
     public Response sentEmailRecordatorio(DiaryDto diaryDto) {
         try {
-           Email email = new Email();
-           email.setDestinationMail(diaryDto.getDySpace().getSeAppointment().getAtEmail());
-           email.enviarRecordatorio(diaryDto.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), diaryDto.getDySpace().getSeAppointment().getAtPatient().getPtName());
-           return Response.ok().build();
+            Email email = new Email();
+            email.setDestinationMail(diaryDto.getDySpace().getSeAppointment().getAtEmail());
+            email.enviarRecordatorio(diaryDto.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), diaryDto.getDySpace().getSeAppointment().getAtPatient().getPtName());
+            return Response.ok().build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleDiary.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando la agenda").build();
         }
     }
+
     @DELETE
     @Path("/diary/{id}")
     public Response deleteDiary(@PathParam("id") Integer id) {
@@ -121,7 +115,6 @@ public class ModuleDiary {
         }
     }
 
-
     @GET
     @Path("/diary")
     public Response getAppointments() {
@@ -136,5 +129,13 @@ public class ModuleDiary {
             Logger.getLogger(ModuleDiary.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la agenda").build();
         }
+    }
+
+    public void setDiaryService(DiaryService diaryService) {
+        this.diaryService = diaryService;
+    }
+
+    public DiaryService getDiaryService() {
+        return diaryService;
     }
 }

@@ -12,6 +12,10 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,8 +31,15 @@ public class ModuleJasperReports {
     DiaryService diaryService;
     
     @GET
-    @Path("/JasperReports/{Date}")
-    public Response getReportDiary(@PathParam("date") Date date) {
+    @Path("/getReportDiary/{date}/{dateTwo}")
+    public Response getReportDiary(@PathParam("date") String dateStr, @PathParam("dateTwo") String dateTwo) throws ParseException {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date date = df.parse(dateStr);
+        Date date2 = df.parse(dateTwo);
+        return Response.ok().build();
+        
+        
         /*
         try {
             Respuesta res = diaryService.getDiary(id);
@@ -41,6 +52,5 @@ public class ModuleJasperReports {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la agenda").build();
         }
         */
-        return null;
     }
 }

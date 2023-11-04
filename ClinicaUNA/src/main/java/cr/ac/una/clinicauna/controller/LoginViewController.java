@@ -5,17 +5,25 @@ import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.model.UserDto;
+import cr.ac.una.clinicauna.service.DiaryService;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
 
 import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
+import cr.ac.una.clinicauna.util.Request;
 import cr.ac.una.clinicauna.util.Respuesta;
+import jakarta.ws.rs.core.GenericType;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -101,7 +109,7 @@ public class LoginViewController extends Controller implements Initializable {
     List<Node> required1 = new ArrayList<>();
     List<Node> required2 = new ArrayList<>();
     private boolean pass = false;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         choiceBoxIdioms.getItems().addAll(Spanish);
