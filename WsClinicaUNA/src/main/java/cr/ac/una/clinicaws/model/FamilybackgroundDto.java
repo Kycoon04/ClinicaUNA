@@ -15,7 +15,7 @@ public class FamilybackgroundDto {
     private String fbRelationship;
     private Disease fbDisease;
     private int fbFilecode;
-    
+
     public FamilybackgroundDto() {
     }
 
@@ -23,7 +23,11 @@ public class FamilybackgroundDto {
         this.fbId = familybackground.getFbId();
         this.fbDisease = familybackground.getFbDisease();
         this.fbRelationship = familybackground.getFbRelationship();
-        this.fbFilecode= familybackground.getFbFilecode();
+        this.fbFilecode = familybackground.getFbFilecode();
+    }
+
+    public String getFbDiseaseString() {
+        return fbDisease.getDsName();
     }
 
     public int getFbFilecode() {

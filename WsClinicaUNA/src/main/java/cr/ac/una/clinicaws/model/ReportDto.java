@@ -5,6 +5,10 @@
 package cr.ac.una.clinicaws.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -12,7 +16,7 @@ import java.util.Date;
  * @author dilan
  */
 public class ReportDto {
-    
+
     private Integer rtId;
     private double rtPressure;
     private double rtHeartRate;
@@ -28,10 +32,11 @@ public class ReportDto {
     private String rtCarePlan;
     private String rtObservations;
     private LocalDate rtDate;
-    
-    public ReportDto(){
-        
+
+    public ReportDto() {
+
     }
+
     public ReportDto(Report report) {
         this.rtId = report.getRtId();
         this.rtPressure = report.getRtPressure();
@@ -50,6 +55,16 @@ public class ReportDto {
         this.rtDate = report.getRtDate();
     }
 
+    public Date getRtDateDate() {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalDateTime localDateTime = LocalDateTime.of(rtDate, null);
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    
+    public String getCodeAppointment(){
+    return rtAppointment.getAtCode();
+    }
+    
     public LocalDate getRtDate() {
         return rtDate;
     }
@@ -89,7 +104,7 @@ public class ReportDto {
     public void setRtObservations(String rtObservations) {
         this.rtObservations = rtObservations;
     }
-   
+
     public Integer getRtId() {
         return rtId;
     }
