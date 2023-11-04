@@ -9,10 +9,9 @@ package cr.ac.una.clinicaws.model;
  * @author dilan
  */
 public class ExamDto {
-    
 
     private Integer emId;
-   
+
     private String emName;
 
     private String emDoctornote;
@@ -32,7 +31,10 @@ public class ExamDto {
     public ExamDto() {
     }
 
-    
+    public String getEmDoctorString() {
+        return emDoctor.getDrUser().getUsName();
+    }
+
     public Integer getEmId() {
         return emId;
     }
@@ -72,8 +74,5 @@ public class ExamDto {
     public void setEmProceedings(Proceedings emProceedings) {
         this.emProceedings = emProceedings;
     }
-    
-    
-    
-    
+
 }

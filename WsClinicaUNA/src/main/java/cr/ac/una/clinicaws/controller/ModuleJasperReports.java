@@ -53,6 +53,7 @@ public class ModuleJasperReports {
     AppointmentService appointmentService;
     @Context
     ServletContext context;
+    
     private static final Logger LOGGER = Logger.getLogger(ModuleJasperReports.class.getName());
 
     @GET
@@ -83,7 +84,22 @@ public class ModuleJasperReports {
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .build();
     }
+/*
+    @GET
+    @Path("/ReportPatient/{id}")
+    @Produces("application/pdf")
+    public Response exportPdfPatient(@PathParam("id") Integer id) throws JRException, FileNotFoundException {
 
+        
+        
+        
+        byte[] pdfContent = exportToPdf(reportesEmpleados);
+        String contentDisposition = "attachment; filename=\"petsReport.pdf\"";
+        return Response.ok(pdfContent)
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .build();
+    }*/
+    
     @GET
     @Path("/export-xls")
     @Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
