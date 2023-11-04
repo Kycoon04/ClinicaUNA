@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicauna.model;
 
+import java.util.Date;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -23,12 +24,25 @@ public class ReportDto {
     private SimpleStringProperty rtNotesNursing;
     private SimpleStringProperty rtDoctorReason;
     private AppointmentDto rtAppointment;
+    private SimpleStringProperty rtFisicExamen;
+    private SimpleStringProperty rtTreatmentExamen;
+    private SimpleStringProperty rtCarePlan;
+    private SimpleStringProperty rtObservations;
+    private Date rtDate;
+
     
     public ReportDto() {
         this.rtId = new SimpleIntegerProperty();
         this.rtNotesNursing = new SimpleStringProperty();
         rtDoctorReason = new SimpleStringProperty();
-        rtAppointment = new AppointmentDto();     
+        rtAppointment = new AppointmentDto();
+        rtFisicExamen= new SimpleStringProperty();
+        rtTreatmentExamen= new SimpleStringProperty();
+        rtCarePlan= new SimpleStringProperty();
+        rtObservations= new SimpleStringProperty();
+    }
+    public void setRtId(int rtId) {
+        this.rtId.set(rtId);
     }
     
     public Integer getRtId() {
@@ -83,11 +97,9 @@ public class ReportDto {
         this.rtBodyMass = rtBodyMass;
     }
     
-    
-    
-    public void setRtBodyMass(short rtBodyMass) {
+    /*public void setRtBodyMass(short rtBodyMass) {
         this.rtBodyMass = rtBodyMass;
-    }
+    }*/
     
     public String getRtNotesNursing() {
         return rtNotesNursing.get();
@@ -112,5 +124,36 @@ public class ReportDto {
     public void setRtAppointment(AppointmentDto rtAppointment) {
         this.rtAppointment = rtAppointment;
     }
+     public String getRtFisicExamen() {
+        return rtFisicExamen.get();
+    }
+    public void setRtFisicExamen(String rtFisicExamen) {
+        this.rtFisicExamen.set(rtFisicExamen);
+    }
+    public String getRtTreatmentExamen() {
+        return rtTreatmentExamen.get();
+    }
+   
+    public void setRtTreatmentExamen(String rtTreatmentExamen) {
+        this.rtTreatmentExamen.set(rtTreatmentExamen);
+    }
+    public String getRtCarePlan() {
+        return rtCarePlan.get();
+    }
+    public void setRtCarePlan(String rtCarePlan) {
+        this.rtCarePlan.set(rtCarePlan);
+    }
+    public String getRtObservations() {
+        return rtObservations.get();
+    }
     
+    public void setRtObservations(String rtObservations) {
+        this.rtObservations.set(rtObservations);
+    }
+    public Date getRtDate() {
+        return rtDate;
+    }
+    public void setRtDate(Date rtDate) {
+        this.rtDate = rtDate;
+    }
 }

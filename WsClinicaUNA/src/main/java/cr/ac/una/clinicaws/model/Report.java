@@ -94,7 +94,7 @@ public class Report implements Serializable {
     @Column(name = "RT_OBSERVATIONS")
     private String rtObservations;
     @Column(name = "RT_DATE")
-    private LocalDate rtDate;
+    private Date rtDate;
     @JoinColumn(name = "RT_APPOINTMENT", referencedColumnName = "AT_ID")
     @ManyToOne(optional = false)
     private Appointment rtAppointment;
@@ -239,11 +239,11 @@ public class Report implements Serializable {
         this.rtObservations = rtObservations;
     }
 
-    public LocalDate getRtDate() {
+    public Date getRtDate() {
         return rtDate;
     }
 
-    public void setRtDate(LocalDate rtDate) {
+    public void setRtDate(Date rtDate) {
         this.rtDate = rtDate;
     }
 

@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicaws.model;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -31,7 +32,7 @@ public class ReportDto {
     private String rtTreatmentExamen;
     private String rtCarePlan;
     private String rtObservations;
-    private LocalDate rtDate;
+    private Date rtDate;
 
     public ReportDto() {
 
@@ -58,19 +59,21 @@ public class ReportDto {
     public Date getRtDateDate() {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime localTime = LocalTime.parse("12:23", timeFormatter);
-        LocalDateTime localDateTime = LocalDateTime.of(rtDate, localTime);
+        Instant instant = rtDate.toInstant();
+        LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
-    
-    public String getCodeAppointment(){
-    return rtAppointment.getAtCode();
+
+    public String getCodeAppointment() {
+        return rtAppointment.getAtCode();
     }
-    
-    public LocalDate getRtDate() {
+
+    public Date getRtDate() {
         return rtDate;
     }
 
-    public void setRtDate(LocalDate rtDate) {
+    public void setRtDate(Date rtDate) {
         this.rtDate = rtDate;
     }
 

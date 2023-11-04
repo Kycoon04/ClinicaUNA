@@ -29,7 +29,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.ParseException;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -299,6 +301,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private TextArea textAreaRep_Treatments;
     @FXML
     private ComboBox<String> spacesEdit = new ComboBox();
+    ReportDto reportDto = new ReportDto();
 
     /**
      * Initializes the controller class.
@@ -1525,10 +1528,31 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
     }
 
+    public void loadReport(ReportDto report) {
+        textFieldRep_Pressure.setText(String.valueOf(reportDto.getRtPressure()));
+        textFieldRep_HeartRate.setText(String.valueOf(reportDto.getRtHeartRate()));
+        textFieldRep_Height.setText(String.valueOf(reportDto.getRtHeight()));
+        textFieldRep_Weight.setText(String.valueOf(reportDto.getRtWeight()));
+        textFieldRep_Temperature.setText(String.valueOf(reportDto.getRtTemperature()));
+        textFieldRep_BodyMass.setText(String.valueOf(reportDto.getRtBodyMass()));
+        textAreaRep_Reason.setText(reportDto.getRtDoctorReason());
+        textAreaRep_NotesNursing.setText(reportDto.getRtNotesNursing());
+        textAreaRep_CarePlan.setText(reportDto.getRtCarePlan());
+        textAreaRep_PhysicalExam.setText(reportDto.getRtFisicExamen());
+        textAreaRep_Treatments.setText(reportDto.getRtTreatmentExamen());
+        textAreaRep_Notes.setText(reportDto.getRtObservations());
+        datePickerConsultDate.setValue(reportDto.getRtDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        Instant instant = reportDto.getRtDate().toInstant();
+        LocalTime localTime = instant.atZone(ZoneId.systemDefault()).toLocalTime();
+        timePickerConsultTime.setValue(localTime);
+
+    }
+
     public void ModificarCita(AppointmentDto cita) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Modificar Cita");
         alert.setHeaderText(null);
+        ReportService serviceRepor = new ReportService();
         if (usrIdiom.getUsLenguage().equals("Spanish")) {
             alert.setContentText("¿Quieres modificar esta cita?");
         } else if (usrIdiom.getUsLenguage().equals("English")) {
@@ -1550,6 +1574,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             reason.setText(appointmentDtoModi.getAtReason());
             btnAttentionControl.setVisible(true);
             DatePickerAppointment.setVisible(true);
+            Respuesta res = serviceRepor.getReportByIdAppoinment(appointmentDtoModi.getAtId());
+            reportDto = (ReportDto) res.getResultado("Report");
+            if (reportDto != null) {
+                loadReport(reportDto);
+            }
 
             switch (appointmentDtoModi.getAtState()) {
                 case "Programada":
@@ -1765,39 +1794,64 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
     }
 
+    ReportDto bindNewReport() {
+
+        reportDto.setRtId(reportDto.getRtId());
+        reportDto.setRtAppointment(appointmentDtoModi);
+        reportDto.setRtPressure(Double.parseDouble(textFieldRep_Pressure.getText()));
+        reportDto.setRtHeartRate(Double.parseDouble(textFieldRep_HeartRate.getText()));
+
+        reportDto.setRtHeight(Double.parseDouble(textFieldRep_Height.getText()));
+        reportDto.setRtWeight(Double.parseDouble(textFieldRep_Weight.getText()));
+        reportDto.setRtTemperature(Double.parseDouble(textFieldRep_Temperature.getText()));
+        reportDto.setRtBodyMass(Double.parseDouble(textFieldRep_BodyMass.getText()));
+        reportDto.setRtDoctorReason(textAreaRep_Reason.getText());
+        reportDto.setRtNotesNursing(textAreaRep_NotesNursing.getText());
+        reportDto.setRtCarePlan(textAreaRep_CarePlan.getText());
+        reportDto.setRtFisicExamen(textAreaRep_PhysicalExam.getText());
+        reportDto.setRtTreatmentExamen(textAreaRep_Treatments.getText());
+        reportDto.setRtObservations(textAreaRep_Notes.getText());
+        LocalDate localDate = datePickerConsultDate.getValue();
+        //Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, timePickerConsultTime.getValue());
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        reportDto.setRtDate(date);
+
+        return reportDto;
+    }
+
     @FXML
     private void updateReportAp(ActionEvent event) {
-        ReportDto reportDto = new ReportDto();
-        reportDto.setRtAppointment(appointmentDtoModi);
-        reportDto.setRtPressure(Short.parseShort(textFieldRep_Pressure.getText()));
-        reportDto.setRtHeartRate(Short.parseShort(textFieldRep_HeartRate.getText()));
-
-        reportDto.setRtHeight(Short.parseShort(textFieldRep_Height.getText()));
-        reportDto.setRtWeight(Short.parseShort(textFieldRep_Weight.getText()));
-        reportDto.setRtTemperature(Short.parseShort(textFieldRep_Temperature.getText()));
-        reportDto.setRtBodyMass(Short.parseShort("23"));
-        if (textAreaRep_Reason.getText().isEmpty()) {
-            reportDto.setRtDoctorReason("N/C");
-        } else {
-            reportDto.setRtDoctorReason(textAreaRep_Reason.getText());
-        }
-        if (textAreaRep_Reason.getText().isEmpty()) {
-            reportDto.setRtNotesNursing("N/C");
-        } else {
-            reportDto.setRtNotesNursing(textAreaRep_Notes.getText());
-        }
 
         ReportService service = new ReportService();
         Respuesta response = null;
 
         if (reportDto != null) {
-            response = service.saveReport(reportDto);
+            response = service.saveReport(bindNewReport());
+            reportDto = new ReportDto();
         }
         if (response.getEstado()) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Control de Atención guardada");
-            cleanAttentionControl();
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Control de Atención guardada");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Attention Control", getStage(), "Saved Attention Control");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer le contrôle de l'attention", getStage(), "Contrôle d'attention enregistré");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "アテンションコントロールの保存", getStage(), "保存されたアテンション コントロール");
+            }
+            //cleanAttentionControl();
+
         } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Error al guardar el Control de Atención");
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Error al guardar el Control de Atención");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Save Attention Control", getStage(), "Error saving Attention Control");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Enregistrer le contrôle de l'attention", getStage(), "Erreur lors de l'enregistrement du contrôle d'attention");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "アテンションコントロールの保存", getStage(), "アテンション コントロールの保存中にエラーが発生しました");
+            }
         }
 
     }
