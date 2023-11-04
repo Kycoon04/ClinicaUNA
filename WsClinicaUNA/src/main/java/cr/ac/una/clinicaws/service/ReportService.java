@@ -115,20 +115,4 @@ public class ReportService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el tipo de Report.", "getTipoReport " + ex.getMessage());
         }
     }
-    
-        public Respuesta getReportAppoint(Integer rtId) {
-        try {
-            Query qryReport = em.createQuery("SELECT r FROM Report r WHERE r.rtAppointment.atId = :rtId", Report.class);
-            qryReport.setParameter("rtId", rtId);
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Report", new ReportDto((Report) qryReport.getSingleResult()));
-        } catch (NoResultException ex) {//sin resultado
-            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getReportAppoint NoResultException");
-        } catch (NonUniqueResultException ex) {//mas de un resultado 
-            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el Report.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Report.", "getReportAppoint NonUniqueResultException");
-        } catch (Exception ex) {// codig de erro en el server 
-            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el Report Extraido.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Report.", "getReportAppoint " + ex.getMessage());
-        }
-    }
 }

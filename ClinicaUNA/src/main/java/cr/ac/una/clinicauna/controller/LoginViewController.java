@@ -359,7 +359,7 @@ public class LoginViewController extends Controller implements Initializable {
             user.setUsLenguage(idiom);
         }
         if (choiceBoxIdioms.getValue().equals("Japonais") || choiceBoxIdioms.getValue().equals("Japonese") || choiceBoxIdioms.getValue().equals("Japonés") || choiceBoxIdioms.getValue().equals("日本語")) {
-            idiom = "Japanese";
+            idiom = "Japonese";
             user.setUsLenguage(idiom);
         }
         user.setUsIdentification(idRegisField.getText());

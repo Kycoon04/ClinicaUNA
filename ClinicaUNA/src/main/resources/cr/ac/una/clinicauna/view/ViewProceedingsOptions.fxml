@@ -282,220 +282,6 @@
             </HBox>
          </center>
       </BorderPane>
-      <BorderPane fx:id="ReportView" layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="967.0">
-         <center>
-            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
-               <children>
-                  <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="25.0" visible="false" />
-                  <VBox prefHeight="600.0" prefWidth="398.0">
-                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#backReport" prefHeight="24.0" prefWidth="113.0" style="-fx-background-color: transparent;">
-                                 <graphic>
-                                    <ImageView fitHeight="59.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../resources/IconBack.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                                 <HBox.margin>
-                                    <Insets top="8.0" />
-                                 </HBox.margin>
-                              </Button>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Reporte" wrappingWidth="317.13673210144043">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="34.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets top="25.0" />
-                                 </HBox.margin>
-                              </Text>
-                           </children>
-                        </HBox>
-                        <Separator prefHeight="12.0" prefWidth="454.0" visible="false" />
-                        <HBox prefHeight="37.0" prefWidth="503.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Presion" wrappingWidth="156.33668327331543">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextField fx:id="textFieldRep_Pressure" prefHeight="26.0" prefWidth="159.0" />
-                           </children>
-                        </HBox>
-                        <Separator prefHeight="17.0" prefWidth="454.0" visible="false" />
-                        <HBox layoutX="10.0" layoutY="144.0" prefHeight="37.0" prefWidth="503.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%FrecuenciaCardiaca" wrappingWidth="157.13667106628418">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextField fx:id="textFieldRep_HeartRate" prefHeight="42.0" prefWidth="158.0" />
-                           </children>
-                        </HBox>
-                        <Separator layoutX="10.0" layoutY="181.0" prefHeight="18.0" prefWidth="454.0" visible="false" />
-                        <HBox layoutX="10.0" layoutY="200.0" prefHeight="37.0" prefWidth="503.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Altura" wrappingWidth="157.13667106628418">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextField fx:id="textFieldRep_Height" prefHeight="38.0" prefWidth="159.0" />
-                           </children>
-                        </HBox>
-                        <Separator layoutX="10.0" layoutY="248.0" prefHeight="19.0" prefWidth="454.0" visible="false" />
-                        <HBox layoutX="10.0" layoutY="267.0" prefHeight="38.0" prefWidth="406.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Peso" wrappingWidth="157.13667106628418">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextField fx:id="textFieldRep_Weight" prefHeight="38.0" prefWidth="159.0" />
-                           </children>
-                        </HBox>
-                        <Separator layoutX="10.0" layoutY="304.0" prefHeight="18.0" prefWidth="454.0" visible="false" />
-                        <HBox layoutX="10.0" layoutY="324.0" prefHeight="37.0" prefWidth="503.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Temperatura" wrappingWidth="157.13667106628418">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextField fx:id="textFieldRep_Temperature" prefHeight="38.0" prefWidth="156.0" />
-                           </children>
-                        </HBox>
-                        <Separator layoutX="10.0" layoutY="361.0" prefHeight="29.0" prefWidth="454.0" visible="false" />
-                        <HBox layoutX="10.0" layoutY="380.0" prefHeight="38.0" prefWidth="406.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%MasaCorporal" wrappingWidth="157.13667106628418">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextField fx:id="textFieldRep_BodyMass" editable="false" prefHeight="38.0" prefWidth="103.0" />
-                              <Button mnemonicParsing="false" onAction="#calculateBodyMass" prefHeight="30.0" prefWidth="110.0" text="%Calcular">
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </Button>
-                           </children>
-                        </HBox>
-                        <Separator prefHeight="25.0" prefWidth="454.0" visible="false" />
-                        <HBox prefHeight="46.0" prefWidth="454.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Fecha" wrappingWidth="157.13667106628418">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <JFXDatePicker fx:id="datePickerConsultDate" defaultColor="#000033" prefHeight="28.0" prefWidth="154.0" />
-                           </children>
-                        </HBox>
-                        <Separator layoutX="10.0" layoutY="456.0" prefHeight="18.0" prefWidth="454.0" visible="false" />
-                        <HBox layoutX="10.0" layoutY="481.0" prefHeight="46.0" prefWidth="321.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Hora" wrappingWidth="157.13667106628418">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <JFXTimePicker fx:id="timePickerConsultTime" defaultColor="#000033" prefHeight="28.0" prefWidth="151.0" />
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-                  <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="23.0" visible="false" />
-                  <VBox prefHeight="600.0" prefWidth="235.0">
-                     <children>
-                        <Separator prefHeight="46.0" prefWidth="443.0" visible="false" />
-                        <Spinner fx:id="spinnerAppoinment" onMouseClicked="#changeViewAppointment" prefHeight="26.0" prefWidth="266.0" />
-                        <Separator layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="443.0" visible="false" />
-                        <VBox prefHeight="134.0" prefWidth="342.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%NotasEnfermeria" wrappingWidth="185.93665885925293">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextArea fx:id="textAreaRep_NotesNursing" prefHeight="110.0" prefWidth="326.0" />
-                           </children>
-                        </VBox>
-                        <Separator layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="443.0" visible="false" />
-                        <VBox>
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Observaciones" wrappingWidth="185.93665885925293">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextArea fx:id="textAreaRep_Notes" prefHeight="110.0" prefWidth="235.0" />
-                           </children>
-                        </VBox>
-                        <Separator layoutX="10.0" layoutY="332.0" prefHeight="13.0" prefWidth="443.0" visible="false" />
-                        <VBox layoutX="10.0" layoutY="246.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%PlanAtencion" wrappingWidth="185.93665885925293">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextArea fx:id="textAreaRep_CarePlan" prefHeight="110.0" prefWidth="235.0" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </VBox>
-                  <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="58.0" visible="false" />
-                  <VBox layoutX="457.0" layoutY="10.0" prefHeight="600.0" prefWidth="235.0">
-                     <children>
-                        <Separator layoutX="10.0" layoutY="10.0" prefHeight="89.0" prefWidth="235.0" visible="false" />
-                        <VBox prefHeight="134.0" prefWidth="342.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%RazonConsulta" wrappingWidth="185.93665885925293">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextArea fx:id="textAreaRep_Reason" prefHeight="110.0" prefWidth="326.0" />
-                           </children>
-                        </VBox>
-                        <Separator layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="443.0" visible="false" />
-                        <VBox>
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%ExamenFisico" wrappingWidth="185.93665885925293">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextArea fx:id="textAreaRep_PhysicalExam" prefHeight="110.0" prefWidth="235.0" />
-                           </children>
-                        </VBox>
-                        <Separator layoutX="10.0" layoutY="332.0" prefHeight="13.0" prefWidth="443.0" visible="false" />
-                        <VBox layoutX="10.0" layoutY="246.0">
-                           <children>
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Tratamientos" wrappingWidth="185.93665885925293">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <TextArea fx:id="textAreaRep_Treatments" prefHeight="110.0" prefWidth="235.0" />
-                           </children>
-                        </VBox>
-                        <Separator layoutX="10.0" layoutY="383.0" prefHeight="23.0" prefWidth="235.0" visible="false" />
-                        <Button mnemonicParsing="false" onAction="#updateReportAp" prefHeight="30.0" prefWidth="109.0" text="%Actualizar">
-                           <VBox.margin>
-                              <Insets left="85.0" />
-                           </VBox.margin>
-                        </Button>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-         </center>
-      </BorderPane>
       <BorderPane fx:id="OptionsProceedingsView" prefHeight="600.0" prefWidth="1000.0" stylesheets="@StyleClinica.css">
          <center>
             <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
@@ -1091,6 +877,220 @@
                   </TabPane>
                </children>
             </VBox>
+         </center>
+      </BorderPane>
+      <BorderPane fx:id="ReportView" layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="967.0">
+         <center>
+            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+               <children>
+                  <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="25.0" visible="false" />
+                  <VBox prefHeight="600.0" prefWidth="398.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#backReport" prefHeight="24.0" prefWidth="113.0" style="-fx-background-color: transparent;">
+                                 <graphic>
+                                    <ImageView fitHeight="59.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../resources/IconBack.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets top="8.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Reporte" wrappingWidth="317.13673210144043">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="34.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets top="25.0" />
+                                 </HBox.margin>
+                              </Text>
+                           </children>
+                        </HBox>
+                        <Separator prefHeight="12.0" prefWidth="454.0" visible="false" />
+                        <HBox prefHeight="37.0" prefWidth="503.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Presion" wrappingWidth="156.33668327331543">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_Pressure" prefHeight="26.0" prefWidth="159.0" />
+                           </children>
+                        </HBox>
+                        <Separator prefHeight="17.0" prefWidth="454.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="144.0" prefHeight="37.0" prefWidth="503.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%FrecuenciaCardiaca" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_HeartRate" prefHeight="42.0" prefWidth="158.0" />
+                           </children>
+                        </HBox>
+                        <Separator layoutX="10.0" layoutY="181.0" prefHeight="18.0" prefWidth="454.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="200.0" prefHeight="37.0" prefWidth="503.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Altura" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_Height" prefHeight="38.0" prefWidth="159.0" />
+                           </children>
+                        </HBox>
+                        <Separator layoutX="10.0" layoutY="248.0" prefHeight="19.0" prefWidth="454.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="267.0" prefHeight="38.0" prefWidth="406.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Peso" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_Weight" prefHeight="38.0" prefWidth="159.0" />
+                           </children>
+                        </HBox>
+                        <Separator layoutX="10.0" layoutY="304.0" prefHeight="18.0" prefWidth="454.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="324.0" prefHeight="37.0" prefWidth="503.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Temperatura" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_Temperature" prefHeight="38.0" prefWidth="156.0" />
+                           </children>
+                        </HBox>
+                        <Separator layoutX="10.0" layoutY="361.0" prefHeight="29.0" prefWidth="454.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="380.0" prefHeight="38.0" prefWidth="406.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%MasaCorporal" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextField fx:id="textFieldRep_BodyMass" editable="false" prefHeight="38.0" prefWidth="103.0" />
+                              <Button mnemonicParsing="false" onAction="#calculateBodyMass" prefHeight="30.0" prefWidth="110.0" text="%Calcular">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <Separator prefHeight="25.0" prefWidth="454.0" visible="false" />
+                        <HBox prefHeight="46.0" prefWidth="454.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Fecha" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <JFXDatePicker fx:id="datePickerConsultDate" defaultColor="#000033" prefHeight="28.0" prefWidth="154.0" />
+                           </children>
+                        </HBox>
+                        <Separator layoutX="10.0" layoutY="456.0" prefHeight="18.0" prefWidth="454.0" visible="false" />
+                        <HBox layoutX="10.0" layoutY="481.0" prefHeight="46.0" prefWidth="321.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 18;" text="%Hora" wrappingWidth="157.13667106628418">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <JFXTimePicker fx:id="timePickerConsultTime" defaultColor="#000033" prefHeight="28.0" prefWidth="151.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="23.0" visible="false" />
+                  <VBox prefHeight="600.0" prefWidth="235.0">
+                     <children>
+                        <Separator prefHeight="46.0" prefWidth="443.0" visible="false" />
+                        <Spinner fx:id="spinnerAppoinment" onMouseClicked="#changeViewAppointment" prefHeight="26.0" prefWidth="266.0" />
+                        <Separator layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="443.0" visible="false" />
+                        <VBox prefHeight="134.0" prefWidth="342.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%NotasEnfermeria" wrappingWidth="185.93665885925293">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextArea fx:id="textAreaRep_NotesNursing" prefHeight="110.0" prefWidth="326.0" />
+                           </children>
+                        </VBox>
+                        <Separator layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="443.0" visible="false" />
+                        <VBox>
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Observaciones" wrappingWidth="185.93665885925293">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextArea fx:id="textAreaRep_Notes" prefHeight="110.0" prefWidth="235.0" />
+                           </children>
+                        </VBox>
+                        <Separator layoutX="10.0" layoutY="332.0" prefHeight="13.0" prefWidth="443.0" visible="false" />
+                        <VBox layoutX="10.0" layoutY="246.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%PlanAtencion" wrappingWidth="185.93665885925293">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextArea fx:id="textAreaRep_CarePlan" prefHeight="110.0" prefWidth="235.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+                  <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="58.0" visible="false" />
+                  <VBox layoutX="457.0" layoutY="10.0" prefHeight="600.0" prefWidth="235.0">
+                     <children>
+                        <Separator layoutX="10.0" layoutY="10.0" prefHeight="89.0" prefWidth="235.0" visible="false" />
+                        <VBox prefHeight="134.0" prefWidth="342.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%RazonConsulta" wrappingWidth="185.93665885925293">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextArea fx:id="textAreaRep_Reason" prefHeight="110.0" prefWidth="326.0" />
+                           </children>
+                        </VBox>
+                        <Separator layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="443.0" visible="false" />
+                        <VBox>
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%ExamenFisico" wrappingWidth="185.93665885925293">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextArea fx:id="textAreaRep_PhysicalExam" prefHeight="110.0" prefWidth="235.0" />
+                           </children>
+                        </VBox>
+                        <Separator layoutX="10.0" layoutY="332.0" prefHeight="13.0" prefWidth="443.0" visible="false" />
+                        <VBox layoutX="10.0" layoutY="246.0">
+                           <children>
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Tratamientos" wrappingWidth="185.93665885925293">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <TextArea fx:id="textAreaRep_Treatments" prefHeight="110.0" prefWidth="235.0" />
+                           </children>
+                        </VBox>
+                        <Separator layoutX="10.0" layoutY="383.0" prefHeight="23.0" prefWidth="235.0" visible="false" />
+                        <Button mnemonicParsing="false" onAction="#updateReportAp" prefHeight="30.0" prefWidth="109.0" text="%Actualizar">
+                           <VBox.margin>
+                              <Insets left="85.0" />
+                           </VBox.margin>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
          </center>
       </BorderPane>
    </children>
