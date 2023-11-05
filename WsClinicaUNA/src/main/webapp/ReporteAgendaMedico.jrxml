@@ -88,7 +88,7 @@
 				<text><![CDATA[Numero Telefonico: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="330" y="30" width="80" height="30" uuid="bb7f90ff-ef56-4507-ba24-8c7fc508e61c">
+				<reportElement x="280" y="70" width="140" height="15" uuid="bb7f90ff-ef56-4507-ba24-8c7fc508e61c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -111,11 +111,11 @@
 				<text><![CDATA[8321-8913]]></text>
 			</staticText>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="410" y="36" width="100" height="18" uuid="a928fc3e-2414-4a16-8b2f-5a0fc534d417"/>
+				<reportElement x="413" y="70" width="100" height="18" uuid="a928fc3e-2414-4a16-8b2f-5a0fc534d417"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField pattern="HH:mm">
-				<reportElement x="500" y="36" width="100" height="18" uuid="bd47be64-3fd2-4989-9281-06c7f95269d4"/>
+				<reportElement x="500" y="70" width="100" height="18" uuid="bd47be64-3fd2-4989-9281-06c7f95269d4"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>

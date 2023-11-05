@@ -726,19 +726,19 @@
 			</componentElement>
 			<lineChart>
 				<chart evaluationTime="Report">
-					<reportElement x="480" y="0" width="580" height="220" uuid="8f11505e-a93e-47b8-95dd-5635c85c0053"/>
+					<reportElement x="480" y="0" width="580" height="220" uuid="d55f1fd2-eb7e-4272-8f61-a21f58c2308c"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="dsHistograma" uuid="e9aaf710-9d8f-48c8-8bba-8a6dedf51086">
+						<datasetRun subDataset="dsHistograma" uuid="e136941e-325e-46a5-8bd7-2200f25df781">
 							<dataSourceExpression><![CDATA[$P{dsHistogramasource}]]></dataSourceExpression>
 						</datasetRun>
 					</dataset>
 					<categorySeries>
-						<seriesExpression><![CDATA["SERIES 1"]]></seriesExpression>
+						<seriesExpression><![CDATA["Lapso de tiempo"]]></seriesExpression>
 						<categoryExpression><![CDATA[$F{rtDate}]]></categoryExpression>
 						<valueExpression><![CDATA[$F{rtBodyMass}]]></valueExpression>
 					</categorySeries>
