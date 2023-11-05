@@ -1147,8 +1147,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void openProceeding(ActionEvent event) {
+        System.out.println(patientDto.getPtId());
         if (patientDto.getPtId() != 0) {
-
             ProceedingsService serviceProced = new ProceedingsService();
             Respuesta hasProc = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
 
@@ -1168,7 +1168,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
                
             }
-
+            System.out.println("AJA");
             AppContext.getInstance().set("Patient", patientDto);
             FlowController.getInstance().goMain("ViewProceedingsOptions");
         } else {

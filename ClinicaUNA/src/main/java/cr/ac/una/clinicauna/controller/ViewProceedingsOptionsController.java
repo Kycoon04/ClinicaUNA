@@ -495,15 +495,35 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             r = service.saveDisease(diseaseDto);
             diseaseDto = new DiseaseDto();
         }
+        System.out.println(userDto.getUsLenguage());
         if (r.getEstado()) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Enfermedad guardada");
-            // textFieldFamBgDisease.setText(diseaseDto.);
+            if (userDto.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Enfermedad guardada");
+            }
+            if (userDto.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Disease Saved");
+            }
+            if (userDto.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Maladie sauvée");
+            }
+            if (userDto.getUsLenguage().equals("Japanese")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "保存された病気");
+            }
         } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Error al Guardar Enfermedad");
+            if (userDto.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Error al guardar enfermedad ");
+            }
+            if (userDto.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Error saving disease");
+            }
+            if (userDto.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "Erreur lors de la sauvegarde de la maladie");
+            }
+            if (userDto.getUsLenguage().equals("Japanese")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Enfermedad", getStage(), "病気の保存エラー");
+            }
         }
-
         fillTableDiseases();
-
         // OptionsProceedingsView.toFront();
     }
 
@@ -576,9 +596,32 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                     deleteDisease = false;
                     diseaseDto = new DiseaseDto();
                     if (r.getEstado()) {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Enfermedad Eliminada Correctamente");
+                        if (userDto.getUsLenguage().equals("Spanish")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar", getStage(), "Enfermedad eliminada");
+                        }
+                        if (userDto.getUsLenguage().equals("English")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Delete", getStage(), "Disease deleted");
+                        }
+                        if (userDto.getUsLenguage().equals("French")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "éliminée", getStage(), "Maladie éliminée");
+                        }
+                        if (userDto.getUsLenguage().equals("Japanese")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "病気を保存", getStage(), "病気の除去");
+                        }
+
                     } else {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Error al eliminar Enfermedad");
+                        if (userDto.getUsLenguage().equals("Spanish")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar", getStage(), "Error al eliminar la enfermedad");
+                        }
+                        if (userDto.getUsLenguage().equals("English")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Delete", getStage(), "Error deleting the disease");
+                        }
+                        if (userDto.getUsLenguage().equals("French")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "éliminée", getStage(), "Erreur lors de la suppression de la maladie");
+                        }
+                        if (userDto.getUsLenguage().equals("Japanese")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "病気を保存", getStage(), "病気の削除中にエラーが発生しました");
+                        }
                     }
                 }
             }
@@ -612,7 +655,18 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
         Respuesta resp = serviceProced.saveProcedings(proceedingsDto);
         if (resp.getEstado()) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), " Expediente Guardado Correctamente");
+            if (userDto.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Expediente Guardado Correctamente");
+            }
+            if (userDto.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Record Saved Successfully");
+            }
+            if (userDto.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Dossier enregistré avec succès");
+            }
+            if (userDto.getUsLenguage().equals("Japanese")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "記録が正常に保存されました");
+            }
         }
         resp = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
         proceedingsDto = (ProceedingsDto) resp.getResultado("Proceedings");
@@ -626,10 +680,33 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             examDto.setEmProceedings(proceedingsDto);
             resp = serviceExam.saveExam(examDto);
             if (resp.getEstado()) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Examen Guardado Correctamente");
+                if (userDto.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Examen Guardado Correctamente");
+                }
+                if (userDto.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Exam Saved Successfully");
+                }
+                if (userDto.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Examen enregistré avec succès");
+                }
+                if (userDto.getUsLenguage().equals("Japanese")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "試験が正常に保存されました");
+                }
+
                 fillTableExams();
             } else {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Examen no guardado ");
+                if (userDto.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Examen no guardado");
+                }
+                if (userDto.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Exam not saved");
+                }
+                if (userDto.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Examen non enregistré");
+                }
+                if (userDto.getUsLenguage().equals("Japanese")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "試験が保存されていません");
+                }
             }
         }
 
@@ -650,7 +727,19 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         if (proceedingsDto != null) {
             savePersonalBackground();
         } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "No existe un expediente para este paciente");
+            if (userDto.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "No existe un expediente para este paciente");
+            }
+            if (userDto.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "There is no record for this patient");
+            }
+            if (userDto.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Il n'y a pas de dossier pour ce patient");
+            }
+            if (userDto.getUsLenguage().equals("Japanese")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "この患者の記録はありません");
+            }
+
         }
 
     }
@@ -686,7 +775,19 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             Respuesta personalBac = service.savePersonalbackground(personalBkDto);
 
             if (personalBac.getEstado()) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo el antecedente");
+                if (userDto.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Se guardó el antecedente");
+                }
+                if (userDto.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "The history was saved");
+                }
+                if (userDto.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "L'histoire a été enregistrée");
+                }
+                if (userDto.getUsLenguage().equals("Japanese")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "履歴が保存されました");
+                }
+
                 fillTablePersonalBack();
                 personalBac = service.getPersonalbackgroundCode(codigo);
                 personalBkDto = (PersonalbackgroundDto) personalBac.getResultado("PersonalBackground");
@@ -696,9 +797,33 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                     PProceedingsDto.setPpProceedings(proceedingsDto);
                     Respuesta procedings = serviceProP.savePProceedings(PProceedingsDto);
                     if (procedings.getEstado()) {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo en su expediente");
+                        if (userDto.getUsLenguage().equals("Spanish")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Se guardó en su expediente");
+                        }
+                        if (userDto.getUsLenguage().equals("English")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Saved in the record");
+                        }
+                        if (userDto.getUsLenguage().equals("French")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Enregistré dans le dossier");
+                        }
+                        if (userDto.getUsLenguage().equals("Japanese")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "レコードに保存されました");
+                        }
+
                     } else {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "no se guardo en su expediente");
+                        if (userDto.getUsLenguage().equals("Spanish")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "No se guardó en su expediente");
+                        }
+                        if (userDto.getUsLenguage().equals("English")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Not saved in the record");
+                        }
+                        if (userDto.getUsLenguage().equals("French")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Non enregistré dans le dossier");
+                        }
+                        if (userDto.getUsLenguage().equals("Japanese")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "レコードに保存されませんでした");
+                        }
+
                     }
                 }
             }
@@ -724,11 +849,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void personalBgClicked(MouseEvent event) {
-        if(event.getClickCount()==2){
-            personalBkDto= tableViewPersonalBg.getSelectionModel().getSelectedItem();
+        if (event.getClickCount() == 2) {
+            personalBkDto = tableViewPersonalBg.getSelectionModel().getSelectedItem();
             textAreaPersBgContext.setText(personalBkDto.getPbContext());
         }
-        
+
     }
 
     @FXML
@@ -746,7 +871,19 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         familyBkDto.setFbDisease(diseaseDto);
         Respuesta familyBac = service.saveFamilybackground(familyBkDto);
         if (familyBac.getEstado()) {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo el antecedente");
+            if (userDto.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Se guardó el antecedente");
+            }
+            if (userDto.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "The history was saved");
+            }
+            if (userDto.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "L'histoire a été enregistrée");
+            }
+            if (userDto.getUsLenguage().equals("Japanese")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "履歴が保存されました");
+            }
+
             familyBac = service.getFamilybackgroundCode(codigo);
             familyBkDto = (FamilybackgroundDto) familyBac.getResultado("Familybackground");
             if (familyBac.getEstado()) {
@@ -755,24 +892,60 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                 FProceedingsDto.setFpProceedings(proceedingsDto);
                 Respuesta procedings = serviceProP.savefProceedings(FProceedingsDto);
                 if (procedings.getEstado()) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Se guardo en su expediente");
+                    if (userDto.getUsLenguage().equals("Spanish")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Se guardó en su expediente");
+                    }
+                    if (userDto.getUsLenguage().equals("English")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Saved in the record");
+                    }
+                    if (userDto.getUsLenguage().equals("French")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Enregistré dans le dossier");
+                    }
+                    if (userDto.getUsLenguage().equals("Japanese")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "レコードに保存されました");
+                    }
+
                     fillTableFamilyBack();
                 } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "no se guardo en su expediente");
+                    if (userDto.getUsLenguage().equals("Spanish")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "No se guardó en su expediente");
+                    }
+                    if (userDto.getUsLenguage().equals("English")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Not saved in the record");
+                    }
+                    if (userDto.getUsLenguage().equals("French")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Non enregistré dans le dossier");
+                    }
+                    if (userDto.getUsLenguage().equals("Japanese")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "レコードに保存されませんでした");
+                    }
+
                 }
             }
         } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Ocurrio un error en el proceso");
+            if (userDto.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Ocurrió un error en el proceso");
+            }
+            if (userDto.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "An error occurred in the process");
+            }
+            if (userDto.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Une erreur s'est produite dans le processus");
+            }
+            if (userDto.getUsLenguage().equals("Japanese")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "プロセスでエラーが発生しました");
+            }
+
         }
     }
 
     @FXML
     private void familiyBgClicked(MouseEvent event) {
-         if(event.getClickCount()==2){
-            familyBkDto= tableViewFamilyBg.getSelectionModel().getSelectedItem();
+        if (event.getClickCount() == 2) {
+            familyBkDto = tableViewFamilyBg.getSelectionModel().getSelectedItem();
             textFieldFamBgRelationship.setText(familyBkDto.getFbDiseaseName());
             textFieldFamBgDisease.setText(familyBkDto.getFbDiseaseName());
-        } 
+        }
     }
 
     @FXML
