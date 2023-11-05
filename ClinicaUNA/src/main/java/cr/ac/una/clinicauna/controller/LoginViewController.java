@@ -117,7 +117,7 @@ public class LoginViewController extends Controller implements Initializable {
         idRegisField.setTextFormatter(Formato.getInstance().integerFormat());
         surname1RegisField.setTextFormatter(Formato.getInstance().letrasFormat(18));
         surname2RegisField.setTextFormatter(Formato.getInstance().letrasFormat(18));
-        usernameRegisField.setTextFormatter(Formato.getInstance().letrasFormat(20));
+        usernameRegisField.setTextFormatter(Formato.getInstance().maxLengthFormat(20));
         emailRegisField.setTextFormatter(Formato.getInstance().maxLengthFormat(80));
         emailRecoverField.setTextFormatter(Formato.getInstance().maxLengthFormat(80));
         AceptRecoverField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));

@@ -144,5 +144,27 @@ public class FamilybackgroundService {
     }
     
     
+    public Respuesta getFamilyBackgroundsByProceedingsId(long proceedingsId) {
+        try {                                        
+            Query qryPersonalBackground = em.createQuery("SELECT pb FROM Personalbackground pb JOIN PProceedings pc ON pc.ppPersonalback.pbId= pb.pbId JOIN Proceedings p ON p.psId= pc.ppProceedings.psId "/*WHERE p.psId = :psId "*/, Familybackground.class);            //qryExams.setParameter("patientId", proceedingsId);
+          //  qryPersonalBackground.setParameter("psId", proceedingsId);
+            List<Familybackground> bgrounds = (List<Familybackground>) qryPersonalBackground.getResultList();
+            
+            List<FamilybackgroundDto> listExamsDto = new ArrayList<>();
+            for (Familybackground back : bgrounds) {
+                FamilybackgroundDto examDto = new FamilybackgroundDto(back);
+                listExamsDto.add(examDto);
+            }
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "FamilyBack", listExamsDto);
+        } catch (NoResultException ex) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontraron antecedentes para el paciente con el ID proporcionado.", "getBackByPatientId NoResultException");
+        } catch (NonUniqueResultException ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al consultar los antecedentes para el paciente.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los antecedentes para el paciente.", "getBackByPatientId NonUniqueResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrió un error al consultar los antecedentes para el paciente.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los antecedentes para el paciente.", "getBackByPatientId " + ex.getMessage());
+        }
+    }
     
 }
