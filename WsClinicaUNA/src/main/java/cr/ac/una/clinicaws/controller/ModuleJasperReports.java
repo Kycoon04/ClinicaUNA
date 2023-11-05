@@ -2,13 +2,16 @@ package cr.ac.una.clinicaws.controller;
 
 import cr.ac.una.clinicaws.model.AppointmentDto;
 import cr.ac.una.clinicaws.model.DiaryDto;
+import cr.ac.una.clinicaws.model.ExamDto;
 import cr.ac.una.clinicaws.model.FProceedingsDto;
 import cr.ac.una.clinicaws.model.PProceedingsDto;
 import cr.ac.una.clinicaws.model.ProceedingsDto;
 import cr.ac.una.clinicaws.model.ReportDiary;
 import cr.ac.una.clinicaws.model.ReportDto;
+import cr.ac.una.clinicaws.model.ReportIMC;
 import cr.ac.una.clinicaws.service.AppointmentService;
 import cr.ac.una.clinicaws.service.DiaryService;
+import cr.ac.una.clinicaws.service.ExamService;
 import cr.ac.una.clinicaws.service.FProceedingsService;
 import cr.ac.una.clinicaws.service.PProceedingsService;
 import cr.ac.una.clinicaws.service.ProceedingsService;
@@ -67,15 +70,15 @@ public class ModuleJasperReports {
     FProceedingsService fProceedingsService;
     @EJB
     ReportService reportService;
+    @EJB
+    ExamService examService;
     @Context
     ServletContext context;
 
-    private static final Logger LOGGER = Logger.getLogger(ModuleJasperReports.class.getName());
-
     @GET
-    @Path("/ReportDiary/{date}/{dateTwo}")
+    @Path("/ReportDiary/{date}/{dateTwo}/{Doctor}")
     @Produces("application/pdf")
-    public Response exportPdf(@PathParam("date") String date, @PathParam("dateTwo") String dateTwo) throws JRException, FileNotFoundException {
+    public Response exportPdf(@PathParam("date") String date, @PathParam("dateTwo") String dateTwo, @PathParam("Doctor") Integer Doctor) throws JRException, FileNotFoundException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate parsedDateTwo;
         LocalDate parsedDate = LocalDate.parse(date, formatter);
@@ -84,7 +87,8 @@ public class ModuleJasperReports {
         } else {
             parsedDateTwo = LocalDate.parse(dateTwo, formatter);
         }
-        List<DiaryDto> lista = (List<DiaryDto>) diaryService.getByDate(parsedDate, parsedDateTwo).getResultado("Diaries");
+        
+        List<DiaryDto> lista = (List<DiaryDto>) diaryService.getByDate(parsedDate, parsedDateTwo,Doctor).getResultado("Diaries");
 
         List<ReportDiary> reportesEmpleados = new ArrayList<>();
         if (lista.size() == 0) {
@@ -94,8 +98,8 @@ public class ModuleJasperReports {
                 reportesEmpleados.add(new ReportDiary(lista.get(i), new AppointmentDto(lista.get(i).getDySpace().getSeAppointment())));
             }
         }
-        byte[] pdfContent = exportToPdf(reportesEmpleados);
-        String contentDisposition = "attachment; filename=\"petsReport.pdf\"";
+        byte[] pdfContent = exportToPdf(reportesEmpleados,lista.get(0).getDyDoctor().getDrUser().getUsName());
+        String contentDisposition = "attachment; filename=\"Reporte Agenda de "+lista.get(0).getDyDoctor().getDrUser().getUsName()+".pdf\"";
         return Response.ok(pdfContent)
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .build();
@@ -110,21 +114,80 @@ public class ModuleJasperReports {
         List<FProceedingsDto> familiares = (List<FProceedingsDto>) fProceedingsService.getProceeding(expediente.getPsId()).getResultado("FProceeding");
         List<AppointmentDto> citas = (List<AppointmentDto>) appointmentService.getAppointmentsPatient(id).getResultado("Appointments");
         List<ReportDto> reportes = new ArrayList<>();
-        
+        List<ReportIMC> IMC = new ArrayList<>();
         for(AppointmentDto p: citas){
             if((ReportDto) reportService.getReports(p.getAtId()).getResultado("Report")!=null){
             reportes.add((ReportDto) reportService.getReports(p.getAtId()).getResultado("Report"));
             }
         }
-        
-        byte[] pdfContent = exportToPdfPatient(personales,familiares,reportes);
-        String contentDisposition = "attachment; filename=\"petsReport.pdf\"";
+        for(ReportDto p: reportes){
+            IMC.add(new ReportIMC(p));
+        }
+        List<ExamDto> examenes = (List<ExamDto>) examService.getExamsByPatientId(id.longValue()).getResultado("Exams");
+        byte[] pdfContent = exportToPdfPatient(personales,familiares,reportes,examenes,IMC);
+        String contentDisposition = "attachment; filename=\"Reporte del paciente "+citas.get(0).getAtPatient().getPtName()+".pdf\"";
         return Response.ok(pdfContent)
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .build();
     }
 
-    @GET
+    public byte[] exportToPdf(List<ReportDiary> list, String name) throws JRException, FileNotFoundException {
+        return JasperExportManager.exportReportToPdf(getReport(list,name));
+    }
+
+    private JasperPrint getReport(List<ReportDiary> list, String name) throws FileNotFoundException, JRException {
+        JRBeanArrayDataSource ds = new JRBeanArrayDataSource(list.toArray());
+        Map<String, Object> params = new HashMap<String, Object>();
+        InputStream LogoClinic = context.getResourceAsStream("/LogoMedicalClinic.png");
+        InputStream ImageBackground = context.getResourceAsStream("/LogoMedicalClinic.png");
+        params.put("ds", ds);
+        params.put("Doctor", name);
+        params.put("LogoClinic", LogoClinic);
+        params.put("Imagebackgroud", ImageBackground);
+        InputStream reportStream = context.getResourceAsStream("/ReporteAgendaMedico.jrxml");
+        JasperReport compiledReport = JasperCompileManager.compileReport(reportStream);
+        JasperPrint report = JasperFillManager.fillReport(compiledReport, params, new JREmptyDataSource());
+        return report;
+    }
+
+    public byte[] exportToPdfPatient(List<PProceedingsDto> listPP,List<FProceedingsDto> listFP,List<ReportDto> listReporte,List<ExamDto> listExam,List<ReportIMC> IMC) throws JRException, FileNotFoundException {
+        return JasperExportManager.exportReportToPdf(getReportPatient(listPP,listFP,listReporte,listExam,IMC));
+    }
+
+    private JasperPrint getReportPatient(List<PProceedingsDto> listPP,List<FProceedingsDto> listFP,List<ReportDto> listReporte,List<ExamDto> listExam,List<ReportIMC> IMC) throws FileNotFoundException, JRException {
+        JRBeanArrayDataSource ds = new JRBeanArrayDataSource(listPP.toArray());
+        JRBeanArrayDataSource dsFamily = new JRBeanArrayDataSource(listFP.toArray());
+        JRBeanArrayDataSource dsExamen = new JRBeanArrayDataSource(listExam.toArray());
+        JRBeanArrayDataSource dsAppointment = new JRBeanArrayDataSource(listReporte.toArray());
+        JRBeanArrayDataSource dsHistogramasource = new JRBeanArrayDataSource(IMC.toArray());
+        Map<String, Object> params = new HashMap<String, Object>();
+        InputStream LogoClinic = context.getResourceAsStream("/LogoMedicalClinic.png");
+        InputStream ImageBackground = context.getResourceAsStream("/LogoMedicalClinic.png");
+        params.put("ds", ds);
+        params.put("dsHistogramasource", dsHistogramasource);
+        params.put("dsExamen", dsExamen);
+        params.put("dsAppointment", dsAppointment);
+        params.put("Paciente", listReporte.get(0).getRtAppointment().getAtPatient().getPtName());
+        params.put("dsFamily", dsFamily);
+        params.put("LogoClinic", LogoClinic);
+        params.put("Imagebackgroud", ImageBackground);
+        InputStream reportStream = context.getResourceAsStream("/ReportPatient.jrxml");
+        JasperReport compiledReport = JasperCompileManager.compileReport(reportStream);
+        JasperPrint report = JasperFillManager.fillReport(compiledReport, params, new JREmptyDataSource());
+        return report;
+    }
+
+  /*  public byte[] exportToXls(List<ReportDiary> list) throws JRException, FileNotFoundException {
+        ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+        SimpleOutputStreamExporterOutput output = new SimpleOutputStreamExporterOutput(byteArray);
+        JRXlsExporter exporter = new JRXlsExporter();
+        exporter.setExporterInput(new SimpleExporterInput(getReport(list)));
+        exporter.setExporterOutput(output);
+        exporter.exportReport();
+        output.close();
+        return byteArray.toByteArray();
+    }
+        @GET
     @Path("/export-xls")
     @Produces("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     public Response exportXls() throws JRException, FileNotFoundException {
@@ -136,57 +199,6 @@ public class ModuleJasperReports {
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .build();
     }
-
-    public byte[] exportToPdf(List<ReportDiary> list) throws JRException, FileNotFoundException {
-        return JasperExportManager.exportReportToPdf(getReport(list));
-    }
-
-    private JasperPrint getReport(List<ReportDiary> list) throws FileNotFoundException, JRException {
-        JRBeanArrayDataSource ds = new JRBeanArrayDataSource(list.toArray());
-        Map<String, Object> params = new HashMap<String, Object>();
-        InputStream LogoClinic = context.getResourceAsStream("/LogoMedicalClinic.png");
-        InputStream ImageBackground = context.getResourceAsStream("/LogoMedicalClinic.png");
-        params.put("ds", ds);
-        params.put("LogoClinic", LogoClinic);
-        params.put("Imagebackgroud", ImageBackground);
-        InputStream reportStream = context.getResourceAsStream("/ReporteAgendaMedico.jrxml");
-        JasperReport compiledReport = JasperCompileManager.compileReport(reportStream);
-        JasperPrint report = JasperFillManager.fillReport(compiledReport, params, new JREmptyDataSource());
-        return report;
-    }
-
-    public byte[] exportToPdfPatient(List<PProceedingsDto> listPP,List<FProceedingsDto> listFP,List<ReportDto> listReporte) throws JRException, FileNotFoundException {
-        return JasperExportManager.exportReportToPdf(getReportPatient(listPP,listFP,listReporte));
-    }
-
-    private JasperPrint getReportPatient(List<PProceedingsDto> listPP,List<FProceedingsDto> listFP,List<ReportDto> listReporte) throws FileNotFoundException, JRException {
-        JRBeanArrayDataSource ds = new JRBeanArrayDataSource(listPP.toArray());
-        JRBeanArrayDataSource dsFamily = new JRBeanArrayDataSource(listFP.toArray());
-        JRBeanArrayDataSource dsAppointment = new JRBeanArrayDataSource(listReporte.toArray());
-        
-        Map<String, Object> params = new HashMap<String, Object>();
-        InputStream LogoClinic = context.getResourceAsStream("/LogoMedicalClinic.png");
-        InputStream ImageBackground = context.getResourceAsStream("/LogoMedicalClinic.png");
-        params.put("ds", ds);
-        params.put("dsAppointment", dsAppointment);
-        params.put("dsFamily", dsFamily);
-        params.put("LogoClinic", LogoClinic);
-        params.put("Imagebackgroud", ImageBackground);
-        InputStream reportStream = context.getResourceAsStream("/ReportPatient.jrxml");
-        JasperReport compiledReport = JasperCompileManager.compileReport(reportStream);
-        JasperPrint report = JasperFillManager.fillReport(compiledReport, params, new JREmptyDataSource());
-        return report;
-    }
-
-    public byte[] exportToXls(List<ReportDiary> list) throws JRException, FileNotFoundException {
-        ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-        SimpleOutputStreamExporterOutput output = new SimpleOutputStreamExporterOutput(byteArray);
-        JRXlsExporter exporter = new JRXlsExporter();
-        exporter.setExporterInput(new SimpleExporterInput(getReport(list)));
-        exporter.setExporterOutput(output);
-        exporter.exportReport();
-        output.close();
-        return byteArray.toByteArray();
-    }
+    */
 
 }

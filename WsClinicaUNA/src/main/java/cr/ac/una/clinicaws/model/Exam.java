@@ -27,6 +27,7 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Exam.findAll", query = "SELECT e FROM Exam e"),
     @NamedQuery(name = "Exam.findByEmId", query = "SELECT e FROM Exam e WHERE e.emId = :emId"),
     @NamedQuery(name = "Exam.findByEmName", query = "SELECT e FROM Exam e WHERE e.emName = :emName"),
+    @NamedQuery(name = "Exam.findByProceedingId", query = "SELECT e FROM Exam e WHERE e.emProceedings.psId = :ProceedingId"),
     @NamedQuery(name = "Exam.findByEmDoctornote", query = "SELECT e FROM Exam e WHERE e.emDoctornote = :emDoctornote"),
   })
     

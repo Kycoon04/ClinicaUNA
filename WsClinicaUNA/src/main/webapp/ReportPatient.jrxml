@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReportPatient" pageWidth="1100" pageHeight="842" columnWidth="1060" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5db04dff-9afc-4310-b212-e7004ae5b1d7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReportPatient" pageWidth="1100" pageHeight="950" columnWidth="1060" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5db04dff-9afc-4310-b212-e7004ae5b1d7">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -164,6 +155,14 @@
 		<field name="emDoctornote" class="java.lang.String"/>
 		<field name="emDoctorString" class="java.lang.String"/>
 	</subDataset>
+	<subDataset name="dsHistograma" uuid="98101663-e378-4690-b308-52da8be6f0f4">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="rtBodyMass" class="java.lang.Double"/>
+		<field name="rtDate" class="java.util.Date"/>
+	</subDataset>
 	<parameter name="ds" class="net.sf.jasperreports.engine.data.JRBeanArrayDataSource"/>
 	<parameter name="LogoClinic" class="java.io.InputStream"/>
 	<parameter name="Imagebackgroud" class="java.io.InputStream"/>
@@ -171,11 +170,10 @@
 	<parameter name="Paciente" class="java.lang.String"/>
 	<parameter name="dsFamily" class="net.sf.jasperreports.engine.data.JRBeanArrayDataSource"/>
 	<parameter name="dsExamen" class="net.sf.jasperreports.engine.data.JRBeanArrayDataSource"/>
+	<parameter name="dsHistogramasource" class="net.sf.jasperreports.engine.data.JRBeanArrayDataSource"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="IMC" class="java.lang.Float"/>
-	<field name="FechaAppointment" class="java.util.Date"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -201,7 +199,7 @@
 				<reportElement x="90" y="30" width="100" height="15" uuid="bfd36310-4445-43e0-b39f-c1a3cb779ef0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Left">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Correo electrónico:]]></text>
@@ -210,13 +208,13 @@
 				<reportElement x="90" y="50" width="100" height="15" uuid="a038ff80-5ee1-4d13-a4ca-ac68419f4168">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Left">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Numero Telefonico: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="340" y="10" width="80" height="30" uuid="2ca529a8-c205-4a42-8dd4-4577ee3cb598">
+				<reportElement x="340" y="2" width="150" height="18" uuid="2ca529a8-c205-4a42-8dd4-4577ee3cb598">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -225,25 +223,25 @@
 				<text><![CDATA[Fecha y Hora de Impresión:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="190" y="30" width="120" height="15" uuid="93fbd87a-e169-4901-98bc-cec86aea1a1c">
+				<reportElement x="180" y="30" width="120" height="15" uuid="93fbd87a-e169-4901-98bc-cec86aea1a1c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[clinicauna10@gmail.com]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="190" y="50" width="60" height="15" uuid="e0cb4137-a85d-4ad3-bd46-e878c8f1aacf">
+				<reportElement x="180" y="50" width="60" height="15" uuid="e0cb4137-a85d-4ad3-bd46-e878c8f1aacf">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[8321-8913]]></text>
 			</staticText>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="420" y="16" width="100" height="18" uuid="e876d917-c6fe-4e6c-8a48-f1c585f8abb8"/>
+				<reportElement x="480" y="2" width="100" height="18" uuid="e876d917-c6fe-4e6c-8a48-f1c585f8abb8"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="340" y="50" width="50" height="15" uuid="dec9c3b2-5ac6-45da-b4f5-6da6c340f446">
+				<reportElement x="90" y="70" width="50" height="15" uuid="dec9c3b2-5ac6-45da-b4f5-6da6c340f446">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -252,15 +250,15 @@
 				<text><![CDATA[Paciente:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="390" y="50" width="200" height="15" uuid="935ceee1-ce79-4d9a-946d-de3aa2cac63e"/>
+				<reportElement x="140" y="70" width="200" height="15" uuid="935ceee1-ce79-4d9a-946d-de3aa2cac63e"/>
 				<textFieldExpression><![CDATA[$P{Paciente}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="32" splitType="Stretch">
+		<band height="40" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="2" width="1060" height="30" forecolor="#FFFFFF" backcolor="#CC9900" uuid="9eb3b86f-57d9-4739-a3fc-7421ec1cecc3">
+				<reportElement mode="Opaque" x="0" y="2" width="1060" height="37" forecolor="#FFFFFF" backcolor="#CC9900" uuid="9eb3b86f-57d9-4739-a3fc-7421ec1cecc3">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -269,7 +267,7 @@
 				<text><![CDATA[REPORTE DE EXPEDIENTE DEL PACIENTE]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="0" width="1060" height="1" uuid="3039a4ba-7bbc-46c7-b175-97c3a81284e6">
+				<reportElement x="0" y="2" width="1060" height="1" uuid="3039a4ba-7bbc-46c7-b175-97c3a81284e6">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -277,10 +275,44 @@
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="246" splitType="Stretch">
+		<band height="36">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="-1" width="530" height="37" forecolor="#FFFFFF" backcolor="#CC9900" uuid="c9f8f313-1691-49ea-9c6b-fd9086e1123f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="0">
+					<pen lineWidth="0.25" lineColor="#030000"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#030000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#030000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ANTECEDENTES PERSONALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="530" y="-1" width="530" height="37" forecolor="#FFFFFF" backcolor="#CC9900" uuid="fa6a825f-20ac-4e89-b8b5-bb04c74caf08">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box padding="0">
+					<pen lineWidth="0.25" lineColor="#030000"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#030000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#030000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ANTECEDENTES FAMILIARES]]></text>
+			</staticText>
+		</band>
+		<band height="283" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 			<componentElement>
-				<reportElement x="0" y="0" width="530" height="246" uuid="0a427eac-aebd-49e2-b4e3-e2ffa6489c56">
+				<reportElement x="0" y="0" width="530" height="283" uuid="0a427eac-aebd-49e2-b4e3-e2ffa6489c56">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -327,7 +359,7 @@
 				</jr:table>
 			</componentElement>
 			<componentElement>
-				<reportElement x="530" y="0" width="530" height="246" uuid="05ab8d7f-423e-443e-8b87-ba90b5494700">
+				<reportElement x="530" y="0" width="530" height="283" uuid="05ab8d7f-423e-443e-8b87-ba90b5494700">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
@@ -374,7 +406,7 @@
 				</jr:table>
 			</componentElement>
 		</band>
-		<band height="342">
+		<band height="340">
 			<componentElement>
 				<reportElement x="0" y="2" width="1060" height="338" uuid="faaf11b1-f997-4bdf-a0c0-37b6e671b6a5">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
@@ -627,7 +659,7 @@
 				</jr:table>
 			</componentElement>
 		</band>
-		<band height="273">
+		<band height="225">
 			<componentElement>
 				<reportElement x="0" y="0" width="480" height="220" uuid="14ccfd51-f7c6-48bf-b82a-a502a548f525">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
@@ -694,20 +726,20 @@
 			</componentElement>
 			<lineChart>
 				<chart evaluationTime="Report">
-					<reportElement x="480" y="0" width="580" height="273" uuid="aaeaa5a6-8edc-4d0b-80b2-f4a52d8f56ee"/>
+					<reportElement x="480" y="0" width="580" height="220" uuid="8f11505e-a93e-47b8-95dd-5635c85c0053"/>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="dsReportAppointment" uuid="35236a05-94b4-4495-a173-d1157003ec84">
-							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<datasetRun subDataset="dsHistograma" uuid="e9aaf710-9d8f-48c8-8bba-8a6dedf51086">
+							<dataSourceExpression><![CDATA[$P{dsHistogramasource}]]></dataSourceExpression>
 						</datasetRun>
 					</dataset>
 					<categorySeries>
-						<seriesExpression><![CDATA["IMC"]]></seriesExpression>
-						<categoryExpression><![CDATA[$F{rtDateDate}]]></categoryExpression>
+						<seriesExpression><![CDATA["SERIES 1"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{rtDate}]]></categoryExpression>
 						<valueExpression><![CDATA[$F{rtBodyMass}]]></valueExpression>
 					</categorySeries>
 				</categoryDataset>

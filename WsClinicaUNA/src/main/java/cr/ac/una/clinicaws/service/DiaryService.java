@@ -56,11 +56,12 @@ public class DiaryService {
         }
     }
 
-    public Respuesta getByDate(LocalDate dia , LocalDate fin) {
+    public Respuesta getByDate(LocalDate dia , LocalDate fin,Integer id) {
         try {
             Query qryUsers = em.createNamedQuery("Diary.findByDateRange", Diary.class);
             qryUsers.setParameter("startDate", dia);
             qryUsers.setParameter("endDate", fin);
+            qryUsers.setParameter("DoctorId", id);
             List<Diary> diary = (List<Diary>) qryUsers.getResultList();
             List<DiaryDto> ListDiaries = new ArrayList<>();
             for (Diary tipo : diary) {

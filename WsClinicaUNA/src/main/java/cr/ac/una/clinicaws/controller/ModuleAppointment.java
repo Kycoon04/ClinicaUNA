@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 @Tag(name = "Appointment", description = "Operations on Appointments")
 //@Secure
 public class ModuleAppointment {
-    
+
     @EJB
     AppointmentService appointmentService;
 
@@ -54,6 +54,21 @@ public class ModuleAppointment {
         }
     }
 
+    @GET
+    @Path("/appointments/{id}")
+    public Response getAppointmentsbyPatient(@PathParam("id") Integer id) {
+        try {
+            Respuesta res = appointmentService.getAppointmentsPatient(id);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(new GenericEntity<List<AppointmentDto>>((List< AppointmentDto>) res.getResultado("Appointments")) {
+            }).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la cita").build();
+        }
+    }
 
     @POST
     @Path("/appointment")
@@ -85,7 +100,6 @@ public class ModuleAppointment {
         }
     }
 
-
     @GET
     @Path("/appointment")
     public Response getAppointments() {
@@ -101,5 +115,5 @@ public class ModuleAppointment {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la cita").build();
         }
     }
-    
+
 }

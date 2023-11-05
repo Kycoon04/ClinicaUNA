@@ -27,7 +27,7 @@ import java.time.LocalDate;
     @NamedQuery(name = "Diary.findAll", query = "SELECT d FROM Diary d"),
     @NamedQuery(name = "Diary.findByDyId", query = "SELECT d FROM Diary d WHERE d.dyId = :dyId"),
     @NamedQuery(name = "Diary.findByDyDate", query = "SELECT d FROM Diary d WHERE d.dyDate = :dyDate")})
-    @NamedQuery(name = "Diary.findByDateRange", query = "SELECT d FROM Diary d WHERE d.dyDate BETWEEN :startDate AND :endDate")
+    @NamedQuery(name = "Diary.findByDateRange", query = "SELECT d FROM Diary d WHERE d.dyDate BETWEEN :startDate AND :endDate AND d.dyDoctor.drId = :DoctorId")
 public class Diary implements Serializable {
 
     private static final long serialVersionUID = 1L;
