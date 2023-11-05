@@ -123,7 +123,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TextField textFieldFamBgRelationship;
     @FXML
     private TextField textFieldFamBgDisease;
-    @FXML
     private TextField textFieldSearchFamBg_Relationship;
     @FXML
     private TextField textFieldSearchFamBg_Disease;
@@ -1155,5 +1154,31 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void updateReportAp(ActionEvent event) {
 
     }
+
+    @FXML
+    private void searchRelaDisease(KeyEvent event) {
+      FilteredList<FamilybackgroundDto> filteredFam = new FilteredList<>(familyBackObservableList, f -> true);
+        textFieldSearchFamBg_Disease.textProperty().addListener((observable, value, newValue) -> {
+            filteredFam.setPredicate(FamilybackgroundDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (FamilybackgroundDto.getFbDisease().getDsName().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredFamily(filteredFam);
+    }
+
+    private void filteredFamily(FilteredList<FamilybackgroundDto> list) {
+        SortedList<FamilybackgroundDto> sorted = new SortedList<>(list);
+        sorted.comparatorProperty().bind(tableViewFamilyBg.comparatorProperty());
+        tableViewFamilyBg.setItems(sorted);
+    }
+
 
 }
