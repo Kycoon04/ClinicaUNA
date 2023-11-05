@@ -505,7 +505,14 @@ create table CL_P_PROCEEDINGS
 tablespace USERS
   pctfree 10
   initrans 1
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 -- Create/Recreate primary, unique and foreign key constraints 
 alter table CL_P_PROCEEDINGS
   add constraint PK_PPID primary key (PP_ID)
@@ -513,10 +520,21 @@ alter table CL_P_PROCEEDINGS
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table CL_P_PROCEEDINGS
+  add constraint FK_PPBACKGROUNDS foreign key (PP_PERSONALBACK)
+  references CL_PERSONALBACKGROUND (PB_ID);
 alter table CL_P_PROCEEDINGS
   add constraint FK_PPPROCEEDINGS foreign key (PP_PROCEEDINGS)
   references CL_PROCEEDINGS (PS_ID);
+
 
 
 -- Create table
