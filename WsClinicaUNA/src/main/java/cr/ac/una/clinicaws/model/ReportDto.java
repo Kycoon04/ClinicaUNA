@@ -33,6 +33,7 @@ public class ReportDto {
     private String rtCarePlan;
     private String rtObservations;
     private Date rtDate;
+    private Proceedings rtProceedings;
 
     public ReportDto() {
 
@@ -54,6 +55,7 @@ public class ReportDto {
         this.rtCarePlan = report.getRtCarePlan();
         this.rtObservations = report.getRtObservations();
         this.rtDate = report.getRtDate();
+        this.rtProceedings = report.getRtProceedings();
     }
 
     public Date getRtDateDate() {
@@ -63,6 +65,14 @@ public class ReportDto {
         LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    public Proceedings getRtProceedings() {
+        return rtProceedings;
+    }
+
+    public void setRtProceedings(Proceedings rtProceedings) {
+        this.rtProceedings = rtProceedings;
     }
 
     public String getCodeAppointment() {

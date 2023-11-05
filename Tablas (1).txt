@@ -630,12 +630,20 @@ create table CL_REPORT
   rt_treatment_examen NVARCHAR2(300),
   rt_care_plan        NVARCHAR2(300),
   rt_observations     NVARCHAR2(300),
-  rt_date             DATE
+  rt_date             DATE,
+  rt_proceedings      NUMBER(5)
 )
 tablespace USERS
   pctfree 10
   initrans 1
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 -- Create/Recreate primary, unique and foreign key constraints 
 alter table CL_REPORT
   add constraint PK_RTID primary key (RT_ID)
@@ -643,10 +651,21 @@ alter table CL_REPORT
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table CL_REPORT
+  add constraint FK_PROCEEDINGS foreign key (RT_PROCEEDINGS)
+  references CL_PROCEEDINGS (PS_ID);
 alter table CL_REPORT
   add constraint FK_RTAPPOINTMENT foreign key (RT_APPOINTMENT)
   references CL_APPOINTMENT (AT_ID);
+
 
 -- Create table
 create table CL_EXAM

@@ -9,6 +9,7 @@ import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiaryDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
+import cr.ac.una.clinicauna.model.HistoryDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.ReportDto;
 import cr.ac.una.clinicauna.model.SpaceDto;
@@ -16,6 +17,7 @@ import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.AppointmentService;
 import cr.ac.una.clinicauna.service.DiaryService;
 import cr.ac.una.clinicauna.service.DoctorService;
+import cr.ac.una.clinicauna.service.HistoryService;
 import cr.ac.una.clinicauna.service.PatientService;
 import cr.ac.una.clinicauna.service.ReportService;
 import cr.ac.una.clinicauna.service.SpaceService;
@@ -1079,6 +1081,10 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
 
+        HistoryService serviceHistorial = new HistoryService();
+        List<HistoryDto> lista = serviceHistorial.getHistorysByDoctor(doctorDto.getDrId());
+        
+        
         mint = new String[v];
         int doctoSpaces = v;
 
@@ -1417,6 +1423,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void lookday(ActionEvent event) {
+        DiaryPane = null;
         btnRecordatorio.setDisable(false);
         if (DiaryPane != null) {
             DiaryPane.getChildren().removeAll(citasAgregadasList);

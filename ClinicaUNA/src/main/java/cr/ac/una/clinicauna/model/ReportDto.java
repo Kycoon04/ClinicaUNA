@@ -29,7 +29,7 @@ public class ReportDto {
     private SimpleStringProperty rtCarePlan;
     private SimpleStringProperty rtObservations;
     private Date rtDate;
-
+    private ProceedingsDto rtProceedings;
     
     public ReportDto() {
         this.rtId = new SimpleIntegerProperty();
@@ -40,7 +40,17 @@ public class ReportDto {
         rtTreatmentExamen= new SimpleStringProperty();
         rtCarePlan= new SimpleStringProperty();
         rtObservations= new SimpleStringProperty();
+        rtProceedings = new ProceedingsDto();
     }
+
+    public ProceedingsDto getRtProceedings() {
+        return rtProceedings;
+    }
+
+    public void setRtProceedings(ProceedingsDto rtProceedings) {
+        this.rtProceedings = rtProceedings;
+    }
+    
     public void setRtId(int rtId) {
         this.rtId.set(rtId);
     }

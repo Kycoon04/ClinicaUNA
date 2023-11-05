@@ -4,7 +4,6 @@
  */
 package cr.ac.una.clinicaws.model;
 
-import java.io.Serializable;
 import java.util.Date;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -98,12 +97,25 @@ public class Report implements Serializable {
     @JoinColumn(name = "RT_APPOINTMENT", referencedColumnName = "AT_ID")
     @ManyToOne(optional = false)
     private Appointment rtAppointment;
+    @JoinColumn(name = "RT_PROCEEDINGS", referencedColumnName = "PS_ID")
+    @ManyToOne
+    private Proceedings rtProceedings;
 
     public Report() {
     }
 
     public Report(Integer rtId) {
         this.rtId = rtId;
+    }
+
+    public Report(Integer rtId, double rtPressure, double rtHeartRate, double rtWeight, double rtHeight, double rtTemperature, double rtBodyMass) {
+        this.rtId = rtId;
+        this.rtPressure = rtPressure;
+        this.rtHeartRate = rtHeartRate;
+        this.rtWeight = rtWeight;
+        this.rtHeight = rtHeight;
+        this.rtTemperature = rtTemperature;
+        this.rtBodyMass = rtBodyMass;
     }
     public Report(ReportDto reportDto) {
         this.rtId = reportDto.getRtId();
@@ -125,16 +137,8 @@ public class Report implements Serializable {
         this.rtCarePlan = report.getRtCarePlan();
         this.rtObservations = report.getRtObservations();
         this.rtDate = report.getRtDate();
+        this.rtProceedings = report.getRtProceedings();
     }
-    
-    public Appointment getRtAppointment() {
-        return rtAppointment;
-    }
-
-    public void setRtAppointment(Appointment rtAppointment) {
-        this.rtAppointment = rtAppointment;
-    }
-
     public Integer getRtId() {
         return rtId;
     }
@@ -247,6 +251,22 @@ public class Report implements Serializable {
         this.rtDate = rtDate;
     }
 
+    public Appointment getRtAppointment() {
+        return rtAppointment;
+    }
+
+    public void setRtAppointment(Appointment rtAppointment) {
+        this.rtAppointment = rtAppointment;
+    }
+
+    public Proceedings getRtProceedings() {
+        return rtProceedings;
+    }
+
+    public void setRtProceedings(Proceedings rtProceedings) {
+        this.rtProceedings = rtProceedings;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -271,5 +291,5 @@ public class Report implements Serializable {
     public String toString() {
         return "cr.ac.una.clinicaws.model.Report[ rtId=" + rtId + " ]";
     }
-
+    
 }
