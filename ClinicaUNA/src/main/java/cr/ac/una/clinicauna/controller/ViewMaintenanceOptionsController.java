@@ -719,6 +719,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             UserService service = new UserService();
             service.saveUser(bindNewUser());
             DoctorService serviceD = new DoctorService();
+            
+            
             response = serviceD.saveDoctor(bindNewDoctor());
             doctorDto = (DoctorDto) serviceD.getDoctorUser(userDto.getUsId()).getResultado("Doctor");
             HistoryDto actual = new HistoryDto();
@@ -729,6 +731,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                     actual.setHtSpaces(doctorDto.drSpaces);
                     actual.setHtId(0);
                     response = serviceHistorial.saveHistory(actual);
+                    
+                    
                     
             fillTableUsers();
             fillTableDoctors();
