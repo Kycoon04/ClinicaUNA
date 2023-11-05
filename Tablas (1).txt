@@ -192,6 +192,48 @@ alter table CL_DOCTOR
   references CL_USERS (US_ID);
 
 -- Create table
+create table CL_HISTORYTIME
+(
+  ht_id           NUMBER(5) not null,
+  ht_date         DATE,
+  ht_spaces       NUMBER(1),
+  ht_iniworking   VARCHAR2(10),
+  ht_finisworking VARCHAR2(10),
+  ht_doctor       NUMBER(5),
+  ht_date_final   DATE
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_HISTORYTIME
+  add constraint PK_HTID primary key (HT_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table CL_HISTORYTIME
+  add constraint FK_HTDR foreign key (HT_DOCTOR)
+  references CL_DOCTOR (DR_ID);
+
+
+-- Create table
 create table CL_PATIENT
 (
   pt_name           VARCHAR2(30) not null,
@@ -762,3 +804,13 @@ declare
 begin
  SELECT SecuenciaClinica.nextval INTO :new.US_ID FROM dual;
 end TriggerUser;
+/
+create or replace noneditionable trigger TriggerDoctor
+  before insert
+  on CL_DOCTOR
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.DR_ID FROM dual;
+end TriggerDoctor;

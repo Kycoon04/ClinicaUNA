@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReportAppointment" pageWidth="700" pageHeight="842" columnWidth="660" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c78fecdf-e371-4344-843b-3f7047f66a19">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#090775">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<subDataset name="dsEspaciosVacios" uuid="f4aa0588-2f1d-40f7-8fd7-dcd0a142b311">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="rtState" class="java.lang.String"/>
+		<field name="rtDate" class="java.util.Date"/>
+	</subDataset>
+	<subDataset name="dsHistograma" uuid="8f394ad9-f02b-4430-86a7-ae8f5a595a8c">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="rtDate" class="java.lang.String"/>
+		<field name="rtCantidad" class="java.lang.Integer"/>
+		<field name="rtState" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="Doctor" class="java.lang.String"/>
+	<parameter name="LogoClinic" class="java.io.InputStream"/>
+	<parameter name="Imagebackgroud" class="java.io.InputStream"/>
+	<parameter name="ds" class="net.sf.jasperreports.engine.data.JRBeanArrayDataSource"/>
+	<parameter name="dsTable" class="net.sf.jasperreports.engine.data.JRBeanArrayDataSource"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="88" splitType="Stretch">
+			<image onErrorType="Blank">
+				<reportElement key="" x="0" y="2" width="80" height="80" isRemoveLineWhenBlank="true" uuid="434e74ad-2698-474e-b41a-19eedb5212cd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{LogoClinic}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="90" y="0" width="60" height="15" uuid="7a7f20bc-e6ed-4a18-9746-3fd377ce106d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Clínica UNA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="20" width="100" height="15" uuid="42db7741-2cf5-4eaf-8c62-96e9a432f26e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Correo electrónico:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="90" y="45" width="100" height="15" uuid="ebf72929-b7c7-4c0a-8ad7-8483a5bc05f7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Numero Telefonico: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="20" width="120" height="15" uuid="0c40d617-d1d4-4513-a0c0-aa481bbf3321">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[clinicauna10@gmail.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="45" width="60" height="15" uuid="f729c956-39b8-423d-84ce-9967f7b19434">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[8321-8913]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="140" y="67" width="200" height="15" uuid="e6d9b63f-a8fe-4c57-88ef-1423471f0505"/>
+				<textFieldExpression><![CDATA[$P{Doctor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="90" y="67" width="50" height="15" uuid="c65089c9-f3f5-44d3-95bb-33a1ba2f5055">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Doctor:]]></text>
+			</staticText>
+			<textField pattern="HH:mm">
+				<reportElement x="560" y="65" width="100" height="18" uuid="8867cfa7-37f7-4cdf-847d-29994bcb68c2"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="340" y="65" width="140" height="15" uuid="dae6fd5c-292d-4ddc-b0ee-fb7edf279096">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha y Hora de Impresión:]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="473" y="65" width="100" height="18" uuid="76b724bb-9d4b-4e86-a6cc-986160d44772"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="660" height="30" forecolor="#FFFFFF" backcolor="#CC9900" uuid="9a6a5824-86d0-4adf-b13b-63e924030dd2">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#030000"/>
+					<bottomPen lineWidth="1.0" lineColor="#030000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE LOS ESPACIOS VACÍOS DEL DOCTOR]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="291" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="0" width="280" height="291" uuid="05ab1faa-0785-42c1-8795-4d9dff5a6466">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dsEspaciosVacios" uuid="faa4152e-55d5-48db-afb5-a1f59b8f86f5">
+						<dataSourceExpression><![CDATA[$P{dsTable}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="140" uuid="af9311c9-fc0b-40fa-a848-33de7279f882">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="20" forecolor="#FFFFFF" uuid="281024da-d7eb-485f-9f3c-3b418fefa4b8"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Fecha]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="140" height="20" uuid="516cbd94-ecff-4280-b658-7c51deed4f5e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{rtDate}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="1854b784-9cc4-4785-a908-a6954c79ebc2">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="20" forecolor="#FFFFFF" uuid="01abf86f-ebd2-4b61-a776-7a6a549bf9b7"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Estado]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="140" height="20" uuid="ff9f0954-deb3-46d4-b01c-4c1eea9dae9a"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{rtState}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<areaChart>
+				<chart evaluationTime="Report">
+					<reportElement x="280" y="0" width="380" height="200" uuid="394d0523-204b-4e70-b81a-b3e0b318253a"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="dsHistograma" uuid="fbd39ac8-c104-4c2b-88b3-e8386e00c6cf">
+							<dataSourceExpression><![CDATA[$P{ds}]]></dataSourceExpression>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{rtState}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{rtDate}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{rtCantidad}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<areaPlot>
+					<plot/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</areaPlot>
+			</areaChart>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="390" height="38" uuid="92df2097-a7c4-492a-a1cf-8b6c471abcd2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[Representación impresa de los reportes de los espacios vacíos del doctor. Para más información por favor comunicarse por medio de nuestro correo electrónico o  numero telefonico.]]></text>
+			</staticText>
+			<image onErrorType="Blank">
+				<reportElement key="" x="620" y="1" width="40" height="40" uuid="a56afc0a-35be-40aa-a7c3-ec6758493b28">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{Imagebackgroud}]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
+</jasperReport>
