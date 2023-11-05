@@ -4,11 +4,13 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
+import cr.ac.una.clinicauna.model.HistoryDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
+import cr.ac.una.clinicauna.service.HistoryService;
 import cr.ac.una.clinicauna.service.PatientService;
 import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.service.UserService;
@@ -180,7 +182,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private BorderPane MenuView;
 
-    UserDto userDto = new UserDto();
+    UserDto userDto;
     DoctorDto doctorDto = new DoctorDto();
     PatientDto patientDto = new PatientDto();
     DiseaseDto diseaseDto = new DiseaseDto();
@@ -195,7 +197,9 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     String jobsSpanish[] = {"Administrador", "Recepcionista", "Doctor"};
     String jobsEnglish[] = {"Administrator", "Receptionist", "Doctor"};
     boolean userDoctor = false;
-
+    int respaldo = 0;
+    String respaldoFechaInit;
+    String respaldoFechaFinal;
     boolean deleteDoctor = false;
     boolean deleteUser = false;
     boolean deletePatient = false;
@@ -681,15 +685,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
             doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
             doctorDto.setDrSpaces(intToShort(Integer.parseInt(SpacesDocMainField1.getText())));
-            System.out.println(timepickerIniWork.getValue().toString());
-            System.out.println(timepickerFinWork.getValue().toString());
-
             doctorDto.setDrIniworking(timepickerIniWork.getValue().toString());
             doctorDto.setDrFinisworking(timepickerFinWork.getValue().toString());
-
-            doctorDto.toString();
-            userDto.toString();
-
         } else if (userDto != null) {
             doctorDto.setDrId(doctorDto.getDrId());
             doctorDto.setDrUser(userDto);
@@ -698,14 +695,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             doctorDto.setDrLicense(Integer.parseInt(licenseDocMainField.getText()));
             doctorDto.setDrFol(Integer.parseInt(folioDocMainField.getText()));
             doctorDto.setDrSpaces(intToShort(3));
-            System.out.println(timepickerIniWork.getValue().toString());
-            System.out.println(timepickerFinWork.getValue().toString());
-
             doctorDto.setDrIniworking(timepickerIniWork.getValue().toString());
             doctorDto.setDrFinisworking(timepickerFinWork.getValue().toString());
-
-            doctorDto.toString();
-            userDto.toString();
         }
         return doctorDto;
     }
@@ -737,6 +728,25 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 DoctorService serviceD = new DoctorService();
                 response = serviceD.saveDoctor(bindNewDoctor());
                 fillTableDoctors();
+
+                if (respaldo != doctorDto.drSpaces || respaldoFechaInit != doctorDto.getDrIniworking() || respaldoFechaFinal != doctorDto.getDrFinisworking()) {
+                    HistoryService serviceHistorial = new HistoryService();
+                    List<HistoryDto> lista = serviceHistorial.getHistorysByDoctor(doctorDto.getDrId());
+                    HistoryDto ultimo = lista.stream().filter(x -> x.getHtDateFinal() == null).findAny().get();
+                    LocalDate today = LocalDate.now();
+                    LocalDate yesterday = today.minusDays(1);
+                    ultimo.setHtDateFinal(yesterday);
+                    response = serviceHistorial.saveHistory(ultimo);
+                    HistoryDto actual = new HistoryDto();
+                    actual.setHtDate(today);
+                    actual.setHtDoctor(doctorDto);
+                    actual.setHtIniworking(doctorDto.getDrIniworking());
+                    actual.setHtFinisworking(doctorDto.getDrFinisworking());
+                    actual.setHtSpaces(doctorDto.drSpaces);
+                    actual.setHtId(0);
+                    response = serviceHistorial.saveHistory(actual);
+                }
+
                 doctorDto = new DoctorDto();
             }
         }
@@ -785,7 +795,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         licenseDocMainField.setText(doctorDto.getDrLicense() + "");
         folioDocMainField.setText(doctorDto.getDrFol() + "");
         breaksMainField.setText(doctorDto.getDrBreak());
-
+        SpacesDocMainField1.setText(String.valueOf(doctorDto.getDrSpaces()));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime iniWorkin = LocalTime.parse(doctorDto.getDrIniworking(), formatter);
         LocalTime finiWorkin = LocalTime.parse(doctorDto.getDrFinisworking(), formatter);
@@ -930,6 +940,9 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             }
         } else if (event.getClickCount() == 2) {
             doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
+            respaldo = doctorDto.getDrSpaces();
+            respaldoFechaInit = doctorDto.getDrIniworking();
+            respaldoFechaFinal = doctorDto.getDrFinisworking();
             fillDoctors(doctorDto);
             tabPaneMantDoctors.getSelectionModel().select(tabManDoctors);
 

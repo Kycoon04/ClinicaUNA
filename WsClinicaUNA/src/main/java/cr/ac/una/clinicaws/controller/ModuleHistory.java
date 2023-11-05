@@ -95,12 +95,27 @@ public class ModuleHistory {
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
-            return Response.ok(new GenericEntity<List<DiaryDto>>((List< DiaryDto>) res.getResultado("historytime")) {
+            return Response.ok(new GenericEntity<List<HistoryDto>>((List< HistoryDto>) res.getResultado("historytime")) {
             }).build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleDiary.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la historial").build();
         }
     }
-
+    
+    @GET
+    @Path("/historys/{id}")
+    public Response getHistoryByDoctor(@PathParam("id") Integer id) {
+        try {
+            Respuesta res = historyService.getHistoryByDoctor(id);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(new GenericEntity<List<HistoryDto>>((List< HistoryDto>) res.getResultado("historytime")) {
+            }).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleDiary.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la historial").build();
+        }
+    }
 }

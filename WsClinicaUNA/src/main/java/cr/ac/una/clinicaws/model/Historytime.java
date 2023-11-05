@@ -72,7 +72,7 @@ public class Historytime implements Serializable {
         this.htDate = historyDto.getHtDate();
         this.htSpaces = historyDto.getHtSpaces();
         this.htIniworking = historyDto.getHtIniworking();
-        this.htFinisworking = historyDto.getHtIniworking();
+        this.htFinisworking = historyDto.getHtFinisworking();
         this.htDoctor = historyDto.getHtDoctor();
         this.htDateFinal = historyDto.getHtDateFinal();
     }
