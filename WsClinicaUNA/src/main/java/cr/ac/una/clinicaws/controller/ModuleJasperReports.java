@@ -103,13 +103,15 @@ public class ModuleJasperReports {
         }
 
         List<DiaryDto> lista = (List<DiaryDto>) diaryService.getByDate(parsedDate, parsedDateTwo, Doctor).getResultado("Diaries");
-
         List<ReportDiary> reportesEmpleados = new ArrayList<>();
+
         if (lista.size() == 0) {
             reportesEmpleados.add(new ReportDiary());
         } else {
             for (int i = 0; i < lista.size(); i++) {
-                reportesEmpleados.add(new ReportDiary(lista.get(i), new AppointmentDto(lista.get(i).getDySpace().getSeAppointment())));
+                if (!lista.get(i).getDySpace().getSeAppointment().getAtState().equals("Cancelada")) {
+                    reportesEmpleados.add(new ReportDiary(lista.get(i), new AppointmentDto(lista.get(i).getDySpace().getSeAppointment())));
+                }
             }
         }
         byte[] pdfContent = exportToPdf(reportesEmpleados, lista.get(0).getDyDoctor().getDrUser().getUsName());
@@ -162,15 +164,65 @@ public class ModuleJasperReports {
         List<ReportHistograma> Histograma = new ArrayList<>();
         List<ReportVacio> resultado = new ArrayList<>();
         int cantidadCancelada = 0;
-        int cantidadAusente = 0;
-
+        int cantidadSinAgendar = 0;
         for (LocalDate datefor = parsedDate; !datefor.isAfter(parsedDateTwo); datefor = datefor.plusDays(1)) {
             final LocalDate currentDate = datefor;
             List<DiaryDto> Aux = lista.stream().filter(x -> x.getDyDate().equals(currentDate)).collect(Collectors.toList());
+
             HistoryDto filteredList = historial.stream()
                     .filter(x -> (currentDate.isAfter(x.getHtDate()) || currentDate.isEqual(x.getHtDate()))
-                    && (currentDate.isBefore(x.getHtDateFinal()) || currentDate.isEqual(x.getHtDateFinal()))).findFirst().get();
+                    && (x.getHtDateFinal() == null || currentDate.isBefore(x.getHtDateFinal()) || currentDate.isEqual(x.getHtDateFinal())))
+                    .findFirst()
+                    .orElse(null);
 
+            String horaInicio = filteredList.getHtIniworking();
+            String horaFin = filteredList.getHtFinisworking();
+            String[] partesInicio = horaInicio.split(":");
+            String[] partesFin = horaFin.split(":");
+            int horaInicioInt = Integer.parseInt(partesInicio[0]);
+            int horaFinInt = Integer.parseInt(partesFin[0]);
+            int contHora = horaInicioInt;
+            String[] mint = new String[filteredList.getHtSpaces()];
+
+            if (filteredList.getHtSpaces() == 2) {
+                mint[0] = "00";
+                mint[1] = "30";
+            } else if (filteredList.getHtSpaces() == 3) {
+                mint[0] = "00";
+                mint[1] = "20";
+                mint[2] = "40";
+            } else {
+                mint[0] = "00";
+                mint[1] = "15";
+                mint[2] = "30";
+                mint[3] = "45";
+            }
+
+            for (int i = 0; i < (horaFinInt - horaInicioInt); i++) {
+
+                for (int j = 0; j < filteredList.getHtSpaces(); j++) {
+                    String horaString;
+                    LocalDate localDate = currentDate;
+                    if((contHora + i)<10){
+                    horaString = "0"+(contHora + i) + ":" + mint[j];
+                    }else{
+                    horaString = (contHora + i) + ":" + mint[j];
+                    }
+                    LocalTime timeFromString = LocalTime.parse(horaString);
+                    boolean exists = Aux.stream()
+                            .anyMatch(item -> {
+                                LocalTime seHour = LocalTime.parse(item.getDySpace().getSeHour());
+                                return seHour.equals(timeFromString);
+                            });
+                    if(!exists){
+                    LocalTime localTime = LocalTime.parse(horaString);
+                    LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+                    Date dateDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                    resultado.add(new ReportVacio("Sin agendar", dateDate));
+                    cantidadSinAgendar++;
+                    }
+                }
+            }
             for (int i = 0; i < Aux.size(); i++) {
                 if (Aux.get(i).getDySpace().getSeAppointment().getAtState().equals("Cancelada")) {
                     LocalDate localDate = Aux.get(i).getDyDate();
@@ -181,21 +233,11 @@ public class ModuleJasperReports {
                     resultado.add(new ReportVacio("Cancelada", dateDate));
                     cantidadCancelada++;
                 }
-                if (Aux.get(i).getDySpace().getSeAppointment().getAtState().equals("Ausente")) {
-                    LocalDate localDate = Aux.get(i).getDyDate();
-                    String horaString = Aux.get(i).getDySpace().getSeHour();
-                    LocalTime localTime = LocalTime.parse(horaString);
-                    LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
-                    Date dateDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-                    resultado.add(new ReportVacio("Ausente", dateDate));
-                    cantidadAusente++;
-                }
             }
-            
+            Histograma.add(new ReportHistograma("Sin agendar", datefor.format(formatter), cantidadSinAgendar));
             Histograma.add(new ReportHistograma("Cancelada", datefor.format(formatter), cantidadCancelada));
-            Histograma.add(new ReportHistograma("Ausente", datefor.format(formatter), cantidadAusente));
             cantidadCancelada = 0;
-            cantidadAusente = 0;
+            cantidadSinAgendar = 0;
         }
 
         byte[] pdfContent = exportToPdfAppointment(resultado, Histograma);
