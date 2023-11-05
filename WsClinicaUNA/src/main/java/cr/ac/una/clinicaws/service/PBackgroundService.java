@@ -132,7 +132,37 @@ public class PBackgroundService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el tipo de PBackground.", "getTipoPBackground " + ex.getMessage());
         }
     }
+/*
+    public Respuesta getPersonalBackgroundsByProceedingsId(long proceedingsId) {
+        try {
+            Query qryPersonalBackground = em.createQuery("SELECT pb FROM Personalbackground pb "
+                    + "JOIN pb.pProceedings pp "
+                    + "JOIN pp.proceedings ps "
+                    + "WHERE ps.id = :proceedingsId", Personalbackground.class);
+
+            qryPersonalBackground.setParameter("proceedingsId", 283);
 
 
+        List<Personalbackground> exams = (List<Personalbackground>) qryPersonalBackground.getResultList();
+    
+        List<PersonalbackgroundDto> listExamsDto = new ArrayList<>();
+        for (Personalbackground exam : exams) {
+            PersonalbackgroundDto examDto = new PersonalbackgroundDto(exam);
+            listExamsDto.add(examDto);
+        }
 
+       
+        return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Exams", listExamsDto);
+    } catch (NoResultException ex) {
+        return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontraron exámenes para el paciente con el ID proporcionado.", "getExamsByPatientId NoResultException");
+    } catch (NonUniqueResultException ex) {
+        LOG.log(Level.SEVERE, "Ocurrió un error al consultar los exámenes para el paciente.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los exámenes para el paciente.", "getExamsByPatientId NonUniqueResultException");
+    } catch (Exception ex) {
+        LOG.log(Level.SEVERE, "Ocurrió un error al consultar los exámenes para el paciente.", ex);
+        return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los exámenes para el paciente.", "getExamsByPatientId " + ex.getMessage());
+    }
+
+    }
+*/
 }

@@ -121,8 +121,25 @@ public class ModulePBackground {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo los Personal Backgrounds").build();
         }
     }
-    
-    
-    
+    /*
+     @GET
+    @Path("/pBacks/{id}")
+    public Response getDoctorsPati(@PathParam("id") long PatientId) {
+        try {
+   
+            Respuesta res = pBackgroundService.getPersonalBackgroundsByProceedingsId(PatientId); 
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            List<PersonalbackgroundDto> examDtoList = (List<PersonalbackgroundDto>) res.getResultado("Exams");
+
+            return Response.ok(new GenericEntity<List<PersonalbackgroundDto>>(examDtoList) {
+            }).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModulePBackground.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Examen").build();
+        }
+    }
+    */
     
 }

@@ -1114,9 +1114,25 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                     fillTablePatient();
                     patientDto = new PatientDto();
                     if (r.getEstado()) {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Paciente Eliminado Correctamente");
+                        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Paciente", getStage(), "Paciente Eliminado Correctamente");
+                        } else if (usrIdiom.getUsLenguage().equals("English")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Delete Patient", getStage(), "Patient Deleted Successfully");
+                        } else if (usrIdiom.getUsLenguage().equals("French")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Supprimer un patient", getStage(), "Patient supprimé avec succès");
+                        } else {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "患者を削除する", getStage(), "患者は正常に削除されました");
+                        }
                     } else {
-                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Error al eliminar paciente");
+                        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Paciente", getStage(), "Error al eliminar paciente");
+                        } else if (usrIdiom.getUsLenguage().equals("English")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Delete Patient", getStage(), "Error when deleting patient");
+                        } else if (usrIdiom.getUsLenguage().equals("French")) {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Supprimer un patient", getStage(), "Erreur lors de la suppression du patient");
+                        } else {
+                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "患者を削除する", getStage(), "患者の削除時にエラーが発生しました");
+                        }
                     }
                 }
             }
@@ -1158,7 +1174,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             } else {
                 proceedingsDto.setPsId(0);
                 proceedingsDto.setPsPatient(patientDto);
-                 Respuesta resp = serviceProced.saveProcedings(proceedingsDto);
+                Respuesta resp = serviceProced.saveProcedings(proceedingsDto);
                 if (resp.getEstado()) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), " Expediente Guardado Correctamente");
                 }
@@ -1166,21 +1182,43 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 proceedingsDto = (ProceedingsDto) hasProc.getResultado("Proceedings");
                 AppContext.getInstance().set("Proceding", proceedingsDto);
 
-               
             }
             System.out.println("AJA");
             AppContext.getInstance().set("Patient", patientDto);
             FlowController.getInstance().goMain("ViewProceedingsOptions");
         } else {
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, " ", getStage(), "Debes cargar un paciente ");
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Debes cargar un paciente");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "You must load a patient");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Vous devez charger un patient");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "患者をロードする必要があります");
+            }
         }
     }
 
     @FXML
     private void cleanUpMantDoctors(ActionEvent event) {
-        if (new Mensaje().showConfirmation("Limpiar Doctor", getStage(), "¿Esta seguro que desea limpiar el registro?")) {
-            cleanUpDoctor();
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            if (new Mensaje().showConfirmation("Limpiar Doctor", getStage(), "¿Está seguro que desea limpiar el registro?")) {
+                cleanUpDoctor();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            if (new Mensaje().showConfirmation("Clean Doctor", getStage(), "Are you sure you want to clear the record?")) {
+                cleanUpDoctor();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            if (new Mensaje().showConfirmation("Nettoyer le médecin", getStage(), "Êtes-vous sûr de vouloir effacer l'enregistrement ?")) {
+                cleanUpDoctor();
+            }
+        } else {
+            if (new Mensaje().showConfirmation("医師をクリア", getStage(), "レコードをクリアしてもよろしいですか？")) {
+                cleanUpDoctor();
+            }
         }
+
     }
 
     private void cleanUpDoctor() {
@@ -1195,8 +1233,22 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void cleanUpMantUser(ActionEvent event) {
-        if (new Mensaje().showConfirmation("Limpiar Usuario", getStage(), "¿Esta seguro que desea limpiar el registro?")) {
-            cleanUpUser();
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            if (new Mensaje().showConfirmation("Limpiar Usuario", getStage(), "¿Está seguro que desea limpiar el registro?")) {
+                cleanUpUser();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            if (new Mensaje().showConfirmation("Clean User", getStage(), "Are you sure you want to clear the record?")) {
+                cleanUpUser();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            if (new Mensaje().showConfirmation("Nettoyer l'utilisateur", getStage(), "Êtes-vous sûr de vouloir effacer l'enregistrement ?")) {
+                cleanUpUser();
+            }
+        } else {
+            if (new Mensaje().showConfirmation("ユーザーをクリア", getStage(), "レコードをクリアしてもよろしいですか？")) {
+                cleanUpUser();
+            }
         }
     }
 
@@ -1214,8 +1266,22 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void cleanUpMantPatient(ActionEvent event) {
-        if (new Mensaje().showConfirmation("Limpiar Paciente", getStage(), "¿Esta seguro que desea limpiar el registro?")) {
-            cleanUpPatient();
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            if (new Mensaje().showConfirmation("Limpiar Paciente", getStage(), "¿Está seguro que desea limpiar el registro?")) {
+                cleanUpPatient();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            if (new Mensaje().showConfirmation("Clean Patient", getStage(), "Are you sure you want to clear the record?")) {
+                cleanUpPatient();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            if (new Mensaje().showConfirmation("Nettoyer le patient", getStage(), "Êtes-vous sûr de vouloir effacer l'enregistrement ?")) {
+                cleanUpPatient();
+            }
+        } else {
+            if (new Mensaje().showConfirmation("患者をクリア", getStage(), "レコードをクリアしてもよろしいですか？")) {
+                cleanUpPatient();
+            }
         }
     }
 
