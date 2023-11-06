@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicaws.model;
 
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +17,8 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.Date;
+
 
 /**
  *
@@ -30,8 +33,9 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "Appointment.findByAtTelephone", query = "SELECT a FROM Appointment a WHERE a.atTelephone = :atTelephone"),
     @NamedQuery(name = "Appointment.findByAtEmail", query = "SELECT a FROM Appointment a WHERE a.atEmail = :atEmail"),
     @NamedQuery(name = "Appointment.findByAtState", query = "SELECT a FROM Appointment a WHERE a.atState = :atState"),
+    @NamedQuery(name = "Appointment.findByAtCode", query = "SELECT a FROM Appointment a WHERE a.atCode = :atCode"),
     @NamedQuery(name = "Appointment.findByPatientId", query = "SELECT a FROM Appointment a WHERE a.atPatient.ptId = :PatientId"),
-    @NamedQuery(name = "Appointment.findByAtCode", query = "SELECT a FROM Appointment a WHERE a.atCode = :atCode")})
+    @NamedQuery(name = "Appointment.findByAtDateregister", query = "SELECT a FROM Appointment a WHERE a.atDateregister = :atDateregister")})
 public class Appointment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,13 +60,15 @@ public class Appointment implements Serializable {
     @Size(max = 10)
     @Column(name = "AT_CODE")
     private String atCode;
+    @Column(name = "AT_DATEREGISTER")
+    private Date atDateregister;
     @JoinColumn(name = "AT_PATIENT", referencedColumnName = "PT_ID")
     @ManyToOne(optional = false)
     private Patient atPatient;
     @JoinColumn(name = "AT_USERREGISTER", referencedColumnName = "US_ID")
     @ManyToOne(optional = false)
     private Users atUserregister;
-
+    
     public Appointment() {
     }
 
@@ -134,6 +140,14 @@ public class Appointment implements Serializable {
     public void setAtCode(String atCode) {
         this.atCode = atCode;
     }
+
+    public Date getAtDateregister() {
+        return atDateregister;
+    }
+
+    public void setAtDateregister(Date atDateregister) {
+        this.atDateregister = atDateregister;
+    }
     public Patient getAtPatient() {
         return atPatient;
     }
@@ -173,5 +187,5 @@ public class Appointment implements Serializable {
     public String toString() {
         return "cr.ac.una.clinicaws.model.Appointment[ atId=" + atId + " ]";
     }
-
+    
 }
