@@ -996,7 +996,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "患者を救う", getStage(), "救われた患者");
             }
             cleanUpPatient();
-            patientDto = null;
+            //patientDto = null;
         } else {
             if (usrIdiom.getUsLenguage().equals("Spanish")) {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Paciente", getStage(), "Error al guardar");

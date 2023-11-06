@@ -145,5 +145,27 @@ public class ReportService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Report.", "getReportAppoint " + ex.getMessage());
         }
     }
+            
+    public Respuesta getReportsByProceeding(Integer rtId) {
+        try {
+            Query qryReport = em.createQuery("SELECT rp FROM Report rp WHERE rp.rtProceedings.psId = :rtId", Report.class);
+            qryReport.setParameter("rtId", rtId);
+            List<Report> reports = (List<Report>) qryReport.getResultList();
+             List<ReportDto> ListreportsDto = new ArrayList<>();
+            for (Report tipo : reports) {
+                ReportDto reportDto = new ReportDto(tipo);
+                ListreportsDto.add(reportDto);
+            }
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Report", ListreportsDto);
+        } catch (NoResultException ex) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un tipo de Report con el código ingresado.", "getTipoReport NoResultException");
+        } catch (NonUniqueResultException ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el tipo de Report.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el tipo de Report.", "getTipoReport NonUniqueResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el Report.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el tipo de Report.", "getTipoReport " + ex.getMessage());
+        }
+    }
     
 }

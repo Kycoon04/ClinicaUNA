@@ -16,6 +16,7 @@ import cr.ac.una.clinicauna.model.PProceedingsDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.PersonalbackgroundDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
+import cr.ac.una.clinicauna.model.ReportDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
@@ -25,6 +26,7 @@ import cr.ac.una.clinicauna.service.FamilybackgroundService;
 import cr.ac.una.clinicauna.service.PProceedingsService;
 import cr.ac.una.clinicauna.service.PersonalbackgroundService;
 import cr.ac.una.clinicauna.service.ProceedingsService;
+import cr.ac.una.clinicauna.service.ReportService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Formato;
@@ -34,6 +36,7 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -157,24 +160,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private TextArea textAreaPersBgContext;
     @FXML
-    private TextField textFieldSpaceState;
-    @FXML
-    private TextField textFieldSpaceDate;
-    @FXML
-    private TextField textFieldSpaceHour;
-    @FXML
-    private TextField textFieldSearchSpace_State;
-    @FXML
-    private TableView<?> tableViewPersonalBg1;
-    @FXML
-    private TableColumn<?, ?> tableColSpaceState;
-    @FXML
-    private TableColumn<?, ?> tableColPersBgContext1;
-    @FXML
-    private TableColumn<?, ?> tableColPersBgType11;
-    @FXML
-    private Spinner<?> spinnerAppoinment;
-    @FXML
     private TextField textFieldPatientIdent;
     @FXML
     private LineChart<?, ?> lineChartBodyMass;
@@ -271,6 +256,21 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TextArea textAreaRep_PhysicalExam;
     @FXML
     private TextArea textAreaRep_Treatments;
+    @FXML
+    private JFXDatePicker datePickerConsultDate1;
+    @FXML
+    private JFXTimePicker timePickerConsultTime1;
+    @FXML
+    private TextArea textAreaRepA_NotesNursing;
+    @FXML
+    private TextArea textAreaRepA_Notes;
+    @FXML
+    private TextArea textAreaRepA_Reason;
+    @FXML
+    private TextArea textAreaRepA_CarePlan;
+    
+    ReportDto reportDto=new ReportDto();
+    List<ReportDto> reports=new ArrayList<>();
 
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**
@@ -325,6 +325,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         fillTableDiseases();
         fillTablePersonalBack();
         fillTableFamilyBack();
+        getReports();
         nameDistMainField.setTextFormatter(Formato.getInstance().letrasFormat(10));
     }
 
@@ -949,7 +950,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void backReport(ActionEvent event) {
-        ProceedingsService serviceProced = new ProceedingsService();
+        /*ProceedingsService serviceProced = new ProceedingsService();
         Respuesta hasProc = serviceProced.getProcedingsIdPatient(patientDto.getPtId());
 
         if (hasProc.getEstado()) {
@@ -962,7 +963,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             saveFamilyBackground();
         } else {
 
-        }
+        }*/
+        OptionsProceedingsView.toFront();
     }
 
     @FXML
@@ -990,26 +992,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         OptionsMainDesease.toFront();
     }
 
-    @FXML
-    private void changeViewAppointment(MouseEvent event) {
-        /*spinnerAppoinment = new Spinner<>(appointmentsList);
-
-        // Configurar el StringConverter personalizado
-        spinnerAppoinment.getValueFactory().setConverter(new StringConverter<>() {
-            @Override
-            public String toString(AppointmentDto appointment) {
-                return appointment.;
-            }
-
-            @Override
-            public Person fromString(String string) {
-                return people.stream()
-                        .filter(person -> person.getName().equals(string))
-                        .findFirst()
-                        .orElse(null);
-            }
-        });*/
-    }
 
     private void loadAppoinmentList() {
         reportList.clear();
@@ -1149,9 +1131,71 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void selectDoctor(MouseEvent event) {
         searchSelectDoctor.toFront();
     }
+    
+    private void getReports(){
+        ReportService service = new ReportService();
+        List<ReportDto> reports = service.getReportsbyProceeding(proceedingsDto.getPsId());
+        System.out.println(""+reports.get(0).getRtPressure());
+        
+    }
+    ReportDto bindNewReport() {
+
+        reportDto.setRtId(reportDto.getRtId());
+        reportDto.setRtProceedings(proceedingsDto);
+        reportDto.setRtPressure(Double.parseDouble(textFieldRep_Pressure.getText()));
+        reportDto.setRtHeartRate(Double.parseDouble(textFieldRep_HeartRate.getText()));
+        reportDto.setRtHeight(Double.parseDouble(textFieldRep_Height.getText()));
+        reportDto.setRtWeight(Double.parseDouble(textFieldRep_Weight.getText()));
+        reportDto.setRtTemperature(Double.parseDouble(textFieldRep_Temperature.getText()));
+        reportDto.setRtBodyMass(Double.parseDouble(textFieldRep_BodyMass.getText()));
+        reportDto.setRtDoctorReason(textAreaRep_Reason.getText());
+        reportDto.setRtNotesNursing(textAreaRep_NotesNursing.getText());
+        reportDto.setRtCarePlan(textAreaRep_CarePlan.getText());
+        reportDto.setRtFisicExamen(textAreaRep_PhysicalExam.getText());
+        reportDto.setRtTreatmentExamen(textAreaRep_Treatments.getText());
+        reportDto.setRtObservations(textAreaRep_Notes.getText());
+        LocalDate localDate = datePickerConsultDate.getValue();
+        //Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, timePickerConsultTime.getValue());
+        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        reportDto.setRtDate(date);
+
+        return reportDto;
+    }
 
     @FXML
     private void updateReportAp(ActionEvent event) {
+         ReportService service = new ReportService();
+        Respuesta response = null;
+
+        if (reportDto != null) {
+            response = service.saveReport(bindNewReport());
+            reportDto = new ReportDto();
+        }
+        if (response.getEstado()) {
+            if (userDto.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Control de Atención guardada");
+            } else if (userDto.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Attention Control", getStage(), "Saved Attention Control");
+            } else if (userDto.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer le contrôle de l'attention", getStage(), "Contrôle d'attention enregistré");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "アテンションコントロールの保存", getStage(), "保存されたアテンション コントロール");
+            }
+            //cleanAttentionControl();
+
+        } else {
+            if (userDto.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Error al guardar el Control de Atención");
+            } else if (userDto.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Save Attention Control", getStage(), "Error saving Attention Control");
+            } else if (userDto.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Enregistrer le contrôle de l'attention", getStage(), "Erreur lors de l'enregistrement du contrôle d'attention");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "アテンションコントロールの保存", getStage(), "アテンション コントロールの保存中にエラーが発生しました");
+            }
+        }
+
 
     }
 
@@ -1178,6 +1222,14 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         SortedList<FamilybackgroundDto> sorted = new SortedList<>(list);
         sorted.comparatorProperty().bind(tableViewFamilyBg.comparatorProperty());
         tableViewFamilyBg.setItems(sorted);
+    }
+
+    @FXML
+    private void moveRight_AttControl(MouseEvent event) {
+    }
+
+    @FXML
+    private void moveLeft_AttControl(MouseEvent event) {
     }
 
 

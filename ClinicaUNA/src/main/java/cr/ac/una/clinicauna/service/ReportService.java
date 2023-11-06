@@ -86,6 +86,24 @@ public class ReportService {
             return null;
         }
     }
+    
+        public List<ReportDto> getReportsbyProceeding(Integer id) {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("id", id);
+            Request request = new Request("ModuleReport/reportsProceeding", "/{id}", parametros);
+            request.get();
+            if (request.isError()) {
+                System.out.println(request.getError());
+                return null;
+            }
+            return (List<ReportDto>) request.readEntity(new GenericType<List<ReportDto>>() {
+            });
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return null;
+        }
+    }
      public Respuesta getReportByIdAppoinment(Integer id) {
         try {
             Map<String, Object> parametros = new HashMap<>();
