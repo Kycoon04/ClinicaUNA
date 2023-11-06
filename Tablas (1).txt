@@ -312,7 +312,8 @@ create table CL_APPOINTMENT
   at_telephone    NUMBER(10),
   at_email        VARCHAR2(30),
   at_state        VARCHAR2(15) not null,
-  at_code         VARCHAR2(10)
+  at_code         VARCHAR2(10),
+  at_dateregister DATE
 )
 tablespace USERS
   pctfree 10
@@ -364,7 +365,6 @@ alter table CL_APPOINTMENT
 alter table CL_APPOINTMENT
   add constraint AT_STATECONSTRAINT
   check (at_state in ('Programada','Atendida','Cancelada','Ausente'));
-
 
 -- Create table
 create table CL_SPACE

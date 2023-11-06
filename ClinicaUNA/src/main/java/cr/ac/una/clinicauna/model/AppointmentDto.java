@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicauna.model;
 
+import java.util.Date;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,7 +23,7 @@ public class AppointmentDto {
     public SimpleStringProperty atCode;
     public PatientDto atPatient;
     public UserDto atUserregister;
-
+    private Date FechaRegistro;
     public AppointmentDto() {
         this.atId = new SimpleIntegerProperty();
         this.atReason = new SimpleStringProperty();
@@ -31,6 +32,15 @@ public class AppointmentDto {
         this.atState = new SimpleStringProperty();
         this.atUserregister = new UserDto();
         this.atCode = new SimpleStringProperty();
+        this.FechaRegistro = new Date();
+    }
+
+    public Date getFechaRegistro() {
+        return FechaRegistro;
+    }
+
+    public void setFechaRegistro(Date FechaRegistro) {
+        this.FechaRegistro = FechaRegistro;
     }
 
     public int getAtId() {
