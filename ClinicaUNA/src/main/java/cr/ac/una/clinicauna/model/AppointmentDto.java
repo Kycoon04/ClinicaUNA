@@ -24,7 +24,7 @@ public class AppointmentDto {
     public SimpleStringProperty atCode;
     public PatientDto atPatient;
     public UserDto atUserregister;
-    private LocalDate FechaRegistro;
+    public LocalDate atDateregister;
     public AppointmentDto() {
         this.atId = new SimpleIntegerProperty();
         this.atReason = new SimpleStringProperty();
@@ -35,12 +35,12 @@ public class AppointmentDto {
         this.atCode = new SimpleStringProperty();
     }
 
-    public LocalDate getFechaRegistro() {
-        return FechaRegistro;
+    public LocalDate getAtDateregister() {
+        return atDateregister;
     }
 
-    public void setFechaRegistro(LocalDate FechaRegistro) {
-        this.FechaRegistro = FechaRegistro;
+    public void setAtDateregister(LocalDate FechaRegistro) {
+        this.atDateregister = FechaRegistro;
     }
 
     public int getAtId() {

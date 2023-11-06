@@ -88,7 +88,7 @@ public class Appointment implements Serializable {
         this.atTelephone = appointmentDto.getAtTelephone();
         this.atUserregister = appointmentDto.getAtUserregister();
         this.atCode = appointmentDto.getAtCode();
-        this.atDateregister = appointmentDto.getFechaRegistro();
+        this.atDateregister = appointmentDto.getAtDateregister();
     }
     public Appointment(Integer atId, String atState) {
         this.atId = atId;

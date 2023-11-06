@@ -111,6 +111,7 @@ public class AppointmentService {
                 appointment = new Appointment(appointmentDto);
                 em.persist(appointment);
             }
+            em.flush();
             Query qryusuario = em.createNamedQuery("Appointment.findByAtCode", Appointment.class);
             qryusuario.setParameter("atCode", appointment.getAtCode());
             em.flush();

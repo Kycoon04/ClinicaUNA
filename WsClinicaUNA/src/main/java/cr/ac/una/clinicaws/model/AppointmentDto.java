@@ -22,7 +22,7 @@ public class AppointmentDto {
     private Patient atPatient;
     private Users atUserregister;
     private String atCode;
-    private LocalDate FechaRegistro;
+    private LocalDate atDateregister;
     
     public AppointmentDto(Appointment appointment) {
         this.atId = appointment.getAtId();
@@ -33,15 +33,15 @@ public class AppointmentDto {
         this.atPatient = appointment.getAtPatient();
         this.atUserregister = appointment.getAtUserregister();
         this.atCode = appointment.getAtCode();
-        this.FechaRegistro = appointment.getAtDateregister();
+        this.atDateregister = appointment.getAtDateregister();
     }
 
-    public LocalDate getFechaRegistro() {
-        return FechaRegistro;
+    public LocalDate getAtDateregister() {
+        return atDateregister;
     }
 
-    public void setFechaRegistro(LocalDate FechaRegistro) {
-        this.FechaRegistro = FechaRegistro;
+    public void setAtDateregister(LocalDate FechaRegistro) {
+        this.atDateregister = FechaRegistro;
     }
 
     public String getAtCode() {

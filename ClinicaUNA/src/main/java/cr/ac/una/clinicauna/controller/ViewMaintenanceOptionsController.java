@@ -749,8 +749,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                     List<HistoryDto> lista = serviceHistorial.getHistorysByDoctor(doctorDto.getDrId());
                     HistoryDto ultimo = lista.stream().filter(x -> x.getHtDateFinal() == null).findAny().get();
                     LocalDate today = LocalDate.now();
-                    LocalDate yesterday = today.minusDays(1);
-                    ultimo.setHtDateFinal(yesterday);
+                    ultimo.setHtDateFinal(today);
                     response = serviceHistorial.saveHistory(ultimo);
                     
                     HistoryDto actual = new HistoryDto();

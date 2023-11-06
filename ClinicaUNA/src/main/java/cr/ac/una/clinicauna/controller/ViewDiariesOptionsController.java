@@ -371,7 +371,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             appointmentDto.setAtPatient(patientDto);
             appointmentDto.setAtUserregister(userDto);
             appointmentDto.setAtReason(reason.getText());
-            appointmentDto.setFechaRegistro(LocalDate.now());
+            appointmentDto.setAtDateregister(LocalDate.now());
             Long numLong = Long.parseLong(numberP.getText());
             appointmentDto.setAtTelephone(numLong);
             appointmentDto.setAtEmail(email.getText());
@@ -1076,6 +1076,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
 
     public GridPane createWeekCalendarWithHeaders(int b, int a, int v, boolean type) {
+        horasTotales.clear();
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
 
@@ -1100,7 +1101,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         } else {
             AppointmentService prueba = new AppointmentService();
             AppointmentDto as = (AppointmentDto) prueba.getAppointmentId(listadiario.get(0).getDySpace().getSeAppointment().getAtId()).getResultado("Appointments");
-            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getFechaRegistro().toString(), doctorDto.getDrId()).getResultado("history");
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getAtDateregister().toString(), doctorDto.getDrId()).getResultado("history");
             String horaInicio = filteredList.getHtIniworking();
             String horaFin = filteredList.getHtFinisworking();
             String[] partesInicio = horaInicio.split(":");
@@ -1471,7 +1472,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         } else {
             AppointmentService prueba = new AppointmentService();
             AppointmentDto as = (AppointmentDto) prueba.getAppointmentId(listadiario.get(0).getDySpace().getSeAppointment().getAtId()).getResultado("Appointments");
-            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getFechaRegistro().toString(), doctorDto.getDrId()).getResultado("history");
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getAtDateregister().toString(), doctorDto.getDrId()).getResultado("history");
 
             String horaInicio = filteredList.getHtIniworking();
             String horaFin = filteredList.getHtFinisworking();
@@ -1988,7 +1989,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         } else {
             AppointmentService prueba = new AppointmentService();
             AppointmentDto as = (AppointmentDto) prueba.getAppointmentId(listadiario.get(0).getDySpace().getSeAppointment().getAtId()).getResultado("Appointments");
-            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getFechaRegistro().toString(), doctorDto.getDrId()).getResultado("history");
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getAtDateregister().toString(), doctorDto.getDrId()).getResultado("history");
 
             String horaInicio = filteredList.getHtIniworking();
             String horaFin = filteredList.getHtFinisworking();
@@ -2105,6 +2106,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
 
     public GridPane createWeekCalendarWithHeadersModi(int b, int a, int v, boolean type) {
+        horasTotales.clear();
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
 
@@ -2129,7 +2131,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         } else {
             AppointmentService prueba = new AppointmentService();
             AppointmentDto as = (AppointmentDto) prueba.getAppointmentId(listadiario.get(0).getDySpace().getSeAppointment().getAtId()).getResultado("Appointments");
-            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getFechaRegistro().toString(), doctorDto.getDrId()).getResultado("history");
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getAtDateregister().toString(), doctorDto.getDrId()).getResultado("history");
             String horaInicio = filteredList.getHtIniworking();
             String horaFin = filteredList.getHtFinisworking();
             String[] partesInicio = horaInicio.split(":");
