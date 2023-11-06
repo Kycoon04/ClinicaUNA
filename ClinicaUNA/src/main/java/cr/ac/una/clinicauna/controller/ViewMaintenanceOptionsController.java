@@ -715,14 +715,29 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private void UpdateDoctor(ActionEvent event) {
         Respuesta response = null;
         if (userDoctor) {
+            HistoryService serviceHistorial = new HistoryService();
             UserService service = new UserService();
             service.saveUser(bindNewUser());
             DoctorService serviceD = new DoctorService();
+            
+            
             response = serviceD.saveDoctor(bindNewDoctor());
+            doctorDto = (DoctorDto) serviceD.getDoctorUser(userDto.getUsId()).getResultado("Doctor");
+            HistoryDto actual = new HistoryDto();
+                    actual.setHtDate(LocalDate.now());
+                    actual.setHtDoctor(doctorDto);
+                    actual.setHtIniworking(doctorDto.getDrIniworking());
+                    actual.setHtFinisworking(doctorDto.getDrFinisworking());
+                    actual.setHtSpaces(doctorDto.drSpaces);
+                    actual.setHtId(0);
+                    response = serviceHistorial.saveHistory(actual);
+                    
+                    
+                    
             fillTableUsers();
             fillTableDoctors();
             userDoctor = false;
-            doctorDto = new DoctorDto();
+
         } else {
             if (doctorDto != null) {
                 DoctorService serviceD = new DoctorService();
