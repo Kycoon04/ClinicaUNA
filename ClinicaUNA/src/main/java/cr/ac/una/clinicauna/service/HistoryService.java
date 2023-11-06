@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicauna.service;
 
+import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.model.DiaryDto;
 import cr.ac.una.clinicauna.model.HistoryDto;
 import cr.ac.una.clinicauna.util.Request;
@@ -99,6 +100,24 @@ public class HistoryService {
             }
             return (List<HistoryDto>) request.readEntity(new GenericType<List<HistoryDto>>() {
             });
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return null;
+        }
+    }
+    public Respuesta getHistorysByDate(String date,Integer id) {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("date", date);
+            parametros.put("id", id);
+            Request request = new Request("ModuleHistory/historysRange", "/{date}/{id}", parametros);
+            request.get();
+            if (request.isError()) {
+                System.out.println(request.getError());
+                return null;
+            }
+            HistoryDto historyDto = (HistoryDto) request.readEntity(HistoryDto.class);
+            return new Respuesta(true, "", "", "history", historyDto);
         } catch (Exception e) {
             System.out.println(e.toString());
             return null;

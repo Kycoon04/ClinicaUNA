@@ -16,6 +16,7 @@ import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -62,6 +63,22 @@ public class HistoryService {
                 Listhistorys.add(diaryDto);
             }
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "historytime", Listhistorys);
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe una historial con el código ingresado.", "getDiary NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar la historial.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar la historial.", "getDiary NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar la historial.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar la historial.", "getDiary " + ex.getMessage());
+        }
+    }
+    public Respuesta getHistoryByDate(LocalDate date,Integer id) {
+        try {
+            Query qryusuario = em.createNamedQuery("Historytime.findByDateInRange", Historytime.class);
+            qryusuario.setParameter("date", date);
+            qryusuario.setParameter("DoctorId", id);
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "historytime",  new HistoryDto((Historytime) qryusuario.getSingleResult()));
         } catch (NoResultException ex) {//sin resultado
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe una historial con el código ingresado.", "getDiary NoResultException");
         } catch (NonUniqueResultException ex) {//mas de un resultado 

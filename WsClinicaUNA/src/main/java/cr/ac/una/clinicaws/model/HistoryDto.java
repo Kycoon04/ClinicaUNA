@@ -27,6 +27,7 @@ public class HistoryDto {
         this.htIniworking  = history.getHtIniworking();
         this.htFinisworking = history.getHtFinisworking();
         this.htDoctor = history.getHtDoctor();
+        this.htDateFinal = history.getHtDateFinal();
     }
 
     public LocalDate getHtDateFinal() {

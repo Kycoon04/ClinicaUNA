@@ -244,6 +244,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private boolean modificarCita = false;
     private int movespace = 0;
     private String[] mint;
+    int iniHora;
+    int finHora;
+    int spacesfree;
     private int HoraSelecionada = 0;
     private List<Integer> horasTotales = new ArrayList<>();
     private boolean canupdate = false;
@@ -906,7 +909,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     public void eventAgendDoct() {
         rootDocDiary.getChildren().removeIf(node -> node instanceof GridPane);
-        DiaryPane = createWeekCalendarWithHeaders(1,2,doctorDto.getDrSpaces(), true);
+        DiaryPane = createWeekCalendarWithHeaders(1, 2, doctorDto.getDrSpaces(), true);
         DiaryPane.setPrefSize(rootDocDiary.getPrefWidth() / 2 + 500, rootDocDiary.getPrefHeight() / 2 + 180);
         DiaryPane.setGridLinesVisible(true);
         DiaryPane.getChildren().removeAll(citasAgregadasList);
@@ -1072,53 +1075,41 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private void UpdateWorkerEnter(KeyEvent event) {
     }
 
-    public GridPane createWeekCalendarWithHeaders(int b,int a,int v, boolean type) {
+    public GridPane createWeekCalendarWithHeaders(int b, int a, int v, boolean type) {
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
 
         HistoryService serviceHistorial = new HistoryService();
         List<HistoryDto> lista = serviceHistorial.getHistorysByDoctor(doctorDto.getDrId());
         DiaryService diario = new DiaryService();
-        
-        List<DiaryDto> listadiario = diario.getDiary();
-        listadiario = listadiario.stream().filter(x->x.getDyDate().equals(DayPicker.getValue())).toList();
-        HistoryDto filteredList;
-        int iniHora;
-        int finHora;
 
-        if(listadiario.isEmpty()){
-        final LocalDate currentDate = DayPicker.getValue();
-        filteredList = lista.stream()
-                    .filter(x -> (currentDate.isAfter(x.getHtDate()) || currentDate.isEqual(x.getHtDate()))
-                    && (x.getHtDateFinal() == null || currentDate.isBefore(x.getHtDateFinal()) || currentDate.isEqual(x.getHtDateFinal())))
-                    .findFirst().get();
-        String horaInicio = filteredList.getHtIniworking();
-        String horaFin = filteredList.getHtFinisworking();
-        String[] partesInicio = horaInicio.split(":");
-        String[] partesFin = horaFin.split(":");
-        iniHora = Integer.parseInt(partesInicio[0]);
-        finHora = Integer.parseInt(partesFin[0]);
-        mint = new String[filteredList.getHtSpaces()];
-        
-        }else{
-        final LocalDate currentDate = listadiario.get(0).getDySpace().getSeAppointment().getFechaRegistro();
-        filteredList = lista.stream()
-                    .filter(x -> (currentDate.isAfter(x.getHtDate()) || currentDate.isEqual(x.getHtDate()))
-                    && (x.getHtDateFinal() == null || currentDate.isBefore(x.getHtDateFinal()) || currentDate.isEqual(x.getHtDateFinal())))
-                    .findFirst()
-                    .orElse(lista.stream()
-                    .filter(x -> (x.getHtDateFinal() == null || currentDate.isBefore(x.getHtDateFinal()) || currentDate.isEqual(x.getHtDateFinal())))
-                    .findFirst().get());
-        
-        String horaInicio = filteredList.getHtIniworking();
-        String horaFin = filteredList.getHtFinisworking();
-        String[] partesInicio = horaInicio.split(":");
-        String[] partesFin = horaFin.split(":");
-        iniHora = Integer.parseInt(partesInicio[0]);
-        finHora = Integer.parseInt(partesFin[0]);
-        mint = new String[filteredList.getHtSpaces()];
+        List<DiaryDto> listadiario = diario.getDiary();
+        listadiario = listadiario.stream().filter(x -> x.getDyDate().equals(DayPicker.getValue())).toList();
+        HistoryDto filteredList;
+
+        if (listadiario.isEmpty()) {
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(DayPicker.getValue().toString(), doctorDto.getDrId()).getResultado("history");
+            String horaInicio = filteredList.getHtIniworking();
+            String horaFin = filteredList.getHtFinisworking();
+            String[] partesInicio = horaInicio.split(":");
+            String[] partesFin = horaFin.split(":");
+            iniHora = Integer.parseInt(partesInicio[0]);
+            finHora = Integer.parseInt(partesFin[0]);
+            mint = new String[filteredList.getHtSpaces()];
+
+        } else {
+            AppointmentService prueba = new AppointmentService();
+            AppointmentDto as = (AppointmentDto) prueba.getAppointmentId(listadiario.get(0).getDySpace().getSeAppointment().getAtId()).getResultado("Appointments");
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getFechaRegistro().toString(), doctorDto.getDrId()).getResultado("history");
+            String horaInicio = filteredList.getHtIniworking();
+            String horaFin = filteredList.getHtFinisworking();
+            String[] partesInicio = horaInicio.split(":");
+            String[] partesFin = horaFin.split(":");
+            iniHora = Integer.parseInt(partesInicio[0]);
+            finHora = Integer.parseInt(partesFin[0]);
+            mint = new String[filteredList.getHtSpaces()];
         }
-        
+        spacesfree = filteredList.getHtSpaces();
         if (filteredList.getHtSpaces() == 2) {
             mint[0] = "00";
             mint[1] = "30";
@@ -1306,7 +1297,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
             LocalTime horaActual = null;
             if (citasAgregadas <= min.length) {
-                horaActual = LocalTime.of(hour, Integer.parseInt(min[columnIdx - 1]));
+                horaActual = LocalTime.of(hour, Integer.parseInt(mint[columnIdx - 1]));
                 horasAgregadas.add(horaActual);
             }
 
@@ -1399,11 +1390,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 columnIdx++;
             }
         }
-        for (LocalTime p : horasAgregadas) {
-
-            System.out.println(p.format(timeFormatter));
-
-        }
         btnAgendar.setDisable(false);
     }
 
@@ -1420,9 +1406,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         return null;
     }
 
-    public int findColumna(DiaryDto p) {
-        for (int i = 1; i <= doctorDto.getDrSpaces(); i++) {
-            Node node = getNodeFromGridPane(DiaryPane, 0, i);
+    public int findColumna(GridPane gridPane, DiaryDto p) {
+        for (int i = 1; i <= spacesfree; i++) {
+            Node node = getNodeFromGridPane(gridPane, 0, i);
 
             if (node instanceof Label) {
                 Label label = (Label) node;
@@ -1435,9 +1421,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         return 0;
     }
 
-    public int findFila(DiaryDto p, int iniHora, int finHora) {
+    public int findFila(GridPane gridPane, DiaryDto p, int iniHora, int finHora) {
         for (int i = iniHora; i <= finHora; i++) {
-            Node node = getNodeFromGridPane(DiaryPane, i - iniHora + 1, 0);
+            Node node = getNodeFromGridPane(gridPane, i - iniHora + 1, 0);
 
             if (node instanceof Label) {
                 Label label = (Label) node;
@@ -1468,24 +1454,30 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
         HistoryService serviceHistorial = new HistoryService();
         List<HistoryDto> lista = serviceHistorial.getHistorysByDoctor(doctorDto.getDrId());
-        
-        final LocalDate currentDate = DayPicker.getValue();
-        HistoryDto filteredList = lista.stream()
-                    .filter(x -> (currentDate.isAfter(x.getHtDate()) || currentDate.isEqual(x.getHtDate()))
-                    && (x.getHtDateFinal() == null || currentDate.isBefore(x.getHtDateFinal()) || currentDate.isEqual(x.getHtDateFinal())))
-                    .findFirst()
-                    .orElse(lista.stream()
-                    .filter(x -> (x.getHtDateFinal() == null || currentDate.isBefore(x.getHtDateFinal()) || currentDate.isEqual(x.getHtDateFinal())))
-                    .findFirst().get());
-        
-        String horaInicio = filteredList.getHtIniworking();
-        String horaFin = filteredList.getHtFinisworking();
-        String[] partesInicio = horaInicio.split(":");
-        String[] partesFin = horaFin.split(":");
+        DiaryService diario = new DiaryService();
 
-        int iniHora = Integer.parseInt(partesInicio[0]);
-        int finHora = Integer.parseInt(partesFin[0]);
+        List<DiaryDto> listadiario = diario.getDiary();
+        listadiario = listadiario.stream().filter(x -> x.getDyDate().equals(DayPicker.getValue())).toList();
+        HistoryDto filteredList;
 
+        if (listadiario.isEmpty()) {
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(DayPicker.getValue().toString(), doctorDto.getDrId()).getResultado("history");
+
+            String horaInicio = filteredList.getHtIniworking();
+            String horaFin = filteredList.getHtFinisworking();
+            String[] partesInicio = horaInicio.split(":");
+            String[] partesFin = horaFin.split(":");
+
+        } else {
+            AppointmentService prueba = new AppointmentService();
+            AppointmentDto as = (AppointmentDto) prueba.getAppointmentId(listadiario.get(0).getDySpace().getSeAppointment().getAtId()).getResultado("Appointments");
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getFechaRegistro().toString(), doctorDto.getDrId()).getResultado("history");
+
+            String horaInicio = filteredList.getHtIniworking();
+            String horaFin = filteredList.getHtFinisworking();
+            String[] partesInicio = horaInicio.split(":");
+            String[] partesFin = horaFin.split(":");
+        }
         int fila = 0;
         int columna = 0;
         if (DayPicker.getValue() == null) {
@@ -1499,7 +1491,6 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダーが送信されました", getStage(), "日を選択してください");
             }
         } else {
-            DiaryService diario = new DiaryService();
             List<DiaryDto> AgendaCompleta = diario.getDiary();
 
             if (AgendaCompleta != null) {
@@ -1507,9 +1498,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
                 for (int i = 0; i < AgendaCompleta.size(); i++) {
 
-                    fila = findFila(AgendaCompleta.get(i), iniHora, finHora);
-                    columna = findColumna(AgendaCompleta.get(i));
-
+                    fila = findFila(DiaryPane, AgendaCompleta.get(i), iniHora, finHora);
+                    columna = findColumna(DiaryPane, AgendaCompleta.get(i));
                     Label label = new Label("Cita / " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                     CargarColor(label, AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                     label.setUserData(AgendaCompleta.get(i));
@@ -1953,6 +1943,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
 
     public void eventAgendDoctModi() {
+        rootDocDiary1.getChildren().removeIf(node -> node instanceof GridPane);
         String horaInicio = doctorDto.getDrIniworking();
         String horaFin = doctorDto.getDrFinisworking();
         String[] partesInicio = horaInicio.split(":");
@@ -1960,7 +1951,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         int horaInicioInt = Integer.parseInt(partesInicio[0]);
         int horaFinInt = Integer.parseInt(partesFin[0]);
-        DiaryPaneModi = createWeekCalendarWithHeaders(horaInicioInt, horaFinInt, doctorDto.getDrSpaces(), false);
+        DiaryPaneModi = createWeekCalendarWithHeadersModi(horaInicioInt, horaFinInt, doctorDto.getDrSpaces(), false);
         DiaryPaneModi.setPrefSize(rootDocDiary1.getPrefWidth() / 2 + 500, rootDocDiary1.getPrefHeight() / 2 + 180);
         DiaryPaneModi.setGridLinesVisible(true);
         DiaryPaneModi.getChildren().removeAll(citasAgregadasList);
@@ -1978,15 +1969,35 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
 
     private void lookdayModi(ActionEvent event) {
-        String horaInicio = doctorDto.getDrIniworking();
-        String horaFin = doctorDto.getDrFinisworking();
-        String[] partesInicio = horaInicio.split(":");
-        String[] partesFin = horaFin.split(":");
-        int iniHora = Integer.parseInt(partesInicio[0]);
-        int finHora = Integer.parseInt(partesFin[0]);
+        HistoryService serviceHistorial = new HistoryService();
+        List<HistoryDto> lista = serviceHistorial.getHistorysByDoctor(doctorDto.getDrId());
+        DiaryService diario = new DiaryService();
+
+        List<DiaryDto> listadiario = diario.getDiary();
+        listadiario = listadiario.stream().filter(x -> x.getDyDate().equals(DayPicker.getValue())).toList();
+        HistoryDto filteredList;
+
+        if (listadiario.isEmpty()) {
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(DayPicker.getValue().toString(), doctorDto.getDrId()).getResultado("history");
+
+            String horaInicio = filteredList.getHtIniworking();
+            String horaFin = filteredList.getHtFinisworking();
+            String[] partesInicio = horaInicio.split(":");
+            String[] partesFin = horaFin.split(":");
+
+        } else {
+            AppointmentService prueba = new AppointmentService();
+            AppointmentDto as = (AppointmentDto) prueba.getAppointmentId(listadiario.get(0).getDySpace().getSeAppointment().getAtId()).getResultado("Appointments");
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getFechaRegistro().toString(), doctorDto.getDrId()).getResultado("history");
+
+            String horaInicio = filteredList.getHtIniworking();
+            String horaFin = filteredList.getHtFinisworking();
+            String[] partesInicio = horaInicio.split(":");
+            String[] partesFin = horaFin.split(":");
+        }
+
         int fila = 0;
         int columna = 0;
-        DiaryService diario = new DiaryService();
         List<DiaryDto> AgendaCompleta = diario.getDiary();
 
         if (AgendaCompleta != null) {
@@ -1994,13 +2005,16 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
             for (int i = 0; i < AgendaCompleta.size(); i++) {
 
-                fila = findFila(AgendaCompleta.get(i), iniHora, finHora);
-                columna = findColumna(AgendaCompleta.get(i));
+                fila = findFila(DiaryPaneModi, AgendaCompleta.get(i), iniHora, finHora);
+                columna = findColumna(DiaryPaneModi, AgendaCompleta.get(i));
 
                 Label label = new Label("Cita / " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                 CargarColor(label, AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                 label.setUserData(AgendaCompleta.get(i));
-
+                label.setAlignment(Pos.CENTER);
+                label.setMaxWidth(Double.MAX_VALUE);
+                label.setMaxHeight(Double.MAX_VALUE);
+                GridPane.setMargin(label, new Insets(5, 5, 5, 5));
                 label.setOnMouseClicked(eventClicked -> {
                     DiaryDto DiaryAux = (DiaryDto) label.getUserData();
                     ModificarCita(DiaryAux.getDySpace().getSeAppointment());
@@ -2088,5 +2102,136 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         textAreaRep_CarePlan.clear();
         textAreaRep_PhysicalExam.clear();
         textAreaRep_Treatments.clear();
+    }
+
+    public GridPane createWeekCalendarWithHeadersModi(int b, int a, int v, boolean type) {
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+
+        HistoryService serviceHistorial = new HistoryService();
+        List<HistoryDto> lista = serviceHistorial.getHistorysByDoctor(doctorDto.getDrId());
+        DiaryService diario = new DiaryService();
+
+        List<DiaryDto> listadiario = diario.getDiary();
+        listadiario = listadiario.stream().filter(x -> x.getDyDate().equals(DatePickerAppointment.getValue())).toList();
+        HistoryDto filteredList;
+
+        if (listadiario.isEmpty()) {
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(DatePickerAppointment.getValue().toString(), doctorDto.getDrId()).getResultado("history");
+            String horaInicio = filteredList.getHtIniworking();
+            String horaFin = filteredList.getHtFinisworking();
+            String[] partesInicio = horaInicio.split(":");
+            String[] partesFin = horaFin.split(":");
+            iniHora = Integer.parseInt(partesInicio[0]);
+            finHora = Integer.parseInt(partesFin[0]);
+            mint = new String[filteredList.getHtSpaces()];
+
+        } else {
+            AppointmentService prueba = new AppointmentService();
+            AppointmentDto as = (AppointmentDto) prueba.getAppointmentId(listadiario.get(0).getDySpace().getSeAppointment().getAtId()).getResultado("Appointments");
+            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(as.getFechaRegistro().toString(), doctorDto.getDrId()).getResultado("history");
+            String horaInicio = filteredList.getHtIniworking();
+            String horaFin = filteredList.getHtFinisworking();
+            String[] partesInicio = horaInicio.split(":");
+            String[] partesFin = horaFin.split(":");
+            iniHora = Integer.parseInt(partesInicio[0]);
+            finHora = Integer.parseInt(partesFin[0]);
+            mint = new String[filteredList.getHtSpaces()];
+        }
+        spacesfree = filteredList.getHtSpaces();
+        if (filteredList.getHtSpaces() == 2) {
+            mint[0] = "00";
+            mint[1] = "30";
+        } else if (filteredList.getHtSpaces() == 3) {
+            mint[0] = "00";
+            mint[1] = "20";
+            mint[2] = "40";
+        } else {
+            mint[0] = "00";
+            mint[1] = "15";
+            mint[2] = "30";
+            mint[3] = "45";
+        }
+        for (int i = 0; i < mint.length; i++) {
+            Label dayLabel = new Label(mint[i]);
+            dayLabel.setAlignment(Pos.CENTER);
+            dayLabel.setStyle("-fx-font-weight: bold; "
+                    + "-fx-background-color: #CC9900; ");
+
+            dayLabel.setMaxWidth(Double.MAX_VALUE);
+            dayLabel.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setFillWidth(dayLabel, true);
+            GridPane.setFillHeight(dayLabel, true);
+            gridPane.add(dayLabel, i + 1, 0);
+        }
+
+        Label dayLabel = new Label("Agenda");
+        dayLabel.setAlignment(Pos.CENTER);
+        dayLabel.setStyle("-fx-font-weight: bold; "
+                + "-fx-background-color: #CC9900; ");
+
+        dayLabel.setMaxWidth(Double.MAX_VALUE);
+        dayLabel.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setFillWidth(dayLabel, true);
+        GridPane.setFillHeight(dayLabel, true);
+        gridPane.add(dayLabel, 0, 0);
+
+        for (int i = iniHora; i <= finHora; i++) {
+            Label hourLabel = new Label(String.format("%02d:00", i));
+            hourLabel.setAlignment(Pos.CENTER);
+            hourLabel.setStyle("-fx-font-weight: bold; "
+                    + "-fx-background-color: #CC9900; ");
+
+            hourLabel.setMaxWidth(Double.MAX_VALUE);
+            hourLabel.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setFillWidth(hourLabel, true);
+            GridPane.setFillHeight(hourLabel, true);
+
+            gridPane.add(hourLabel, 0, i - iniHora + 1);
+        }
+
+        for (int day = 1; day <= mint.length; day++) {
+            for (int hour = iniHora; hour <= finHora; hour++) {
+                Label cellLabel = new Label();
+                cellLabel.setStyle("-fx-font-size: 10");
+
+                cellLabel.setMaxWidth(Double.MAX_VALUE);
+                cellLabel.setMaxHeight(Double.MAX_VALUE);
+                cellLabel.setAlignment(Pos.TOP_LEFT);
+                GridPane.setFillWidth(cellLabel, true);
+                GridPane.setFillHeight(cellLabel, true);
+
+                final int finalHour = hour;
+                horasTotales.add(hour);
+                cellLabel.setOnMouseClicked(event -> {
+                    try {
+                        if (type) {
+                            handleCellClick(gridPane, cellLabel, mint, finalHour);
+                        } else {
+                            handleCellClickModi(gridPane, cellLabel, mint, finalHour);
+                        }
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ViewDiariesOptionsController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
+
+                gridPane.add(cellLabel, day, hour - iniHora + 1);
+            }
+        }
+
+        for (int col = 0; col <= mint.length; col++) {
+            ColumnConstraints columnConstraints = new ColumnConstraints();
+            columnConstraints.setPercentWidth(80.0 / (mint.length + 1));
+            gridPane.getColumnConstraints().add(columnConstraints);
+        }
+
+        int totalRows = finHora - iniHora + 2;
+        for (int row = 0; row < totalRows; row++) {
+            RowConstraints rowConstraints = new RowConstraints();
+            rowConstraints.setPercentHeight(80.0 / totalRows);
+            gridPane.getRowConstraints().add(rowConstraints);
+        }
+
+        return gridPane;
     }
 }

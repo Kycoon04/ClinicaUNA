@@ -23,6 +23,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
@@ -113,6 +114,23 @@ public class ModuleHistory {
             }
             return Response.ok(new GenericEntity<List<HistoryDto>>((List< HistoryDto>) res.getResultado("historytime")) {
             }).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleDiary.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la historial").build();
+        }
+    }
+        
+    @GET
+    @Path("/historysRange/{date}/{id}")
+    public Response getHistoryByRange(@PathParam("date") String date,@PathParam("id") Integer id) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate parsedDate = LocalDate.parse(date, formatter);
+            Respuesta res = historyService.getHistoryByDate(parsedDate,id);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(res.getResultado("historytime")).build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleDiary.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la historial").build();
