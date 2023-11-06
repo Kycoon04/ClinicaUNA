@@ -52,7 +52,10 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -165,7 +168,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldPatientIdent;
     @FXML
-    private LineChart<?, ?> lineChartBodyMass;
+    private LineChart<String, Number> lineChartBodyMass;
     private boolean deleteDisease = false;
 
     List<ExamDto> patiExams = new ArrayList<ExamDto>();
@@ -281,6 +284,10 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private Button btnMoveLeft;
     @FXML
     private Button btnMoveRight;
+    @FXML
+    private NumberAxis categoryBodyMassY;
+    @FXML
+    private CategoryAxis categoryAppoinmentsX;
 
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**
@@ -337,6 +344,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         fillTableFamilyBack();
         getReports();
         nameDistMainField.setTextFormatter(Formato.getInstance().letrasFormat(10));
+        graphBodyMass();
     }
 
     private void fillTableDoctors() {
@@ -476,7 +484,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     private void bindPatient() {
         if (patientDto != null) {
-            textProcName.setText(": "+patientDto.getPtName()+" "+patientDto.getPtPlastname()+" "+patientDto.getPtSlastname());
+            textProcName.setText(": " + patientDto.getPtName() + " " + patientDto.getPtPlastname() + " " + patientDto.getPtSlastname());
             textFieldPatientIdent.setText(patientDto.getPtIdentification());
             Date fecha = patientDto.getPtBirthdate();
             LocalDate localDate = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -1171,23 +1179,26 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void getReports() {
         ReportService service = new ReportService();
         reports = service.getReportsbyProceeding(proceedingsDto.getPsId());
-        if (!indexConst) {
-            indexReports = reports.size() - 1;
+        if (reports.isEmpty()) {
             btnMoveRight.setVisible(false);
-        }
-        reportDto = reports.get(indexReports);
-        textIndexReport.setText("" + indexReports);
-        if (reports.size() == 1) {
             btnMoveLeft.setVisible(false);
-        }
+        } else {
+            if (!indexConst && reports != null) {
+                indexReports = reports.size() - 1;
+                btnMoveRight.setVisible(false);
+            }
+            reportDto = reports.get(indexReports);
+            textIndexReport.setText("" + indexReports);
+            if (reports.size() == 1) {
+                btnMoveLeft.setVisible(false);
+            }
 
-        loadCurrentReport();
+            loadCurrentReport();
+        }
 
     }
 
     ReportDto bindNewReport() {
-        //AppointmentService serviceAp=new AppointmentService();
-        //AppointmentDto appointement = serviceAp.getAppointmentId(reportDto.getRtAppointment());
         AppointmentDto appointement = reportDto.getRtAppointment();
         reportDto.setRtId(reportDto.getRtId());
         reportDto.setRtProceedings(proceedingsDto);
@@ -1232,8 +1243,9 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             } else {
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "アテンションコントロールの保存", getStage(), "保存されたアテンション コントロール");
             }
-            //cleanAttentionControl();
             indexConst = true;
+            lineChartBodyMass.getData().clear();
+            graphBodyMass();
             getReports();
 
         } else {
@@ -1315,6 +1327,62 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             loadCurrentReport();
         }
 
+    }
+
+    double calculateWeightIdeal(ReportDto report) {
+        double weight = 0;
+        /*if (patientDto.getPtGender().equals("F")) {
+            weight = report.getRtHeight() - 150 * 0.75 + 50;
+        } else {
+            weight = report.getRtHeight() - 150 * 0.6 + 50;
+        }*/
+        System.out.println("Peso" + (reportDto.getRtHeight() / 100));
+        //weight=report.getRtWeight()/((reportDto.getRtHeight()/100)*(reportDto.getRtHeight()/100));
+        weight = (report.getRtHeight() - 100) - (report.getRtHeight() - 150) / 4;
+        return weight;
+    }
+
+    double calculateBodyMassIdeal(ReportDto report) {
+        double height = 0;
+        double weight = 0;
+
+        height = report.getRtHeight();
+        weight = calculateWeightIdeal(report);
+        double IMC = weight / (height * height) * 10000;
+        double roundedIMC = Math.round(IMC * 10.0) / 10.0;
+        return roundedIMC;
+    }
+
+    void graphBodyMass() {
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>(); // Especifica el tipo de datos en la serie
+        XYChart.Series<String, Number> seriesBodyMassIdeal = new XYChart.Series<>();
+
+        for (ReportDto report : reports) {
+            LocalDate local = report.getRtDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            // Añade datos basados en las propiedades de tu objeto ReportDto
+            series.getData().add(new XYChart.Data(local.toString(), report.getRtBodyMass()));
+            seriesBodyMassIdeal.getData().add(new XYChart.Data(local.toString(), calculateBodyMassIdeal(report)));
+        }
+        String textIndex = "";
+        String textBodyMassIdeal = "";
+        if (userDto.getUsLenguage().equals("Spanish")) {
+            textIndex = "Indice Personal";
+            textBodyMassIdeal = "Indice Ideal";
+        } else if (userDto.getUsLenguage().equals("English")) {
+            textIndex = "Personal Index";
+            textBodyMassIdeal = "Ideal Index";
+        } else if (userDto.getUsLenguage().equals("French")) {
+            textIndex = "Index Personnel";
+            textBodyMassIdeal = "Indice Idéal";
+        } else {
+            textIndex = "個人的なインデックス";
+            textBodyMassIdeal = "理想的な指数";
+        }
+        series.setName(textIndex);
+        seriesBodyMassIdeal.setName(textBodyMassIdeal);
+
+        lineChartBodyMass.getData().addAll(series, seriesBodyMassIdeal);
     }
 
 }

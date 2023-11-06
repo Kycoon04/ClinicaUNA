@@ -11,6 +11,7 @@ import cr.ac.una.clinicauna.model.DiaryDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
 import cr.ac.una.clinicauna.model.HistoryDto;
 import cr.ac.una.clinicauna.model.PatientDto;
+import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.model.ReportDto;
 import cr.ac.una.clinicauna.model.SpaceDto;
 import cr.ac.una.clinicauna.model.UserDto;
@@ -19,6 +20,7 @@ import cr.ac.una.clinicauna.service.DiaryService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.HistoryService;
 import cr.ac.una.clinicauna.service.PatientService;
+import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.service.ReportService;
 import cr.ac.una.clinicauna.service.SpaceService;
 import cr.ac.una.clinicauna.util.AppContext;
@@ -1837,12 +1839,14 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     }
 
     ReportDto bindNewReport() {
-
+        ProceedingsService service = new ProceedingsService();
+        Respuesta respuesta=service.getProcedingsIdPatient(patientDto.getPtId());
+        ProceedingsDto proceeding=(ProceedingsDto) respuesta.getResultado("Proceedings");
         reportDto.setRtId(reportDto.getRtId());
         reportDto.setRtAppointment(appointmentDtoModi);
         reportDto.setRtPressure(Double.parseDouble(textFieldRep_Pressure.getText()));
         reportDto.setRtHeartRate(Double.parseDouble(textFieldRep_HeartRate.getText()));
-
+        reportDto.setRtProceedings(proceeding);
         reportDto.setRtHeight(Double.parseDouble(textFieldRep_Height.getText()));
         reportDto.setRtWeight(Double.parseDouble(textFieldRep_Weight.getText()));
         reportDto.setRtTemperature(Double.parseDouble(textFieldRep_Temperature.getText()));

@@ -719,12 +719,12 @@
                                     <TextField fx:id="textFieldPatientEmail" editable="false" layoutX="273.0" layoutY="226.0" />
                                     <TextField fx:id="textFieldPatientBirthday" editable="false" layoutX="38.0" layoutY="226.0" />
                                     <TextField fx:id="textFieldPatientIdent" editable="false" layoutX="38.0" layoutY="129.0" />
-                                    <LineChart fx:id="lineChartBodyMass" layoutX="474.0" layoutY="13.0" prefHeight="362.0" prefWidth="500.0" title="%BodyMassIndex">
+                                    <LineChart fx:id="lineChartBodyMass" layoutX="445.0" layoutY="8.0" prefHeight="372.0" prefWidth="542.0" title="%BodyMassIndex">
                                       <xAxis>
-                                        <CategoryAxis side="BOTTOM" />
+                                        <CategoryAxis fx:id="categoryAppoinmentsX" label="%Appoiments" side="BOTTOM" />
                                       </xAxis>
                                       <yAxis>
-                                        <NumberAxis side="LEFT" />
+                                        <NumberAxis fx:id="categoryBodyMassY" autoRanging="false" side="LEFT" tickLabelGap="5.0" upperBound="50.0" />
                                       </yAxis>
                                     </LineChart>
                                  </children>
