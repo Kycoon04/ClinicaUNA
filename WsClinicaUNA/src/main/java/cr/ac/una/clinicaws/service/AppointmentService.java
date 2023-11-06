@@ -16,7 +16,9 @@ import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,6 +75,28 @@ public class AppointmentService {
         }
     }
 
+    public Respuesta getAppointmentsDate(LocalDate date) {
+        try {
+            Query qryUsers = em.createNamedQuery("Appointment.findByAtDateregister", Appointment.class);
+            qryUsers.setParameter("atDateregister", date);
+            List<Appointment> appointments = (List<Appointment>) qryUsers.getResultList();
+             List<AppointmentDto> ListAppointments = new ArrayList<>();
+            for (Appointment tipo : appointments) {
+                AppointmentDto appointmentDto = new AppointmentDto(tipo);
+                ListAppointments.add(appointmentDto);
+            }
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Appointments", ListAppointments);
+        } catch (NoResultException ex) {
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existen citas.", "getCitas NoResultException");
+        } catch (NonUniqueResultException ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar las citas.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar las citas.", "getCitas NonUniqueResultException");
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el usuario.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar la citas.", "getCitas " + ex.getMessage());
+        }
+    }
+    
     public Respuesta saveAppointments(AppointmentDto appointmentDto) {
         try {
             Appointment appointment = new Appointment();

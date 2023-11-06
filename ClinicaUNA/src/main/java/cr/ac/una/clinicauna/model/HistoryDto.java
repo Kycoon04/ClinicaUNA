@@ -27,7 +27,6 @@ public class HistoryDto {
         this.htDoctor = new DoctorDto();
         this.htIniworking = new SimpleStringProperty();
         this.htFinisworking = new SimpleStringProperty();
-        htDateFinal = null;
     }
     
     public String getHtIniworking() {

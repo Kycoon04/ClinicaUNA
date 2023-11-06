@@ -752,6 +752,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                     LocalDate yesterday = today.minusDays(1);
                     ultimo.setHtDateFinal(yesterday);
                     response = serviceHistorial.saveHistory(ultimo);
+                    
                     HistoryDto actual = new HistoryDto();
                     actual.setHtDate(today);
                     actual.setHtDoctor(doctorDto);

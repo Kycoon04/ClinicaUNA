@@ -8,6 +8,7 @@ import cr.ac.una.clinicauna.model.AppointmentDto;
 import cr.ac.una.clinicauna.util.Request;
 import cr.ac.una.clinicauna.util.Respuesta;
 import jakarta.ws.rs.core.GenericType;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,24 @@ public class AppointmentService {
         try {
             Map<String, Object> parametros = new HashMap<>();
             Request request = new Request("ModuleAppointment/appointment", "", parametros);
+            request.get();
+            if (request.isError()) {
+                System.out.println(request.getError());
+                return null;
+            }
+            return (List<AppointmentDto>) request.readEntity(new GenericType<List<AppointmentDto>>() {
+            });
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return null;
+        }
+    }
+    
+    public List<AppointmentDto> getAppointmentsByDate(String date) {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("date", date);
+            Request request = new Request("ModuleAppointment/appointmentsbyDate", "/{date}", parametros);
             request.get();
             if (request.isError()) {
                 System.out.println(request.getError());

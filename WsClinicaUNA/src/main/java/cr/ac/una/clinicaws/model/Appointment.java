@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -61,7 +62,7 @@ public class Appointment implements Serializable {
     @Column(name = "AT_CODE")
     private String atCode;
     @Column(name = "AT_DATEREGISTER")
-    private Date atDateregister;
+    private LocalDate atDateregister;
     @JoinColumn(name = "AT_PATIENT", referencedColumnName = "PT_ID")
     @ManyToOne(optional = false)
     private Patient atPatient;
@@ -87,6 +88,7 @@ public class Appointment implements Serializable {
         this.atTelephone = appointmentDto.getAtTelephone();
         this.atUserregister = appointmentDto.getAtUserregister();
         this.atCode = appointmentDto.getAtCode();
+        this.atDateregister = appointmentDto.getFechaRegistro();
     }
     public Appointment(Integer atId, String atState) {
         this.atId = atId;
@@ -141,11 +143,11 @@ public class Appointment implements Serializable {
         this.atCode = atCode;
     }
 
-    public Date getAtDateregister() {
+    public LocalDate getAtDateregister() {
         return atDateregister;
     }
 
-    public void setAtDateregister(Date atDateregister) {
+    public void setAtDateregister(LocalDate atDateregister) {
         this.atDateregister = atDateregister;
     }
     public Patient getAtPatient() {

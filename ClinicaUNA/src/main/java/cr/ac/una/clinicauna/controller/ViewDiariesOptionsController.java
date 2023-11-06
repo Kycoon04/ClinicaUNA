@@ -368,6 +368,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             appointmentDto.setAtPatient(patientDto);
             appointmentDto.setAtUserregister(userDto);
             appointmentDto.setAtReason(reason.getText());
+            appointmentDto.setFechaRegistro(LocalDate.now());
             Long numLong = Long.parseLong(numberP.getText());
             appointmentDto.setAtTelephone(numLong);
             appointmentDto.setAtEmail(email.getText());
@@ -1077,9 +1078,31 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         HistoryService serviceHistorial = new HistoryService();
         List<HistoryDto> lista = serviceHistorial.getHistorysByDoctor(doctorDto.getDrId());
+        DiaryService diario = new DiaryService();
         
+        List<DiaryDto> listadiario = diario.getDiary();
+        listadiario = listadiario.stream().filter(x->x.getDyDate().equals(DayPicker.getValue())).toList();
+        HistoryDto filteredList;
+        int iniHora;
+        int finHora;
+
+        if(listadiario.isEmpty()){
         final LocalDate currentDate = DayPicker.getValue();
-        HistoryDto filteredList = lista.stream()
+        filteredList = lista.stream()
+                    .filter(x -> (currentDate.isAfter(x.getHtDate()) || currentDate.isEqual(x.getHtDate()))
+                    && (x.getHtDateFinal() == null || currentDate.isBefore(x.getHtDateFinal()) || currentDate.isEqual(x.getHtDateFinal())))
+                    .findFirst().get();
+        String horaInicio = filteredList.getHtIniworking();
+        String horaFin = filteredList.getHtFinisworking();
+        String[] partesInicio = horaInicio.split(":");
+        String[] partesFin = horaFin.split(":");
+        iniHora = Integer.parseInt(partesInicio[0]);
+        finHora = Integer.parseInt(partesFin[0]);
+        mint = new String[filteredList.getHtSpaces()];
+        
+        }else{
+        final LocalDate currentDate = listadiario.get(0).getDySpace().getSeAppointment().getFechaRegistro();
+        filteredList = lista.stream()
                     .filter(x -> (currentDate.isAfter(x.getHtDate()) || currentDate.isEqual(x.getHtDate()))
                     && (x.getHtDateFinal() == null || currentDate.isBefore(x.getHtDateFinal()) || currentDate.isEqual(x.getHtDateFinal())))
                     .findFirst()
@@ -1091,12 +1114,11 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         String horaFin = filteredList.getHtFinisworking();
         String[] partesInicio = horaInicio.split(":");
         String[] partesFin = horaFin.split(":");
-
-        int iniHora = Integer.parseInt(partesInicio[0]);
-        int finHora = Integer.parseInt(partesFin[0]);
-        
+        iniHora = Integer.parseInt(partesInicio[0]);
+        finHora = Integer.parseInt(partesFin[0]);
         mint = new String[filteredList.getHtSpaces()];
-
+        }
+        
         if (filteredList.getHtSpaces() == 2) {
             mint[0] = "00";
             mint[1] = "30";

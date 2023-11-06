@@ -21,6 +21,13 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,6 +66,24 @@ public class ModuleAppointment {
     public Response getAppointmentsbyPatient(@PathParam("id") Integer id) {
         try {
             Respuesta res = appointmentService.getAppointmentsPatient(id);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(new GenericEntity<List<AppointmentDto>>((List< AppointmentDto>) res.getResultado("Appointments")) {
+            }).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la cita").build();
+        }
+    }
+
+    @GET
+    @Path("/appointmentsbyDate/{date}")
+    public Response getAppointmentsbyDate(@PathParam("date") String date) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate parsedDate = LocalDate.parse(date, formatter);
+            Respuesta res = appointmentService.getAppointmentsDate(parsedDate);
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }

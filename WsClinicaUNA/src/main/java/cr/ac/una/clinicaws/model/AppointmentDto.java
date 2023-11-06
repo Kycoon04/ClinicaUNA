@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicaws.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -21,7 +22,7 @@ public class AppointmentDto {
     private Patient atPatient;
     private Users atUserregister;
     private String atCode;
-    private Date FechaRegistro;
+    private LocalDate FechaRegistro;
     
     public AppointmentDto(Appointment appointment) {
         this.atId = appointment.getAtId();
@@ -35,11 +36,11 @@ public class AppointmentDto {
         this.FechaRegistro = appointment.getAtDateregister();
     }
 
-    public Date getFechaRegistro() {
+    public LocalDate getFechaRegistro() {
         return FechaRegistro;
     }
 
-    public void setFechaRegistro(Date FechaRegistro) {
+    public void setFechaRegistro(LocalDate FechaRegistro) {
         this.FechaRegistro = FechaRegistro;
     }
 
