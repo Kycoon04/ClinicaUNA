@@ -525,12 +525,12 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Text id="Text" fill="#000359" layoutX="339.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Nombre" textAlignment="RIGHT" wrappingWidth="322.73670768737793" GridPane.rowIndex="1">
+                              <Text id="Text" fill="#000359" layoutX="339.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%PatientName" textAlignment="RIGHT" wrappingWidth="322.73670768737793" GridPane.rowIndex="2">
                                  <font>
                                     <Font name="Tw Cen MT" size="24.0" />
                                  </font>
                               </Text>
-                              <Text id="Text" fx:id="textProcName" fill="#000359" layoutX="10.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="646.7366466522217" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <Text id="Text" fx:id="textProcName" fill="#000359" layoutX="10.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="646.7366466522217" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                  <font>
                                     <Font name="Tw Cen MT" size="24.0" />
                                  </font>
@@ -963,7 +963,7 @@
                                                             <Font name="Tw Cen MT" size="28.0" />
                                                          </font>
                                                       </Text>
-                                                      <JFXDatePicker fx:id="datePickerConsultDate1" defaultColor="#000033" editable="false" prefHeight="28.0" prefWidth="154.0" />
+                                                      <JFXDatePicker fx:id="datePickerConsultDateA" defaultColor="#000033" editable="false" prefHeight="28.0" prefWidth="154.0" />
                                                    </children>
                                                 </HBox>
                                                 <HBox prefHeight="46.0" prefWidth="218.0">
@@ -973,14 +973,14 @@
                                                             <Font name="Tw Cen MT" size="28.0" />
                                                          </font>
                                                       </Text>
-                                                      <JFXTimePicker fx:id="timePickerConsultTime1" defaultColor="#000033" prefHeight="28.0" prefWidth="150.0" />
+                                                      <JFXTimePicker fx:id="timePickerConsultTimeA" defaultColor="#000033" prefHeight="28.0" prefWidth="150.0" />
                                                    </children>
                                                 </HBox>
                                                 <Separator prefHeight="163.0" prefWidth="226.0" visible="false" />
                                                 <HBox prefHeight="86.0" prefWidth="241.0">
                                                    <children>
                                                       <Separator orientation="VERTICAL" prefHeight="97.0" prefWidth="38.0" visible="false" />
-                                                      <Button mnemonicParsing="false" onMouseClicked="#moveLeft_AttControl" prefHeight="97.0" prefWidth="114.0" style="-fx-background-color: transparent;">
+                                                      <Button fx:id="btnMoveLeft" mnemonicParsing="false" onMouseClicked="#moveLeft_AttControl" prefHeight="97.0" prefWidth="114.0" style="-fx-background-color: transparent;">
                                                          <graphic>
                                                             <ImageView fitHeight="85.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                                                <image>
@@ -1008,7 +1008,7 @@
                                                             <Separator layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="564.0" visible="false" />
                                                             <VBox prefHeight="134.0" prefWidth="426.0">
                                                                <children>
-                                                                  <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%NotasEnfermeria" wrappingWidth="185.93665885925293">
+                                                                  <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%NotasEnfermeria" wrappingWidth="246.73666191101074">
                                                                      <font>
                                                                         <Font name="Tw Cen MT" size="28.0" />
                                                                      </font>
@@ -1019,7 +1019,7 @@
                                                             <Separator layoutX="10.0" layoutY="10.0" prefHeight="14.0" prefWidth="443.0" visible="false" />
                                                             <VBox>
                                                                <children>
-                                                                  <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Observaciones" wrappingWidth="185.93665885925293">
+                                                                  <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%Observaciones" wrappingWidth="244.3366985321045">
                                                                      <font>
                                                                         <Font name="Tw Cen MT" size="28.0" />
                                                                      </font>
@@ -1036,7 +1036,7 @@
                                                             <Separator layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="564.0" visible="false" />
                                                             <VBox prefHeight="134.0" prefWidth="342.0">
                                                                <children>
-                                                                  <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%RazonConsulta" wrappingWidth="185.93665885925293">
+                                                                  <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%RazonConsulta" wrappingWidth="239.53675651550293">
                                                                      <font>
                                                                         <Font name="Tw Cen MT" size="28.0" />
                                                                      </font>
@@ -1047,7 +1047,7 @@
                                                             <Separator layoutX="10.0" layoutY="332.0" prefHeight="13.0" prefWidth="443.0" visible="false" />
                                                             <VBox layoutX="10.0" layoutY="246.0">
                                                                <children>
-                                                                  <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%PlanAtencion" wrappingWidth="185.93665885925293">
+                                                                  <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-size: 20;" text="%PlanAtencion" wrappingWidth="244.33668327331543">
                                                                      <font>
                                                                         <Font name="Tw Cen MT" size="28.0" />
                                                                      </font>
@@ -1071,7 +1071,7 @@
                                           <VBox prefHeight="411.0" prefWidth="218.0">
                                              <children>
                                                 <Separator prefHeight="15.0" prefWidth="201.0" visible="false" />
-                                                <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="3" textAlignment="CENTER" wrappingWidth="200.73666954040527">
+                                                <Text fx:id="textIndexReport" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="200.73666954040527">
                                                    <font>
                                                       <Font name="Tw Cen MT" size="21.0" />
                                                    </font>
@@ -1080,7 +1080,7 @@
                                                 <HBox prefHeight="86.0" prefWidth="241.0">
                                                    <children>
                                                       <Separator orientation="VERTICAL" prefHeight="97.0" prefWidth="87.0" visible="false" />
-                                                      <Button mnemonicParsing="false" onMouseClicked="#moveRight_AttControl" prefHeight="97.0" prefWidth="114.0" style="-fx-background-color: transparent;">
+                                                      <Button fx:id="btnMoveRight" mnemonicParsing="false" onMouseClicked="#moveRight_AttControl" prefHeight="97.0" prefWidth="114.0" style="-fx-background-color: transparent;">
                                                          <graphic>
                                                             <ImageView fitHeight="85.0" fitWidth="144.0" pickOnBounds="true" preserveRatio="true">
                                                                <image>

@@ -18,6 +18,7 @@ import cr.ac.una.clinicauna.model.PersonalbackgroundDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.model.ReportDto;
 import cr.ac.una.clinicauna.model.UserDto;
+import cr.ac.una.clinicauna.service.AppointmentService;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.ExamService;
@@ -35,8 +36,10 @@ import cr.ac.una.clinicauna.util.Respuesta;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -257,10 +260,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private TextArea textAreaRep_Treatments;
     @FXML
-    private JFXDatePicker datePickerConsultDate1;
-    @FXML
-    private JFXTimePicker timePickerConsultTime1;
-    @FXML
     private TextArea textAreaRepA_NotesNursing;
     @FXML
     private TextArea textAreaRepA_Notes;
@@ -268,9 +267,20 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private TextArea textAreaRepA_Reason;
     @FXML
     private TextArea textAreaRepA_CarePlan;
-    
-    ReportDto reportDto=new ReportDto();
-    List<ReportDto> reports=new ArrayList<>();
+
+    ReportDto reportDto = new ReportDto();
+    List<ReportDto> reports = new ArrayList<>();
+    int indexReports = 0;
+    @FXML
+    private JFXDatePicker datePickerConsultDateA;
+    @FXML
+    private JFXTimePicker timePickerConsultTimeA;
+    @FXML
+    private Text textIndexReport;
+    @FXML
+    private Button btnMoveLeft;
+    @FXML
+    private Button btnMoveRight;
 
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**
@@ -466,7 +476,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     private void bindPatient() {
         if (patientDto != null) {
-            textProcName.setText(patientDto.getPtName());
+            textProcName.setText(": "+patientDto.getPtName()+" "+patientDto.getPtPlastname()+" "+patientDto.getPtSlastname());
             textFieldPatientIdent.setText(patientDto.getPtIdentification());
             Date fecha = patientDto.getPtBirthdate();
             LocalDate localDate = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -992,7 +1002,6 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         OptionsMainDesease.toFront();
     }
 
-
     private void loadAppoinmentList() {
         reportList.clear();
     }
@@ -1131,17 +1140,58 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void selectDoctor(MouseEvent event) {
         searchSelectDoctor.toFront();
     }
-    
-    private void getReports(){
-        ReportService service = new ReportService();
-        List<ReportDto> reports = service.getReportsbyProceeding(proceedingsDto.getPsId());
-        System.out.println(""+reports.get(0).getRtPressure());
-        
-    }
-    ReportDto bindNewReport() {
 
+    private void loadCurrentReport() {
+
+        textFieldRep_Pressure.setText(String.valueOf(reportDto.getRtPressure()));
+        textFieldRep_HeartRate.setText(String.valueOf(reportDto.getRtHeartRate()));
+        textFieldRep_Height.setText(String.valueOf(reportDto.getRtHeight()));
+        textFieldRep_Weight.setText(String.valueOf(reportDto.getRtWeight()));
+        textFieldRep_Temperature.setText(String.valueOf(reportDto.getRtTemperature()));
+        textFieldRep_BodyMass.setText(String.valueOf(reportDto.getRtBodyMass()));
+        textAreaRep_Reason.setText(reportDto.getRtDoctorReason());
+        textAreaRep_NotesNursing.setText(reportDto.getRtNotesNursing());
+        textAreaRep_CarePlan.setText(reportDto.getRtCarePlan());
+        textAreaRep_PhysicalExam.setText(reportDto.getRtFisicExamen());
+        textAreaRep_Treatments.setText(reportDto.getRtTreatmentExamen());
+        textAreaRep_Notes.setText(reportDto.getRtObservations());
+        datePickerConsultDate.setValue(reportDto.getRtDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        datePickerConsultDateA.setValue(reportDto.getRtDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        Instant instant = reportDto.getRtDate().toInstant();
+        LocalTime localTime = instant.atZone(ZoneId.systemDefault()).toLocalTime();
+        timePickerConsultTime.setValue(localTime);
+        timePickerConsultTimeA.setValue(localTime);
+        textAreaRepA_NotesNursing.setText(reportDto.getRtNotesNursing());
+        textAreaRepA_Notes.setText(reportDto.getRtObservations());
+        textAreaRepA_Reason.setText(reportDto.getRtDoctorReason());
+        textAreaRepA_CarePlan.setText(reportDto.getRtCarePlan());
+    }
+    boolean indexConst = false;
+
+    private void getReports() {
+        ReportService service = new ReportService();
+        reports = service.getReportsbyProceeding(proceedingsDto.getPsId());
+        if (!indexConst) {
+            indexReports = reports.size() - 1;
+            btnMoveRight.setVisible(false);
+        }
+        reportDto = reports.get(indexReports);
+        textIndexReport.setText("" + indexReports);
+        if (reports.size() == 1) {
+            btnMoveLeft.setVisible(false);
+        }
+
+        loadCurrentReport();
+
+    }
+
+    ReportDto bindNewReport() {
+        //AppointmentService serviceAp=new AppointmentService();
+        //AppointmentDto appointement = serviceAp.getAppointmentId(reportDto.getRtAppointment());
+        AppointmentDto appointement = reportDto.getRtAppointment();
         reportDto.setRtId(reportDto.getRtId());
         reportDto.setRtProceedings(proceedingsDto);
+        reportDto.setRtAppointment(appointement);
         reportDto.setRtPressure(Double.parseDouble(textFieldRep_Pressure.getText()));
         reportDto.setRtHeartRate(Double.parseDouble(textFieldRep_HeartRate.getText()));
         reportDto.setRtHeight(Double.parseDouble(textFieldRep_Height.getText()));
@@ -1165,7 +1215,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void updateReportAp(ActionEvent event) {
-         ReportService service = new ReportService();
+        ReportService service = new ReportService();
         Respuesta response = null;
 
         if (reportDto != null) {
@@ -1183,6 +1233,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "アテンションコントロールの保存", getStage(), "保存されたアテンション コントロール");
             }
             //cleanAttentionControl();
+            indexConst = true;
+            getReports();
 
         } else {
             if (userDto.getUsLenguage().equals("Spanish")) {
@@ -1196,12 +1248,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
             }
         }
 
-
     }
 
     @FXML
     private void searchRelaDisease(KeyEvent event) {
-      FilteredList<FamilybackgroundDto> filteredFam = new FilteredList<>(familyBackObservableList, f -> true);
+        FilteredList<FamilybackgroundDto> filteredFam = new FilteredList<>(familyBackObservableList, f -> true);
         textFieldSearchFamBg_Disease.textProperty().addListener((observable, value, newValue) -> {
             filteredFam.setPredicate(FamilybackgroundDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -1226,11 +1277,44 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     @FXML
     private void moveRight_AttControl(MouseEvent event) {
+        int indice = indexReports;
+        indice = indice + 1;
+        if (indice >= reports.size() - 1) {
+            btnMoveRight.setVisible(false);
+            btnMoveLeft.setVisible(true);
+        }
+        if (indice <= reports.size() - 1) {
+            btnMoveLeft.setVisible(true);
+            indexReports += 1;
+            reportDto = new ReportDto();
+            reportDto = reports.get(indexReports);
+            textIndexReport.setText("" + indexReports);
+            loadCurrentReport();
+        }
     }
 
     @FXML
     private void moveLeft_AttControl(MouseEvent event) {
-    }
+        int indice = indexReports;
+        indice = indice - 1;
+        if (indice <= 0) {
+            btnMoveLeft.setVisible(false);
+            btnMoveRight.setVisible(true);
+        }
+        if (indice >= 0) {
+            btnMoveRight.setVisible(true);
+            indexReports = indexReports - 1;
+            System.out.println("Indice" + indexReports);
+            reportDto = new ReportDto();
+            if (indexReports == 0) {
+                reportDto = reports.get(0);
+            } else {
+                reportDto = reports.get(indexReports);
+            }
+            textIndexReport.setText("" + indexReports);
+            loadCurrentReport();
+        }
 
+    }
 
 }
