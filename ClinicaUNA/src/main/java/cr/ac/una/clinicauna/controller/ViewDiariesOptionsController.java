@@ -1088,17 +1088,30 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         List<DiaryDto> listadiario = diario.getDiary();
         listadiario = listadiario.stream().filter(x -> x.getDyDate().equals(DayPicker.getValue())).toList();
-        HistoryDto filteredList;
+        HistoryDto filteredList = new HistoryDto();
 
         if (listadiario.isEmpty()) {
-            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(DayPicker.getValue().toString(), doctorDto.getDrId()).getResultado("history");
-            String horaInicio = filteredList.getHtIniworking();
-            String horaFin = filteredList.getHtFinisworking();
-            String[] partesInicio = horaInicio.split(":");
-            String[] partesFin = horaFin.split(":");
-            iniHora = Integer.parseInt(partesInicio[0]);
-            finHora = Integer.parseInt(partesFin[0]);
-            mint = new String[filteredList.getHtSpaces()];
+            Respuesta respuesta = serviceHistorial.getHistorysByDate(DayPicker.getValue().toString(), doctorDto.getDrId());
+            if (respuesta != null) {
+                filteredList = (HistoryDto) respuesta.getResultado("history");
+                String horaInicio = filteredList.getHtIniworking();
+                String horaFin = filteredList.getHtFinisworking();
+                String[] partesInicio = horaInicio.split(":");
+                String[] partesFin = horaFin.split(":");
+                iniHora = Integer.parseInt(partesInicio[0]);
+                finHora = Integer.parseInt(partesFin[0]);
+                mint = new String[filteredList.getHtSpaces()];
+            } else {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "La fecha es invalida, el doctor no se encontraba trabajando para la clinica");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "The date is invalid, the doctor was not working for the clinic at that time.");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "La date est invalide, le docteur ne travaillait pas pour la clinique à ce moment-là.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダー", getStage(), "その日付は無効です、その時医者はクリニックで働いていませんでした。");
+                }
+            }
 
         } else {
             AppointmentService prueba = new AppointmentService();
@@ -1621,6 +1634,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             reportDto = (ReportDto) res.getResultado("Report");
             if (reportDto != null) {
                 loadReport(reportDto);
+            } else {
+                reportDto = new ReportDto();
             }
 
             switch (appointmentDtoModi.getAtState()) {
@@ -1685,6 +1700,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private void backAppointment(ActionEvent event) {
         cleanUpAppointment(event);
+        cleanAttentionControl();
         modificarCita = false;
         nameP.setDisable(false);
         userLog.setDisable(false);
@@ -1840,8 +1856,18 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     ReportDto bindNewReport() {
         ProceedingsService service = new ProceedingsService();
-        Respuesta respuesta=service.getProcedingsIdPatient(patientDto.getPtId());
-        ProceedingsDto proceeding=(ProceedingsDto) respuesta.getResultado("Proceedings");
+        Respuesta respuesta = service.getProcedingsIdPatient(patientDto.getPtId());
+        ProceedingsDto proceeding = new ProceedingsDto();
+        Respuesta hasProc = new Respuesta();
+        if (!respuesta.getEstado()) {
+            proceeding.setPsId(0);
+            proceeding.setPsPatient(patientDto);
+            service.saveProcedings(proceeding);
+            respuesta = service.getProcedingsIdPatient(patientDto.getPtId());
+
+        }
+        proceeding = new ProceedingsDto();
+        proceeding = (ProceedingsDto) respuesta.getResultado("Proceedings");
         reportDto.setRtId(reportDto.getRtId());
         reportDto.setRtAppointment(appointmentDtoModi);
         reportDto.setRtPressure(Double.parseDouble(textFieldRep_Pressure.getText()));
@@ -1857,11 +1883,15 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         reportDto.setRtFisicExamen(textAreaRep_PhysicalExam.getText());
         reportDto.setRtTreatmentExamen(textAreaRep_Treatments.getText());
         reportDto.setRtObservations(textAreaRep_Notes.getText());
-        LocalDate localDate = datePickerConsultDate.getValue();
-        //Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        LocalDateTime localDateTime = LocalDateTime.of(localDate, timePickerConsultTime.getValue());
-        Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-        reportDto.setRtDate(date);
+        if (datePickerConsultDate.getValue() != null&&timePickerConsultTime.getValue()!=null) {
+            LocalDate localDate = datePickerConsultDate.getValue();
+            //Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            LocalDateTime localDateTime = LocalDateTime.of(localDate, timePickerConsultTime.getValue());
+            Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            reportDto.setRtDate(date);
+        } else {
+            reportDto.setRtDate(null);
+        }
 
         return reportDto;
     }
@@ -1869,34 +1899,47 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private void updateReportAp(ActionEvent event) {
 
-        ReportService service = new ReportService();
-        Respuesta response = null;
+        if (textFieldRep_Pressure.getText().isEmpty() || textFieldRep_HeartRate.getText().isEmpty() || textFieldRep_Height.getText().isEmpty() || textFieldRep_Height.getText().isEmpty() || textFieldRep_Weight.getText().isEmpty() || textFieldRep_Temperature.getText().isEmpty() || textFieldRep_BodyMass.getText().isEmpty()) {
+               if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Te quedan espacios de completar");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Attention Control", getStage(), "You have spaces left to complete");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer le contrôle de l'attention", getStage(), "Il vous reste des places à compléter");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "アテンションコントロールの保存", getStage(), "完了するスペースが残っています");
+                }
+            
+        }else{
+            ReportService service = new ReportService();
+            Respuesta response = null;
 
-        if (reportDto != null) {
-            response = service.saveReport(bindNewReport());
-            reportDto = new ReportDto();
-        }
-        if (response.getEstado()) {
-            if (usrIdiom.getUsLenguage().equals("Spanish")) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Control de Atención guardada");
-            } else if (usrIdiom.getUsLenguage().equals("English")) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Attention Control", getStage(), "Saved Attention Control");
-            } else if (usrIdiom.getUsLenguage().equals("French")) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer le contrôle de l'attention", getStage(), "Contrôle d'attention enregistré");
-            } else {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "アテンションコントロールの保存", getStage(), "保存されたアテンション コントロール");
+            if (reportDto != null) {
+                response = service.saveReport(bindNewReport());
+                reportDto = new ReportDto();
             }
-            //cleanAttentionControl();
+            if (response.getEstado()) {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Control de Atención guardada");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Attention Control", getStage(), "Saved Attention Control");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer le contrôle de l'attention", getStage(), "Contrôle d'attention enregistré");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "アテンションコントロールの保存", getStage(), "保存されたアテンション コントロール");
+                }
+                //cleanAttentionControl();
 
-        } else {
-            if (usrIdiom.getUsLenguage().equals("Spanish")) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Error al guardar el Control de Atención");
-            } else if (usrIdiom.getUsLenguage().equals("English")) {
-                new Mensaje().showModal(Alert.AlertType.ERROR, "Save Attention Control", getStage(), "Error saving Attention Control");
-            } else if (usrIdiom.getUsLenguage().equals("French")) {
-                new Mensaje().showModal(Alert.AlertType.ERROR, "Enregistrer le contrôle de l'attention", getStage(), "Erreur lors de l'enregistrement du contrôle d'attention");
             } else {
-                new Mensaje().showModal(Alert.AlertType.ERROR, "アテンションコントロールの保存", getStage(), "アテンション コントロールの保存中にエラーが発生しました");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Control de Atención", getStage(), "Error al guardar el Control de Atención");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Save Attention Control", getStage(), "Error saving Attention Control");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Enregistrer le contrôle de l'attention", getStage(), "Erreur lors de l'enregistrement du contrôle d'attention");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "アテンションコントロールの保存", getStage(), "アテンション コントロールの保存中にエラーが発生しました");
+                }
             }
         }
 
@@ -2120,18 +2163,30 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         List<DiaryDto> listadiario = diario.getDiary();
         listadiario = listadiario.stream().filter(x -> x.getDyDate().equals(DatePickerAppointment.getValue())).toList();
-        HistoryDto filteredList;
+        HistoryDto filteredList = new HistoryDto();
 
         if (listadiario.isEmpty()) {
-            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(DatePickerAppointment.getValue().toString(), doctorDto.getDrId()).getResultado("history");
-            String horaInicio = filteredList.getHtIniworking();
-            String horaFin = filteredList.getHtFinisworking();
-            String[] partesInicio = horaInicio.split(":");
-            String[] partesFin = horaFin.split(":");
-            iniHora = Integer.parseInt(partesInicio[0]);
-            finHora = Integer.parseInt(partesFin[0]);
-            mint = new String[filteredList.getHtSpaces()];
-
+            Respuesta respuesta = serviceHistorial.getHistorysByDate(DayPicker.getValue().toString(), doctorDto.getDrId());
+            if (respuesta != null) {
+                filteredList = (HistoryDto) respuesta.getResultado("history");
+                String horaInicio = filteredList.getHtIniworking();
+                String horaFin = filteredList.getHtFinisworking();
+                String[] partesInicio = horaInicio.split(":");
+                String[] partesFin = horaFin.split(":");
+                iniHora = Integer.parseInt(partesInicio[0]);
+                finHora = Integer.parseInt(partesFin[0]);
+                mint = new String[filteredList.getHtSpaces()];
+            } else {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Aviso", getStage(), "La fecha es invalida, el doctor no se encontraba trabajando para la clinica");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Warning", getStage(), "The date is invalid, the doctor was not working for the clinic at that time.");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Avertissement", getStage(), "La date est invalide, le docteur ne travaillait pas pour la clinique à ce moment-là.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダー", getStage(), "その日付は無効です、その時医者はクリニックで働いていませんでした。");
+                }
+            }
         } else {
             AppointmentService prueba = new AppointmentService();
             AppointmentDto as = (AppointmentDto) prueba.getAppointmentId(listadiario.get(0).getDySpace().getSeAppointment().getAtId()).getResultado("Appointments");

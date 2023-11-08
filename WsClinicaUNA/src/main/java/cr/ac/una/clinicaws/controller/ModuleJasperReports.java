@@ -240,18 +240,18 @@ public class ModuleJasperReports {
             cantidadSinAgendar = 0;
         }
 
-        byte[] pdfContent = exportToPdfAppointment(resultado, Histograma);
+        byte[] pdfContent = exportToPdfAppointment(resultado, Histograma,lista.get(0).getDyDoctor().getDrUser().getUsName());
         String contentDisposition = "attachment; filename=\"Reporte del doctor " + lista.get(0).getDyDoctor().getDrUser().getUsName() + ".pdf\"";
         return Response.ok(pdfContent)
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
                 .build();
     }
 
-    public byte[] exportToPdfAppointment(List<ReportVacio> list, List<ReportHistograma> listHistograma) throws JRException, FileNotFoundException {
-        return JasperExportManager.exportReportToPdf(getReportAppointment(list, listHistograma));
+    public byte[] exportToPdfAppointment(List<ReportVacio> list, List<ReportHistograma> listHistograma,String name) throws JRException, FileNotFoundException {
+        return JasperExportManager.exportReportToPdf(getReportAppointment(list, listHistograma,name));
     }
 
-    private JasperPrint getReportAppointment(List<ReportVacio> list, List<ReportHistograma> listHistograma) throws FileNotFoundException, JRException {
+    private JasperPrint getReportAppointment(List<ReportVacio> list, List<ReportHistograma> listHistograma,String name) throws FileNotFoundException, JRException {
         JRBeanArrayDataSource ds = new JRBeanArrayDataSource(list.toArray());
         JRBeanArrayDataSource dsHistograma = new JRBeanArrayDataSource(listHistograma.toArray());
         Map<String, Object> params = new HashMap<String, Object>();
@@ -259,6 +259,7 @@ public class ModuleJasperReports {
         InputStream ImageBackground = context.getResourceAsStream("/LogoMedicalClinic.png");
         params.put("dsTable", ds);
         params.put("ds", dsHistograma);
+        params.put("Doctor", name);
         params.put("LogoClinic", LogoClinic);
         params.put("Imagebackgroud", ImageBackground);
         InputStream reportStream = context.getResourceAsStream("/ReportAppointment.jrxml");

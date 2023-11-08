@@ -838,7 +838,7 @@
                                           <TextField fx:id="numberP" layoutX="41.0" layoutY="215.0" />
                                           <TextField fx:id="email" layoutX="242.0" layoutY="310.0" />
                                           <TextField fx:id="userLog" layoutX="244.0" layoutY="131.0" />
-                                          <TextField fx:id="nameP" editable="false" layoutX="38.0" layoutY="129.0" onMouseClicked="#selectPatient" text="%Seleccionar" />
+                                          <TextField fx:id="nameP" editable="false" layoutX="38.0" layoutY="129.0" onMouseClicked="#selectPatient" promptText="%Seleccionar" />
                                           <TextField fx:id="code" layoutX="244.0" layoutY="220.0" />
                                           <Text id="Text" fill="#000359" layoutX="241.0" layoutY="214.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%CodeDetails" wrappingWidth="190.92812204360962">
                                              <font>

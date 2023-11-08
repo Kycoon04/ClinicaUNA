@@ -24,6 +24,7 @@ import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.ExamService;
 import cr.ac.una.clinicauna.service.FProceedingsService;
 import cr.ac.una.clinicauna.service.FamilybackgroundService;
+import cr.ac.una.clinicauna.service.JasperReportService;
 import cr.ac.una.clinicauna.service.PProceedingsService;
 import cr.ac.una.clinicauna.service.PersonalbackgroundService;
 import cr.ac.una.clinicauna.service.ProceedingsService;
@@ -33,6 +34,7 @@ import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
+import java.io.FileNotFoundException;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -1383,6 +1385,36 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         seriesBodyMassIdeal.setName(textBodyMassIdeal);
 
         lineChartBodyMass.getData().addAll(series, seriesBodyMassIdeal);
+    }
+
+    @FXML
+    private void sendReportPatient(MouseEvent event) throws FileNotFoundException {
+        JasperReportService serviceJasper = new JasperReportService();
+        
+        //Respuesta respuesta = serviceJasper.getDiaryDoctor(287, "2023-11-25", "2023-11-30");
+        //respuesta = serviceJasper.getNotDiaryDoctor(287, "2023-11-25", "2023-11-30");
+        Respuesta respuesta = serviceJasper.getProceedings(patientDto.getPtId());
+        if(respuesta.getEstado()){
+           if (userDto.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reporte de Expediente", getStage(), "Reporte de Expediente generado.");
+                } else if (userDto.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "File Report", getStage(), "File report generated.");
+                } else if (userDto.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapport de fichier", getStage(), "Rapport de fichier généré.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "ファイルレポート", getStage(), "生成されたファイルレポート");
+                }
+        }else{
+             if (userDto.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Reporte de Expediente", getStage(), "Error al generar el reporte.");
+                } else if (userDto.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "File Report", getStage(), "Error generating the report.");
+                } else if (userDto.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Rapport de fichier", getStage(), "Erreur lors de la génération du rapport.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "ファイルレポート", getStage(), "レポート生成エラー.");
+                }
+        }
     }
 
 }

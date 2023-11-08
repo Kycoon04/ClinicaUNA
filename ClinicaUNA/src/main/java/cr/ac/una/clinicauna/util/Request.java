@@ -42,7 +42,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;*/
-
 /**
  *
  * @author ccarranza
@@ -97,6 +96,14 @@ public class Request {
     public void setHeader(MultivaluedMap<String, Object> valores) {
         valores.add("Content-Type", "application/json; charset=UTF-8");
         builder.headers(valores);
+    }
+
+    public byte[] getPdfContent() {
+        if (response != null && response.getStatus() == 200) {
+            byte[] pdfContent = response.readEntity(byte[].class);
+            return pdfContent;
+        }
+        return null;
     }
 
     public void get() {

@@ -36,7 +36,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Historytime.findByHtFinisworking", query = "SELECT h FROM Historytime h WHERE h.htFinisworking = :htFinisworking"),
     @NamedQuery(name = "Historytime.findByDoctorId", query = "SELECT h FROM Historytime h WHERE h.htDoctor.drId = :DoctorId"),
     @NamedQuery(name = "Historytime.findByDateInRange",
-    query = "SELECT h FROM Historytime h WHERE :date > h.htDate AND (h.htDateFinal IS NULL OR :date <= h.htDateFinal) AND h.htDoctor.drId = :DoctorId"),
+    query = "SELECT h FROM Historytime h WHERE :date >= h.htDate AND (h.htDateFinal IS NULL OR :date <= h.htDateFinal) AND h.htDoctor.drId = :DoctorId"),
     @NamedQuery(name = "Historytime.findByHtDateFinal", query = "SELECT h FROM Historytime h WHERE h.htDateFinal = :htDateFinal")})
 public class Historytime implements Serializable {
 

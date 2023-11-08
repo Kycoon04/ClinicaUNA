@@ -11,6 +11,7 @@ import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.HistoryService;
+import cr.ac.una.clinicauna.service.JasperReportService;
 import cr.ac.una.clinicauna.service.PatientService;
 import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.service.UserService;
@@ -19,6 +20,7 @@ import cr.ac.una.clinicauna.util.FlowController;
 import cr.ac.una.clinicauna.util.Formato;
 import cr.ac.una.clinicauna.util.Mensaje;
 import cr.ac.una.clinicauna.util.Respuesta;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -183,7 +185,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private BorderPane MenuView;
 
     UserDto userDto;
-    DoctorDto doctorDto = new DoctorDto();
+    DoctorDto doctorDto;
     PatientDto patientDto = new PatientDto();
     DiseaseDto diseaseDto = new DiseaseDto();
 
@@ -283,6 +285,16 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     ProceedingsDto proceedingsDto = new ProceedingsDto();
     @FXML
     private TextField telephonePatMainField;
+    @FXML
+    private BorderPane OptionsReportsView;
+    @FXML
+    private JFXDatePicker datePickerInitialReport;
+    @FXML
+    private JFXDatePicker datePickerFinalReport;
+    @FXML
+    private TextField textReportNameDoctor;
+    @FXML
+    private TextField textReportIDDoctor;
 
     /**
      * Initializes the controller class.
@@ -290,6 +302,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         formater();
+        MenuView.toFront();
         OptionsMenuView.toFront();
         UserDto us = new UserDto();
         us = (UserDto) AppContext.getInstance().get("Usuario");
@@ -461,6 +474,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
         } else {
             userDoctor = true;
+            doctorDto=new DoctorDto();
             if (usrIdiom.getUsLenguage().equals("Spanish")) {
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Debes completar la siguiente información");
             } else if (usrIdiom.getUsLenguage().equals("English")) {
@@ -719,21 +733,18 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             UserService service = new UserService();
             service.saveUser(bindNewUser());
             DoctorService serviceD = new DoctorService();
-            
-            
+
             response = serviceD.saveDoctor(bindNewDoctor());
             doctorDto = (DoctorDto) serviceD.getDoctorUser(userDto.getUsId()).getResultado("Doctor");
             HistoryDto actual = new HistoryDto();
-                    actual.setHtDate(LocalDate.now());
-                    actual.setHtDoctor(doctorDto);
-                    actual.setHtIniworking(doctorDto.getDrIniworking());
-                    actual.setHtFinisworking(doctorDto.getDrFinisworking());
-                    actual.setHtSpaces(doctorDto.drSpaces);
-                    actual.setHtId(0);
-                    response = serviceHistorial.saveHistory(actual);
-                    
-                    
-                    
+            actual.setHtDate(LocalDate.now());
+            actual.setHtDoctor(doctorDto);
+            actual.setHtIniworking(doctorDto.getDrIniworking());
+            actual.setHtFinisworking(doctorDto.getDrFinisworking());
+            actual.setHtSpaces(doctorDto.drSpaces);
+            actual.setHtId(0);
+            response = serviceHistorial.saveHistory(actual);
+
             fillTableUsers();
             fillTableDoctors();
             userDoctor = false;
@@ -751,7 +762,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                     LocalDate today = LocalDate.now();
                     ultimo.setHtDateFinal(today);
                     response = serviceHistorial.saveHistory(ultimo);
-                    
+
                     HistoryDto actual = new HistoryDto();
                     actual.setHtDate(today);
                     actual.setHtDoctor(doctorDto);
@@ -954,6 +965,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 }
             }
         } else if (event.getClickCount() == 2) {
+            doctorDto = new DoctorDto();
             doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
             respaldo = doctorDto.getDrSpaces();
             respaldoFechaInit = doctorDto.getDrIniworking();
@@ -1257,6 +1269,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         breaksMainField.clear();
         timepickerIniWork.setValue(null);
         timepickerFinWork.setValue(null);
+        doctorDto = null;
     }
 
     @FXML
@@ -1322,6 +1335,128 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         identPatMainField.clear();
         gender.selectToggle(null);
         telephonePatMainField.clear();
+    }
+
+    @FXML
+    private void openReportDoctor(MouseEvent event) {
+        if (doctorDto!=null) {
+            textReportNameDoctor.setText(doctorDto.getDoctorName() + " " + doctorDto.getDoctorPsurname() + " " + doctorDto.getDrUser().getUsSlastname());
+            textReportIDDoctor.setText(doctorDto.getDrUser().getUsIdentification());
+            OptionsReportsView.toFront();
+        } else {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Reportes de Doctor", getStage(), "Debes cargar un doctor");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Doctor reports", getStage(), "You must carry a doctor.");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Rapports du médecin", getStage(), "Tu dois avoir un médecin.");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "医師の報告", getStage(), "あなたは医者を連れていかなければなりません.");
+            }
+        }
+    }
+
+    @FXML
+    private void createReportBlankSpaces(MouseEvent event) throws FileNotFoundException {
+        JasperReportService serviceJasper = new JasperReportService();
+        String initialDate = "", finalDate = "";
+        if (datePickerInitialReport.getValue() == null) {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Debes seleccionar fecha inicial.");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Doctor reports", getStage(), "You must select starting date.");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapports du médecin", getStage(), "Vous devez sélectionner la date de début.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "医師の報告", getStage(), "開始日を選択する必要があります");
+                }
+
+        } else {
+            if (datePickerFinalReport.getValue() == null) {
+                finalDate = "N/A";
+            } else {
+                finalDate = datePickerFinalReport.getValue().toString();
+            }
+            initialDate = datePickerInitialReport.getValue().toString();
+            
+            Respuesta respuesta = serviceJasper.getNotDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate);
+            if (respuesta.getEstado()) {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Reporte generado.");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Doctor reports", getStage(), "Report generated.");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapports du médecin", getStage(), "Rapport généré.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "医師の報告", getStage(), "生成されたレポート");
+                }
+            } else {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Reportes de Doctor", getStage(), "Error al generar el reporte.");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "File Report", getStage(), "Error generating the report.");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Rapports du médecin", getStage(), "Erreur lors de la génération du rapport.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "医師の報告", getStage(), "レポート生成エラー.");
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void createReportAppoinments(MouseEvent event) throws FileNotFoundException {
+         JasperReportService serviceJasper = new JasperReportService();
+        String initialDate = "", finalDate = "";
+        if (datePickerInitialReport.getValue() == null) {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Debes seleccionar fecha inicial.");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Doctor reports", getStage(), "You must select starting date.");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapports du médecin", getStage(), "Vous devez sélectionner la date de début.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "医師の報告", getStage(), "開始日を選択する必要があります");
+                }
+
+        } else {
+            if (datePickerFinalReport.getValue() == null) {
+                finalDate = "N/A";
+            } else {
+                finalDate = datePickerFinalReport.getValue().toString();
+            }
+            initialDate = datePickerInitialReport.getValue().toString();
+             Respuesta respuesta = serviceJasper.getDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate);
+            if (respuesta.getEstado()) {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Reporte generado.");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Doctor reports", getStage(), "Report generated.");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapports du médecin", getStage(), "Rapport généré.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "医師の報告", getStage(), "生成されたレポート");
+                }
+            } else {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Reportes de Doctor", getStage(), "Error al generar el reporte.");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Doctor reports", getStage(), "Error generating the report.");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Rapports du médecin", getStage(), "Erreur lors de la génération du rapport.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "医師の報告", getStage(), "レポート生成エラー.");
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void backReport(ActionEvent event) {
+        datePickerInitialReport.setValue(null);
+        datePickerFinalReport.setValue(null);
+        OptionsReportsView.toBack();
+
     }
 
 }
