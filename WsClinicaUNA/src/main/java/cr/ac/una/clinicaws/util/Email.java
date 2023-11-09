@@ -4,6 +4,9 @@
  */
 package cr.ac.una.clinicaws.util;
 
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
 import jakarta.mail.Message;
 import jakarta.mail.Multipart;
 import jakarta.mail.Session;
@@ -12,6 +15,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
+import java.io.File;
 import java.util.Properties;
 
 public class Email {
@@ -222,6 +226,70 @@ public class Email {
 
             mensaje.setContent(mensajeHTML, "text/html");
 
+            Transport t = s.getTransport("smtp");
+            t.connect(sourceMail, password);
+            if (t.isConnected()) {
+                t.sendMessage(mensaje, mensaje.getAllRecipients());
+                t.close();
+            }
+            System.out.printf("Mensaje enviado");
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+
+    public void enviarExcel(String dia, String nombre, File archivoAdjunto) {
+
+        sourceMail = "clinicauna10@gmail.com";
+        name = "ClinicaUNA";
+        info = "La mejor en salud";
+        password = "xvezelgtwkeuhawv";
+
+        try {
+            Properties p = new Properties();
+            p.put("mail.smtp.host", "smtp.gmail.com");
+            p.setProperty("mail.smtp.starttls.enable", "true");
+            p.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+            p.setProperty("mail.smtp.port", "587");
+            p.setProperty("mail.smtp.user", sourceMail);
+            p.setProperty("mail.smtp.auth", "true");
+            Session s = Session.getDefaultInstance(p);
+
+            String mensajeHTML = "<html>"
+                    + "<head>"
+                    + "<style>"
+                    + "body { font-family: Arial, sans-serif; background-color: #f2f2f2; }"
+                    + "h1 { color: #333; background-color: grey;  text-align: center; }"
+                    + "p { color: #666; }"
+                    + "</style>"
+                    + "</head>"
+                    + "<body>"
+                    + "<h1>Confirmación de cita</h1>"
+                    + "<p>Hola " + nombre + "!</p>"
+                    + "<p>Te confirmamos tu cita para el dia " + dia + "</p>"
+                    + "<p>Te esperamos!</p>"
+                    + "<p><strong>" + destinationMail + "</strong></p>"
+                    + "</body>"
+                    + "</html>";
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            mimeBodyPart.setContent(mensajeHTML, "text/html");
+
+            MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+            DataSource source = new FileDataSource(archivoAdjunto);
+            attachmentBodyPart.setDataHandler(new DataHandler(source));
+            attachmentBodyPart.setFileName(archivoAdjunto.getName());
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(mimeBodyPart);
+            multipart.addBodyPart(attachmentBodyPart);
+
+            MimeMessage mensaje = new MimeMessage(s);
+            mensaje.setFrom(new InternetAddress(sourceMail));
+            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinationMail));
+            mensaje.setSubject("Confirmación");
+            mensaje.setContent(multipart);
+
+            // Enviar el correo
             Transport t = s.getTransport("smtp");
             t.connect(sourceMail, password);
             if (t.isConnected()) {

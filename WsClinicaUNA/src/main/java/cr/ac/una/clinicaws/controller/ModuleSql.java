@@ -28,15 +28,15 @@ import java.util.logging.Logger;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Sql", description = "Operations on employees")
 public class ModuleSql {
-    
+
     @EJB
     GenericSql ServiceSql;
-    
+
     @GET
-    @Path("/user/{ConsultaSql}")
-    public Response getUser(@PathParam("ConsultaSql") String consulta) {
+    @Path("/user/{ConsultaSql}/{Titulo}")
+    public Response getUser(@PathParam("ConsultaSql") String consulta, @PathParam("Titulo") String titulo,@PathParam("Correos") String Correo) {
         try {
-            Respuesta res = ServiceSql.getSQL(consulta);
+            Respuesta res = ServiceSql.getSQL(consulta,titulo,Correo);
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
@@ -46,5 +46,4 @@ public class ModuleSql {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error realizando la consulta").build();
         }
     }
-    
 }
