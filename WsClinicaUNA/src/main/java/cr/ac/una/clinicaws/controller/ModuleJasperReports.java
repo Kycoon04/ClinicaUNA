@@ -279,6 +279,9 @@ public class ModuleJasperReports {
         InputStream ImageBackground = context.getResourceAsStream("/LogoMedicalClinic.png");
         params.put("ds", ds);
         params.put("Doctor", name);
+        params.put("FechaTitulo", "Fecha de generación: ");
+        params.put("TituloCentral", "REPORTE DE LA AGENDA DEL DOCTOR");
+        params.put("Doctor", name);
         params.put("LogoClinic", LogoClinic);
         params.put("Imagebackgroud", ImageBackground);
         InputStream reportStream = context.getResourceAsStream("/ReporteAgendaMedico.jrxml");
