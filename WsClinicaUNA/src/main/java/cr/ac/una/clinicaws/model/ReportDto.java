@@ -34,7 +34,20 @@ public class ReportDto {
     private String rtObservations;
     private Date rtDate;
     private Proceedings rtProceedings;
-
+    private String fecha;
+    private String presion;
+    private String codigo;
+    private String ritmo;
+    private String peso;
+    private String altura;
+    private String temperatura;
+    private String masa;
+    private String notas;
+    private String razon;
+    private String plan;
+    private String tratamiento;
+    private String examenFisico;
+    private String observaciones;
     public ReportDto() {
 
     }
@@ -58,6 +71,120 @@ public class ReportDto {
         this.rtProceedings = report.getRtProceedings();
     }
 
+    public String getPresion() {
+        return presion;
+    }
+
+    public void setPresion(String presion) {
+        this.presion = presion;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getRitmo() {
+        return ritmo;
+    }
+
+    public void setRitmo(String ritmo) {
+        this.ritmo = ritmo;
+    }
+
+    public String getPeso() {
+        return peso;
+    }
+
+    public void setPeso(String peso) {
+        this.peso = peso;
+    }
+
+    public String getAltura() {
+        return altura;
+    }
+
+    public void setAltura(String altura) {
+        this.altura = altura;
+    }
+
+    public String getTemperatura() {
+        return temperatura;
+    }
+
+    public void setTemperatura(String temperatura) {
+        this.temperatura = temperatura;
+    }
+
+    public String getMasa() {
+        return masa;
+    }
+
+    public void setMasa(String masa) {
+        this.masa = masa;
+    }
+
+    public String getNotas() {
+        return notas;
+    }
+
+    public void setNotas(String notas) {
+        this.notas = notas;
+    }
+
+    public String getRazon() {
+        return razon;
+    }
+
+    public void setRazon(String razon) {
+        this.razon = razon;
+    }
+
+    public String getPlan() {
+        return plan;
+    }
+
+    public void setPlan(String plan) {
+        this.plan = plan;
+    }
+
+    public String getTratamiento() {
+        return tratamiento;
+    }
+
+    public void setTratamiento(String tratamiento) {
+        this.tratamiento = tratamiento;
+    }
+
+    public String getExamenFisico() {
+        return examenFisico;
+    }
+
+    public void setExamenFisico(String examenFisico) {
+        this.examenFisico = examenFisico;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    
+    
     public Date getRtDateDate() {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime localTime = LocalTime.parse("12:23", timeFormatter);

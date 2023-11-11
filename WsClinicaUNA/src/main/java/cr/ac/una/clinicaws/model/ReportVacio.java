@@ -11,15 +11,46 @@ import java.util.Date;
  * @author jomav
  */
 public class ReportVacio {
+
     private String rtState;
     private Date rtDate;
+    private String fecha;
+    private String estado;
 
     public ReportVacio() {
     }
 
-    public ReportVacio(String rtState, Date rtDate) {
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public ReportVacio(String rtState, Date rtDate, String language) {
         this.rtState = rtState;
         this.rtDate = rtDate;
+
+        if (language.equals("Spanish")) {
+            fecha = "Fecha";
+            estado = "Estado";
+        } else if (language.equals("English") || language.equals("Japanese")) {
+            fecha = "Date";
+            estado = "State";
+        } else if (language.equals("French")) {
+            fecha = "Date";
+            estado = "État";
+        }
+
     }
 
     public String getRtState() {
@@ -29,7 +60,7 @@ public class ReportVacio {
     public void setRtState(String rtState) {
         this.rtState = rtState;
     }
-    
+
     public Date getRtDate() {
         return rtDate;
     }
@@ -37,8 +68,5 @@ public class ReportVacio {
     public void setRtDate(Date rtDate) {
         this.rtDate = rtDate;
     }
-    
-    
-    
-    
+
 }
