@@ -81,8 +81,7 @@ public class ReportService {
                 em.persist(report);
             }
             em.flush();
-            Email email= new Email();
-            email.enviarReporteControl(reportDto, "dio3sancho@gmail.com");
+          
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Report", new ReportDto(report));
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrio un error al guardar el Report.", ex);

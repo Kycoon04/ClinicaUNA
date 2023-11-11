@@ -310,8 +310,7 @@ public class LoginViewController extends Controller implements Initializable {
     }
 
     private void ChoiceIdiom(String idiom, String l1, String l2, String l3, String l4) {
-        System.out.println("sfddfsdfsdfsdfsfsdfsdfs");
-        System.out.println("");
+       
         if (idiom != "") {
             if (idiom == "French") {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "v", getStage(), l1);
