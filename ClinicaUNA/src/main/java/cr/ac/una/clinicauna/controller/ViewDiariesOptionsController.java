@@ -1711,6 +1711,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             reason.setText(appointmentDtoModi.getAtReason());
             btnAttentionControl.setVisible(true);
             DatePickerAppointment.setVisible(true);
+            patientDto=appointmentDtoModi.getAtPatient();
             Respuesta res = serviceRepor.getReportByIdAppoinment(appointmentDtoModi.getAtId());
             reportDto = (ReportDto) res.getResultado("Report");
             if (reportDto != null) {
