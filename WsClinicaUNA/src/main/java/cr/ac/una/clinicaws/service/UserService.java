@@ -276,7 +276,7 @@ public class UserService {
                 user.setUsPassword(usersDto.getUsTemppassword());
 
                 Email email = new Email(user.getUsEmail(), "Recuperacion de constraseña", "");
-                email.envioCmbClave(usersDto.getUsTemppassword());
+                email.envioCmbClave(usersDto.getUsTemppassword(),user.getUsLenguage());
 
                 user = em.merge(user);
                 em.flush();

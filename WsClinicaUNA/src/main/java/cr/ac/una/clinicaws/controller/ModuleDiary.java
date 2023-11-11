@@ -92,7 +92,7 @@ public class ModuleDiary {
         try {
             Email email = new Email();
             email.setDestinationMail(diaryDto.getDySpace().getSeAppointment().getAtEmail());
-            email.enviarRecordatorio(diaryDto.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), diaryDto.getDySpace().getSeAppointment().getAtPatient().getPtName());
+            email.enviarRecordatorio(diaryDto.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), diaryDto.getDySpace().getSeAppointment().getAtPatient().getPtName(),diaryDto.getDySpace().getSeAppointment().getAtUserregister().getUsLenguage());
             return Response.ok().build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleDiary.class.getName()).log(Level.SEVERE, null, ex);

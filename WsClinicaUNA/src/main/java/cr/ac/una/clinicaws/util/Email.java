@@ -76,8 +76,8 @@ public class Email {
      *
      * @param link Enlace que se incluirá en el cuerpo del correo.
      */
-    public void envioCmbClave(String link) {
-        enviarClave(link);
+    public void envioCmbClave(String link,String idiom) {
+        enviarClave(link,idiom);
     }
 
     public void enviarCorreoReporte(Email acti) {
@@ -363,7 +363,7 @@ public class Email {
             motive = "Confirmation de rendez-vous";
             action = "Nous confirmons ton rendez-vous pour le jour";
             button= "Continuer";
-        } else if(idiom.equals("Japanese")) {
+        } else {
             info = "We are waiting for you!";
             motive = "Appointment Confirmation";
             action = "We confirm your appointment for the day";
@@ -481,12 +481,37 @@ public class Email {
         }
     }
 
-    public void enviarRecordatorio(String dia, String nombre) {
+    public void enviarRecordatorio(String dia, String nombre, String idiom) {
 
         sourceMail = "clinicauna10@gmail.com";
         name = "ClinicaUNA";
         info = "La mejor en salud";
         password = "xvezelgtwkeuhawv";
+        
+         if (idiom.equals("Spanish")) {
+            info = "Te Esperamos!";
+            motive = "Recordatorio de cita";
+            action = "Te recordamos tu cita para el dia";
+            button= "Continuar";
+
+        } else if (idiom.equals("English")) {
+            info = "We are waiting for you!";
+            motive = "Appointment reminder";
+            action = "We remind you of your appointment for the day";
+            button= "Continue";
+
+        } else if (idiom.equals("French")) {
+            info = "Nous t'attendons!";
+            motive = "Rappel de rendez-vous";
+            action = "Nous vous rappelons votre rendez-vous du jour";
+            button= "Continuer";
+        } else {
+            info = "We are waiting for you!";
+            motive = "Appointment reminder";
+            action = "We remind you of your appointment for the day";
+            button= "Continue";
+        }
+        
 
         try {
             Properties p = new Properties();
@@ -507,10 +532,10 @@ public class Email {
                     + "</style>"
                     + "</head>"
                     + "<body>"
-                    + "<h1>Recordatorio</h1>"
+                    + "<h1>"+motive+"</h1>"
                     + "<p>Hola " + nombre + "!</p>"
-                    + "<p>Te recordamos tu cita para el dia " + dia + "</p>"
-                    + "<p>Te esperamos!</p>"
+                    + "<p>"+action+" " + dia + "</p>"
+                    + "<p>"+info+"</p>"
                     + "<p><strong>" + destinationMail + "</strong></p>"
                     + "</body>"
                     + "</html>";
@@ -534,12 +559,38 @@ public class Email {
         }
     }
 
-    public void enviarClave(String link) {
+    public void enviarClave(String link, String idiom) {
 
         sourceMail = "clinicauna10@gmail.com";
         name = "ClinicaUNA";
         info = "La mejor en salud";
         password = "xvezelgtwkeuhawv";
+        
+        
+         if (idiom.equals("Spanish")) {
+            info = "Te Esperamos!";
+            motive = "Recuperación de Contraseña";
+            action = "Se ha detectado un intento de recuperación de contraseña para la dirección de correo ";
+            button= "Aqui esta su contraseña temporal ";
+
+        } else if (idiom.equals("English")) {
+            info = "We are waiting for you!";
+            motive = "Password Recovery";
+            action = "A password recovery attempt has been detected for the email address";
+            button= "Here is your temporary password";
+
+        } else if (idiom.equals("French")) {
+            info = "Nous t'attendons!";
+            motive = "Récupération de Mot de Passe";
+            action = "Une tentative de récupération de mot de passe a été détectée pour l'adresse email";
+            button= "Voici votre mot de passe temporaire";
+        } else {
+            info = "We are waiting for you!";
+            motive = "Password Recovery";
+            action = "A password recovery attempt has been detected for the email address";
+            button= "Here is your temporary password";
+
+        }
 
         try {
             Properties p = new Properties();
@@ -561,11 +612,11 @@ public class Email {
                     + "</style>"
                     + "</head>"
                     + "<body>"
-                    + "<h1>Recuperación de Contraseña</h1>"
-                    + "<p>Se ha detectado un intento de recuperación de contraseña para la dirección de correo:</p>"
+                    + "<h1>"+motive+"</h1>"
+                    + "<p>"+action+" "+"</p>"
                     + "<p><strong>" + destinationMail + "</strong></p>"
                     + "<img id='imageLogo' src='https://eblbeoe.stripocdn.email/content/guids/CABINET_6900d7cefb295c65d827b1830fdf29ebf3b01e24733c06a4ea87c88a9f13230d/images/logomedicalclinic.png' alt='Imagen 1'>"
-                    + "<p>Aquí está su contraseña temporal:</p>"
+                    + "<p>"+button+"</p>"
                     + "<p><strong>" + link + "</strong></p>"
                     + "</body>"
                     + "</html>";

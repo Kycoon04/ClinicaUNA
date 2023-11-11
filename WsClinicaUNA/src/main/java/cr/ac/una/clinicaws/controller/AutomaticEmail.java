@@ -73,7 +73,7 @@ public class AutomaticEmail {
         for (DiaryDto p : filteredList) {
            Email email = new Email();
            email.setDestinationMail(p.getDySpace().getSeAppointment().getAtEmail());
-           email.enviarRecordatorio(p.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), p.getDySpace().getSeAppointment().getAtPatient().getPtName());
+           email.enviarRecordatorio(p.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), p.getDySpace().getSeAppointment().getAtPatient().getPtName(),p.getDySpace().getSeAppointment().getAtUserregister().getUsLenguage());
            
         }
     }
