@@ -33,7 +33,6 @@ public class Email {
     private String motive;
     private String button;
 
-
     /**
      * Constructor de la clase Email.
      *
@@ -52,7 +51,7 @@ public class Email {
         this.archive = "";
         this.action = "";
         this.motive = "";
-         this.button = "";
+        this.button = "";
     }
 
     public Email() {
@@ -76,8 +75,8 @@ public class Email {
      *
      * @param link Enlace que se incluirá en el cuerpo del correo.
      */
-    public void envioCmbClave(String link,String idiom) {
-        enviarClave(link,idiom);
+    public void envioCmbClave(String link, String idiom) {
+        enviarClave(link, idiom);
     }
 
     public void enviarCorreoReporte(Email acti) {
@@ -209,24 +208,24 @@ public class Email {
             info = "La mejor en salud";
             motive = "Activacion de Cuentas";
             action = "Bienvenido al sistema de salud , para continuar con su proceso de activacion, da clic en el siguiente boton";
-            button= "Continuar";
+            button = "Continuar";
 
         } else if (idiom.equals("English")) {
             info = "The best in health";
             motive = "Account Activation";
             action = "Welcome to the health system, to continue with your activation process, click the following button.";
-            button= "Continue";
+            button = "Continue";
 
         } else if (idiom.equals("French")) {
             info = "Le meilleur en matière de santé";
             motive = "Activation de Compte";
             action = "Bienvenue dans le système de santé, pour continuer votre processus d'activation, cliquez sur le bouton suivant.";
-            button= "continuer";
-        } else if(idiom.equals("Japanese")) {
-             info = "The best in health";
+            button = "continuer";
+        } else if (idiom.equals("Japanese")) {
+            info = "The best in health";
             motive = "Account Activation";
             action = "Welcome to the health system, to continue with your activation process, click the following button.";
-            button= "Continue";
+            button = "Continue";
         }
 
         try {
@@ -305,12 +304,12 @@ public class Email {
                     + "</head>\n"
                     + "<body>\n"
                     + "<header>\n"
-                    + "<h1>"+ motive +" "+ name + "</h1>\n"
-                    + "<h2>"+action+"</h2>\n"
+                    + "<h1>" + motive + " " + name + "</h1>\n"
+                    + "<h2>" + action + "</h2>\n"
                     + "<h2>" + info + "</h2>\n"
                     + "</header>\n"
                     + "<div class='container'>\n"
-                    + "<p class='center'><a id='activeButton' href='" + acti.getLink() + "'>"+button+"</a></p>\n"
+                    + "<p class='center'><a id='activeButton' href='" + acti.getLink() + "'>" + button + "</a></p>\n"
                     + "</div>\n"
                     + "</body>\n"
                     + "</html>";
@@ -342,35 +341,34 @@ public class Email {
 
         sourceMail = "clinicauna10@gmail.com";
         name = "ClinicaUNA";
- 
+
         password = "xvezelgtwkeuhawv";
 
-        
         if (idiom.equals("Spanish")) {
             info = "Te Esperamos!";
             motive = "Confirmación de cita";
             action = "Te confirmamos tu cita para el dia";
-            button= "Continuar";
+            button = "Continuar";
 
         } else if (idiom.equals("English")) {
             info = "We are waiting for you!";
             motive = "Appointment Confirmation";
             action = "We confirm your appointment for the day";
-            button= "Continue";
+            button = "Continue";
 
         } else if (idiom.equals("French")) {
             info = "Nous t'attendons!";
             motive = "Confirmation de rendez-vous";
             action = "Nous confirmons ton rendez-vous pour le jour";
-            button= "Continuer";
+            button = "Continuer";
         } else {
             info = "We are waiting for you!";
             motive = "Appointment Confirmation";
             action = "We confirm your appointment for the day";
-            button= "Continue";
+            button = "Continue";
 
         }
-        
+
         try {
             Properties p = new Properties();
             p.put("mail.smtp.host", "smtp.gmail.com");
@@ -390,10 +388,10 @@ public class Email {
                     + "</style>"
                     + "</head>"
                     + "<body>"
-                    + "<h1>"+motive+"</h1>"
+                    + "<h1>" + motive + "</h1>"
                     + "<p>Hola " + nombre + "!</p>"
-                    + "<p>"+action+" " + dia + "</p>"
-                    + "<p>"+info+"</p>"
+                    + "<p>" + action + " " + dia + "</p>"
+                    + "<p>" + info + "</p>"
                     + "<p><strong>" + destinationMail + "</strong></p>"
                     + "</body>"
                     + "</html>";
@@ -445,7 +443,7 @@ public class Email {
                     + "<body>"
                     + "<h1>Confirmación de cita</h1>"
                     + "<p>Hola " + nombre + "!</p>"
-                    + "<p>"+action +" "+ dia + "</p>"
+                    + "<p>" + action + " " + dia + "</p>"
                     + "<p>Te esperamos!</p>"
                     + "<p><strong>" + destinationMail + "</strong></p>"
                     + "</body>"
@@ -487,31 +485,30 @@ public class Email {
         name = "ClinicaUNA";
         info = "La mejor en salud";
         password = "xvezelgtwkeuhawv";
-        
-         if (idiom.equals("Spanish")) {
+
+        if (idiom.equals("Spanish")) {
             info = "Te Esperamos!";
             motive = "Recordatorio de cita";
             action = "Te recordamos tu cita para el dia";
-            button= "Continuar";
+            button = "Continuar";
 
         } else if (idiom.equals("English")) {
             info = "We are waiting for you!";
             motive = "Appointment reminder";
             action = "We remind you of your appointment for the day";
-            button= "Continue";
+            button = "Continue";
 
         } else if (idiom.equals("French")) {
             info = "Nous t'attendons!";
             motive = "Rappel de rendez-vous";
             action = "Nous vous rappelons votre rendez-vous du jour";
-            button= "Continuer";
+            button = "Continuer";
         } else {
             info = "We are waiting for you!";
             motive = "Appointment reminder";
             action = "We remind you of your appointment for the day";
-            button= "Continue";
+            button = "Continue";
         }
-        
 
         try {
             Properties p = new Properties();
@@ -532,10 +529,10 @@ public class Email {
                     + "</style>"
                     + "</head>"
                     + "<body>"
-                    + "<h1>"+motive+"</h1>"
+                    + "<h1>" + motive + "</h1>"
                     + "<p>Hola " + nombre + "!</p>"
-                    + "<p>"+action+" " + dia + "</p>"
-                    + "<p>"+info+"</p>"
+                    + "<p>" + action + " " + dia + "</p>"
+                    + "<p>" + info + "</p>"
                     + "<p><strong>" + destinationMail + "</strong></p>"
                     + "</body>"
                     + "</html>";
@@ -565,30 +562,29 @@ public class Email {
         name = "ClinicaUNA";
         info = "La mejor en salud";
         password = "xvezelgtwkeuhawv";
-        
-        
-         if (idiom.equals("Spanish")) {
+
+        if (idiom.equals("Spanish")) {
             info = "Te Esperamos!";
             motive = "Recuperación de Contraseña";
             action = "Se ha detectado un intento de recuperación de contraseña para la dirección de correo ";
-            button= "Aqui esta su contraseña temporal ";
+            button = "Aqui esta su contraseña temporal ";
 
         } else if (idiom.equals("English")) {
             info = "We are waiting for you!";
             motive = "Password Recovery";
             action = "A password recovery attempt has been detected for the email address";
-            button= "Here is your temporary password";
+            button = "Here is your temporary password";
 
         } else if (idiom.equals("French")) {
             info = "Nous t'attendons!";
             motive = "Récupération de Mot de Passe";
             action = "Une tentative de récupération de mot de passe a été détectée pour l'adresse email";
-            button= "Voici votre mot de passe temporaire";
+            button = "Voici votre mot de passe temporaire";
         } else {
             info = "We are waiting for you!";
             motive = "Password Recovery";
             action = "A password recovery attempt has been detected for the email address";
-            button= "Here is your temporary password";
+            button = "Here is your temporary password";
 
         }
 
@@ -612,11 +608,11 @@ public class Email {
                     + "</style>"
                     + "</head>"
                     + "<body>"
-                    + "<h1>"+motive+"</h1>"
-                    + "<p>"+action+" "+"</p>"
+                    + "<h1>" + motive + "</h1>"
+                    + "<p>" + action + " " + "</p>"
                     + "<p><strong>" + destinationMail + "</strong></p>"
                     + "<img id='imageLogo' src='https://eblbeoe.stripocdn.email/content/guids/CABINET_6900d7cefb295c65d827b1830fdf29ebf3b01e24733c06a4ea87c88a9f13230d/images/logomedicalclinic.png' alt='Imagen 1'>"
-                    + "<p>"+button+"</p>"
+                    + "<p>" + button + "</p>"
                     + "<p><strong>" + link + "</strong></p>"
                     + "</body>"
                     + "</html>";
@@ -642,19 +638,80 @@ public class Email {
 
     public void enviarReporteControl(ReportDto report, String EmailDest) {
 
-        String Presion = report.getRtPressure() + "";
-        String FrecuenciaCardi = report.getRtHeartRate() + "";
-        String Altura = report.getRtHeight() + "";
-        String Peso = report.getRtWeight() + "";
-        String Temperatura = report.getRtTemperature() + "";
-        String IMC = report.getRtBodyMass() + "";
-        String observaciones = report.getRtObservations();
-        String Razon = report.getRtNotesNursing();
-        String fechaHora = report.getRtDate() + "  /  ";
-        String nombrePaciente = report.getRtAppointment().getAtPatient().getPtName();
-        String ExamenFisico = report.getRtFisicExamen();
-        String Tratamiento = report.getRtTreatmentExamen();
-        String PlanCuidados = report.getRtCarePlan();
+        String Presion;
+        String FrecuenciaCardi;
+        String Altura;
+        String Peso;
+        String Temperatura;
+        String IMC;
+        String observaciones;
+        String Razon;
+        String fechaHora;
+        String nombrePaciente;
+        String ExamenFisico;
+        String Tratamiento;
+        String PlanCuidados;
+
+        if (report.getRtAppointment().getAtUserregister().getUsLenguage().equals("Spanish")) {
+            Presion = "Presion: ";
+            FrecuenciaCardi = "Frecuencia Cardica: ";
+            Altura = "Altura: ";
+            Peso = "Peso: ";
+            Temperatura = "Temperatura: ";
+            IMC = "IMC: ";
+            observaciones = "Observaciones: ";
+            Razon = "Razon: ";
+            fechaHora = "Fecha/Hora: ";
+            nombrePaciente = "Nombre: ";
+            ExamenFisico = "Examen Fisico: ";
+            Tratamiento = "Tratamiento: ";
+            PlanCuidados = "Cuidados: ";
+        } else if (report.getRtAppointment().getAtUserregister().getUsLenguage().equals("English")) {
+            Presion = "Blood Pressure: ";
+            FrecuenciaCardi = "Heart Rate: ";
+            Altura = "Height: ";
+            Peso = "Weight: ";
+            Temperatura = "Temperature: ";
+            IMC = "BMI: ";
+            observaciones = "Observations: ";
+            Razon = "Reason: ";
+            fechaHora = "Date/Time: ";
+            nombrePaciente = "Patient's Name: ";
+            ExamenFisico = "Physical Examination: ";
+            Tratamiento = "Treatment: ";
+            PlanCuidados = "Care Plan: ";
+
+        } else if (report.getRtAppointment().getAtUserregister().getUsLenguage().equals("French")) {
+            Presion = "Pression artérielle : ";
+            FrecuenciaCardi = "Fréquence cardiaque : ";
+            Altura = "Taille : ";
+            Peso = "Poids : ";
+            Temperatura = "Température : ";
+            IMC = "IMC (Indice de Masse Corporelle) : ";
+            observaciones = "Observations : ";
+            Razon = "Raison : ";
+            fechaHora = "Date/Heure : ";
+            nombrePaciente = "Nom du patient : ";
+            ExamenFisico = "Examen physique : ";
+            Tratamiento = "Traitement : ";
+            PlanCuidados = "Plan de soins : ";
+
+        } else {
+            Presion = "Blood Pressure: ";
+            FrecuenciaCardi = "Heart Rate: ";
+            Altura = "Height: ";
+            Peso = "Weight: ";
+            Temperatura = "Temperature: ";
+            IMC = "BMI: ";
+            observaciones = "Observations: ";
+            Razon = "Reason: ";
+            fechaHora = "Date/Time: ";
+            nombrePaciente = "Patient's Name: ";
+            ExamenFisico = "Physical Examination: ";
+            Tratamiento = "Treatment: ";
+            PlanCuidados = "Care Plan: ";
+
+        }
 
         sourceMail = "clinicauna10@gmail.com";
         name = "ClinicaUNA";
@@ -687,21 +744,21 @@ public class Email {
                     + "<h1>Reporte de Control</h1>"
                     + "<div class='flex-container'>"
                     + "<div class='left-section'>"
-                    + "<p>Fecha y Hora: " + fechaHora + "</p>"
-                    + "<p>Nombre del Paciente: " + nombrePaciente + "</p>"
-                    + "<p>Presión: " + Presion + "</p>"
-                    + "<p>Frecuencia Cardíaca: " + FrecuenciaCardi + "</p>"
-                    + "<p>Altura: " + Altura + "</p>"
-                    + "<p>Peso: " + Peso + "</p>"
-                    + "<p>Temperatura: " + Temperatura + "</p>"
+                    + "<p>" + fechaHora + report.getRtDate() + "</p>"
+                    + "<p>" + nombrePaciente + report.getRtAppointment().getAtPatient().getPtName() + "</p>"
+                    + "<p>" + Presion + "" + report.getRtPressure() + "</p>"
+                    + "<p>" + FrecuenciaCardi + report.getRtHeartRate() + "</p>"
+                    + "<p>" + Altura + report.getRtHeight() + "</p>"
+                    + "<p>" + Peso + report.getRtWeight() + "</p>"
+                    + "<p>" + Temperatura + report.getRtTemperature() + "</p>"
                     + "</div>"
                     + "<div class='right-section'>"
-                    + "<p>IMC: " + IMC + "</p>"
-                    + "<p>Observaciones: " + observaciones + "</p>"
-                    + "<p>Razón: " + Razon + "</p>"
-                    + "<p>Examen Físico: " + ExamenFisico + "</p>"
-                    + "<p>Tratamiento: " + Tratamiento + "</p>"
-                    + "<p>Plan de Cuidado: " + PlanCuidados + "</p>"
+                    + "<p>" + IMC + report.getRtBodyMass() + "</p>"
+                    + "<p>" + observaciones + report.getRtObservations() + "</p>"
+                    + "<p>" + Razon + report.getRtNotesNursing() + "</p>"
+                    + "<p>" + ExamenFisico + report.getRtFisicExamen() + "</p>"
+                    + "<p>" + Tratamiento + report.getRtTreatmentExamen() + "</p>"
+                    + "<p>" + PlanCuidados + report.getRtCarePlan() + "</p>"
                     + "</div>"
                     + "</div>"
                     + "</body>"
