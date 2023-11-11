@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicaws.util;
 
+import cr.ac.una.clinicaws.model.ReportDto;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import jakarta.activation.FileDataSource;
@@ -410,6 +411,93 @@ public class Email {
             System.out.println(e.toString());
         }
     }
+    
+     public void enviarReporteControl(ReportDto report, String EmailDest) {
+
+        String Presion = report.getRtPressure() + "";
+        String FrecuenciaCardi = report.getRtHeartRate() + "";
+        String Altura = report.getRtHeight() + "";
+        String Peso = report.getRtWeight() + "";
+        String Temperatura = report.getRtTemperature() + "";
+        String IMC = report.getRtBodyMass() + "";
+        String observaciones = report.getRtObservations();
+        String Razon = report.getRtNotesNursing();
+        String fechaHora = report.getRtDate() + "  /  ";
+        String nombrePaciente = report.getRtAppointment().getAtPatient().getPtName();
+        String ExamenFisico= report.getRtFisicExamen();
+        String Tratamiento= report.getRtTreatmentExamen();
+        String PlanCuidados = report.getRtCarePlan();
+       
+
+        sourceMail = "clinicauna10@gmail.com";
+        name = "ClinicaUNA";
+        info = "La mejor en salud";
+        password = "xvezelgtwkeuhawv";
+        destinationMail = EmailDest;
+
+        try {
+            Properties p = new Properties();
+            p.put("mail.smtp.host", "smtp.gmail.com");
+            p.setProperty("mail.smtp.starttls.enable", "true");
+            p.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+            p.setProperty("mail.smtp.port", "587");
+            p.setProperty("mail.smtp.user", sourceMail);
+            p.setProperty("mail.smtp.auth", "true");
+            Session s = Session.getDefaultInstance(p);
+
+            String mensajeHTML = "<html>"
+                    + "<head>"
+                    + "<style>"
+                    + "body { font-family: Arial, sans-serif; background-color: #f2f2f2; }"
+                    + "h1 { color: WHITE; background-color: #000359;  text-align: center; }"
+                    + "p { color: #666; }"
+                    + ".flex-container { display: flex; justify-content: space-between; }" // Establecer flexbox
+                    + ".left-section { flex: 1; }" // Ajustar el tamaño de la sección izquierdae
+                    + ".right-section { flex: 1; text-align: right; }" // Ajustar el tamaño y alinear a la derecha
+                    + "</style>"
+                    + "</head>"
+                    + "<body>"
+                    + "<h1>Reporte de Control</h1>"
+                    + "<div class='flex-container'>"
+                    + "<div class='left-section'>"
+                    + "<p>Fecha y Hora: " + fechaHora + "</p>"
+                    + "<p>Nombre del Paciente: " + nombrePaciente + "</p>"
+                    + "<p>Presión: " + Presion + "</p>"
+                    + "<p>Frecuencia Cardíaca: " + FrecuenciaCardi + "</p>"
+                    + "<p>Altura: " + Altura + "</p>"
+                    + "<p>Peso: " + Peso + "</p>"
+                    + "<p>Temperatura: " + Temperatura + "</p>"
+                    + "</div>"
+                    + "<div class='right-section'>"
+                    + "<p>IMC: " + IMC + "</p>"
+                    + "<p>Observaciones: " + observaciones + "</p>"
+                    + "<p>Razón: " + Razon + "</p>"
+                    + "<p>Examen Físico: " + ExamenFisico + "</p>"
+                    + "<p>Tratamiento: " + Tratamiento + "</p>"
+                    + "<p>Plan de Cuidado: " + PlanCuidados + "</p>"
+                    + "</div>"
+                    + "</div>"
+                    + "</body>"
+                    + "</html>";
+            MimeMessage mensaje = new MimeMessage(s);
+            mensaje.setFrom(new InternetAddress(sourceMail));
+            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinationMail));
+            mensaje.setSubject("Reporte de Control");
+
+            mensaje.setContent(mensajeHTML, "text/html");
+
+            Transport t = s.getTransport("smtp");
+            t.connect(sourceMail, password);
+            if (t.isConnected()) {
+                t.sendMessage(mensaje, mensaje.getAllRecipients());
+                t.close();
+            }
+            System.out.printf("Mensaje enviado");
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+    
 
     public String getSourceMail() {
         return sourceMail;

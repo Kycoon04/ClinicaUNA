@@ -7,6 +7,7 @@ package cr.ac.una.clinicaws.service;
 import cr.ac.una.clinicaws.model.Report;
 import cr.ac.una.clinicaws.model.ReportDto;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
+import cr.ac.una.clinicaws.util.Email;
 import cr.ac.una.clinicaws.util.Respuesta;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
@@ -80,6 +81,8 @@ public class ReportService {
                 em.persist(report);
             }
             em.flush();
+            Email email= new Email();
+            email.enviarReporteControl(reportDto, "dio3sancho@gmail.com");
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Report", new ReportDto(report));
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Ocurrio un error al guardar el Report.", ex);
