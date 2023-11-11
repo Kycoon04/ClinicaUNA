@@ -16,18 +16,24 @@ public class ReportDiary {
     private String atPatient;
     private String atUserregister;
     private String atCode;
+    private String fechaTabla;
+    private String codigoTabla;
+    private String estadoTabla;
+    private String usuarioTabla;
+    private String pacienteTabla;
+    private String emailTabla;
 
     public ReportDiary() {
         Calendar calendar = Calendar.getInstance();
         this.dyDate = calendar.getTime();
         this.ptEmail = "N/A";
-        this.atState =  "N/A";
-        this.atPatient =  "N/A";
+        this.atState = "N/A";
+        this.atPatient = "N/A";
         this.atUserregister = "N/A";
         this.atCode = "N/A";
     }
 
-    public ReportDiary(DiaryDto agenda, AppointmentDto cita) {
+    public ReportDiary(DiaryDto agenda, AppointmentDto cita, String Language) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime localTime = LocalTime.parse(agenda.getDySpace().getSeHour(), timeFormatter);
         LocalDateTime localDateTime = LocalDateTime.of(agenda.getDyDate(), localTime);
@@ -37,6 +43,76 @@ public class ReportDiary {
         this.atPatient = cita.getAtPatient().getPtName() + " " + cita.getAtPatient().getPtPlastname();
         this.atUserregister = cita.getAtUserregister().getUsName() + " " + cita.getAtUserregister().getUsPlastname();
         this.atCode = cita.getAtCode();
+        if (Language.equals("Spanish")) {
+            this.fechaTabla = "Fecha";
+            this.codigoTabla = "Código de Cita";
+            this.estadoTabla = "Estado";
+            this.usuarioTabla = "Usuario Registrador";
+            this.pacienteTabla = "Paciente";
+            this.emailTabla = "Email";
+        } else if (Language.equals("English")|| Language.equals("Japanese")) {
+            this.fechaTabla = "Date";
+            this.codigoTabla = "Appointment Code";
+            this.estadoTabla = "Status";
+            this.usuarioTabla = "Registering User";
+            this.pacienteTabla = "Patient";
+            this.emailTabla = "Email";
+        } else if (Language.equals("French")) {
+            this.fechaTabla = "Date";
+            this.codigoTabla = "Code de Rendez-vous";
+            this.estadoTabla = "État";
+            this.usuarioTabla = "Utilisateur Enregistreur";
+            this.pacienteTabla = "Patient";
+            this.emailTabla = "Email";
+        }
+    }
+
+    public String getCodigoTabla() {
+        return codigoTabla;
+    }
+
+    public void setCodigoTabla(String codigoTabla) {
+        this.codigoTabla = codigoTabla;
+    }
+
+    public String getEstadoTabla() {
+        return estadoTabla;
+    }
+
+    public void setEstadoTabla(String estadoTabla) {
+        this.estadoTabla = estadoTabla;
+    }
+
+    public String getUsuarioTabla() {
+        return usuarioTabla;
+    }
+
+    public void setUsuarioTabla(String usuarioTabla) {
+        this.usuarioTabla = usuarioTabla;
+    }
+
+    public String getPacienteTabla() {
+        return pacienteTabla;
+    }
+
+    public void setPacienteTabla(String pacienteTabla) {
+        this.pacienteTabla = pacienteTabla;
+    }
+
+    public String getEmailTabla() {
+        return emailTabla;
+    }
+
+    public void setEmailTabla(String emailTabla) {
+        this.emailTabla = emailTabla;
+    }
+
+    public String getFechaTabla() {
+        return fechaTabla;
+    }
+
+    public void setFechaTabla(String FechaTabla) {
+        this.fechaTabla = FechaTabla;
     }
 
     public void asignarFechaDesdeLocalDate(LocalDate fechaLocal) {

@@ -1406,7 +1406,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             }
             initialDate = datePickerInitialReport.getValue().toString();
 
-            Respuesta respuesta = serviceJasper.getNotDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate);
+            Respuesta respuesta = serviceJasper.getNotDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate,userDto.getUsLenguage());
             if (respuesta.getEstado()) {
                 if (usrIdiom.getUsLenguage().equals("Spanish")) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Reporte generado.");
@@ -1453,7 +1453,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 finalDate = datePickerFinalReport.getValue().toString();
             }
             initialDate = datePickerInitialReport.getValue().toString();
-            Respuesta respuesta = serviceJasper.getDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate);
+            Respuesta respuesta = serviceJasper.getDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate,userDto.getUsLenguage());
             if (respuesta.getEstado()) {
                 if (usrIdiom.getUsLenguage().equals("Spanish")) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Reporte generado.");

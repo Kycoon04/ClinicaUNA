@@ -9,12 +9,16 @@ package cr.ac.una.clinicaws.model;
  * @author dilan
  */
 public class FProceedingsDto {
-    
+
     private Integer fpId;
- 
+
     private Familybackground fpFamilyback;
-    
+
     private Proceedings fpProceedings;
+    
+    private String relacion;
+    
+    private String enfermedad;
 
     public FProceedingsDto() {
     }
@@ -25,15 +29,34 @@ public class FProceedingsDto {
         this.fpProceedings = fProceedings.getFpProceedings();
     }
 
+    public String getRelacion() {
+        return relacion;
+    }
+
+    public void setRelacion(String relacion) {
+        this.relacion = relacion;
+    }
+
+    public String getEnfermedad() {
+        return enfermedad;
+    }
+
+    public void setEnfermedad(String enfermedad) {
+        this.enfermedad = enfermedad;
+    }
+
     public Integer getFpId() {
         return fpId;
     }
+
     public String getFbRelationship() {
         return fpFamilyback.getFbRelationship();
     }
+
     public String getFbDiseaseString() {
         return fpFamilyback.getFbDiseaseString();
     }
+
     public void setFpId(Integer fpId) {
         this.fpId = fpId;
     }
@@ -53,7 +76,5 @@ public class FProceedingsDto {
     public void setFpProceedings(Proceedings fpProceedings) {
         this.fpProceedings = fpProceedings;
     }
-    
-    
-    
+
 }
