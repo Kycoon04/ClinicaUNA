@@ -1399,7 +1399,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         
         //Respuesta respuesta = serviceJasper.getDiaryDoctor(287, "2023-11-25", "2023-11-30");
         //respuesta = serviceJasper.getNotDiaryDoctor(287, "2023-11-25", "2023-11-30");
-        Respuesta respuesta = serviceJasper.getProceedings(patientDto.getPtId());
+        Respuesta respuesta = serviceJasper.getProceedings(patientDto.getPtId(),userDto.getUsLenguage());
         if(respuesta.getEstado()){
            if (userDto.getUsLenguage().equals("Spanish")) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reporte de Expediente", getStage(), "Reporte de Expediente generado.");

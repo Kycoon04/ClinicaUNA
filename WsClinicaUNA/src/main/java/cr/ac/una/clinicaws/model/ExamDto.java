@@ -20,6 +20,9 @@ public class ExamDto {
 
     private Proceedings emProceedings;
 
+    private String nombre;
+    private String notas;
+    private String doctor;
     public ExamDto(Exam exam) {
         this.emId = exam.getEmId();
         this.emName = exam.getEmName();
@@ -29,6 +32,30 @@ public class ExamDto {
     }
 
     public ExamDto() {
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String Nombre) {
+        this.nombre = Nombre;
+    }
+
+    public String getNotas() {
+        return notas;
+    }
+
+    public void setNotas(String Notas) {
+        this.notas = Notas;
+    }
+
+    public String getDoctor() {
+        return doctor;
+    }
+
+    public void setDoctor(String Doctor) {
+        this.doctor = Doctor;
     }
 
     public String getEmDoctorString() {

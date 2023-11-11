@@ -21,13 +21,14 @@ import java.util.logging.Logger;
  */
 public class JasperReportService {
 
-    public Respuesta getDiaryDoctor(Integer id, String Date, String DateTwo) throws FileNotFoundException {
+    public Respuesta getDiaryDoctor(Integer id, String Date, String DateTwo,String Language) throws FileNotFoundException {
         try {
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("Doctor", id);
             parametros.put("date", Date);
             parametros.put("dateTwo", DateTwo);
-            Request request = new Request("ModuleJasperReports/ReportDiary", "/{date}/{dateTwo}/{Doctor}", parametros);
+            parametros.put("Language", Language);
+            Request request = new Request("ModuleJasperReports/ReportDiary", "/{date}/{dateTwo}/{Doctor}/{Language}", parametros);
             request.get();
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
@@ -50,11 +51,12 @@ public class JasperReportService {
         }
     }
 
-    public Respuesta getProceedings(Integer id) throws FileNotFoundException {
+    public Respuesta getProceedings(Integer id,String Language) throws FileNotFoundException {
         try {
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("id", id);
-            Request request = new Request("ModuleJasperReports/ReportPatient", "/{id}", parametros);
+            parametros.put("Language", Language);
+            Request request = new Request("ModuleJasperReports/ReportPatient", "/{id}/{Language}", parametros);
             request.get();
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
@@ -77,13 +79,14 @@ public class JasperReportService {
         }
     }
     
-        public Respuesta getNotDiaryDoctor(Integer id, String Date, String DateTwo) throws FileNotFoundException {
+        public Respuesta getNotDiaryDoctor(Integer id, String Date, String DateTwo,String Language) throws FileNotFoundException {
         try {
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("Doctor", id);
             parametros.put("date", Date);
             parametros.put("dateTwo", DateTwo);
-            Request request = new Request("ModuleJasperReports/ReportEspacios", "/{date}/{dateTwo}/{Doctor}", parametros);
+            parametros.put("Language", Language);
+            Request request = new Request("ModuleJasperReports/ReportEspacios", "/{date}/{dateTwo}/{Doctor}/{Language}", parametros);
             request.get();
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");

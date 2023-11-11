@@ -13,7 +13,9 @@ public class PProceedingsDto {
     private Integer ppId;
     private Personalbackground ppPersonalback;
     private Proceedings ppProceedings;
-
+    private String Tipo;
+    private String Descripcion;
+    
     public PProceedingsDto() {
     }
 
@@ -21,6 +23,22 @@ public class PProceedingsDto {
         ppId = PProceedings.getPpId();
         ppPersonalback = PProceedings.getPpPersonalback();
         ppProceedings = PProceedings.getPpProceedings();
+    }
+
+    public String getTipo() {
+        return Tipo;
+    }
+
+    public void setTipo(String Tipo) {
+        this.Tipo = Tipo;
+    }
+
+    public String getDescripcion() {
+        return Descripcion;
+    }
+
+    public void setDescripcion(String Descripcion) {
+        this.Descripcion = Descripcion;
     }
 
     public Integer getPpId() {
