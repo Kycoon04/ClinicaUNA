@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -51,6 +52,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -295,6 +297,29 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private TextField textReportNameDoctor;
     @FXML
     private TextField textReportIDDoctor;
+    @FXML
+    private BorderPane OptionsReportExcel;
+    @FXML
+    private ChoiceBox<String> choiceBoxPeriodReport;
+    @FXML
+    private TextField textFieldNameReport;
+    @FXML
+    private TextArea textAreaDescripReport;
+    @FXML
+    private TextArea textAreaQueryReport;
+    @FXML
+    private TextField textFieldEmailReport;
+    @FXML
+    private TableView<String> tableViewEmails;
+    @FXML
+    private TableColumn<String, String> tableColEmailReport;
+
+    private List<String> listEmails = new ArrayList<>();
+    private ObservableList<String> emails = FXCollections.observableArrayList();
+    String periodSpanish[] = {"Diario", "Semanal", "Mensual"};
+    String periodEnglish[] = {"Daily", "Weekly", "Monthly"};
+    String periodFrench[] = {"Quotidien", "Hebdomadaire", "Mensuel"};
+    String periodJapanese[] = {"「日次」", "「週次」", "「月次」"};
 
     /**
      * Initializes the controller class.
@@ -342,6 +367,9 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         this.tableColPatGender.setCellValueFactory(new PropertyValueFactory("PtGender"));
         this.tableColPatEmail.setCellValueFactory(new PropertyValueFactory("PtEmail"));
         this.tableColId.setCellValueFactory(new PropertyValueFactory("PtId"));
+
+        this.tableColEmailReport.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()));
+        this.tableViewEmails.setItems(emails);
 
         fillTableUsers();
         fillTableDoctors();
@@ -474,7 +502,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
         } else {
             userDoctor = true;
-            doctorDto=new DoctorDto();
+            doctorDto = new DoctorDto();
             if (usrIdiom.getUsLenguage().equals("Spanish")) {
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Doctor", getStage(), "Debes completar la siguiente información");
             } else if (usrIdiom.getUsLenguage().equals("English")) {
@@ -1223,7 +1251,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 AppContext.getInstance().set("Proceding", proceedingsDto);
 
             }
-            System.out.println("AJA");
             AppContext.getInstance().set("Patient", patientDto);
             FlowController.getInstance().goMain("ViewProceedingsOptions");
         } else {
@@ -1339,7 +1366,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void openReportDoctor(MouseEvent event) {
-        if (doctorDto!=null) {
+        if (doctorDto != null) {
             textReportNameDoctor.setText(doctorDto.getDoctorName() + " " + doctorDto.getDoctorPsurname() + " " + doctorDto.getDrUser().getUsSlastname());
             textReportIDDoctor.setText(doctorDto.getDrUser().getUsIdentification());
             OptionsReportsView.toFront();
@@ -1362,14 +1389,14 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         String initialDate = "", finalDate = "";
         if (datePickerInitialReport.getValue() == null) {
             if (usrIdiom.getUsLenguage().equals("Spanish")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Debes seleccionar fecha inicial.");
-                } else if (usrIdiom.getUsLenguage().equals("English")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Doctor reports", getStage(), "You must select starting date.");
-                } else if (usrIdiom.getUsLenguage().equals("French")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapports du médecin", getStage(), "Vous devez sélectionner la date de début.");
-                } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "医師の報告", getStage(), "開始日を選択する必要があります");
-                }
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Debes seleccionar fecha inicial.");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Doctor reports", getStage(), "You must select starting date.");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapports du médecin", getStage(), "Vous devez sélectionner la date de début.");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "医師の報告", getStage(), "開始日を選択する必要があります");
+            }
 
         } else {
             if (datePickerFinalReport.getValue() == null) {
@@ -1378,7 +1405,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 finalDate = datePickerFinalReport.getValue().toString();
             }
             initialDate = datePickerInitialReport.getValue().toString();
-            
+
             Respuesta respuesta = serviceJasper.getNotDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate);
             if (respuesta.getEstado()) {
                 if (usrIdiom.getUsLenguage().equals("Spanish")) {
@@ -1406,18 +1433,18 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void createReportAppoinments(MouseEvent event) throws FileNotFoundException {
-         JasperReportService serviceJasper = new JasperReportService();
+        JasperReportService serviceJasper = new JasperReportService();
         String initialDate = "", finalDate = "";
         if (datePickerInitialReport.getValue() == null) {
             if (usrIdiom.getUsLenguage().equals("Spanish")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Debes seleccionar fecha inicial.");
-                } else if (usrIdiom.getUsLenguage().equals("English")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Doctor reports", getStage(), "You must select starting date.");
-                } else if (usrIdiom.getUsLenguage().equals("French")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapports du médecin", getStage(), "Vous devez sélectionner la date de début.");
-                } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "医師の報告", getStage(), "開始日を選択する必要があります");
-                }
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Debes seleccionar fecha inicial.");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Doctor reports", getStage(), "You must select starting date.");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapports du médecin", getStage(), "Vous devez sélectionner la date de début.");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "医師の報告", getStage(), "開始日を選択する必要があります");
+            }
 
         } else {
             if (datePickerFinalReport.getValue() == null) {
@@ -1426,7 +1453,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 finalDate = datePickerFinalReport.getValue().toString();
             }
             initialDate = datePickerInitialReport.getValue().toString();
-             Respuesta respuesta = serviceJasper.getDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate);
+            Respuesta respuesta = serviceJasper.getDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate);
             if (respuesta.getEstado()) {
                 if (usrIdiom.getUsLenguage().equals("Spanish")) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Reporte generado.");
@@ -1457,6 +1484,75 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         datePickerFinalReport.setValue(null);
         OptionsReportsView.toBack();
 
+    }
+
+    @FXML
+    private void openReportExcel(ActionEvent event) {
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            choiceBoxPeriodReport.getItems().addAll(periodSpanish);
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            choiceBoxPeriodReport.getItems().addAll(periodEnglish);
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            choiceBoxPeriodReport.getItems().addAll(periodFrench);
+        } else {
+            choiceBoxPeriodReport.getItems().addAll(periodJapanese);
+        }
+        OptionsReportExcel.toFront();
+        listEmails = new ArrayList<>();
+        emails.clear();
+        this.tableViewEmails.refresh();
+        cleanReportExcel();
+        
+    }
+
+    @FXML
+    private void cleanUpReportExcel(ActionEvent event) {
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            if (new Mensaje().showConfirmation("Limpiar Reporte", getStage(), "¿Está seguro que desea limpiar el registro?")) {
+                cleanReportExcel();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            if (new Mensaje().showConfirmation("Clean Report", getStage(), "Are you sure you want to clear the record?")) {
+                cleanReportExcel();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            if (new Mensaje().showConfirmation("Effacer le rapport", getStage(), "Êtes-vous sûr de vouloir effacer l'enregistrement ?")) {
+                cleanReportExcel();
+            }
+        } else {
+            if (new Mensaje().showConfirmation("クリアレポート", getStage(), "レコードをクリアしてもよろしいですか？")) {
+                cleanReportExcel();
+            }
+        }
+    }
+
+    private void cleanReportExcel() {
+        textFieldEmailReport.clear();
+        textFieldNameReport.clear();
+        textAreaDescripReport.clear();
+        textAreaQueryReport.clear();
+        choiceBoxPeriodReport.setValue(null);
+    }
+
+    @FXML
+    private void addEmail(MouseEvent event) {
+        String email = "";
+        if (!textFieldEmailReport.getText().isEmpty()) {
+            email = textFieldEmailReport.getText();
+            listEmails.add(email);
+            emails.add(email);
+            this.tableViewEmails.refresh();
+            this.tableViewEmails.setItems(emails);
+
+        }
+    }
+
+    @FXML
+    private void emailClicked(MouseEvent event) {
+    }
+
+    @FXML
+    private void sendReport(MouseEvent event) {
     }
 
 }

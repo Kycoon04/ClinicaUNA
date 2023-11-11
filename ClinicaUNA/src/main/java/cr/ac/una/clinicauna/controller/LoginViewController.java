@@ -288,6 +288,8 @@ public class LoginViewController extends Controller implements Initializable {
         emailRecoverField.setText("");
         passwordField.setText("");
         userRegisField.setText("");
+        choiceBoxIdioms.setValue(null);
+        
     }
 
     @FXML
@@ -345,7 +347,6 @@ public class LoginViewController extends Controller implements Initializable {
         
         String code = CodeRamdon();
         user.setUsCode(code);
-
         if (choiceBoxIdioms.getValue().equals("Espagnol") || choiceBoxIdioms.getValue().equals("Spanish") || choiceBoxIdioms.getValue().equals("Español") || choiceBoxIdioms.getValue().equals("スペイン語")) {
             idiom = "Spanish";
             user.setUsLenguage(idiom);
@@ -358,7 +359,7 @@ public class LoginViewController extends Controller implements Initializable {
             idiom = "French";
             user.setUsLenguage(idiom);
         }
-        if (choiceBoxIdioms.getValue().equals("Japonais") || choiceBoxIdioms.getValue().equals("Japonese") || choiceBoxIdioms.getValue().equals("Japonés") || choiceBoxIdioms.getValue().equals("日本語")) {
+        if (choiceBoxIdioms.getValue().equals("Japonais") || choiceBoxIdioms.getValue().equals("Japanese") || choiceBoxIdioms.getValue().equals("Japonés") || choiceBoxIdioms.getValue().equals("日本語")) {
             idiom = "Japanese";
             user.setUsLenguage(idiom);
         }

@@ -290,6 +290,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private NumberAxis categoryBodyMassY;
     @FXML
     private CategoryAxis categoryAppoinmentsX;
+    @FXML
+    private Button btnViewReport;
 
     //List<AppointmentDto> reportList = new ArrayList<>();
     /**
@@ -337,6 +339,8 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
         this.tableColFamBgRelation.setCellValueFactory(new PropertyValueFactory("FbRelationship"));
         this.tableColFamBgDisease.setCellValueFactory(new PropertyValueFactory("FbDiseaseName"));
+        this.tableViewPersonalBg.refresh();
+        this.tableViewPersonalBg.refresh();
 
         bindPatient();
         fillTableExams();
@@ -1136,6 +1140,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void doctorClicked(MouseEvent event) {
         if (event.getClickCount() == 2) {
             doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
+            textFieldDoctorSelected.setText(doctorDto.getDoctorName()+" "+doctorDto.getDoctorPsurname());
             OptionsProceedingsView.toFront();
         }
 
@@ -1184,6 +1189,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         if (reports.isEmpty()) {
             btnMoveRight.setVisible(false);
             btnMoveLeft.setVisible(false);
+            btnViewReport.setVisible(false);
         } else {
             if (!indexConst && reports != null) {
                 indexReports = reports.size() - 1;
@@ -1415,6 +1421,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                     new Mensaje().showModal(Alert.AlertType.ERROR, "ファイルレポート", getStage(), "レポート生成エラー.");
                 }
         }
+    }
+
+    @FXML
+    private void backMainDesease(ActionEvent event) {
+       OptionsProceedingsView.toFront();
     }
 
 }
