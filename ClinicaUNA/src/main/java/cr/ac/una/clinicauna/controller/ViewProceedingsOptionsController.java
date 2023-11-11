@@ -383,11 +383,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     }
 
     private void fillTablePersonalBack() {
-        PersonalbackgroundService service = new PersonalbackgroundService();
-        personalBaList = service.getPersonalbackgrounds();
+         PersonalbackgroundService service = new PersonalbackgroundService();
+        personalBaList = service.getPersonalbackgroundsByProceedingsId(proceedingsDto.getPsId());
 
         if (personalBaList == null) {
-            System.out.println("nula");
+         
         } else {
             personalBackObservableList = FXCollections.observableArrayList(personalBaList);
             this.tableViewPersonalBg.refresh();
@@ -398,10 +398,10 @@ public class ViewProceedingsOptionsController extends Controller implements Init
 
     private void fillTableFamilyBack() {
         FamilybackgroundService service = new FamilybackgroundService();
-        familyBaList = service.getFamilybackground();
+        familyBaList = service.getFamilybackgroundsByProceedingsId(proceedingsDto.getPsId());
 
         if (familyBaList == null) {
-            System.out.println("nula");
+        
         } else {
             familyBackObservableList = FXCollections.observableArrayList(familyBaList);
             this.tableViewFamilyBg.refresh();

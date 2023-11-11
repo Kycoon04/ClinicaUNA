@@ -9,6 +9,7 @@ import cr.ac.una.clinicauna.model.FamilybackgroundDto;
 import cr.ac.una.clinicauna.util.Request;
 import cr.ac.una.clinicauna.util.Respuesta;
 import jakarta.ws.rs.core.GenericType;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,4 +104,24 @@ public class FamilybackgroundService {
             return null;
         }
     }
+    
+    
+    public List<FamilybackgroundDto> getFamilybackgroundsByProceedingsId(int proceedingsId) {
+    try {
+        Map<String, Object> parametros = new HashMap<>();
+        parametros.put("id", proceedingsId);
+        Request request = new Request("ModuleFamilybackground/familyBacks/{id}", "", parametros);
+        request.get();
+        if (request.isError()) {
+           
+            return Collections.emptyList();
+        }
+        return (List<FamilybackgroundDto>) request.readEntity(new GenericType<List<FamilybackgroundDto>>() {});
+    } catch (Exception e) {
+      
+        System.out.println(e.toString());
+        return Collections.emptyList();
+    }
+}
+
 }

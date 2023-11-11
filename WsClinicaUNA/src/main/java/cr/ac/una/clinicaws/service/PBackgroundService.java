@@ -18,6 +18,7 @@ import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -133,26 +134,16 @@ public class PBackgroundService {
         }
     }
 
-    public Respuesta getPersonalBackgroundsByProceedingsId(long proceedingsId) {
-        try {                                        
-            Query qryPersonalBackground = em.createQuery("SELECT pb FROM Personalbackground pb JOIN PProceedings pc ON pc.ppPersonalback.pbId= pb.pbId JOIN Proceedings p ON p.psId= pc.ppProceedings.psId "/*WHERE p.psId = :psId "*/, Personalbackground.class);        
-          //  qryPersonalBackground.setParameter("psId", proceedingsId);
-            List<Personalbackground> exams = (List<Personalbackground>) qryPersonalBackground.getResultList();
-            
-            List<PersonalbackgroundDto> listExamsDto = new ArrayList<>();
-            for (Personalbackground exam : exams) {
-                PersonalbackgroundDto examDto = new PersonalbackgroundDto(exam);
-                listExamsDto.add(examDto);
-            }
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "PersonalBack", listExamsDto);
-        } catch (NoResultException ex) {
-            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontraron antecedentes para el paciente con el ID proporcionado.", "getExamsByPatientId NoResultException");
-        } catch (NonUniqueResultException ex) {
-            LOG.log(Level.SEVERE, "Ocurrió un error al consultar los antecedentes para el paciente.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los antecedentes para el paciente.", "getBackByPatientId NonUniqueResultException");
+    public List<PersonalbackgroundDto> getPersonalBackgroundsByProceedingsId(Integer proceedingsId) {
+        try {
+            Query query = em.createQuery("SELECT pb FROM Personalbackground pb JOIN PProceedings pp ON pb = pp.ppPersonalback JOIN Proceedings ps ON pp.ppProceedings = ps WHERE ps.psId = :proceedingsId", Personalbackground.class);
+            query.setParameter("proceedingsId", proceedingsId);
+            return (List<PersonalbackgroundDto>) query.getResultList();
+        } catch (NoResultException ex) {  
+            return Collections.emptyList();
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Ocurrió un error al consultar los antecedentes para el paciente.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los antecedentes para el paciente.", "getBackByPatientId " + ex.getMessage());
+            ex.printStackTrace();
+            return Collections.emptyList();
         }
     }
 }

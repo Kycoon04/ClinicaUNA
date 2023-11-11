@@ -14,6 +14,7 @@ import cr.ac.una.clinicaws.util.Respuesta;
 import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
+import jakarta.persistence.NoResultException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -32,7 +33,6 @@ import java.util.logging.Logger;
  *
  * @author jomav
  */
-
 @Path("/ModulePBackground")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -58,8 +58,7 @@ public class ModulePBackground {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Personal Background").build();
         }
     }
-    
-    
+
     @GET
     @Path("/pBackgroundCode/{id}")
     public Response getPBackgroundCode(@PathParam("id") Integer id) {
@@ -74,9 +73,7 @@ public class ModulePBackground {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Personal Background").build();
         }
     }
-    
-  
-    
+
     @POST
     @Path("/pBackground")
     public Response savePBackground(PersonalbackgroundDto personalbackgroundDto) {
@@ -91,6 +88,7 @@ public class ModulePBackground {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando el Personal Background").build();
         }
     }
+
     @DELETE
     @Path("/pBackground/{id}")
     public Response deletePBackground(@PathParam("id") Integer id) {
@@ -105,7 +103,7 @@ public class ModulePBackground {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Personal Background").build();
         }
     }
-    
+
     @GET
     @Path("/pBackgrounds")
     public Response getPBackgrounds() {
@@ -121,25 +119,20 @@ public class ModulePBackground {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo los Personal Backgrounds").build();
         }
     }
-    
-   @GET
+
+    @GET
     @Path("/personalBacks/{id}")
-    public Response getPersonalBack(@PathParam("id") long PatientId) {
+    public Response getPersonalBack(@PathParam("id") int proceedingsId) {
         try {
-   
-            Respuesta res = pBackgroundService.getPersonalBackgroundsByProceedingsId(PatientId); 
-            if (!res.getEstado()) {
-                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
-            }
-            List<PersonalbackgroundDto> personalBList = (List<PersonalbackgroundDto>) res.getResultado("PersonalBack");
+            List<PersonalbackgroundDto> personalBList = pBackgroundService.getPersonalBackgroundsByProceedingsId(proceedingsId);
 
             return Response.ok(new GenericEntity<List<PersonalbackgroundDto>>(personalBList) {
             }).build();
+        } catch (NoResultException ex) {
+            return Response.status(CodigoRespuesta.ERROR_NOENCONTRADO.getValue()).entity("No se encontraron resultados").build();
         } catch (Exception ex) {
             Logger.getLogger(ModulePBackground.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Examen").build();
         }
     }
-    
-   
 }

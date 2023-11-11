@@ -22,6 +22,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,12 +34,11 @@ import java.util.logging.Logger;
 @Stateless
 @LocalBean
 public class FamilybackgroundService {
+
     private static final Logger LOG = Logger.getLogger(FamilybackgroundService.class.getName());
     @PersistenceContext(unitName = "my_persistence_unit")
     private EntityManager em;
-    
-    
-      
+
     public Respuesta getFamilybackground(Long fbId) {
         try {
             Query qryusuario = em.createNamedQuery("Familybackground.findByFbId", Familybackground.class);
@@ -57,8 +57,8 @@ public class FamilybackgroundService {
         }
     }
 
-      public Respuesta getFamilybackgroundCode(Long code) {
-         try {
+    public Respuesta getFamilybackgroundCode(Long code) {
+        try {
             Query qryusuario = em.createNamedQuery("Familybackground.findByFbFilecode", Familybackground.class);
             qryusuario.setParameter("fbFilecode", code);
 
@@ -75,11 +75,10 @@ public class FamilybackgroundService {
         }
     }
 
-
     public Respuesta saveFamilybackground(FamilybackgroundDto familybackgrounddto) {
         try {
             Familybackground familybackground = new Familybackground();
-            if (familybackgrounddto.getFbId()!= null && familybackgrounddto.getFbId()> 0) {
+            if (familybackgrounddto.getFbId() != null && familybackgrounddto.getFbId() > 0) {
                 familybackground = em.find(Familybackground.class, familybackgrounddto.getFbId());
                 if (familybackground == null) {
                     return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encrontró  antecedentes heredo familiares. a modificar.", "Familybackground NoResultException");
@@ -121,12 +120,11 @@ public class FamilybackgroundService {
         }
     }
 
-    
     public Respuesta getFamilybackgrounds() {
         try {
             Query qryUsers = em.createNamedQuery("Familybackground.findAll", Familybackground.class);
             List<Familybackground> familybackground = (List<Familybackground>) qryUsers.getResultList();
-             List<FamilybackgroundDto> ListExam = new ArrayList<>();
+            List<FamilybackgroundDto> ListExam = new ArrayList<>();
             for (Familybackground tipo : familybackground) {
                 FamilybackgroundDto familybackgroundDto = new FamilybackgroundDto(tipo);
                 ListExam.add(familybackgroundDto);
@@ -142,29 +140,27 @@ public class FamilybackgroundService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar antecedentes heredo familiares.", "getFamilybackground " + ex.getMessage());
         }
     }
-    
-    
-    public Respuesta getFamilyBackgroundsByProceedingsId(long proceedingsId) {
-        try {                                        
-            Query qryPersonalBackground = em.createQuery("SELECT pb FROM Personalbackground pb JOIN PProceedings pc ON pc.ppPersonalback.pbId= pb.pbId JOIN Proceedings p ON p.psId= pc.ppProceedings.psId "/*WHERE p.psId = :psId "*/, Familybackground.class);            //qryExams.setParameter("patientId", proceedingsId);
-          //  qryPersonalBackground.setParameter("psId", proceedingsId);
-            List<Familybackground> bgrounds = (List<Familybackground>) qryPersonalBackground.getResultList();
-            
+
+    public Respuesta getFamilyBackgroundsByProceedingsId(Integer proceedingsId) {
+        try {
+            Query query = em.createQuery("SELECT DISTINCT fb FROM Familybackground fb JOIN FProceedings fp ON fb = fp.fpFamilyback JOIN Proceedings ps ON fp.fpProceedings = ps WHERE ps.psId = :proceedingsId", FamilybackgroundDto.class);
+            query.setParameter("proceedingsId", proceedingsId);
+            List<Familybackground> exams = (List<Familybackground>) query.getResultList();
             List<FamilybackgroundDto> listExamsDto = new ArrayList<>();
-            for (Familybackground back : bgrounds) {
-                FamilybackgroundDto examDto = new FamilybackgroundDto(back);
+            for (Familybackground exam : exams) {
+                FamilybackgroundDto examDto = new FamilybackgroundDto(exam);
                 listExamsDto.add(examDto);
             }
-            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "FamilyBack", listExamsDto);
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Exams", listExamsDto);
         } catch (NoResultException ex) {
-            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontraron antecedentes para el paciente con el ID proporcionado.", "getBackByPatientId NoResultException");
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No se encontraron exámenes para el paciente con el ID proporcionado.", "getExamsByPatientId NoResultException");
         } catch (NonUniqueResultException ex) {
-            LOG.log(Level.SEVERE, "Ocurrió un error al consultar los antecedentes para el paciente.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los antecedentes para el paciente.", "getBackByPatientId NonUniqueResultException");
+            LOG.log(Level.SEVERE, "Ocurrió un error al consultar los exámenes para el paciente.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los exámenes para el paciente.", "getExamsByPatientId NonUniqueResultException");
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Ocurrió un error al consultar los antecedentes para el paciente.", ex);
-            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los antecedentes para el paciente.", "getBackByPatientId " + ex.getMessage());
+            LOG.log(Level.SEVERE, "Ocurrió un error al consultar los exámenes para el paciente.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrió un error al consultar los exámenes para el paciente.", "getExamsByPatientId " + ex.getMessage());
         }
     }
-    
+
 }

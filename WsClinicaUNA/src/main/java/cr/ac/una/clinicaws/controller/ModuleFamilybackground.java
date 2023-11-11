@@ -12,6 +12,7 @@ import cr.ac.una.clinicaws.util.Secure;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.ejb.EJB;
+import jakarta.persistence.NoResultException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -25,6 +26,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /**
  *
  * @author dilan
@@ -35,8 +37,8 @@ import java.util.logging.Logger;
 @Tag(name = "Familybackground", description = "Operations on Familybackground")
 //@Secure
 public class ModuleFamilybackground {
-    
-      @EJB
+
+    @EJB
     FamilybackgroundService familybackgroundService;
 
     @GET
@@ -54,7 +56,7 @@ public class ModuleFamilybackground {
         }
     }
 
-        @GET
+    @GET
     @Path("/familybackgroundCode/{id}")
     public Response getFamilybackgroundcode(@PathParam("id") Long id) {
         try {
@@ -68,7 +70,6 @@ public class ModuleFamilybackground {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("antecedentes heredo familiares").build();
         }
     }
-
 
     @POST
     @Path("/familybackground")
@@ -100,42 +101,23 @@ public class ModuleFamilybackground {
         }
     }
 
-
     @GET
-    @Path("/familybackground")
-    public Response getFamilybackground() {
+    @Path("/familyBacks/{id}")
+    public Response getFamilyBack(@PathParam("id") int proceedingsId) {
         try {
-            Respuesta res = familybackgroundService.getFamilybackgrounds();
+
+            Respuesta res = familybackgroundService.getFamilyBackgroundsByProceedingsId(proceedingsId);
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
-            return Response.ok(new GenericEntity<List<FamilybackgroundDto>>((List< FamilybackgroundDto>) res.getResultado("Familybackground")) {
+            List<FamilybackgroundDto> examDtoList = (List<FamilybackgroundDto>) res.getResultado("Exams");
+
+            return Response.ok(new GenericEntity<List<FamilybackgroundDto>>(examDtoList) {
             }).build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleFamilybackground.class.getName()).log(Level.SEVERE, null, ex);
-            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo antecedentes heredo familiares").build();
-        }
-    }
-    
-    
-       @GET
-    @Path("/familyBacks/{id}")
-    public Response getFamilyBack(@PathParam("id") long PatientId) {
-        try {
-   
-            Respuesta res = familybackgroundService.getFamilyBackgroundsByProceedingsId(PatientId); 
-            if (!res.getEstado()) {
-                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
-            }
-            List<FamilybackgroundDto> personalBList = (List<FamilybackgroundDto>) res.getResultado("FamilyBack");
-
-            return Response.ok(new GenericEntity<List<FamilybackgroundDto>>(personalBList) {
-            }).build();
-        } catch (Exception ex) {
-            Logger.getLogger(ModulePBackground.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo el Examen").build();
         }
     }
-    
-    
+
 }
