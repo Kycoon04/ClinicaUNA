@@ -54,6 +54,23 @@ public class ReportService {
         }
     }
 
+    
+    public Respuesta sendReport(ReportDto reportsDto) {
+        try {
+            Request request = new Request("ModuleReport/Sendreport");
+            request.post(reportsDto);
+            if (request.isError()) {
+                return new Respuesta(false, request.getError(), "");
+            }
+            ReportDto reportDto = (ReportDto) request.readEntity(ReportDto.class);
+            return new Respuesta(true, "", "", "App", reportDto);
+        } catch (Exception ex) {
+            Logger.getLogger(ReportService.class.getName()).log(Level.SEVERE, "Error enviando el Reporte.", ex);
+            return new Respuesta(false, "Error enviando el Reporte.", "guardarReporte" + ex.getMessage());
+        }
+    }
+    
+    
     public Respuesta deleteReport(Integer id) {
         try {
             Map<String, Object> parametros = new HashMap<>();

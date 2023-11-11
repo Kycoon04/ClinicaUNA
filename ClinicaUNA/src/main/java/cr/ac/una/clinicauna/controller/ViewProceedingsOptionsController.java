@@ -383,11 +383,11 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     }
 
     private void fillTablePersonalBack() {
-         PersonalbackgroundService service = new PersonalbackgroundService();
+        PersonalbackgroundService service = new PersonalbackgroundService();
         personalBaList = service.getPersonalbackgroundsByProceedingsId(proceedingsDto.getPsId());
 
         if (personalBaList == null) {
-         
+
         } else {
             personalBackObservableList = FXCollections.observableArrayList(personalBaList);
             this.tableViewPersonalBg.refresh();
@@ -401,7 +401,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
         familyBaList = service.getFamilybackgroundsByProceedingsId(proceedingsDto.getPsId());
 
         if (familyBaList == null) {
-        
+
         } else {
             familyBackObservableList = FXCollections.observableArrayList(familyBaList);
             this.tableViewFamilyBg.refresh();
@@ -823,6 +823,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                     if (procedings.getEstado()) {
                         if (userDto.getUsLenguage().equals("Spanish")) {
                             new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Se guardó en su expediente");
+
                         }
                         if (userDto.getUsLenguage().equals("English")) {
                             new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "Saved in the record");
@@ -833,7 +834,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
                         if (userDto.getUsLenguage().equals("Japanese")) {
                             new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "レコードに保存されました");
                         }
-
+                        fillTablePersonalBack();
                     } else {
                         if (userDto.getUsLenguage().equals("Spanish")) {
                             new Mensaje().showModal(Alert.AlertType.INFORMATION, "", getStage(), "No se guardó en su expediente");
@@ -1140,7 +1141,7 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     private void doctorClicked(MouseEvent event) {
         if (event.getClickCount() == 2) {
             doctorDto = tableViewDoctors.getSelectionModel().getSelectedItem();
-            textFieldDoctorSelected.setText(doctorDto.getDoctorName()+" "+doctorDto.getDoctorPsurname());
+            textFieldDoctorSelected.setText(doctorDto.getDoctorName() + " " + doctorDto.getDoctorPsurname());
             OptionsProceedingsView.toFront();
         }
 
@@ -1396,36 +1397,36 @@ public class ViewProceedingsOptionsController extends Controller implements Init
     @FXML
     private void sendReportPatient(MouseEvent event) throws FileNotFoundException {
         JasperReportService serviceJasper = new JasperReportService();
-        
+
         //Respuesta respuesta = serviceJasper.getDiaryDoctor(287, "2023-11-25", "2023-11-30");
         //respuesta = serviceJasper.getNotDiaryDoctor(287, "2023-11-25", "2023-11-30");
-        Respuesta respuesta = serviceJasper.getProceedings(patientDto.getPtId(),userDto.getUsLenguage());
-        if(respuesta.getEstado()){
-           if (userDto.getUsLenguage().equals("Spanish")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reporte de Expediente", getStage(), "Reporte de Expediente generado.");
-                } else if (userDto.getUsLenguage().equals("English")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "File Report", getStage(), "File report generated.");
-                } else if (userDto.getUsLenguage().equals("French")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapport de fichier", getStage(), "Rapport de fichier généré.");
-                } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "ファイルレポート", getStage(), "生成されたファイルレポート");
-                }
-        }else{
-             if (userDto.getUsLenguage().equals("Spanish")) {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "Reporte de Expediente", getStage(), "Error al generar el reporte.");
-                } else if (userDto.getUsLenguage().equals("English")) {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "File Report", getStage(), "Error generating the report.");
-                } else if (userDto.getUsLenguage().equals("French")) {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "Rapport de fichier", getStage(), "Erreur lors de la génération du rapport.");
-                } else {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "ファイルレポート", getStage(), "レポート生成エラー.");
-                }
+        Respuesta respuesta = serviceJasper.getProceedings(patientDto.getPtId(), userDto.getUsLenguage());
+        if (respuesta.getEstado()) {
+            if (userDto.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reporte de Expediente", getStage(), "Reporte de Expediente generado.");
+            } else if (userDto.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "File Report", getStage(), "File report generated.");
+            } else if (userDto.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapport de fichier", getStage(), "Rapport de fichier généré.");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "ファイルレポート", getStage(), "生成されたファイルレポート");
+            }
+        } else {
+            if (userDto.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Reporte de Expediente", getStage(), "Error al generar el reporte.");
+            } else if (userDto.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "File Report", getStage(), "Error generating the report.");
+            } else if (userDto.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Rapport de fichier", getStage(), "Erreur lors de la génération du rapport.");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "ファイルレポート", getStage(), "レポート生成エラー.");
+            }
         }
     }
 
     @FXML
     private void backMainDesease(ActionEvent event) {
-       OptionsProceedingsView.toFront();
+        OptionsProceedingsView.toFront();
     }
 
 }

@@ -122,8 +122,8 @@ public class UserService {
             } else {
                 user = new Users(userDto);
                 em.persist(user);
-                    Email email = new Email(user.getUsEmail(), "Activacion", "http://localhost:8080/WsClinicaUNA/Activacion.html?Code=" + user.getUsCode());
-                email.envioDeCorreos(email);
+                Email email = new Email(user.getUsEmail(), "Activacion", "http://localhost:8080/WsClinicaUNA/Activacion.html?Code=" + user.getUsCode());
+                email.enviarCorreoActiv(email, user.getUsLenguage());
             }
 
             em.flush();

@@ -29,6 +29,10 @@ public class Email {
     private String password;
     private String name;
     private String info;
+    private String action;
+    private String motive;
+    private String button;
+
 
     /**
      * Constructor de la clase Email.
@@ -46,6 +50,9 @@ public class Email {
         this.name = "";
         this.info = "";
         this.archive = "";
+        this.action = "";
+        this.motive = "";
+         this.button = "";
     }
 
     public Email() {
@@ -58,6 +65,10 @@ public class Email {
      */
     public void envioDeCorreos(Email acti) {
         enviarCorreoReporte(acti);
+    }
+
+    public void envioDeActivacion(Email acti, String idiom) {
+        enviarCorreoActiv(acti, idiom);
     }
 
     /**
@@ -74,8 +85,8 @@ public class Email {
         System.out.println("Vacia");
         sourceMail = "clinicauna10@gmail.com";
         name = "ClinicaUNA";
-        info = "La mejor en salud";
         password = "xvezelgtwkeuhawv";
+        info = "La mejor en salud";
 
         try {
             Properties props = new Properties();
@@ -186,13 +197,180 @@ public class Email {
         }
     }
 
-    public void enviarConfirmacion(String dia, String nombre) {
+    public void enviarCorreoActiv(Email acti, String idiom) {
+
+        System.out.println("Vacia");
+        sourceMail = "clinicauna10@gmail.com";
+        name = "ClinicaUNA";
+
+        password = "xvezelgtwkeuhawv";
+
+        if (idiom.equals("Spanish")) {
+            info = "La mejor en salud";
+            motive = "Activacion de Cuentas";
+            action = "Bienvenido al sistema de salud , para continuar con su proceso de activacion, da clic en el siguiente boton";
+            button= "Continuar";
+
+        } else if (idiom.equals("English")) {
+            info = "The best in health";
+            motive = "Account Activation";
+            action = "Welcome to the health system, to continue with your activation process, click the following button.";
+            button= "Continue";
+
+        } else if (idiom.equals("French")) {
+            info = "Le meilleur en matière de santé";
+            motive = "Activation de Compte";
+            action = "Bienvenue dans le système de santé, pour continuer votre processus d'activation, cliquez sur le bouton suivant.";
+            button= "continuer";
+        } else if(idiom.equals("Japanese")) {
+             info = "The best in health";
+            motive = "Account Activation";
+            action = "Welcome to the health system, to continue with your activation process, click the following button.";
+            button= "Continue";
+        }
+
+        try {
+            Properties props = new Properties();
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+            props.put("mail.smtp.user", sourceMail);
+            props.put("mail.smtp.auth", "true");
+
+            Session session = Session.getDefaultInstance(props);
+
+            String mensajeHTML = "<!DOCTYPE html>\n"
+                    + "<html>\n"
+                    + "<head>\n"
+                    + "<style>\n"
+                    + "  body {\n"
+                    + "    font-family: Arial, sans-serif;\n"
+                    + "    background-color: #000359;\n"
+                    + "    max-width: 600px;\n"
+                    + "    margin: 0 auto;\n"
+                    + "    padding: 20px;\n"
+                    + "  }\n"
+                    + "  header {\n"
+                    + "    background-color: #000359;\n"
+                    + "    color: white;\n"
+                    + "    text-align: center;\n"
+                    + "    padding: 10px 0;\n"
+                    + "  }\n"
+                    + "  h1 {\n"
+                    + "    font-size: 24px;\n"
+                    + "    margin-bottom: 20px;\n"
+                    + "    background-color: #000359;\n"
+                    + "  }\n"
+                    + "  h2 {\n"
+                    + "    font-size: 16px;\n"
+                    + "    margin-bottom: 20px;\n"
+                    + "    background-color: #000359;\n"
+                    + "    padding: 10px;\n"
+                    + "  }\n"
+                    + "  p {\n"
+                    + "    font-size: 18px;\n"
+                    + "    line-height: 1.6;\n"
+                    + "  }\n"
+                    + "  .center {\n"
+                    + "    text-align: center;\n"
+                    + "  }\n"
+                    + "  #activeButton {\n"
+                    + "    font-family: 'Tw Cen MT';\n"
+                    + "    font-size: 18px;\n"
+                    + "    display: inline-block;\n"
+                    + "    padding: 10px 20px;\n"
+                    + "    background-color: #000359;\n"
+                    + "    color: white;\n"
+                    + "    text-decoration: none;\n"
+                    + "    border-radius: 5px;\n"
+                    + "    transition: background-color 0.3s ease;\n"
+                    + "    cursor: pointer;\n"
+                    + "  }\n"
+                    + "  #activeButton:hover {\n"
+                    + "    background-color: #5ac500;\n"
+                    + "  }\n"
+                    + "  a {\n"
+                    + "    color: #007bff;\n"
+                    + "    text-decoration: none;\n"
+                    + "  }\n"
+                    + "  ul {\n"
+                    + "    list-style: none;\n"
+                    + "    padding: 0;\n"
+                    + "  }\n"
+                    + "  li {\n"
+                    + "    margin-bottom: 10px;\n"
+                    + "  }\n"
+                    + "</style>\n"
+                    + "</head>\n"
+                    + "<body>\n"
+                    + "<header>\n"
+                    + "<h1>"+ motive +" "+ name + "</h1>\n"
+                    + "<h2>"+action+"</h2>\n"
+                    + "<h2>" + info + "</h2>\n"
+                    + "</header>\n"
+                    + "<div class='container'>\n"
+                    + "<p class='center'><a id='activeButton' href='" + acti.getLink() + "'>"+button+"</a></p>\n"
+                    + "</div>\n"
+                    + "</body>\n"
+                    + "</html>";
+
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setContent(mensajeHTML, "text/html");
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(htmlPart);
+
+            MimeMessage mensaje = new MimeMessage(session);
+            mensaje.setFrom(new InternetAddress(sourceMail));
+            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinationMail));
+            mensaje.setSubject(asunt);
+            mensaje.setContent(multipart);
+
+            Transport transport = session.getTransport("smtp");
+            transport.connect(sourceMail, password);
+            if (transport.isConnected()) {
+                transport.sendMessage(mensaje, mensaje.getAllRecipients());
+                transport.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void enviarConfirmacion2(String dia, String nombre, String idiom) {
 
         sourceMail = "clinicauna10@gmail.com";
         name = "ClinicaUNA";
-        info = "La mejor en salud";
+ 
         password = "xvezelgtwkeuhawv";
 
+        
+        if (idiom.equals("Spanish")) {
+            info = "Te Esperamos!";
+            motive = "Confirmación de cita";
+            action = "Te confirmamos tu cita para el dia";
+            button= "Continuar";
+
+        } else if (idiom.equals("English")) {
+            info = "We are waiting for you!";
+            motive = "Appointment Confirmation";
+            action = "We confirm your appointment for the day";
+            button= "Continue";
+
+        } else if (idiom.equals("French")) {
+            info = "Nous t'attendons!";
+            motive = "Confirmation de rendez-vous";
+            action = "Nous confirmons ton rendez-vous pour le jour";
+            button= "Continuer";
+        } else if(idiom.equals("Japanese")) {
+            info = "We are waiting for you!";
+            motive = "Appointment Confirmation";
+            action = "We confirm your appointment for the day";
+            button= "Continue";
+
+        }
+        
         try {
             Properties p = new Properties();
             p.put("mail.smtp.host", "smtp.gmail.com");
@@ -212,10 +390,10 @@ public class Email {
                     + "</style>"
                     + "</head>"
                     + "<body>"
-                    + "<h1>Confirmación de cita</h1>"
+                    + "<h1>"+motive+"</h1>"
                     + "<p>Hola " + nombre + "!</p>"
-                    + "<p>Te confirmamos tu cita para el dia " + dia + "</p>"
-                    + "<p>Te esperamos!</p>"
+                    + "<p>"+action+" " + dia + "</p>"
+                    + "<p>"+info+"</p>"
                     + "<p><strong>" + destinationMail + "</strong></p>"
                     + "</body>"
                     + "</html>";
@@ -267,7 +445,7 @@ public class Email {
                     + "<body>"
                     + "<h1>Confirmación de cita</h1>"
                     + "<p>Hola " + nombre + "!</p>"
-                    + "<p>Te confirmamos tu cita para el dia " + dia + "</p>"
+                    + "<p>"+action +" "+ dia + "</p>"
                     + "<p>Te esperamos!</p>"
                     + "<p><strong>" + destinationMail + "</strong></p>"
                     + "</body>"
@@ -374,24 +552,23 @@ public class Email {
             Session s = Session.getDefaultInstance(p);
 
             String mensajeHTML = "<html>"
-        + "<head>"
-        + "<style>"
-        + "body { font-family: Arial, sans-serif; background-color: #000359; }"
-        + "h1 { color: White; background-color: #000359;  text-align: center; }"
-        + "p { color: #666; }"
-        + "#imageLogo{ width: 340px;  height: auto; margin: 10px; }"
-        + "</style>"
-        + "</head>"
-        + "<body>"
-        + "<h1>Recuperación de Contraseña</h1>"
-        + "<p>Se ha detectado un intento de recuperación de contraseña para la dirección de correo:</p>"
-        + "<p><strong>" + destinationMail + "</strong></p>"
-        + "<img id='imageLogo' src='https://eblbeoe.stripocdn.email/content/guids/CABINET_6900d7cefb295c65d827b1830fdf29ebf3b01e24733c06a4ea87c88a9f13230d/images/logomedicalclinic.png' alt='Imagen 1'>"
-        + "<p>Aquí está su contraseña temporal:</p>"
-        + "<p><strong>" + link + "</strong></p>"
-        + "</body>"
-        + "</html>";
-
+                    + "<head>"
+                    + "<style>"
+                    + "body { font-family: Arial, sans-serif; background-color: #000359; }"
+                    + "h1 { color: White; background-color: #000359;  text-align: center; }"
+                    + "p { color: #666; }"
+                    + "#imageLogo{ width: 340px;  height: auto; margin: 10px; }"
+                    + "</style>"
+                    + "</head>"
+                    + "<body>"
+                    + "<h1>Recuperación de Contraseña</h1>"
+                    + "<p>Se ha detectado un intento de recuperación de contraseña para la dirección de correo:</p>"
+                    + "<p><strong>" + destinationMail + "</strong></p>"
+                    + "<img id='imageLogo' src='https://eblbeoe.stripocdn.email/content/guids/CABINET_6900d7cefb295c65d827b1830fdf29ebf3b01e24733c06a4ea87c88a9f13230d/images/logomedicalclinic.png' alt='Imagen 1'>"
+                    + "<p>Aquí está su contraseña temporal:</p>"
+                    + "<p><strong>" + link + "</strong></p>"
+                    + "</body>"
+                    + "</html>";
 
             MimeMessage mensaje = new MimeMessage(s);
             mensaje.setFrom(new InternetAddress(sourceMail));
@@ -411,8 +588,8 @@ public class Email {
             System.out.println(e.toString());
         }
     }
-    
-     public void enviarReporteControl(ReportDto report, String EmailDest) {
+
+    public void enviarReporteControl(ReportDto report, String EmailDest) {
 
         String Presion = report.getRtPressure() + "";
         String FrecuenciaCardi = report.getRtHeartRate() + "";
@@ -424,10 +601,9 @@ public class Email {
         String Razon = report.getRtNotesNursing();
         String fechaHora = report.getRtDate() + "  /  ";
         String nombrePaciente = report.getRtAppointment().getAtPatient().getPtName();
-        String ExamenFisico= report.getRtFisicExamen();
-        String Tratamiento= report.getRtTreatmentExamen();
+        String ExamenFisico = report.getRtFisicExamen();
+        String Tratamiento = report.getRtTreatmentExamen();
         String PlanCuidados = report.getRtCarePlan();
-       
 
         sourceMail = "clinicauna10@gmail.com";
         name = "ClinicaUNA";
@@ -497,7 +673,6 @@ public class Email {
             System.out.println(e.toString());
         }
     }
-    
 
     public String getSourceMail() {
         return sourceMail;

@@ -69,6 +69,22 @@ public class ModuleReport {
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error guardando el Report").build();
         }
     }
+    
+    @POST
+    @Path("/Sendreport")
+    public Response sendReport(ReportDto reportDto) {
+        try {
+            Respuesta res = reportService.sendReport(reportDto);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(res.getResultado("App")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleReport.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error enviando el Report").build();
+        }
+    }
+    
 
     @DELETE
     @Path("/report/{id}")

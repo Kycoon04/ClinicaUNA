@@ -2377,4 +2377,19 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
         return gridPane;
     }
+
+    @FXML
+    private void sendControll(MouseEvent event) {
+        Respuesta response = new Respuesta();
+        ReportService report= new ReportService();
+        ReportDto rd=bindNewReport();
+        if(rd!=null){
+        response= report.sendReport(rd); 
+        if(response.getEstado()){
+            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enviar Control de Atención", getStage(), "Control de Atención enviado ");
+        }
+        }else{
+            new Mensaje().showModal(Alert.AlertType.ERROR, "Enviar Control de Atención", getStage(), "Debe llenar el contron de atencion ");
+        }
+    }
 }

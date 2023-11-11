@@ -170,4 +170,14 @@ public class ReportService {
         }
     }
     
+    public Respuesta sendReport(ReportDto report){
+
+        if(report.getRtAppointment()!=null && report.getRtAppointment().getAtState().equals("Atendida")){
+         Email email= new Email();
+         email.enviarReporteControl(report, report.getRtAppointment().getAtEmail());
+         return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "App", report.getRtAppointment());
+        }
+        return null;
+    }
+    
 }
