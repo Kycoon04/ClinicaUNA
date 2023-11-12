@@ -205,6 +205,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private ChoiceBox<String> choiceBoxJobsTypes;
     String jobsSpanish[] = {"Administrador", "Recepcionista", "Doctor"};
     String jobsEnglish[] = {"Administrator", "Receptionist", "Doctor"};
+    String jobsFrench[] = {"Administrateur", "Réceptionniste", "Médecin"};
+    String jobsJapanese[] = {"管理者","受付","医師"};
     boolean userDoctor = false;
     int respaldo = 0;
     String respaldoFechaInit;
@@ -325,6 +327,14 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     String periodEnglish[] = {"Daily", "Weekly", "Monthly"};
     String periodFrench[] = {"Quotidien", "Hebdomadaire", "Mensuel"};
     String periodJapanese[] = {"「日次」", "「週次」", "「月次」"};
+    @FXML
+    private TextField textFieldTitleReport;
+    @FXML
+    private ChoiceBox<String> choiceBoxIdioms;
+    String[] Spanish = {"Español", "Inglés", "Francés", "Japonés"};
+    String[] English = {"Spanish", "English", "France", "Japonese"};
+    String[] French = {"Espagnol", "Anglais", "Francais", "Japonais"};
+    String[] Japanesse = {"スペイン語", "英語", "フランス語", "日本語"};
 
     /**
      * Initializes the controller class.
@@ -340,7 +350,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             btnMantUsers.setDisable(true);
             btnMantDoctors.setDisable(true);
         }
-        choiceBoxJobsTypes.getItems().addAll(jobsEnglish);
+        //choiceBoxIdioms.getItems().addAll(jobsEnglish);
         gender = new ToggleGroup();
         this.radioBtnMale.setToggleGroup(gender);
         this.radioBtnFemale.setToggleGroup(gender);
@@ -375,11 +385,51 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
         this.tableColEmailReport.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()));
         this.tableViewEmails.setItems(emails);
-
+        loadChoiceIdioms();
+        loadChoiceJobs();
         fillTableUsers();
         fillTableDoctors();
         fillTablePatient();
 
+    }
+    private void loadChoiceJobs(){
+        if (usrIdiom.getUsLenguage().equals("Japanese")) {
+            choiceBoxJobsTypes.getItems().clear();
+            choiceBoxJobsTypes.getItems().addAll(jobsJapanese);
+        }
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            choiceBoxJobsTypes.getItems().clear();
+            choiceBoxJobsTypes.getItems().addAll(jobsSpanish);
+
+        }
+        if (usrIdiom.getUsLenguage().equals("English")) {
+            choiceBoxJobsTypes.getItems().clear();
+            choiceBoxJobsTypes.getItems().addAll(jobsEnglish);
+        }
+        if (usrIdiom.getUsLenguage().equals("French")) {
+           choiceBoxJobsTypes.getItems().clear();
+            choiceBoxJobsTypes.getItems().addAll(jobsFrench);
+        }
+    }
+
+    private void loadChoiceIdioms() {
+        if (usrIdiom.getUsLenguage().equals("Japanese")) {
+            choiceBoxIdioms.getItems().clear();
+            choiceBoxIdioms.getItems().addAll(Japanesse);
+        }
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            choiceBoxIdioms.getItems().clear();
+            choiceBoxIdioms.getItems().addAll(Spanish);
+
+        }
+        if (usrIdiom.getUsLenguage().equals("English")) {
+            choiceBoxIdioms.getItems().clear();
+            choiceBoxIdioms.getItems().addAll(English);
+        }
+        if (usrIdiom.getUsLenguage().equals("French")) {
+            choiceBoxIdioms.getItems().clear();
+            choiceBoxIdioms.getItems().addAll(French);
+        }
     }
 
     private void formater() {
@@ -533,6 +583,36 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         userDto.setUsState(userDto.getUsState());
         userDto.setUsType(choiceBoxJobsTypes.getValue());
         userDto.setUsIdentification(identMainField.getText());
+        String idiom="";
+        if (choiceBoxIdioms.getValue().equals("Espagnol") || choiceBoxIdioms.getValue().equals("Spanish") || choiceBoxIdioms.getValue().equals("Español") || choiceBoxIdioms.getValue().equals("スペイン語")) {
+            idiom = "Spanish";
+            userDto.setUsLenguage(idiom);
+        }
+        if (choiceBoxIdioms.getValue().equals("Anglais") || choiceBoxIdioms.getValue().equals("English") || choiceBoxIdioms.getValue().equals("Inglés") || choiceBoxIdioms.getValue().equals("英語")) {
+            idiom = "English";
+            userDto.setUsLenguage(idiom);
+        }
+        if (choiceBoxIdioms.getValue().equals("Francais") || choiceBoxIdioms.getValue().equals("France") || choiceBoxIdioms.getValue().equals("Francés") || choiceBoxIdioms.getValue().equals("フランス語")) {
+            idiom = "French";
+            userDto.setUsLenguage(idiom);
+        }
+        if (choiceBoxIdioms.getValue().equals("Japonais") || choiceBoxIdioms.getValue().equals("Japanese") || choiceBoxIdioms.getValue().equals("Japonés") || choiceBoxIdioms.getValue().equals("日本語")) {
+            idiom = "Japanese";
+            userDto.setUsLenguage(idiom);
+        }
+        String job="";
+         if (choiceBoxJobsTypes.getValue().equals("Administrador") ||choiceBoxJobsTypes.getValue().equals("Administrator") || choiceBoxJobsTypes.getValue().equals("Administrateur") || choiceBoxJobsTypes.getValue().equals("管理者")) {
+            job = "Administrator";
+            userDto.setUsType(job);
+        }
+        if (choiceBoxJobsTypes.getValue().equals("Recepcionista") || choiceBoxJobsTypes.getValue().equals("Receptionist") || choiceBoxJobsTypes.getValue().equals("Réceptionniste") || choiceBoxJobsTypes.getValue().equals("受付")) {
+            job = "Receptionist";
+            userDto.setUsType(job);
+        }
+        if (choiceBoxJobsTypes.getValue().equals("Doctor") || choiceBoxJobsTypes.getValue().equals("Doctor") || choiceBoxJobsTypes.getValue().equals("Médecin") || choiceBoxJobsTypes.getValue().equals("医師")) {
+            job = "Doctor";
+            userDto.setUsType(job);
+        }
         if (rdBtnUserActive.isSelected()) {
             userDto.setUsState("A");
         } else {
@@ -713,6 +793,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         emailMainField.setText(user.getUsUsername());
         identMainField.setText(user.getUsIdentification());
         choiceBoxJobsTypes.setValue(user.getUsType());
+        choiceBoxIdioms.setValue(user.getUsLenguage());
         if (user.getUsState().equals("A")) {
             rdBtnUserActive.setSelected(true);
         } else {
@@ -1333,6 +1414,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         emailMainField.clear();
         identMainField.clear();
         choiceBoxJobsTypes.setValue(null);
+        choiceBoxIdioms.setValue(null);
         rdBtnUserActive.setSelected(false);
         rdBtnUserInactive.setSelected(false);
     }
@@ -1577,7 +1659,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 || choiceBoxPeriodReport.getValue().equals("Mensuel") || choiceBoxPeriodReport.getValue().equals("「月次」")) {
             parametersDto.setPsTime("Monthly");
         }
-        parametersDto.setPsTitule("asdasddfdxxz");
+        parametersDto.setPsTitule(textFieldTitleReport.getText());
         parametersDto.setPsDescription(textAreaDescripReport.getText());
 
         sqlDto.setSqlId(0);

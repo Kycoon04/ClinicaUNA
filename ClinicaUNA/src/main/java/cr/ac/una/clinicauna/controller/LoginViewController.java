@@ -112,6 +112,7 @@ public class LoginViewController extends Controller implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        loginView.toFront();
         choiceBoxIdioms.getItems().addAll(Spanish);
         userRegisField.setTextFormatter(Formato.getInstance().letrasFormat(18));
         idRegisField.setTextFormatter(Formato.getInstance().integerFormat());
