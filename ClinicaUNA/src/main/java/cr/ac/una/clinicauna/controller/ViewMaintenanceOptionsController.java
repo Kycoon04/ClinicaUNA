@@ -4,9 +4,13 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTimePicker;
 import cr.ac.una.clinicauna.model.DiseaseDto;
 import cr.ac.una.clinicauna.model.DoctorDto;
+import cr.ac.una.clinicauna.model.EmailDto;
+import cr.ac.una.clinicauna.model.ExcelDto;
 import cr.ac.una.clinicauna.model.HistoryDto;
+import cr.ac.una.clinicauna.model.ParametersDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
+import cr.ac.una.clinicauna.model.SqlDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
@@ -14,6 +18,7 @@ import cr.ac.una.clinicauna.service.HistoryService;
 import cr.ac.una.clinicauna.service.JasperReportService;
 import cr.ac.una.clinicauna.service.PatientService;
 import cr.ac.una.clinicauna.service.ProceedingsService;
+import cr.ac.una.clinicauna.service.SqlService;
 import cr.ac.una.clinicauna.service.UserService;
 import cr.ac.una.clinicauna.util.AppContext;
 import cr.ac.una.clinicauna.util.FlowController;
@@ -1548,11 +1553,35 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     }
 
     @FXML
-    private void emailClicked(MouseEvent event) {
+    private void emailClicked(MouseEvent event) throws FileNotFoundException {
     }
 
     @FXML
-    private void sendReport(MouseEvent event) {
+    private void sendReport(MouseEvent event) throws FileNotFoundException {
+                SqlService serviceSql = new SqlService();
+        SqlDto sqlDto= new SqlDto();
+        ParametersDto parametersDto = new ParametersDto();
+        List<EmailDto> emailDto = new ArrayList<>();
+        
+        parametersDto.setPsId(0);
+        parametersDto.setPsName(textFieldNameReport.getText());
+        parametersDto.setPsTime(choiceBoxPeriodReport.getValue());
+        parametersDto.setPsTitule("TItulo");
+        parametersDto.setPsDescription(textAreaDescripReport.getText());
+        
+        sqlDto.setSqlId(0);
+        sqlDto.setSqlParam(parametersDto);
+        sqlDto.setSqlQuery(textAreaQueryReport.getText());
+        
+        for(String p: listEmails){
+            EmailDto emailsDto= new EmailDto();
+            emailsDto.setElId(0);
+            emailsDto.setElEmail(p);
+            emailsDto.setElIdsql(sqlDto);
+            emailDto.add(emailsDto);
+        }
+        ExcelDto excelDto = new ExcelDto(parametersDto,sqlDto, emailDto);
+        Respuesta res = serviceSql.getExcel(excelDto);
     }
 
 }

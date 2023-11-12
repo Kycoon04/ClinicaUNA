@@ -5,6 +5,7 @@
 package cr.ac.una.clinicaws.controller;
 
 import cr.ac.una.clinicaws.model.EmailDto;
+import cr.ac.una.clinicaws.model.ExcelDto;
 import cr.ac.una.clinicaws.model.Parameters;
 import cr.ac.una.clinicaws.model.ParametersDto;
 import cr.ac.una.clinicaws.model.Sql;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -46,10 +48,11 @@ public class ModuleSql {
     SqlService serviceSql;
     @EJB
     EmailService serviceemail;
+    private static final Logger LOG = Logger.getLogger(GenericSql.class.getName());
 
-    @GET
-    @Path("/user/{ConsultaSql}/{Titulo}/{Correo}")
-    public Response getUser(@PathParam("ConsultaSql") String consulta, @PathParam("Titulo") String titulo, @PathParam("Correo") String Correo) {
+    @POST
+    @Path("/sql")
+    public Response getUser( ExcelDto excelDto) {
         try {
             /* Parameters parametroDto = new Parameters(); //viene de parametro
             parametroDto.setPsId(888);
