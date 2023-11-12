@@ -53,9 +53,13 @@ public class ModuleSql {
     @POST
     @Path("/sql")
     public Response getUser(ExcelDto excelDto) {
+        
         try {
-
-            Respuesta res = serviceParameters.saveParameters(excelDto.getParametersDto());
+            Respuesta res= ServiceSql.getSQL(excelDto);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            res = serviceParameters.saveParameters(excelDto.getParametersDto());
             
             res = serviceParameters.getParametersByTitule(excelDto.getParametersDto().getPsTitule());
             Parameters parametro = new Parameters((ParametersDto) res.getResultado("Parameters"));
@@ -69,10 +73,6 @@ public class ModuleSql {
             for (EmailDto p : excelDto.getEmailDto()) {
                 p.setElIdsql(sql);
                  res = serviceemail.saveEmail(p);
-            }
-            res= ServiceSql.getSQL(excelDto);
-            if (!res.getEstado()) {
-                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
             return Response.ok().build();
         } catch (Exception ex) {

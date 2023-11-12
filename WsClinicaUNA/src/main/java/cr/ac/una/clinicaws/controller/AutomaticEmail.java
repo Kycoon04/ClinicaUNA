@@ -5,7 +5,16 @@
 package cr.ac.una.clinicaws.controller;
 
 import cr.ac.una.clinicaws.model.DiaryDto;
+import cr.ac.una.clinicaws.model.EmailDto;
+import cr.ac.una.clinicaws.model.ExcelDto;
+import cr.ac.una.clinicaws.model.Parameters;
+import cr.ac.una.clinicaws.model.ParametersDto;
+import cr.ac.una.clinicaws.model.SqlDto;
 import cr.ac.una.clinicaws.service.DiaryService;
+import cr.ac.una.clinicaws.service.EmailService;
+import cr.ac.una.clinicaws.service.GenericSql;
+import cr.ac.una.clinicaws.service.ParametersService;
+import cr.ac.una.clinicaws.service.SqlService;
 import cr.ac.una.clinicaws.util.Email;
 import cr.ac.una.clinicaws.util.Respuesta;
 import jakarta.annotation.PostConstruct;
@@ -39,9 +48,18 @@ public class AutomaticEmail {
 
     @Resource
     TimerService timerService;
-    
+
     @EJB
     private DiaryService diaryService;
+    @EJB
+    ParametersService ParamService;
+    @EJB
+    SqlService sqlService;
+    @EJB
+    EmailService EmailService;
+    @EJB
+    GenericSql ServiceSql;
+
     @PostConstruct
     public void init() {
         LOGGER.info("ScheduledTask iniciado");
@@ -52,16 +70,15 @@ public class AutomaticEmail {
         return t -> seen.add(keyExtractor.apply(t));
     }
 
-    @Schedule(hour = "12", minute = "00", persistent = false)
+    @Schedule(hour = "13", minute = "33", persistent = false)
     public void executeTask() {
 
         List<DiaryDto> lista = new ArrayList<>();
-        
+
         Respuesta respuesta = diaryService.getDiaries();
 
         lista = (List<DiaryDto>) respuesta.getResultado("Diaries");
-        
-        
+
         List<DiaryDto> filteredList = lista.stream()
                 .filter(distinctByKey(x -> x.getDySpace().getSeAppointment().getAtId()))
                 .collect(Collectors.toList());
@@ -71,10 +88,80 @@ public class AutomaticEmail {
                 .collect(Collectors.toList());
 
         for (DiaryDto p : filteredList) {
-           Email email = new Email();
-           email.setDestinationMail(p.getDySpace().getSeAppointment().getAtEmail());
-           email.enviarRecordatorio(p.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), p.getDySpace().getSeAppointment().getAtPatient().getPtName(),p.getDySpace().getSeAppointment().getAtUserregister().getUsLenguage());
-           
+            Email email = new Email();
+            email.setDestinationMail(p.getDySpace().getSeAppointment().getAtEmail());
+            email.enviarRecordatorio(p.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), p.getDySpace().getSeAppointment().getAtPatient().getPtName(), p.getDySpace().getSeAppointment().getAtUserregister().getUsLenguage());
+        }
+        respuesta = ParamService.getParametersByFrequency("Daily");
+        List<ParametersDto> parametros = (List<ParametersDto>) respuesta.getResultado("Parameters");
+        List<SqlDto> sql = new ArrayList<>();
+        List<ExcelDto> excelsDto = new ArrayList<>();
+
+        for (ParametersDto p : parametros) {
+            respuesta = sqlService.getSqlByParam(p.getPsId());
+            SqlDto sqlDto = (SqlDto) respuesta.getResultado("Sql");
+            sql.add(sqlDto);
+        }
+
+        for (int i = 0; i < sql.size(); i++) {
+            respuesta = EmailService.getSqlBySql(sql.get(i).getSqlId());
+            List<EmailDto> emailDto = (List<EmailDto>) respuesta.getResultado("Email");
+            ParametersDto parametro = new ParametersDto(sql.get(i).getSqlParam());
+            ExcelDto excelDto = new ExcelDto(parametro, sql.get(i), emailDto);
+            excelsDto.add(excelDto);
+        }
+        for (ExcelDto p : excelsDto) {
+            respuesta = ServiceSql.getSQL(p);
+        }
+    }
+
+    @Schedule(dayOfWeek = "Mon", hour = "12", minute = "00", persistent = false)
+    public void executeWeeklyTask() {
+        Respuesta respuesta = ParamService.getParametersByFrequency("Weekly");
+        List<ParametersDto> parametros = (List<ParametersDto>) respuesta.getResultado("Parameters");
+        List<SqlDto> sql = new ArrayList<>();
+        List<ExcelDto> excelsDto = new ArrayList<>();
+
+        for (ParametersDto p : parametros) {
+            respuesta = sqlService.getSqlByParam(p.getPsId());
+            SqlDto sqlDto = (SqlDto) respuesta.getResultado("Sql");
+            sql.add(sqlDto);
+        }
+
+        for (int i = 0; i < sql.size(); i++) {
+            respuesta = EmailService.getSqlBySql(sql.get(i).getSqlId());
+            List<EmailDto> emailDto = (List<EmailDto>) respuesta.getResultado("Email");
+            ParametersDto parametro = new ParametersDto(sql.get(i).getSqlParam());
+            ExcelDto excelDto = new ExcelDto(parametro, sql.get(i), emailDto);
+            excelsDto.add(excelDto);
+        }
+        for (ExcelDto p : excelsDto) {
+            respuesta = ServiceSql.getSQL(p);
+        }
+    }
+
+    @Schedule(dayOfMonth = "1", hour = "12", minute = "00", persistent = false)
+    public void executeMonthlyTask() {
+        Respuesta respuesta = ParamService.getParametersByFrequency("Monthly");
+        List<ParametersDto> parametros = (List<ParametersDto>) respuesta.getResultado("Parameters");
+        List<SqlDto> sql = new ArrayList<>();
+        List<ExcelDto> excelsDto = new ArrayList<>();
+
+        for (ParametersDto p : parametros) {
+            respuesta = sqlService.getSqlByParam(p.getPsId());
+            SqlDto sqlDto = (SqlDto) respuesta.getResultado("Sql");
+            sql.add(sqlDto);
+        }
+
+        for (int i = 0; i < sql.size(); i++) {
+            respuesta = EmailService.getSqlBySql(sql.get(i).getSqlId());
+            List<EmailDto> emailDto = (List<EmailDto>) respuesta.getResultado("Email");
+            ParametersDto parametro = new ParametersDto(sql.get(i).getSqlParam());
+            ExcelDto excelDto = new ExcelDto(parametro, sql.get(i), emailDto);
+            excelsDto.add(excelDto);
+        }
+        for (ExcelDto p : excelsDto) {
+            respuesta = ServiceSql.getSQL(p);
         }
     }
 }
