@@ -4,7 +4,15 @@
  */
 package cr.ac.una.clinicaws.controller;
 
+import cr.ac.una.clinicaws.model.EmailDto;
+import cr.ac.una.clinicaws.model.Parameters;
+import cr.ac.una.clinicaws.model.ParametersDto;
+import cr.ac.una.clinicaws.model.Sql;
+import cr.ac.una.clinicaws.model.SqlDto;
+import cr.ac.una.clinicaws.service.EmailService;
 import cr.ac.una.clinicaws.service.GenericSql;
+import cr.ac.una.clinicaws.service.ParametersService;
+import cr.ac.una.clinicaws.service.SqlService;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.Respuesta;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +24,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,12 +40,36 @@ public class ModuleSql {
 
     @EJB
     GenericSql ServiceSql;
+    @EJB
+    ParametersService serviceParameters;
+    @EJB
+    SqlService serviceSql;
+    @EJB
+    EmailService serviceemail;
 
     @GET
     @Path("/user/{ConsultaSql}/{Titulo}/{Correo}")
-    public Response getUser(@PathParam("ConsultaSql") String consulta, @PathParam("Titulo") String titulo,@PathParam("Correo") String Correo) {
+    public Response getUser(@PathParam("ConsultaSql") String consulta, @PathParam("Titulo") String titulo, @PathParam("Correo") String Correo) {
         try {
-            Respuesta res = ServiceSql.getSQL(consulta,titulo,Correo);
+            /* Parameters parametroDto = new Parameters(); //viene de parametro
+            parametroDto.setPsId(888);
+            //Respuesta res = serviceParameters.saveParameters(parametroDto);
+            SqlDto sqlDto = new SqlDto();
+            sqlDto.setSqlQuery(consulta);
+            sqlDto.setSqlId(0);
+            sqlDto.setSqlParam(parametroDto);
+            res = serviceSql.saveSql(sqlDto);
+            Sql sqlDto = new Sql();
+            sqlDto.setSqlId(889);                   ESTO NO SIRVE,ES ORDEN MENTAL MIO QUE LO NECESITO AQUI, LUEGO LO BORRO
+            EmailDto emailDto = new EmailDto();
+            emailDto.setElId(0);
+            emailDto.setElIdsql(sqlDto);
+            emailDto.setElEmail("jomaval4@gmail.com");
+            Respuesta res = serviceemail.saveEmail(emailDto);
+            
+            res = serviceemail.getSqlBySql(889);
+            List<EmailDto> ListemailDto = (List<EmailDto>) res.getResultado("Email"); */
+            Respuesta res = new Respuesta();
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
