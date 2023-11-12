@@ -58,10 +58,15 @@ public class GenericSql {
 
             List<Object[]> resultList = query.getResultList();
             List<Map<String, Object>> rows = new ArrayList<>();
-            for (int j = 0; j < resultList.size(); j++) {
+            for (Object result : resultList) {
                 Map<String, Object> row = new HashMap<>();
-                for (int i = 0; i < headers.size(); i++) {
-                    row.put(headers.get(i), resultList.get(j)[i]);
+                if (result instanceof Object[]) { // Result is an array of values
+                    Object[] rowArray = (Object[]) result;
+                    for (int i = 0; i < headers.size(); i++) {
+                        row.put(headers.get(i), rowArray[i]);
+                    }
+                } else { // Result is a single value
+                    row.put(headers.get(0), result);
                 }
                 rows.add(row);
             }
@@ -127,8 +132,11 @@ public class GenericSql {
         for (int k = 0; k < resultList.size(); k++) {
             for (int i = 0; i < header.size(); i++) {
                 Cell cellData = headerRowData.createCell(i);
-                if (resultList.get(k)[i] != null) {
+                if (resultList.get(k) instanceof Object[] && resultList.get(k)[i] != null) {
                     cellData.setCellValue(resultList.get(k)[i].toString());
+                } else if (resultList.get(k) != null) {
+                    Object objeto= resultList.get(k);
+                     cellData.setCellValue(objeto.toString());
                 } else {
                     cellData.setCellValue("N/A");
                 }
@@ -144,13 +152,13 @@ public class GenericSql {
             libro.write(fileOut);
             File archivoAdjunto = new File(nombreArchivo);
             Email email = new Email();
-            
+
             List<String> correos = new ArrayList<>();
-            for(EmailDto p: excelDto.getEmailDto()){
+            for (EmailDto p : excelDto.getEmailDto()) {
                 correos.add(p.getElEmail());
             }
-            
-            email.enviarExcel(excelDto, archivoAdjunto,correos);
+
+            email.enviarExcel(excelDto, archivoAdjunto, correos);
         } catch (IOException e) {
             e.printStackTrace();
         }
