@@ -5,6 +5,7 @@
 package cr.ac.una.clinicaws.util;
 
 import cr.ac.una.clinicaws.model.ReportDto;
+import cr.ac.una.clinicaws.service.GenericSql;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import jakarta.activation.FileDataSource;
@@ -18,6 +19,7 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import java.io.File;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class Email {
 
@@ -32,7 +34,7 @@ public class Email {
     private String action;
     private String motive;
     private String button;
-
+private static final Logger LOG = Logger.getLogger(GenericSql.class.getName());
     /**
      * Constructor de la clase Email.
      *
@@ -419,7 +421,7 @@ public class Email {
 
         sourceMail = "clinicauna10@gmail.com";
         name = "ClinicaUNA";
-        info = "La mejor en salud";
+
         password = "xvezelgtwkeuhawv";
 
         try {
@@ -443,29 +445,25 @@ public class Email {
                     + "<body>"
                     + "<h1>Confirmación de cita</h1>"
                     + "<p>Hola " + nombre + "!</p>"
-                    + "<p>" + action + " " + dia + "</p>"
                     + "<p>Te esperamos!</p>"
                     + "<p><strong>" + destinationMail + "</strong></p>"
                     + "</body>"
                     + "</html>";
+            
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
             mimeBodyPart.setContent(mensajeHTML, "text/html");
-
             MimeBodyPart attachmentBodyPart = new MimeBodyPart();
             DataSource source = new FileDataSource(archivoAdjunto);
             attachmentBodyPart.setDataHandler(new DataHandler(source));
             attachmentBodyPart.setFileName(archivoAdjunto.getName());
-
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(mimeBodyPart);
             multipart.addBodyPart(attachmentBodyPart);
-
             MimeMessage mensaje = new MimeMessage(s);
             mensaje.setFrom(new InternetAddress(sourceMail));
             mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinationMail));
             mensaje.setSubject("Confirmación");
             mensaje.setContent(multipart);
-
             // Enviar el correo
             Transport t = s.getTransport("smtp");
             t.connect(sourceMail, password);
@@ -473,7 +471,6 @@ public class Email {
                 t.sendMessage(mensaje, mensaje.getAllRecipients());
                 t.close();
             }
-            System.out.printf("Mensaje enviado");
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -630,7 +627,6 @@ public class Email {
                 t.sendMessage(mensaje, mensaje.getAllRecipients());
                 t.close();
             }
-            System.out.printf("Mensaje enviado");
         } catch (Exception e) {
             System.out.println(e.toString());
         }

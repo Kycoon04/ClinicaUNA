@@ -151,7 +151,11 @@ public class GenericSql {
         for (int k = 0; k < resultList.size(); k++) {
             for (int i = 0; i < header.size(); i++) {
                 Cell cellData = headerRowData.createCell(i);
+                if(resultList.get(k)[i]!=null){
                 cellData.setCellValue(resultList.get(k)[i].toString());
+                }else{
+                cellData.setCellValue("N/A");
+                }
             }
             j++;
             headerRowData = hoja1.createRow(j);
@@ -166,6 +170,7 @@ public class GenericSql {
             Email email = new Email();
             email.setDestinationMail(Correo);
             email.enviarExcel("hoy", "Jose", archivoAdjunto);
+            LOG.info("LLEGUE");
         } catch (IOException e) {
             e.printStackTrace();
         }

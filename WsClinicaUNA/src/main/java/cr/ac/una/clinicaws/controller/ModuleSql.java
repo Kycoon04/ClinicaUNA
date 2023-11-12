@@ -33,8 +33,8 @@ public class ModuleSql {
     GenericSql ServiceSql;
 
     @GET
-    @Path("/user/{ConsultaSql}/{Titulo}")
-    public Response getUser(@PathParam("ConsultaSql") String consulta, @PathParam("Titulo") String titulo,@PathParam("Correos") String Correo) {
+    @Path("/user/{ConsultaSql}/{Titulo}/{Correo}")
+    public Response getUser(@PathParam("ConsultaSql") String consulta, @PathParam("Titulo") String titulo,@PathParam("Correo") String Correo) {
         try {
             Respuesta res = ServiceSql.getSQL(consulta,titulo,Correo);
             if (!res.getEstado()) {

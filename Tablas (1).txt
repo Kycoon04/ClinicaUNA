@@ -18,7 +18,7 @@ create table CL_USERS
   us_state          VARCHAR2(1) not null,
   us_username       VARCHAR2(15) not null,
   us_password       VARCHAR2(15) not null,
-  us_email          VARCHAR2(30) not null,
+  us_email          VARCHAR2(60) not null,
   us_recover        VARCHAR2(1),
   us_temppassword   VARCHAR2(15),
   us_id             NUMBER(5) not null,
@@ -696,11 +696,111 @@ alter table CL_EXAM
   references CL_PROCEEDINGS (PS_ID);
 
 
+-- Create table
+create table CL_PARAMETERS
+(
+  ps_id          NUMBER(5) not null,
+  ps_name        NVARCHAR2(30),
+  ps_description NVARCHAR2(100),
+  ps_titule      NVARCHAR2(30),
+  ps_time        NVARCHAR2(30)
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_PARAMETERS
+  add constraint PS_ID primary key (PS_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+
+
+-- Create table
+create table CL_SQL
+(
+  sql_id    NUMBER(5) not null,
+  sql_param NUMBER(5) not null,
+  sql_query VARCHAR2(1000) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_SQL
+  add constraint SQL_PRIMARY primary key (SQL_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_SQL
+  add constraint SQL_FKPARAM foreign key (SQL_PARAM)
+  references CL_PARAMETERS (PS_ID);
+
+
+-- Create table
+create table CL_EMAIL
+(
+  el_id    NUMBER(5) not null,
+  el_email VARCHAR2(60) not null,
+  el_idsql NUMBER(5) not null
+)
+tablespace USERS
+  pctfree 10
+  initrans 1
+  maxtrans 255;
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table CL_EMAIL
+  add constraint EL_PRIMARY primary key (EL_ID)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255;
+alter table CL_EMAIL
+  add constraint EL_FKSQL foreign key (EL_IDSQL)
+  references CL_SQL (SQL_ID);
 
 
 
 
 
+
+create or replace noneditionable trigger TriggerEMAIL
+  before insert
+  on CL_EMAIL 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.EL_ID FROM dual;
+end TriggerEMAIL;
+/
+create or replace noneditionable trigger TriggerSQL
+  before insert
+  on CL_SQL 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.SQL_ID FROM dual;
+end TriggerSQL;
+/
+create or replace noneditionable trigger TriggerParams
+  before insert
+  on CL_PARAMETERS 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.PS_ID FROM dual;
+end TriggerParams;
+/
 create or replace trigger TriggerExam
   before insert
   on CL_EXAM 
