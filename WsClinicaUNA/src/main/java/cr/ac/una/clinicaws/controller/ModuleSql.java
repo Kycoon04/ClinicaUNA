@@ -70,11 +70,11 @@ public class ModuleSql {
                 p.setElIdsql(sql);
                  res = serviceemail.saveEmail(p);
             }
-            
+            res= ServiceSql.getSQL(excelDto);
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
-            return Response.ok(res.getResultado("Lista")).build();
+            return Response.ok().build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error realizando la consulta").build();

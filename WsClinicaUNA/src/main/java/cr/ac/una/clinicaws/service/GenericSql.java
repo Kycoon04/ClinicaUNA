@@ -4,6 +4,8 @@
  */
 package cr.ac.una.clinicaws.service;
 
+import cr.ac.una.clinicaws.model.EmailDto;
+import cr.ac.una.clinicaws.model.ExcelDto;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.Email;
 import cr.ac.una.clinicaws.util.Respuesta;
@@ -49,14 +51,10 @@ public class GenericSql {
     @PersistenceContext(unitName = "my_persistence_unit")
     private EntityManager em;
 
-    public Respuesta getSQL(String consulta, String titulo,String Correo) {
+    public Respuesta getSQL(ExcelDto excelDto) {
         try {
-            Query query = em.createNativeQuery(consulta);
-            List<String> headers = extractSQL(consulta);
-
-            for (String p : headers) {
-                LOG.info("Encabezados encontrados: " + p);
-            }
+            Query query = em.createNativeQuery(excelDto.getSqlDto().getSqlQuery());
+            List<String> headers = extractSQL(excelDto.getSqlDto().getSqlQuery());
 
             List<Object[]> resultList = query.getResultList();
             List<Map<String, Object>> rows = new ArrayList<>();
@@ -67,10 +65,8 @@ public class GenericSql {
                 }
                 rows.add(row);
             }
-            GenerarExcel(Correo,titulo, resultList, headers);
-            for (Map<String, Object> row : rows) {
-                LOG.info(row.toString());
-            }
+            GenerarExcel(excelDto, resultList, headers);
+
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Lista", rows);
         } catch (NoResultException ex) {//sin resultado
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "Error haciendo la consulta sql", "GenericSql NoResultException");
@@ -83,27 +79,7 @@ public class GenericSql {
         }
     }
 
-    public static List<String> extractSQL(String sql) {
-        List<String> headers = new ArrayList<>();
-        String lowercaseSql = sql.toLowerCase();
-        if (lowercaseSql.startsWith("select") && lowercaseSql.contains("from")) {
-            int start = lowercaseSql.indexOf("select") + 6;
-            int end = lowercaseSql.indexOf("from");
-            String columnPart = sql.substring(start, end).trim();
-            String[] columns = columnPart.split(",");
-            for (String column : columns) {
-                column = column.trim().replaceAll(".*\\.().", "");
-                int asIndex = column.toLowerCase().indexOf(" as ");
-                if (asIndex != -1) {
-                    column = column.substring(asIndex + 4).trim();
-                }
-                headers.add(column);
-            }
-        }
-        return headers;
-    }
-
-    private void GenerarExcel(String Correo,String titulo, List<Object[]> resultList, List<String> headersDB) {
+    private void GenerarExcel(ExcelDto excelDto, List<Object[]> resultList, List<String> headersDB) {
         final int cont = 0;
         String nombreArchivo = "ExcelSql.xls";
         String hoja = "ConsultaSql";
@@ -129,7 +105,7 @@ public class GenericSql {
 
         Row headerRowTitule = hoja1.createRow(0);
         Cell cell = headerRowTitule.createCell(header.size() / 2);
-        cell.setCellValue(titulo);
+        cell.setCellValue(excelDto.getParametersDto().getPsTitule());
         cell.setCellStyle(headerCellStyle);
         Row headerRow = hoja1.createRow(1);
 
@@ -142,7 +118,7 @@ public class GenericSql {
         }
 
         cell = headerRowTitule.createCell(header.size() / 2);
-        cell.setCellValue(titulo);
+        cell.setCellValue(excelDto.getParametersDto().getPsTitule());
         cell.setCellStyle(headerCellStyle);
 
         //-------------------RESULTADO DE LA CONSULTA---------------------------
@@ -151,10 +127,10 @@ public class GenericSql {
         for (int k = 0; k < resultList.size(); k++) {
             for (int i = 0; i < header.size(); i++) {
                 Cell cellData = headerRowData.createCell(i);
-                if(resultList.get(k)[i]!=null){
-                cellData.setCellValue(resultList.get(k)[i].toString());
-                }else{
-                cellData.setCellValue("N/A");
+                if (resultList.get(k)[i] != null) {
+                    cellData.setCellValue(resultList.get(k)[i].toString());
+                } else {
+                    cellData.setCellValue("N/A");
                 }
             }
             j++;
@@ -168,12 +144,35 @@ public class GenericSql {
             libro.write(fileOut);
             File archivoAdjunto = new File(nombreArchivo);
             Email email = new Email();
-            email.setDestinationMail(Correo);
-            email.enviarExcel("hoy", "Jose", archivoAdjunto);
-            LOG.info("LLEGUE");
+            
+            List<String> correos = new ArrayList<>();
+            for(EmailDto p: excelDto.getEmailDto()){
+                correos.add(p.getElEmail());
+            }
+            
+            email.enviarExcel(excelDto, archivoAdjunto,correos);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public static List<String> extractSQL(String sql) {
+        List<String> headers = new ArrayList<>();
+        String lowercaseSql = sql.toLowerCase();
+        if (lowercaseSql.startsWith("select") && lowercaseSql.contains("from")) {
+            int start = lowercaseSql.indexOf("select") + 6;
+            int end = lowercaseSql.indexOf("from");
+            String columnPart = sql.substring(start, end).trim();
+            String[] columns = columnPart.split(",");
+            for (String column : columns) {
+                column = column.trim().replaceAll(".*\\.().", "");
+                int asIndex = column.toLowerCase().indexOf(" as ");
+                if (asIndex != -1) {
+                    column = column.substring(asIndex + 4).trim();
+                }
+                headers.add(column);
+            }
+        }
+        return headers;
+    }
 }

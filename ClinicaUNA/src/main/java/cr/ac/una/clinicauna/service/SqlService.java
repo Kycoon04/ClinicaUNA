@@ -27,8 +27,7 @@ public class SqlService {
             if (request.isError()) {
                 return new Respuesta(false, request.getError(), "");
             }
-            DiaryDto diaryDto = (DiaryDto) request.readEntity(DiaryDto.class);
-            return new Respuesta(true, "", "", "Diary", diaryDto);
+            return new Respuesta(true, "", "");
         } catch (Exception ex) {
             Logger.getLogger(DiaryService.class.getName()).log(Level.SEVERE, "Error guardando agenda.", ex);
             return new Respuesta(false, "Error guardando agenda.", "guardarAgenda" + ex.getMessage());

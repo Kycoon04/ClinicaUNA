@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicaws.util;
 
+import cr.ac.una.clinicaws.model.ExcelDto;
 import cr.ac.una.clinicaws.model.ReportDto;
 import cr.ac.una.clinicaws.service.GenericSql;
 import jakarta.activation.DataHandler;
@@ -18,6 +19,7 @@ import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import java.io.File;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -34,7 +36,8 @@ public class Email {
     private String action;
     private String motive;
     private String button;
-private static final Logger LOG = Logger.getLogger(GenericSql.class.getName());
+    private static final Logger LOG = Logger.getLogger(GenericSql.class.getName());
+
     /**
      * Constructor de la clase Email.
      *
@@ -417,7 +420,7 @@ private static final Logger LOG = Logger.getLogger(GenericSql.class.getName());
         }
     }
 
-    public void enviarExcel(String dia, String nombre, File archivoAdjunto) {
+    public void enviarExcel(ExcelDto excelDto, File archivoAdjunto, List<String> destinationMails) {
 
         sourceMail = "clinicauna10@gmail.com";
         name = "ClinicaUNA";
@@ -443,13 +446,11 @@ private static final Logger LOG = Logger.getLogger(GenericSql.class.getName());
                     + "</style>"
                     + "</head>"
                     + "<body>"
-                    + "<h1>Confirmación de cita</h1>"
-                    + "<p>Hola " + nombre + "!</p>"
-                    + "<p>Te esperamos!</p>"
-                    + "<p><strong>" + destinationMail + "</strong></p>"
+                    + "<h1>"+excelDto.getParametersDto().getPsName()+"</h1>"
+                    + "<p>"+excelDto.getParametersDto().getPsDescription()+"</p>"
                     + "</body>"
                     + "</html>";
-            
+
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
             mimeBodyPart.setContent(mensajeHTML, "text/html");
             MimeBodyPart attachmentBodyPart = new MimeBodyPart();
@@ -461,8 +462,10 @@ private static final Logger LOG = Logger.getLogger(GenericSql.class.getName());
             multipart.addBodyPart(attachmentBodyPart);
             MimeMessage mensaje = new MimeMessage(s);
             mensaje.setFrom(new InternetAddress(sourceMail));
-            mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(destinationMail));
-            mensaje.setSubject("Confirmación");
+            for (String mail : destinationMails) {
+                mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(mail));
+            }
+            mensaje.setSubject(excelDto.getParametersDto().getPsName());
             mensaje.setContent(multipart);
             // Enviar el correo
             Transport t = s.getTransport("smtp");

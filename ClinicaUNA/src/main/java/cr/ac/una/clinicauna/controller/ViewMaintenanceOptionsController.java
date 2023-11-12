@@ -1566,7 +1566,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         parametersDto.setPsId(0);
         parametersDto.setPsName(textFieldNameReport.getText());
         parametersDto.setPsTime(choiceBoxPeriodReport.getValue());
-        parametersDto.setPsTitule("TItulo");
+        parametersDto.setPsTitule("ReporteSemanalUsuarios");
         parametersDto.setPsDescription(textAreaDescripReport.getText());
         
         sqlDto.setSqlId(0);
