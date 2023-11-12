@@ -93,8 +93,8 @@ public class ParametersService {
     
     public Respuesta getParametersByTitule(String psName) {
         try {
-            Query qryParameters = em.createNamedQuery("Parameters.findByPsName", Parameters.class);
-            qryParameters.setParameter("psId", psName);
+            Query qryParameters = em.createNamedQuery("Parameters.findByPsTitule", Parameters.class);
+            qryParameters.setParameter("psTitule", psName);
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Parameters", new ParametersDto((Parameters) qryParameters.getSingleResult()));
         } catch (NoResultException ex) {//sin resultado
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getParameters NoResultException");

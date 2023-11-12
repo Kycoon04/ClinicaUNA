@@ -52,27 +52,25 @@ public class ModuleSql {
 
     @POST
     @Path("/sql")
-    public Response getUser( ExcelDto excelDto) {
+    public Response getUser(ExcelDto excelDto) {
         try {
-            /* Parameters parametroDto = new Parameters(); //viene de parametro
-            parametroDto.setPsId(888);
-            //Respuesta res = serviceParameters.saveParameters(parametroDto);
-            SqlDto sqlDto = new SqlDto();
-            sqlDto.setSqlQuery(consulta);
-            sqlDto.setSqlId(0);
-            sqlDto.setSqlParam(parametroDto);
-            res = serviceSql.saveSql(sqlDto);
-            Sql sqlDto = new Sql();
-            sqlDto.setSqlId(889);                   ESTO NO SIRVE,ES ORDEN MENTAL MIO QUE LO NECESITO AQUI, LUEGO LO BORRO
-            EmailDto emailDto = new EmailDto();
-            emailDto.setElId(0);
-            emailDto.setElIdsql(sqlDto);
-            emailDto.setElEmail("jomaval4@gmail.com");
-            Respuesta res = serviceemail.saveEmail(emailDto);
+
+            Respuesta res = serviceParameters.saveParameters(excelDto.getParametersDto());
             
-            res = serviceemail.getSqlBySql(889);
-            List<EmailDto> ListemailDto = (List<EmailDto>) res.getResultado("Email"); */
-            Respuesta res = new Respuesta();
+            res = serviceParameters.getParametersByTitule(excelDto.getParametersDto().getPsTitule());
+            Parameters parametro = new Parameters((ParametersDto) res.getResultado("Parameters"));
+            excelDto.getSqlDto().setSqlParam(parametro);
+            
+            res = serviceSql.saveSql(excelDto.getSqlDto());
+            
+            res = serviceSql.getSqlByParam(excelDto.getSqlDto().getSqlParam().getPsId());
+            SqlDto sqlDto = (SqlDto) res.getResultado("Sql");
+            Sql sql = new Sql(sqlDto);
+            for (EmailDto p : excelDto.getEmailDto()) {
+                p.setElIdsql(sql);
+                 res = serviceemail.saveEmail(p);
+            }
+            
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
