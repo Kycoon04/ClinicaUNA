@@ -1411,7 +1411,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             }
             initialDate = datePickerInitialReport.getValue().toString();
 
-            Respuesta respuesta = serviceJasper.getNotDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate,userDto.getUsLenguage());
+            Respuesta respuesta = serviceJasper.getNotDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate, userDto.getUsLenguage());
             if (respuesta.getEstado()) {
                 if (usrIdiom.getUsLenguage().equals("Spanish")) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Reporte generado.");
@@ -1458,7 +1458,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 finalDate = datePickerFinalReport.getValue().toString();
             }
             initialDate = datePickerInitialReport.getValue().toString();
-            Respuesta respuesta = serviceJasper.getDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate,userDto.getUsLenguage());
+            Respuesta respuesta = serviceJasper.getDiaryDoctor(doctorDto.getDrId(), initialDate, finalDate, userDto.getUsLenguage());
             if (respuesta.getEstado()) {
                 if (usrIdiom.getUsLenguage().equals("Spanish")) {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Doctor", getStage(), "Reporte generado.");
@@ -1507,7 +1507,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         emails.clear();
         this.tableViewEmails.refresh();
         cleanReportExcel();
-        
+
     }
 
     @FXML
@@ -1558,29 +1558,40 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void sendReport(MouseEvent event) throws FileNotFoundException {
-                SqlService serviceSql = new SqlService();
-        SqlDto sqlDto= new SqlDto();
+        SqlService serviceSql = new SqlService();
+        SqlDto sqlDto = new SqlDto();
         ParametersDto parametersDto = new ParametersDto();
         List<EmailDto> emailDto = new ArrayList<>();
-        
+
         parametersDto.setPsId(0);
         parametersDto.setPsName(textFieldNameReport.getText());
-        parametersDto.setPsTime(choiceBoxPeriodReport.getValue());
+        if (choiceBoxPeriodReport.getValue().equals("Diario") || choiceBoxPeriodReport.getValue().equals("Daily")
+                || choiceBoxPeriodReport.getValue().equals("Quotidien") || choiceBoxPeriodReport.getValue().equals("「日次」")) {
+            parametersDto.setPsTime("Daily");
+        }
+        if (choiceBoxPeriodReport.getValue().equals("Semanal") || choiceBoxPeriodReport.getValue().equals("Weekly")
+                || choiceBoxPeriodReport.getValue().equals("Hebdomadaire") || choiceBoxPeriodReport.getValue().equals("「週次」")) {
+            parametersDto.setPsTime("Weekly");
+        }
+        if (choiceBoxPeriodReport.getValue().equals("Mensual") || choiceBoxPeriodReport.getValue().equals("Monthly")
+                || choiceBoxPeriodReport.getValue().equals("Mensuel") || choiceBoxPeriodReport.getValue().equals("「月次」")) {
+            parametersDto.setPsTime("Monthly");
+        }
         parametersDto.setPsTitule("asdasddfdxxz");
         parametersDto.setPsDescription(textAreaDescripReport.getText());
-        
+
         sqlDto.setSqlId(0);
         sqlDto.setSqlParam(parametersDto);
         sqlDto.setSqlQuery(textAreaQueryReport.getText());
-        
-        for(String p: listEmails){
-            EmailDto emailsDto= new EmailDto();
+
+        for (String p : listEmails) {
+            EmailDto emailsDto = new EmailDto();
             emailsDto.setElId(0);
             emailsDto.setElEmail(p);
             emailsDto.setElIdsql(sqlDto);
             emailDto.add(emailsDto);
         }
-        ExcelDto excelDto = new ExcelDto(parametersDto,sqlDto, emailDto);
+        ExcelDto excelDto = new ExcelDto(parametersDto, sqlDto, emailDto);
         Respuesta res = serviceSql.getExcel(excelDto);
     }
 
