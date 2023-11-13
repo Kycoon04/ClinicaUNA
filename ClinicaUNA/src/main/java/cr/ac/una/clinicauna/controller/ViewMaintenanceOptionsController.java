@@ -1675,6 +1675,27 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         }
         ExcelDto excelDto = new ExcelDto(parametersDto, sqlDto, emailDto);
         Respuesta res = serviceSql.getExcel(excelDto);
+        if (res.getEstado()) {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Excel", getStage(), "Reporte generado.");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Excel reports", getStage(), "Report generated.");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapports Excel", getStage(), "Rapport généré.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "エクセルレポート", getStage(), "生成されたレポート");
+                }
+            } else {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Reportes de Excel", getStage(), "Error al generar el reporte.");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Excel reports", getStage(), "Error generating the report.");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Rapports Excel", getStage(), "Erreur lors de la génération du rapport.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "エクセルレポート", getStage(), "レポート生成エラー.");
+                }
+            }
     }
 
 }
