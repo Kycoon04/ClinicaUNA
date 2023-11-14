@@ -206,7 +206,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     String jobsSpanish[] = {"Administrador", "Recepcionista", "Doctor"};
     String jobsEnglish[] = {"Administrator", "Receptionist", "Doctor"};
     String jobsFrench[] = {"Administrateur", "Réceptionniste", "Médecin"};
-    String jobsJapanese[] = {"管理者","受付","医師"};
+    String jobsJapanese[] = {"管理者", "受付", "医師"};
     boolean userDoctor = false;
     int respaldo = 0;
     String respaldoFechaInit;
@@ -394,7 +394,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         fillTablePatient();
 
     }
-    private void loadChoiceJobs(){
+
+    private void loadChoiceJobs() {
         if (usrIdiom.getUsLenguage().equals("Japanese")) {
             choiceBoxJobsTypes.getItems().clear();
             choiceBoxJobsTypes.getItems().addAll(jobsJapanese);
@@ -409,7 +410,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             choiceBoxJobsTypes.getItems().addAll(jobsEnglish);
         }
         if (usrIdiom.getUsLenguage().equals("French")) {
-           choiceBoxJobsTypes.getItems().clear();
+            choiceBoxJobsTypes.getItems().clear();
             choiceBoxJobsTypes.getItems().addAll(jobsFrench);
         }
     }
@@ -585,7 +586,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         userDto.setUsState(userDto.getUsState());
         userDto.setUsType(choiceBoxJobsTypes.getValue());
         userDto.setUsIdentification(identMainField.getText());
-        String idiom="";
+        String idiom = "";
         if (choiceBoxIdioms.getValue().equals("Espagnol") || choiceBoxIdioms.getValue().equals("Spanish") || choiceBoxIdioms.getValue().equals("Español") || choiceBoxIdioms.getValue().equals("スペイン語")) {
             idiom = "Spanish";
             userDto.setUsLenguage(idiom);
@@ -602,8 +603,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             idiom = "Japanese";
             userDto.setUsLenguage(idiom);
         }
-        String job="";
-         if (choiceBoxJobsTypes.getValue().equals("Administrador") ||choiceBoxJobsTypes.getValue().equals("Administrator") || choiceBoxJobsTypes.getValue().equals("Administrateur") || choiceBoxJobsTypes.getValue().equals("管理者")) {
+        String job = "";
+        if (choiceBoxJobsTypes.getValue().equals("Administrador") || choiceBoxJobsTypes.getValue().equals("Administrator") || choiceBoxJobsTypes.getValue().equals("Administrateur") || choiceBoxJobsTypes.getValue().equals("管理者")) {
             job = "Administrator";
             userDto.setUsType(job);
         }
@@ -1646,7 +1647,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         ParametersDto parametersDto = new ParametersDto();
         List<EmailDto> emailDto = new ArrayList<>();
         List<ParametersSqlDto> parametersSqlDto = new ArrayList<>();
-        
+
         parametersDto.setPsId(0);
         parametersDto.setPsName(textFieldNameReport.getText());
         if (choiceBoxPeriodReport.getValue().equals("Diario") || choiceBoxPeriodReport.getValue().equals("Daily")
@@ -1661,51 +1662,58 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 || choiceBoxPeriodReport.getValue().equals("Mensuel") || choiceBoxPeriodReport.getValue().equals("「月次」")) {
             parametersDto.setPsTime("Monthly");
         }
-        
+
         parametersDto.setPsTitule(textFieldTitleReport.getText());
         parametersDto.setPsDescription(textAreaDescripReport.getText());
         parametersDto.setPsQuery(textAreaQueryReport.getText());
         parametersDto.setPsDateInit(datePickerExcelInit.getValue());
-        
+
         for (String p : listEmails) {
             EmailDto emailsDto = new EmailDto();
-            ParametersSqlDto parametroSql = new ParametersSqlDto();
             emailsDto.setElId(0);
             emailsDto.setElEmail(p);
             emailsDto.setElIdsql(parametersDto);
             emailDto.add(emailsDto);
-            
-            parametroSql.setPsqlId(0);
-            parametroSql.setPsqlIdparam(parametersDto);
-            parametroSql.setPsqlType("String");
-            parametroSql.setPsqlIdent(":Param1");
-            parametroSql.setPsqlValue("Jose");
-            parametersSqlDto.add(parametroSql);
-        }
-        
-        ExcelDto excelDto = new ExcelDto(parametersDto,emailDto,parametersSqlDto);
+
+        }/*
+        ParametersSqlDto parametroSql = new ParametersSqlDto();
+        parametroSql.setPsqlId(0);
+        parametroSql.setPsqlIdparam(parametersDto);
+        parametroSql.setPsqlType("Integer");
+        parametroSql.setPsqlIdent(":Param23");
+        parametroSql.setPsqlValue("2");
+        parametersSqlDto.add(parametroSql);            ESTO SE OMITE, ES ESTE CASO SE ENVIARIA LA LISTA QUE ES RESULTADO DEL TABLE COMO LA DE EMAIL     
+        parametroSql = new ParametersSqlDto();         COMO NO TENGO ESO LO HAGO A PATA  
+        parametroSql.setPsqlId(0);
+        parametroSql.setPsqlIdparam(parametersDto);
+        parametroSql.setPsqlType("String");
+        parametroSql.setPsqlIdent(":Param22");
+        parametroSql.setPsqlValue("8:00");
+        parametersSqlDto.add(parametroSql);*/
+                                                                    //ESTA ES LA LISTA QUE CONTIENE LOS PARAMETROS DE LA CONSULTA,
+        ExcelDto excelDto = new ExcelDto(parametersDto, emailDto, parametersSqlDto);
         Respuesta res = serviceSql.getExcel(excelDto);
         if (res.getEstado()) {
-                if (usrIdiom.getUsLenguage().equals("Spanish")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Excel", getStage(), "Reporte generado.");
-                } else if (usrIdiom.getUsLenguage().equals("English")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Excel reports", getStage(), "Report generated.");
-                } else if (usrIdiom.getUsLenguage().equals("French")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapports Excel", getStage(), "Rapport généré.");
-                } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "エクセルレポート", getStage(), "生成されたレポート");
-                }
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Excel", getStage(), "Reporte generado.");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Excel reports", getStage(), "Report generated.");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Rapports Excel", getStage(), "Rapport généré.");
             } else {
-                if (usrIdiom.getUsLenguage().equals("Spanish")) {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "Reportes de Excel", getStage(), "Error al generar el reporte.");
-                } else if (usrIdiom.getUsLenguage().equals("English")) {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "Excel reports", getStage(), "Error generating the report.");
-                } else if (usrIdiom.getUsLenguage().equals("French")) {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "Rapports Excel", getStage(), "Erreur lors de la génération du rapport.");
-                } else {
-                    new Mensaje().showModal(Alert.AlertType.ERROR, "エクセルレポート", getStage(), "レポート生成エラー.");
-                }
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "エクセルレポート", getStage(), "生成されたレポート");
             }
+        } else {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Reportes de Excel", getStage(), "Error al generar el reporte.");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Excel reports", getStage(), "Error generating the report.");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Rapports Excel", getStage(), "Erreur lors de la génération du rapport.");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "エクセルレポート", getStage(), "レポート生成エラー.");
+            }
+        }
     }
 
 }

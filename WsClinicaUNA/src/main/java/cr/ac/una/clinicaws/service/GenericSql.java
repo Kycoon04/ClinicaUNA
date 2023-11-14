@@ -6,6 +6,7 @@ package cr.ac.una.clinicaws.service;
 
 import cr.ac.una.clinicaws.model.EmailDto;
 import cr.ac.una.clinicaws.model.ExcelDto;
+import cr.ac.una.clinicaws.model.ParametersSqlDto;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.Email;
 import cr.ac.una.clinicaws.util.Respuesta;
@@ -51,12 +52,13 @@ public class GenericSql {
     @PersistenceContext(unitName = "my_persistence_unit")
     private EntityManager em;
 
-    public Respuesta VerificarSQL(ExcelDto excelDto){
+    public Respuesta VerificarSQL(ExcelDto excelDto) {
         try {
-            Query query = em.createNativeQuery(excelDto.getParametersDto().getPsQuery());
+            LOG.info(replaceParametersWithOne(excelDto.getParametersDto().getPsQuery(), excelDto.getParametersSqlDto()));
+            Query query = em.createNativeQuery(replaceParametersWithOne(excelDto.getParametersDto().getPsQuery(), excelDto.getParametersSqlDto()));
             List<String> headers = extractSQL(excelDto.getParametersDto().getPsQuery());
             List<Object[]> resultList = query.getResultList();
-            
+
             return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
         } catch (NoResultException ex) {//sin resultado
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "Error haciendo la consulta sql", "GenericSql NoResultException");
@@ -68,7 +70,7 @@ public class GenericSql {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error haciendo la consulta sql", "GenericSql " + ex.getMessage());
         }
     }
-    
+
     public Respuesta getSQL(ExcelDto excelDto) {
         try {
             Query query = em.createNativeQuery(excelDto.getParametersDto().getPsQuery());
@@ -153,8 +155,8 @@ public class GenericSql {
                 if (resultList.get(k) instanceof Object[] && resultList.get(k)[i] != null) {
                     cellData.setCellValue(resultList.get(k)[i].toString());
                 } else if (resultList.get(k) != null) {
-                    Object objeto= resultList.get(k);
-                     cellData.setCellValue(objeto.toString());
+                    Object objeto = resultList.get(k);
+                    cellData.setCellValue(objeto.toString());
                 } else {
                     cellData.setCellValue("N/A");
                 }
@@ -200,5 +202,22 @@ public class GenericSql {
             }
         }
         return headers;
+    }
+
+    public static String replaceParametersWithOne(String sql, List<ParametersSqlDto> lista) {
+        for (ParametersSqlDto param : lista) {
+            String identifier = param.getPsqlType();
+            String value = "";
+            LOG.info(identifier);
+            if (identifier.equals("String")) {
+                value = "'"+param.getPsqlValue()+"'";
+            }else if(identifier.equals("Integer")){
+            value = param.getPsqlValue();
+            } else if(identifier.equals("Date")){
+            value = "TO_DATE('"+param.getPsqlValue()+"', 'DD-MM-YYYY')";
+            }
+            sql = sql.replace(param.getPsqlIdent(), value);
+        }
+        return sql;
     }
 }
