@@ -65,7 +65,7 @@ public class AutomaticEmail {
         return t -> seen.add(keyExtractor.apply(t));
     }
 
-    @Schedule(hour = "12", minute = "00", persistent = false)
+    @Schedule(hour = "23", minute = "00", persistent = false)
     public void executeTask() {
 
         List<DiaryDto> lista = new ArrayList<>();

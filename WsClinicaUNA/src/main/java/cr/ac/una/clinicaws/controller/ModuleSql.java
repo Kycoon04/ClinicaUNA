@@ -48,12 +48,11 @@ public class ModuleSql {
     public Response getUser(ExcelDto excelDto) {
 
         try {
-            Respuesta res = ServiceSql.getSQL(excelDto);
+            Respuesta res = ServiceSql.VerificarSQL(excelDto);
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
-            excelDto.getParametersDto().setPsDateInit(LocalDate.now());
-            excelDto.getParametersDto().setPsDateSig(DatePlus(excelDto.getParametersDto().getPsTime(),LocalDate.now()));
+            excelDto.getParametersDto().setPsDateSig(DatePlus(excelDto.getParametersDto().getPsTime(),excelDto.getParametersDto().getPsDateInit()));
             res = serviceParameters.saveParameters(excelDto.getParametersDto());
 
             res = serviceParameters.getParametersByTitule(excelDto.getParametersDto().getPsTitule());

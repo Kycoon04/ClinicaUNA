@@ -334,6 +334,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     String[] English = {"Spanish", "English", "France", "Japonese"};
     String[] French = {"Espagnol", "Anglais", "Francais", "Japonais"};
     String[] Japanesse = {"スペイン語", "英語", "フランス語", "日本語"};
+    @FXML
+    private JFXDatePicker datePickerExcelInit;
 
     /**
      * Initializes the controller class.
@@ -1660,7 +1662,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         parametersDto.setPsTitule(textFieldTitleReport.getText());
         parametersDto.setPsDescription(textAreaDescripReport.getText());
         parametersDto.setPsQuery(textAreaQueryReport.getText());
-
+        parametersDto.setPsDateInit(datePickerExcelInit.getValue());
         for (String p : listEmails) {
             EmailDto emailsDto = new EmailDto();
             emailsDto.setElId(0);

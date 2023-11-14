@@ -51,6 +51,24 @@ public class GenericSql {
     @PersistenceContext(unitName = "my_persistence_unit")
     private EntityManager em;
 
+    public Respuesta VerificarSQL(ExcelDto excelDto){
+        try {
+            Query query = em.createNativeQuery(excelDto.getParametersDto().getPsQuery());
+            List<String> headers = extractSQL(excelDto.getParametersDto().getPsQuery());
+            List<Object[]> resultList = query.getResultList();
+            
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "");
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "Error haciendo la consulta sql", "GenericSql NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el SQL.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error haciendo la consulta sql", "GenericSql NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el SQL.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error haciendo la consulta sql", "GenericSql " + ex.getMessage());
+        }
+    }
+    
     public Respuesta getSQL(ExcelDto excelDto) {
         try {
             Query query = em.createNativeQuery(excelDto.getParametersDto().getPsQuery());
@@ -76,10 +94,10 @@ public class GenericSql {
         } catch (NoResultException ex) {//sin resultado
             return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "Error haciendo la consulta sql", "GenericSql NoResultException");
         } catch (NonUniqueResultException ex) {//mas de un resultado 
-            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el PProceedings.", ex);
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el SQL.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error haciendo la consulta sql", "GenericSql NonUniqueResultException");
         } catch (Exception ex) {// codig de erro en el server 
-            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el PProceedings.", ex);
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el SQL.", ex);
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Error haciendo la consulta sql", "GenericSql " + ex.getMessage());
         }
     }
