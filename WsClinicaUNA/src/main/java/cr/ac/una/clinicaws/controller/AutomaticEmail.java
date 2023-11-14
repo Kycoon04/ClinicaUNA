@@ -8,10 +8,12 @@ import cr.ac.una.clinicaws.model.DiaryDto;
 import cr.ac.una.clinicaws.model.EmailDto;
 import cr.ac.una.clinicaws.model.ExcelDto;
 import cr.ac.una.clinicaws.model.ParametersDto;
+import cr.ac.una.clinicaws.model.ParametersSqlDto;
 import cr.ac.una.clinicaws.service.DiaryService;
 import cr.ac.una.clinicaws.service.EmailService;
 import cr.ac.una.clinicaws.service.GenericSql;
 import cr.ac.una.clinicaws.service.ParametersService;
+import cr.ac.una.clinicaws.service.ParametersSqlService;
 import cr.ac.una.clinicaws.util.Email;
 import cr.ac.una.clinicaws.util.Respuesta;
 import jakarta.annotation.PostConstruct;
@@ -54,7 +56,8 @@ public class AutomaticEmail {
     EmailService EmailService;
     @EJB
     GenericSql ServiceSql;
-
+    @EJB
+    ParametersSqlService ParamSqlService;
     @PostConstruct
     public void init() {
         LOGGER.info("ScheduledTask iniciado");
@@ -65,7 +68,7 @@ public class AutomaticEmail {
         return t -> seen.add(keyExtractor.apply(t));
     }
 
-    @Schedule(hour = "23", minute = "00", persistent = false)
+    @Schedule(hour = "16", minute = "53", persistent = false)
     public void executeTask() {
 
         List<DiaryDto> lista = new ArrayList<>();
@@ -95,7 +98,9 @@ public class AutomaticEmail {
         for (int i = 0; i < parametros.size(); i++) {
             respuesta = EmailService.getSqlBySql(parametros.get(i).getPsId());
             List<EmailDto> emailDto = (List<EmailDto>) respuesta.getResultado("Email");
-            ExcelDto excelDto = new ExcelDto(parametros.get(i), emailDto);
+            respuesta = ParamSqlService.getParametersByFrequency(parametros.get(i).getPsId());
+            List<ParametersSqlDto> parametrosSql = (List<ParametersSqlDto>) respuesta.getResultado("Parameters");
+            ExcelDto excelDto = new ExcelDto(parametros.get(i), emailDto,parametrosSql);
             excelsDto.add(excelDto);
         }
         for (ExcelDto p : excelsDto) {

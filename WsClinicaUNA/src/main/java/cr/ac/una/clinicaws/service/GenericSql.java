@@ -54,7 +54,6 @@ public class GenericSql {
 
     public Respuesta VerificarSQL(ExcelDto excelDto) {
         try {
-            LOG.info(replaceParametersWithOne(excelDto.getParametersDto().getPsQuery(), excelDto.getParametersSqlDto()));
             Query query = em.createNativeQuery(replaceParametersWithOne(excelDto.getParametersDto().getPsQuery(), excelDto.getParametersSqlDto()));
             List<String> headers = extractSQL(excelDto.getParametersDto().getPsQuery());
             List<Object[]> resultList = query.getResultList();
@@ -73,7 +72,7 @@ public class GenericSql {
 
     public Respuesta getSQL(ExcelDto excelDto) {
         try {
-            Query query = em.createNativeQuery(excelDto.getParametersDto().getPsQuery());
+            Query query = em.createNativeQuery(replaceParametersWithOne(excelDto.getParametersDto().getPsQuery(), excelDto.getParametersSqlDto()));
             List<String> headers = extractSQL(excelDto.getParametersDto().getPsQuery());
 
             List<Object[]> resultList = query.getResultList();

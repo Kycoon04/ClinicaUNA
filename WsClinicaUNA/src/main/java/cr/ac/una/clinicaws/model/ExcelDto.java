@@ -25,9 +25,10 @@ public class ExcelDto {
         this.parametersSqlDto = parametersSqlDto;
     }
 
-    public ExcelDto(ParametersDto parametersDto, List<EmailDto> emailDto) {
+    public ExcelDto(ParametersDto parametersDto, List<EmailDto> emailDto,List<ParametersSqlDto> parametersSqlDtoList) {
         this.parametersDto = parametersDto;
         this.emailDto = emailDto;
+        parametersSqlDto = parametersSqlDtoList;
     }
 
     public ParametersDto getParametersDto() {

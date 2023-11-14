@@ -23,6 +23,7 @@ public class ParametersSqlDto {
         this.psqlValue = parametersSql.getPsqlValue();
         this.psqlType = parametersSql.getPsqlType();
         this.psqlIdparam = parametersSql.getPsqlIdparam();
+        this.psqlIdent = parametersSql.getPsqlIdent();
     }
 
     public String getPsqlIdent() {
