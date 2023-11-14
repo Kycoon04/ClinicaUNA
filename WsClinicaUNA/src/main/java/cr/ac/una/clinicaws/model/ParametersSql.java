@@ -27,7 +27,9 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "ParametersSql.findAll", query = "SELECT p FROM ParametersSql p"),
     @NamedQuery(name = "ParametersSql.findByPsqlId", query = "SELECT p FROM ParametersSql p WHERE p.psqlId = :psqlId"),
     @NamedQuery(name = "ParametersSql.findByPsqlValue", query = "SELECT p FROM ParametersSql p WHERE p.psqlValue = :psqlValue"),
-    @NamedQuery(name = "ParametersSql.findByPsqlType", query = "SELECT p FROM ParametersSql p WHERE p.psqlType = :psqlType")})
+    @NamedQuery(name = "ParametersSql.findByPsqlType", query = "SELECT p FROM ParametersSql p WHERE p.psqlType = :psqlType"),
+    @NamedQuery(name = "ParametersSql.findBySqlId", query = "SELECT e FROM ParametersSql e WHERE e.psqlIdparam.psId = :psId"),
+    @NamedQuery(name = "ParametersSql.findByPsqlIdent", query = "SELECT p FROM ParametersSql p WHERE p.psqlIdent = :psqlIdent")})
 public class ParametersSql implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,13 +44,27 @@ public class ParametersSql implements Serializable {
     @Size(max = 30)
     @Column(name = "PSQL_TYPE")
     private String psqlType;
+    @Size(max = 30)
+    @Column(name = "PSQL_IDENT")
+    private String psqlIdent;
     @JoinColumn(name = "PSQL_IDPARAM", referencedColumnName = "PS_ID")
     @ManyToOne
     private Parameters psqlIdparam;
-
+    
     public ParametersSql() {
     }
+    public ParametersSql(ParametersSqlDto parametersSql) {
+        this.psqlId = parametersSql.getPsqlId();
+        update(parametersSql);
+    }
 
+    public void update(ParametersSqlDto parametersSql) {
+        this.psqlId = parametersSql.getPsqlId();
+        this.psqlValue = parametersSql.getPsqlValue();
+        this.psqlType = parametersSql.getPsqlType();
+        this.psqlIdparam = parametersSql.getPsqlIdparam();
+        this.psqlIdent = parametersSql.getPsqlIdent();
+    }
     public ParametersSql(Integer psqlId) {
         this.psqlId = psqlId;
     }
@@ -77,6 +93,13 @@ public class ParametersSql implements Serializable {
         this.psqlType = psqlType;
     }
 
+    public String getPsqlIdent() {
+        return psqlIdent;
+    }
+
+    public void setPsqlIdent(String psqlIdent) {
+        this.psqlIdent = psqlIdent;
+    }
     public Parameters getPsqlIdparam() {
         return psqlIdparam;
     }
@@ -84,7 +107,6 @@ public class ParametersSql implements Serializable {
     public void setPsqlIdparam(Parameters psqlIdparam) {
         this.psqlIdparam = psqlIdparam;
     }
-
     @Override
     public int hashCode() {
         int hash = 0;

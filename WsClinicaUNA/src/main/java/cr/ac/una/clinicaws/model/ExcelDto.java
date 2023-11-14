@@ -13,8 +13,16 @@ import java.util.List;
 public class ExcelDto {
     private ParametersDto parametersDto;
     private List<EmailDto> emailDto;
-
+    private List<ParametersSqlDto> parametersSqlDto;
     public ExcelDto() {
+    }
+
+    public List<ParametersSqlDto> getParametersSqlDto() {
+        return parametersSqlDto;
+    }
+
+    public void setParametersSqlDto(List<ParametersSqlDto> parametersSqlDto) {
+        this.parametersSqlDto = parametersSqlDto;
     }
 
     public ExcelDto(ParametersDto parametersDto, List<EmailDto> emailDto) {

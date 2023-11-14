@@ -8,6 +8,7 @@ import cr.ac.una.clinicauna.model.EmailDto;
 import cr.ac.una.clinicauna.model.ExcelDto;
 import cr.ac.una.clinicauna.model.HistoryDto;
 import cr.ac.una.clinicauna.model.ParametersDto;
+import cr.ac.una.clinicauna.model.ParametersSqlDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
 import cr.ac.una.clinicauna.model.UserDto;
@@ -1644,7 +1645,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         SqlService serviceSql = new SqlService();
         ParametersDto parametersDto = new ParametersDto();
         List<EmailDto> emailDto = new ArrayList<>();
-
+        List<ParametersSqlDto> parametersSqlDto = new ArrayList<>();
+        
         parametersDto.setPsId(0);
         parametersDto.setPsName(textFieldNameReport.getText());
         if (choiceBoxPeriodReport.getValue().equals("Diario") || choiceBoxPeriodReport.getValue().equals("Daily")
@@ -1659,18 +1661,29 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 || choiceBoxPeriodReport.getValue().equals("Mensuel") || choiceBoxPeriodReport.getValue().equals("「月次」")) {
             parametersDto.setPsTime("Monthly");
         }
+        
         parametersDto.setPsTitule(textFieldTitleReport.getText());
         parametersDto.setPsDescription(textAreaDescripReport.getText());
         parametersDto.setPsQuery(textAreaQueryReport.getText());
         parametersDto.setPsDateInit(datePickerExcelInit.getValue());
+        
         for (String p : listEmails) {
             EmailDto emailsDto = new EmailDto();
+            ParametersSqlDto parametroSql = new ParametersSqlDto();
             emailsDto.setElId(0);
             emailsDto.setElEmail(p);
             emailsDto.setElIdsql(parametersDto);
             emailDto.add(emailsDto);
+            
+            parametroSql.setPsqlId(0);
+            parametroSql.setPsqlIdparam(parametersDto);
+            parametroSql.setPsqlType("String");
+            parametroSql.setPsqlIdent(":Param1");
+            parametroSql.setPsqlValue("Jose");
+            parametersSqlDto.add(parametroSql);
         }
-        ExcelDto excelDto = new ExcelDto(parametersDto,emailDto);
+        
+        ExcelDto excelDto = new ExcelDto(parametersDto,emailDto,parametersSqlDto);
         Respuesta res = serviceSql.getExcel(excelDto);
         if (res.getEstado()) {
                 if (usrIdiom.getUsLenguage().equals("Spanish")) {

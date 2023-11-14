@@ -741,12 +741,20 @@ create table CL_PARAMETERS_SQL
   psql_id      NUMBER(5) not null,
   psql_value   VARCHAR2(30),
   psql_type    VARCHAR2(30),
-  psql_idparam NUMBER(5)
+  psql_idparam NUMBER(5),
+  psql_ident   VARCHAR2(30)
 )
 tablespace USERS
   pctfree 10
   initrans 1
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 -- Create/Recreate primary, unique and foreign key constraints 
 alter table CL_PARAMETERS_SQL
   add constraint PK_PSQL primary key (PSQL_ID)
@@ -754,10 +762,32 @@ alter table CL_PARAMETERS_SQL
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table CL_PARAMETERS_SQL
+  add constraint UNI_IDENT unique (PSQL_IDENT)
+  using index 
+  tablespace USERS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 alter table CL_PARAMETERS_SQL
   add constraint FK_IDPARAM foreign key (PSQL_IDPARAM)
   references CL_PARAMETERS (PS_ID);
+
 
 
 -- Create table
