@@ -12,7 +12,7 @@ public class EmailDto {
     
     private Integer elId;
     private String elEmail;
-    private Sql elIdsql;
+    private Parameters elIdsql;
 
     public EmailDto(Emails email) {
         this.elId = email.getElId();
@@ -39,11 +39,11 @@ public class EmailDto {
         this.elEmail = elEmail;
     }
 
-    public Sql getElIdsql() {
+    public Parameters getElIdsql() {
         return elIdsql;
     }
 
-    public void setElIdsql(Sql elIdsql) {
+    public void setElIdsql(Parameters elIdsql) {
         this.elIdsql = elIdsql;
     }
     

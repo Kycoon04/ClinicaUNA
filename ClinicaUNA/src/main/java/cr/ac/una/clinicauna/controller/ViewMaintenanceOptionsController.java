@@ -10,7 +10,6 @@ import cr.ac.una.clinicauna.model.HistoryDto;
 import cr.ac.una.clinicauna.model.ParametersDto;
 import cr.ac.una.clinicauna.model.PatientDto;
 import cr.ac.una.clinicauna.model.ProceedingsDto;
-import cr.ac.una.clinicauna.model.SqlDto;
 import cr.ac.una.clinicauna.model.UserDto;
 import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
@@ -1641,7 +1640,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private void sendReport(MouseEvent event) throws FileNotFoundException {
         SqlService serviceSql = new SqlService();
-        SqlDto sqlDto = new SqlDto();
         ParametersDto parametersDto = new ParametersDto();
         List<EmailDto> emailDto = new ArrayList<>();
 
@@ -1661,19 +1659,16 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         }
         parametersDto.setPsTitule(textFieldTitleReport.getText());
         parametersDto.setPsDescription(textAreaDescripReport.getText());
-
-        sqlDto.setSqlId(0);
-        sqlDto.setSqlParam(parametersDto);
-        sqlDto.setSqlQuery(textAreaQueryReport.getText());
+        parametersDto.setPsQuery(textAreaQueryReport.getText());
 
         for (String p : listEmails) {
             EmailDto emailsDto = new EmailDto();
             emailsDto.setElId(0);
             emailsDto.setElEmail(p);
-            emailsDto.setElIdsql(sqlDto);
+            emailsDto.setElIdsql(parametersDto);
             emailDto.add(emailsDto);
         }
-        ExcelDto excelDto = new ExcelDto(parametersDto, sqlDto, emailDto);
+        ExcelDto excelDto = new ExcelDto(parametersDto,emailDto);
         Respuesta res = serviceSql.getExcel(excelDto);
         if (res.getEstado()) {
                 if (usrIdiom.getUsLenguage().equals("Spanish")) {

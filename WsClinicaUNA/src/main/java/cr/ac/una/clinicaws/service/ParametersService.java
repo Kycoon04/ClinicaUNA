@@ -18,6 +18,7 @@ import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -112,10 +113,10 @@ public class ParametersService {
         }
     }
 
-    public Respuesta getParametersByFrequency(String psTime) {
+    public Respuesta getParametersByFrequency(LocalDate date) {
         try {
-            Query qryParameters = em.createNamedQuery("Parameters.findByPsTime", Parameters.class);
-            qryParameters.setParameter("psTime", psTime);
+            Query qryParameters = em.createNamedQuery("Parameters.findByPsDateInit", Parameters.class);
+            qryParameters.setParameter("psDateInit", date);
             List<Parameters> diary = (List<Parameters>) qryParameters.getResultList();
              List<ParametersDto> ListDiaries = new ArrayList<>();
             for (Parameters tipo : diary) {

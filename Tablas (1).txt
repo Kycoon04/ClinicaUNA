@@ -700,15 +700,25 @@ alter table CL_EXAM
 create table CL_PARAMETERS
 (
   ps_id          NUMBER(5) not null,
-  ps_name        NVARCHAR2(30),
+  ps_name        NVARCHAR2(30) not null,
   ps_description NVARCHAR2(100),
   ps_titule      NVARCHAR2(30),
-  ps_time        NVARCHAR2(30)
+  ps_time        NVARCHAR2(30),
+  ps_query       VARCHAR2(1000),
+  ps_date_init   DATE,
+  ps_date_sig    DATE
 )
 tablespace USERS
   pctfree 10
   initrans 1
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 -- Create/Recreate primary, unique and foreign key constraints 
 alter table CL_PARAMETERS
   add constraint PS_ID primary key (PS_ID)
@@ -716,30 +726,37 @@ alter table CL_PARAMETERS
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
-
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 
 -- Create table
-create table CL_SQL
+create table CL_PARAMETERS_SQL
 (
-  sql_id    NUMBER(5) not null,
-  sql_param NUMBER(5) not null,
-  sql_query VARCHAR2(1000) not null
+  psql_id      NUMBER(5) not null,
+  psql_value   VARCHAR2(30),
+  psql_type    VARCHAR2(30),
+  psql_idparam NUMBER(5)
 )
 tablespace USERS
   pctfree 10
   initrans 1
   maxtrans 255;
 -- Create/Recreate primary, unique and foreign key constraints 
-alter table CL_SQL
-  add constraint SQL_PRIMARY primary key (SQL_ID)
+alter table CL_PARAMETERS_SQL
+  add constraint PK_PSQL primary key (PSQL_ID)
   using index 
   tablespace USERS
   pctfree 10
   initrans 2
   maxtrans 255;
-alter table CL_SQL
-  add constraint SQL_FKPARAM foreign key (SQL_PARAM)
+alter table CL_PARAMETERS_SQL
+  add constraint FK_IDPARAM foreign key (PSQL_IDPARAM)
   references CL_PARAMETERS (PS_ID);
 
 
@@ -753,7 +770,14 @@ create table CL_EMAIL
 tablespace USERS
   pctfree 10
   initrans 1
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 -- Create/Recreate primary, unique and foreign key constraints 
 alter table CL_EMAIL
   add constraint EL_PRIMARY primary key (EL_ID)
@@ -761,10 +785,17 @@ alter table CL_EMAIL
   tablespace USERS
   pctfree 10
   initrans 2
-  maxtrans 255;
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
 alter table CL_EMAIL
   add constraint EL_FKSQL foreign key (EL_IDSQL)
-  references CL_SQL (SQL_ID);
+  references CL_PARAMETERS (PS_ID);
 
 
 
@@ -781,15 +812,15 @@ begin
   SELECT SecuenciaClinica.nextval INTO :new.EL_ID FROM dual;
 end TriggerEMAIL;
 /
-create or replace noneditionable trigger TriggerSQL
+create or replace trigger TriggerPARAMSQL
   before insert
-  on CL_SQL 
+  on CL_PARAMETERS_SQL 
   for each row
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.SQL_ID FROM dual;
-end TriggerSQL;
+  SELECT SecuenciaClinica.nextval INTO :new.PSQL_ID FROM dual;
+end TriggerPARAMSQL;
 /
 create or replace noneditionable trigger TriggerParams
   before insert

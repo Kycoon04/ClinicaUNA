@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicauna.model;
 
+import java.time.LocalDate;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -18,23 +19,48 @@ public class ParametersDto {
     private SimpleStringProperty psDescription;
     private SimpleStringProperty psTitule;
     private SimpleStringProperty psTime;
-
+    private SimpleStringProperty psQuery;
+    private LocalDate psDateInit;
+    private LocalDate psDateSig;
     public ParametersDto() {
         this.psId = new SimpleIntegerProperty();
         this.psName = new SimpleStringProperty();
         this.psDescription = new SimpleStringProperty();
         this.psTitule = new SimpleStringProperty();
         this.psTime = new SimpleStringProperty();
+        this.psQuery = new SimpleStringProperty();
     }
 
     public Integer getPsId() {
         return psId.get();
     }
 
+    public LocalDate getPsDateInit() {
+        return psDateInit;
+    }
+
+    public void setPsDateInit(LocalDate psDateInit) {
+        this.psDateInit = psDateInit;
+    }
+
+    public LocalDate getPsDateSig() {
+        return psDateSig;
+    }
+
+    public void setPsDateSig(LocalDate psDateSig) {
+        this.psDateSig = psDateSig;
+    }
+
     public void setPsId(Integer emId) {
         this.psId.set(emId);
     }
+    public String getPsQuery() {
+        return psQuery.get();
+    }
 
+    public void setPsQuery(String psName) {
+        this.psQuery.set(psName);
+    }
     public String getPsName() {
         return psName.get();
     }

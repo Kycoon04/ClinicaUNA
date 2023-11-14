@@ -7,14 +7,11 @@ package cr.ac.una.clinicaws.controller;
 import cr.ac.una.clinicaws.model.DiaryDto;
 import cr.ac.una.clinicaws.model.EmailDto;
 import cr.ac.una.clinicaws.model.ExcelDto;
-import cr.ac.una.clinicaws.model.Parameters;
 import cr.ac.una.clinicaws.model.ParametersDto;
-import cr.ac.una.clinicaws.model.SqlDto;
 import cr.ac.una.clinicaws.service.DiaryService;
 import cr.ac.una.clinicaws.service.EmailService;
 import cr.ac.una.clinicaws.service.GenericSql;
 import cr.ac.una.clinicaws.service.ParametersService;
-import cr.ac.una.clinicaws.service.SqlService;
 import cr.ac.una.clinicaws.util.Email;
 import cr.ac.una.clinicaws.util.Respuesta;
 import jakarta.annotation.PostConstruct;
@@ -54,8 +51,6 @@ public class AutomaticEmail {
     @EJB
     ParametersService ParamService;
     @EJB
-    SqlService sqlService;
-    @EJB
     EmailService EmailService;
     @EJB
     GenericSql ServiceSql;
@@ -92,76 +87,36 @@ public class AutomaticEmail {
             email.setDestinationMail(p.getDySpace().getSeAppointment().getAtEmail());
             email.enviarRecordatorio(p.getDyDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), p.getDySpace().getSeAppointment().getAtPatient().getPtName(), p.getDySpace().getSeAppointment().getAtUserregister().getUsLenguage());
         }
-        respuesta = ParamService.getParametersByFrequency("Daily");
+        
+        respuesta = ParamService.getParametersByFrequency(LocalDate.now());
         List<ParametersDto> parametros = (List<ParametersDto>) respuesta.getResultado("Parameters");
-        List<SqlDto> sql = new ArrayList<>();
         List<ExcelDto> excelsDto = new ArrayList<>();
 
-        for (ParametersDto p : parametros) {
-            respuesta = sqlService.getSqlByParam(p.getPsId());
-            SqlDto sqlDto = (SqlDto) respuesta.getResultado("Sql");
-            sql.add(sqlDto);
-        }
-
-        for (int i = 0; i < sql.size(); i++) {
-            respuesta = EmailService.getSqlBySql(sql.get(i).getSqlId());
+        for (int i = 0; i < parametros.size(); i++) {
+            respuesta = EmailService.getSqlBySql(parametros.get(i).getPsId());
             List<EmailDto> emailDto = (List<EmailDto>) respuesta.getResultado("Email");
-            ParametersDto parametro = new ParametersDto(sql.get(i).getSqlParam());
-            ExcelDto excelDto = new ExcelDto(parametro, sql.get(i), emailDto);
+            ExcelDto excelDto = new ExcelDto(parametros.get(i), emailDto);
             excelsDto.add(excelDto);
         }
         for (ExcelDto p : excelsDto) {
             respuesta = ServiceSql.getSQL(p);
+            p.getParametersDto().setPsDateInit(p.getParametersDto().getPsDateSig());
+            p.getParametersDto().setPsDateSig(DatePlus(p.getParametersDto().getPsTime(),p.getParametersDto().getPsDateInit()));
+            respuesta = ParamService.saveParameters(p.getParametersDto());
         }
+        
+    }
+        public LocalDate DatePlus(String date,LocalDate dateUpdate) {
+
+        switch (date) {
+            case "Daily":
+                return dateUpdate.plusDays(1);
+            case "Weekly":
+                return dateUpdate.plusWeeks(1);
+            case "Monthly":
+                return dateUpdate.plusMonths(1);
+        }
+        return null;
     }
 
-    @Schedule(dayOfWeek = "Mon", hour = "12", minute = "00", persistent = false)
-    public void executeWeeklyTask() {
-        Respuesta respuesta = ParamService.getParametersByFrequency("Weekly");
-        List<ParametersDto> parametros = (List<ParametersDto>) respuesta.getResultado("Parameters");
-        List<SqlDto> sql = new ArrayList<>();
-        List<ExcelDto> excelsDto = new ArrayList<>();
-
-        for (ParametersDto p : parametros) {
-            respuesta = sqlService.getSqlByParam(p.getPsId());
-            SqlDto sqlDto = (SqlDto) respuesta.getResultado("Sql");
-            sql.add(sqlDto);
-        }
-
-        for (int i = 0; i < sql.size(); i++) {
-            respuesta = EmailService.getSqlBySql(sql.get(i).getSqlId());
-            List<EmailDto> emailDto = (List<EmailDto>) respuesta.getResultado("Email");
-            ParametersDto parametro = new ParametersDto(sql.get(i).getSqlParam());
-            ExcelDto excelDto = new ExcelDto(parametro, sql.get(i), emailDto);
-            excelsDto.add(excelDto);
-        }
-        for (ExcelDto p : excelsDto) {
-            respuesta = ServiceSql.getSQL(p);
-        }
-    }
-
-    @Schedule(dayOfMonth = "1", hour = "12", minute = "00", persistent = false)
-    public void executeMonthlyTask() {
-        Respuesta respuesta = ParamService.getParametersByFrequency("Monthly");
-        List<ParametersDto> parametros = (List<ParametersDto>) respuesta.getResultado("Parameters");
-        List<SqlDto> sql = new ArrayList<>();
-        List<ExcelDto> excelsDto = new ArrayList<>();
-
-        for (ParametersDto p : parametros) {
-            respuesta = sqlService.getSqlByParam(p.getPsId());
-            SqlDto sqlDto = (SqlDto) respuesta.getResultado("Sql");
-            sql.add(sqlDto);
-        }
-
-        for (int i = 0; i < sql.size(); i++) {
-            respuesta = EmailService.getSqlBySql(sql.get(i).getSqlId());
-            List<EmailDto> emailDto = (List<EmailDto>) respuesta.getResultado("Email");
-            ParametersDto parametro = new ParametersDto(sql.get(i).getSqlParam());
-            ExcelDto excelDto = new ExcelDto(parametro, sql.get(i), emailDto);
-            excelsDto.add(excelDto);
-        }
-        for (ExcelDto p : excelsDto) {
-            respuesta = ServiceSql.getSQL(p);
-        }
-    }
 }

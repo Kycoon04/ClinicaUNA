@@ -12,12 +12,10 @@ import java.util.List;
  */
 public class ExcelDto {
     private ParametersDto parametersDto;
-    private SqlDto sqlDto;
     private List<EmailDto> emailDto;
 
-    public ExcelDto(ParametersDto parametersDto, SqlDto sqlDto, List<EmailDto> emailDto) {
+    public ExcelDto(ParametersDto parametersDto, List<EmailDto> emailDto) {
         this.parametersDto = parametersDto;
-        this.sqlDto = sqlDto;
         this.emailDto = emailDto;
     }
 
@@ -27,14 +25,6 @@ public class ExcelDto {
 
     public void setParametersDto(ParametersDto parametersDto) {
         this.parametersDto = parametersDto;
-    }
-
-    public SqlDto getSqlDto() {
-        return sqlDto;
-    }
-
-    public void setSqlDto(SqlDto sqlDto) {
-        this.sqlDto = sqlDto;
     }
 
     public List<EmailDto> getEmailDto() {

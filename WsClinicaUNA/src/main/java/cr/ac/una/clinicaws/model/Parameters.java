@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -27,7 +28,10 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Parameters.findByPsName", query = "SELECT p FROM Parameters p WHERE p.psName = :psName"),
     @NamedQuery(name = "Parameters.findByPsDescription", query = "SELECT p FROM Parameters p WHERE p.psDescription = :psDescription"),
     @NamedQuery(name = "Parameters.findByPsTitule", query = "SELECT p FROM Parameters p WHERE p.psTitule = :psTitule"),
-    @NamedQuery(name = "Parameters.findByPsTime", query = "SELECT p FROM Parameters p WHERE p.psTime = :psTime")})
+    @NamedQuery(name = "Parameters.findByPsTime", query = "SELECT p FROM Parameters p WHERE p.psTime = :psTime"),
+    @NamedQuery(name = "Parameters.findByPsQuery", query = "SELECT p FROM Parameters p WHERE p.psQuery = :psQuery"),
+    @NamedQuery(name = "Parameters.findByPsDateInit", query = "SELECT p FROM Parameters p WHERE p.psDateInit = :psDateInit"),
+    @NamedQuery(name = "Parameters.findByPsDateSig", query = "SELECT p FROM Parameters p WHERE p.psDateSig = :psDateSig")})
 public class Parameters implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,7 +40,9 @@ public class Parameters implements Serializable {
     @NotNull
     @Column(name = "PS_ID")
     private Integer psId;
-    @Size(max = 30)
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 30)
     @Column(name = "PS_NAME")
     private String psName;
     @Size(max = 100)
@@ -48,13 +54,16 @@ public class Parameters implements Serializable {
     @Size(max = 30)
     @Column(name = "PS_TIME")
     private String psTime;
+    @Size(max = 1000)
+    @Column(name = "PS_QUERY")
+    private String psQuery;
+    @Column(name = "PS_DATE_INIT")
+    private LocalDate psDateInit;
+    @Column(name = "PS_DATE_SIG")
+    private LocalDate psDateSig;
+
     public Parameters() {
     }
-
-    public Parameters(Integer psId) {
-        this.psId = psId;
-    }
-
     public Parameters(ParametersDto parametersDto) {
         this.psId = parametersDto.getPsId();
         update(parametersDto);
@@ -65,8 +74,20 @@ public class Parameters implements Serializable {
         this.psName = parameters.getPsName();
         this.psDescription = parameters.getPsDescription();
         this.psTitule = parameters.getPsTitule();
-        this.psTime = parameters.getPsTime();
+        this.psTime = parameters.getPsTime();      
+        this.psDateInit = parameters.getPsDateInit();
+        this.psDateSig = parameters.getPsDateSig();
+        this.psQuery = parameters.getPsQuery();
     }
+    public Parameters(Integer psId) {
+        this.psId = psId;
+    }
+
+    public Parameters(Integer psId, String psName) {
+        this.psId = psId;
+        this.psName = psName;
+    }
+
     public Integer getPsId() {
         return psId;
     }
@@ -105,6 +126,30 @@ public class Parameters implements Serializable {
 
     public void setPsTime(String psTime) {
         this.psTime = psTime;
+    }
+
+    public String getPsQuery() {
+        return psQuery;
+    }
+
+    public void setPsQuery(String psQuery) {
+        this.psQuery = psQuery;
+    }
+
+    public LocalDate getPsDateInit() {
+        return psDateInit;
+    }
+
+    public void setPsDateInit(LocalDate psDateInit) {
+        this.psDateInit = psDateInit;
+    }
+
+    public LocalDate getPsDateSig() {
+        return psDateSig;
+    }
+
+    public void setPsDateSig(LocalDate psDateSig) {
+        this.psDateSig = psDateSig;
     }
 
     @Override

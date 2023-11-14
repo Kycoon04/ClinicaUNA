@@ -6,10 +6,6 @@ package cr.ac.una.clinicaws.service;
 
 import cr.ac.una.clinicaws.model.EmailDto;
 import cr.ac.una.clinicaws.model.Emails;
-import cr.ac.una.clinicaws.model.Space;
-import cr.ac.una.clinicaws.model.SpaceDto;
-import cr.ac.una.clinicaws.model.Sql;
-import cr.ac.una.clinicaws.model.SqlDto;
 import cr.ac.una.clinicaws.util.CodigoRespuesta;
 import cr.ac.una.clinicaws.util.Respuesta;
 import jakarta.ejb.LocalBean;
@@ -100,7 +96,7 @@ public class EmailService {
     public Respuesta getSqlBySql(Integer sqlParam) {
         try {
             Query qrySpace = em.createNamedQuery("Emails.findBySqlId", Emails.class);
-            qrySpace.setParameter("sqlId", sqlParam);
+            qrySpace.setParameter("psId", sqlParam);
             List<Emails> email = (List<Emails>) qrySpace.getResultList();
             List<EmailDto> ListemailDto = new ArrayList<>();
             for (Emails tipo : email) {

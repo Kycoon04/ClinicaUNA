@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package cr.ac.una.clinicaws.model;
+import java.time.LocalDate;
 
 /**
  *
@@ -14,6 +15,9 @@ public class ParametersDto {
     private String psDescription;
     private String psTitule;
     private String psTime;
+    private String psQuery;
+    private LocalDate psDateInit;
+    private LocalDate psDateSig;
 
     public ParametersDto(Parameters parameters) {
         this.psId = parameters.getPsId();
@@ -21,9 +25,36 @@ public class ParametersDto {
         this.psDescription = parameters.getPsDescription();
         this.psTitule = parameters.getPsTitule();
         this.psTime = parameters.getPsTime();
+        this.psDateInit = parameters.getPsDateInit();
+        this.psDateSig = parameters.getPsDateSig();
+        this.psQuery = parameters.getPsQuery();
+    }
+
+    public LocalDate getPsDateInit() {
+        return psDateInit;
+    }
+
+    public void setPsDateInit(LocalDate psDateInit) {
+        this.psDateInit = psDateInit;
+    }
+
+    public LocalDate getPsDateSig() {
+        return psDateSig;
+    }
+
+    public void setPsDateSig(LocalDate psDateSig) {
+        this.psDateSig = psDateSig;
     }
 
     public ParametersDto() {
+    }
+
+    public String getPsQuery() {
+        return psQuery;
+    }
+
+    public void setPsQuery(String psQuery) {
+        this.psQuery = psQuery;
     }
 
     public Integer getPsId() {

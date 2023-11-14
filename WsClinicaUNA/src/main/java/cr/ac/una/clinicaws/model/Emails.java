@@ -26,7 +26,7 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Emails.findAll", query = "SELECT e FROM Emails e"),
     @NamedQuery(name = "Emails.findByElId", query = "SELECT e FROM Emails e WHERE e.elId = :elId"),
-    @NamedQuery(name = "Emails.findBySqlId", query = "SELECT e FROM Emails e WHERE e.elIdsql.sqlId = :sqlId"),
+    @NamedQuery(name = "Emails.findBySqlId", query = "SELECT e FROM Emails e WHERE e.elIdsql.psId = :psId"),
     @NamedQuery(name = "Emails.findByElEmail", query = "SELECT e FROM Emails e WHERE e.elEmail = :elEmail")})
 public class Emails implements Serializable {
 
@@ -41,17 +41,12 @@ public class Emails implements Serializable {
     @Size(min = 1, max = 60)
     @Column(name = "EL_EMAIL")
     private String elEmail;
-    @JoinColumn(name = "EL_IDSQL", referencedColumnName = "SQL_ID")
+    @JoinColumn(name = "EL_IDSQL", referencedColumnName = "PS_ID")
     @ManyToOne(optional = false)
-    private Sql elIdsql;
+    private Parameters elIdsql;
 
     public Emails() {
     }
-
-    public Emails(Integer elId) {
-        this.elId = elId;
-    }
-
     public Emails(EmailDto emailDto) {
         this.elId = emailDto.getElId();
         update(emailDto);
@@ -61,6 +56,9 @@ public class Emails implements Serializable {
         this.elId = email.getElId();
         this.elEmail = email.getElEmail();
         this.elIdsql = email.getElIdsql();
+    }
+    public Emails(Integer elId) {
+        this.elId = elId;
     }
 
     public Emails(Integer elId, String elEmail) {
@@ -84,11 +82,11 @@ public class Emails implements Serializable {
         this.elEmail = elEmail;
     }
 
-    public Sql getElIdsql() {
+    public Parameters getElIdsql() {
         return elIdsql;
     }
 
-    public void setElIdsql(Sql elIdsql) {
+    public void setElIdsql(Parameters elIdsql) {
         this.elIdsql = elIdsql;
     }
 
@@ -114,7 +112,7 @@ public class Emails implements Serializable {
 
     @Override
     public String toString() {
-        return "cr.ac.una.clinicaws.model.Email[ elId=" + elId + " ]";
+        return "cr.ac.una.clinicaws.model.Emails[ elId=" + elId + " ]";
     }
-
+    
 }

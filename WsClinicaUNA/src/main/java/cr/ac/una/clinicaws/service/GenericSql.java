@@ -53,8 +53,8 @@ public class GenericSql {
 
     public Respuesta getSQL(ExcelDto excelDto) {
         try {
-            Query query = em.createNativeQuery(excelDto.getSqlDto().getSqlQuery());
-            List<String> headers = extractSQL(excelDto.getSqlDto().getSqlQuery());
+            Query query = em.createNativeQuery(excelDto.getParametersDto().getPsQuery());
+            List<String> headers = extractSQL(excelDto.getParametersDto().getPsQuery());
 
             List<Object[]> resultList = query.getResultList();
             List<Map<String, Object>> rows = new ArrayList<>();

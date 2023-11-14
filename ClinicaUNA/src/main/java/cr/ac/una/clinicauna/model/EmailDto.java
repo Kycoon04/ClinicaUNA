@@ -15,12 +15,12 @@ public class EmailDto {
     
     private SimpleIntegerProperty elId;
     private SimpleStringProperty elEmail;
-    private SqlDto elIdsql;
+    private ParametersDto elIdsql;
 
     public EmailDto() {
         this.elId = new SimpleIntegerProperty();
         this.elEmail = new SimpleStringProperty();
-        this.elIdsql = new SqlDto();
+        this.elIdsql = new ParametersDto();
     }
 
     public Integer getElId() {
@@ -39,11 +39,11 @@ public class EmailDto {
         this.elEmail.set(elEmail);
     }
 
-    public SqlDto getElIdsql() {
+    public ParametersDto getElIdsql() {
         return elIdsql;
     }
 
-    public void setElIdsql(SqlDto elIdsql) {
+    public void setElIdsql(ParametersDto elIdsql) {
         this.elIdsql = elIdsql;
     }
     
