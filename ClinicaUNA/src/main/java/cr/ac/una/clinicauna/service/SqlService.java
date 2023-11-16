@@ -19,8 +19,8 @@ import java.util.logging.Logger;
  * @author jomav
  */
 public class SqlService {
-    
-        public Respuesta getExcel(ExcelDto excelDto) throws FileNotFoundException {
+
+    public Respuesta getExcel(ExcelDto excelDto) throws FileNotFoundException {
         try {
             Request request = new Request("ModuleSql/sql");
             request.post(excelDto);
@@ -33,5 +33,5 @@ public class SqlService {
             return new Respuesta(false, "Error guardando agenda.", "guardarAgenda" + ex.getMessage());
         }
     }
-    
+
 }
