@@ -134,4 +134,24 @@ public class ParametersService {
             return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Parameters.", "getParameters " + ex.getMessage());
         }
     }
+        public Respuesta getParameter() {
+        try {
+            Query qryParameters = em.createNamedQuery("Parameters.findAll", Parameters.class);
+            List<Parameters> diary = (List<Parameters>) qryParameters.getResultList();
+             List<ParametersDto> ListDiaries = new ArrayList<>();
+            for (Parameters tipo : diary) {
+                ParametersDto diaryDto = new ParametersDto(tipo);
+                ListDiaries.add(diaryDto);
+            }
+            return new Respuesta(true, CodigoRespuesta.CORRECTO, "", "", "Parameters", ListDiaries);
+        } catch (NoResultException ex) {//sin resultado
+            return new Respuesta(false, CodigoRespuesta.ERROR_NOENCONTRADO, "No existe un user con el código ingresado.", "getParameters NoResultException");
+        } catch (NonUniqueResultException ex) {//mas de un resultado 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el Parameters.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Parameters.", "getParameters NonUniqueResultException");
+        } catch (Exception ex) {// codig de erro en el server 
+            LOG.log(Level.SEVERE, "Ocurrio un error al consultar el Parameters.", ex);
+            return new Respuesta(false, CodigoRespuesta.ERROR_INTERNO, "Ocurrio un error al consultar el Parameters.", "getParameters " + ex.getMessage());
+        }
+    }
 }

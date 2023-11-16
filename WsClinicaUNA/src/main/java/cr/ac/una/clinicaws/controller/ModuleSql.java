@@ -4,6 +4,7 @@
  */
 package cr.ac.una.clinicaws.controller;
 
+import cr.ac.una.clinicaws.model.DiaryDto;
 import cr.ac.una.clinicaws.model.EmailDto;
 import cr.ac.una.clinicaws.model.ExcelDto;
 import cr.ac.una.clinicaws.model.Parameters;
@@ -18,12 +19,16 @@ import cr.ac.una.clinicaws.util.Respuesta;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +50,10 @@ public class ModuleSql {
     EmailService serviceemail;
     @EJB
     ParametersSqlService serviceParametersSql;
+    
+    
     private static final Logger LOG = Logger.getLogger(GenericSql.class.getName());
+
     @POST
     @Path("/sql")
     public Response getUser(ExcelDto excelDto) {
@@ -69,13 +77,47 @@ public class ModuleSql {
                 p.setPsqlIdparam(parametro);
                 res = serviceParametersSql.saveParametersSql(p);
             }
-            
+
             return Response.ok().build();
         } catch (Exception ex) {
-            Logger.getLogger(ModuleUser.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModuleSql.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error realizando la consulta").build();
         }
     }
+
+    @GET
+    @Path("/sql")
+    public Response getParameters() {
+        try {
+            Respuesta res = serviceParameters.getParameter();
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(new GenericEntity<List<DiaryDto>>((List< DiaryDto>) res.getResultado("Parameters")) {
+            }).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleSql.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la agenda").build();
+        }
+    }
+    
+    @GET
+    @Path("/sql/{id}")
+    public Response getParametersSql(@PathParam("id") Integer id) {
+        try {
+            Respuesta res = serviceParametersSql.getParametersByFrequency(id);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(new GenericEntity<List<ParametersSqlDto>>((List< ParametersSqlDto>) res.getResultado("Parameters")) {
+            }).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleSql.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la agenda").build();
+        }
+    } 
+    
+    
 
     public LocalDate DatePlus(String date, LocalDate dateUpdate) {
 
