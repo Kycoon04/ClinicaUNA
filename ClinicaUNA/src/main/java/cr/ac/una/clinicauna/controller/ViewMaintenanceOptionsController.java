@@ -193,6 +193,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     UserDto userDto;
     DoctorDto doctorDto;
+    ParametersDto parametersDto=new ParametersDto();
     PatientDto patientDto = new PatientDto();
     DiseaseDto diseaseDto = new DiseaseDto();
 
@@ -337,6 +338,34 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     String[] Japanesse = {"スペイン語", "英語", "フランス語", "日本語"};
     @FXML
     private JFXDatePicker datePickerExcelInit;
+    @FXML
+    private TabPane tabPaneMantUsers1;
+    @FXML
+    private Tab tabMantReportExcel;
+    @FXML
+    private TextField textFieldSearchReport_Subject;
+    @FXML
+    private TextField textFieldSearchReport_Title;
+    @FXML
+    private TextField textFieldSearchReport_Time;
+    @FXML
+    private TextArea textFieldSearchReport_Query;
+    @FXML
+    private TableView<ParametersDto> tableViewReportsExcel;
+    @FXML
+    private TableColumn tableColReport_Subject;
+    @FXML
+    private TableColumn tableColReport_Title;
+    @FXML
+    private TableColumn tableColReport_Time;
+    @FXML
+    private TableColumn tableColReport_Query;
+    @FXML
+    private TextField textFieldSearchReport_Description;
+    @FXML
+    private TableColumn<?, ?> tableColReport_Description;
+    @FXML
+    private Button btnOpen_Parameters;
 
     /**
      * Initializes the controller class.
@@ -387,6 +416,11 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
         this.tableColEmailReport.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()));
         this.tableViewEmails.setItems(emails);
+        
+        this.tableColReport_Subject.setCellValueFactory(new PropertyValueFactory("psName"));;
+        this.tableColReport_Title.setCellValueFactory(new PropertyValueFactory("psTitule"));;
+        this.tableColReport_Time.setCellValueFactory(new PropertyValueFactory("psTime"));;
+        this.tableColReport_Query.setCellValueFactory(new PropertyValueFactory("psQuery"));;
         loadChoiceIdioms();
         loadChoiceJobs();
         fillTableUsers();
@@ -1622,6 +1656,8 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         textAreaDescripReport.clear();
         textAreaQueryReport.clear();
         choiceBoxPeriodReport.setValue(null);
+         btnOpen_Parameters.setVisible(false);
+        textAreaQueryReport.setEditable(true);
     }
 
     @FXML
@@ -1675,22 +1711,22 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             emailsDto.setElIdsql(parametersDto);
             emailDto.add(emailsDto);
 
-        }/*
+        }
         ParametersSqlDto parametroSql = new ParametersSqlDto();
         parametroSql.setPsqlId(0);
         parametroSql.setPsqlIdparam(parametersDto);
         parametroSql.setPsqlType("Integer");
         parametroSql.setPsqlIdent(":Param23");
         parametroSql.setPsqlValue("2");
-        parametersSqlDto.add(parametroSql);            ESTO SE OMITE, ES ESTE CASO SE ENVIARIA LA LISTA QUE ES RESULTADO DEL TABLE COMO LA DE EMAIL     
-        parametroSql = new ParametersSqlDto();         COMO NO TENGO ESO LO HAGO A PATA  
+        parametersSqlDto.add(parametroSql);           // ESTO SE OMITE, ES ESTE CASO SE ENVIARIA LA LISTA QUE ES RESULTADO DEL TABLE COMO LA DE EMAIL     
+        parametroSql = new ParametersSqlDto();         //COMO NO TENGO ESO LO HAGO A PATA  
         parametroSql.setPsqlId(0);
         parametroSql.setPsqlIdparam(parametersDto);
         parametroSql.setPsqlType("String");
         parametroSql.setPsqlIdent(":Param22");
         parametroSql.setPsqlValue("8:00");
-        parametersSqlDto.add(parametroSql);*/
-                                                                    //ESTA ES LA LISTA QUE CONTIENE LOS PARAMETROS DE LA CONSULTA,
+        parametersSqlDto.add(parametroSql);
+        //ESTA ES LA LISTA QUE CONTIENE LOS PARAMETROS DE LA CONSULTA,
         ExcelDto excelDto = new ExcelDto(parametersDto, emailDto, parametersSqlDto);
         Respuesta res = serviceSql.getExcel(excelDto);
         if (res.getEstado()) {
@@ -1714,6 +1750,64 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 new Mensaje().showModal(Alert.AlertType.ERROR, "エクセルレポート", getStage(), "レポート生成エラー.");
             }
         }
+    }
+    private void fillTableReport(){
+       // ParametersService service = new PatientService();
+        patientList = service.getPatients();
+        if (patientList.isEmpty()) {
+        } else {
+            patientObservableList = FXCollections.observableArrayList(patientList);
+        }
+
+        this.tableViewPatient.refresh();
+        this.tableViewPatient.setItems(patientObservableList);
+    }
+            
+
+
+    @FXML
+    private void searchReport_Subject(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchReport_Title(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchReport_Time(KeyEvent event) {
+    }
+
+    @FXML
+    private void searchReport_Query(KeyEvent event) {
+    }
+    private void fillReport(){
+        textFieldEmailReport.clear();
+        textFieldNameReport.clear();
+        textAreaDescripReport.clear();
+        textAreaQueryReport.clear();
+        choiceBoxPeriodReport.setValue(null);
+        btnOpen_Parameters.setVisible(false);
+        textAreaQueryReport.setEditable(true);
+    }
+
+    @FXML
+    private void reportExcelClicked(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            parametersDto = tableViewReportsExcel.getSelectionModel().getSelectedItem();
+            fillUser(userDto);
+            tabPaneMantUsers.getSelectionModel().select(tabMantUsers);
+            System.out.println(userDto.getUsName());
+        }
+          btnOpen_Parameters.setVisible(true);
+        textAreaQueryReport.setEditable(false);
+    }
+
+    @FXML
+    private void searchReport_Description(KeyEvent event) {
+    }
+
+    @FXML
+    private void loadQuery(ActionEvent event) {
     }
 
 }
