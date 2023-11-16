@@ -962,7 +962,7 @@
                            <center>
                               <HBox BorderPane.alignment="CENTER">
                                  <children>
-                                    <TabPane fx:id="tabPaneMantUsers1" prefHeight="0.0" prefWidth="986.0" tabClosingPolicy="UNAVAILABLE">
+                                    <TabPane fx:id="tabPaneMantReports" prefHeight="0.0" prefWidth="986.0" tabClosingPolicy="UNAVAILABLE">
                                        <tabs>
                                           <Tab fx:id="tabMantReportExcel" text="%MantenimientoU">
                                              <content>
@@ -1200,7 +1200,7 @@
                                                                </children>
                                                             </GridPane>
                                                             <Separator prefHeight="32.0" prefWidth="920.0" />
-                                                            <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" hvalue="2.0" prefHeight="331.0" prefWidth="803.0" vbarPolicy="ALWAYS" vmax="2.0">
+                                                            <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" prefHeight="331.0" prefWidth="803.0" vbarPolicy="ALWAYS" vmax="2.0">
                                                                <content>
                                                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="356.0" prefWidth="856.0">
                                                                      <children>
@@ -1219,7 +1219,7 @@
                                                             </ScrollPane>
                                                          </children>
                                                       </VBox>
-                                                      <Text id="Text" fill="#000359" layoutX="20.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%BusquedaReporte" wrappingWidth="346.73670768737793">
+                                                      <Text id="Text" fill="#000359" layoutX="20.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Reportes" wrappingWidth="346.73670768737793">
                                                          <font>
                                                             <Font name="Tw Cen MT" size="28.0" />
                                                          </font>
@@ -1237,6 +1237,78 @@
                      </children>
                   </StackPane>
                </children></HBox>
+         </center>
+      </BorderPane>
+      <BorderPane fx:id="OptionsParametersSQLView" layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="1000.0">
+         <center>
+            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+               <children>
+                  <AnchorPane prefHeight="600.0" prefWidth="1002.0">
+                     <children>
+                        <Button layoutX="638.0" layoutY="515.0" mnemonicParsing="false" onAction="#saveParameters" onMouseClicked="#createReportBlankSpaces" prefHeight="38.0" prefWidth="286.0" text="%ManActualizar" />
+                        <Text id="Text" fill="#000359" layoutX="360.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Query" textAlignment="CENTER" wrappingWidth="346.73670768737793">
+                           <font>
+                              <Font name="Tw Cen MT" size="28.0" />
+                           </font>
+                        </Text>
+                        <GridPane layoutX="47.0" layoutY="129.0" prefHeight="223.0" prefWidth="554.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="286.5999755859375" minWidth="10.0" prefWidth="190.00001220703126" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="329.59998779296876" minWidth="10.0" prefWidth="197.400048828125" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="244.5999755859375" minWidth="10.0" prefWidth="175.79995117187502" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <TextField fx:id="textFieldParamIdent" GridPane.columnIndex="1" />
+                              <TextField fx:id="textFieldParamValue" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Parametro" textAlignment="CENTER" wrappingWidth="153.93678092956543">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <Text id="Text" fill="#000359" layoutX="10.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Valor" textAlignment="CENTER" wrappingWidth="169.13679313659668" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <RadioButton fx:id="radBtnInteger" mnemonicParsing="false" onAction="#assignValue" text="%Entero" GridPane.rowIndex="1" />
+                              <RadioButton fx:id="radBtnDate" mnemonicParsing="false" onAction="#assignValue" text="%Fecha" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <RadioButton fx:id="radBtnString" mnemonicParsing="false" onAction="#assignValue" text="%Cadena" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <JFXDatePicker fx:id="datePickerReportValue" defaultColor="#666cd4" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                           </children>
+                        </GridPane>
+                        <Button layoutX="16.0" layoutY="21.0" mnemonicParsing="false" onAction="#backParamQuery" prefHeight="24.0" prefWidth="113.0" style="-fx-background-color: transparent;">
+                           <graphic>
+                              <ImageView fitHeight="59.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/IconBack.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" layoutX="548.0" layoutY="119.0" prefHeight="337.0" prefWidth="440.0" vbarPolicy="ALWAYS" vmax="2.0">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="350.0" prefWidth="451.0">
+                                 <children>
+                                    <TableView fx:id="tableViewParametersSQL" layoutY="-4.0" onMouseClicked="#parameterSQLClicked" prefHeight="352.0" prefWidth="468.0">
+                                       <columns>
+                                          <TableColumn fx:id="tableColSQLParameter" prefWidth="135.20000231266022" text="%Parametro" />
+                                          <TableColumn fx:id="tableColSQLType" minWidth="0.0" prefWidth="162.40003967285156" text="%Tipo" />
+                                          <TableColumn fx:id="tableColSQLValue" prefWidth="164.0" text="%Valor" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
          </center>
       </BorderPane>
    </children>

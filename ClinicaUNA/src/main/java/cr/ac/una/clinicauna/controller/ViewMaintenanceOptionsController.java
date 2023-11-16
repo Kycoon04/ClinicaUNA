@@ -16,6 +16,7 @@ import cr.ac.una.clinicauna.service.DiseaseService;
 import cr.ac.una.clinicauna.service.DoctorService;
 import cr.ac.una.clinicauna.service.HistoryService;
 import cr.ac.una.clinicauna.service.JasperReportService;
+import cr.ac.una.clinicauna.service.ParametersService;
 import cr.ac.una.clinicauna.service.PatientService;
 import cr.ac.una.clinicauna.service.ProceedingsService;
 import cr.ac.una.clinicauna.service.SqlService;
@@ -188,12 +189,19 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     List<DiseaseDto> diseaseList = new ArrayList<>();
     private ObservableList<DiseaseDto> diseaseObservableList;
 
+    List<ParametersDto> parametersList = new ArrayList<>();
+    private ObservableList<ParametersDto> parametersObservableList;
+
+    List<ParametersSqlDto> parametersSQLList = new ArrayList<>();
+    private ObservableList<ParametersSqlDto> parametersSQLObservableList;
+
     @FXML
     private BorderPane MenuView;
 
     UserDto userDto;
     DoctorDto doctorDto;
-    ParametersDto parametersDto=new ParametersDto();
+    ParametersDto parametersDto = new ParametersDto();
+    ParametersSqlDto parametersSQLDto = new ParametersSqlDto();
     PatientDto patientDto = new PatientDto();
     DiseaseDto diseaseDto = new DiseaseDto();
 
@@ -339,8 +347,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private JFXDatePicker datePickerExcelInit;
     @FXML
-    private TabPane tabPaneMantUsers1;
-    @FXML
     private Tab tabMantReportExcel;
     @FXML
     private TextField textFieldSearchReport_Subject;
@@ -363,9 +369,34 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private TextField textFieldSearchReport_Description;
     @FXML
-    private TableColumn<?, ?> tableColReport_Description;
+    private TableColumn tableColReport_Description;
     @FXML
     private Button btnOpen_Parameters;
+    @FXML
+    private TabPane tabPaneMantReports;
+    @FXML
+    private BorderPane OptionsParametersSQLView;
+    @FXML
+    private TextField textFieldParamValue;
+    @FXML
+    private RadioButton radBtnInteger;
+    @FXML
+    private RadioButton radBtnDate;
+    @FXML
+    private RadioButton radBtnString;
+    public static ToggleGroup typeParameter;
+    @FXML
+    private JFXDatePicker datePickerReportValue;
+    @FXML
+    private TableView<ParametersSqlDto> tableViewParametersSQL;
+    @FXML
+    private TableColumn tableColSQLParameter;
+    @FXML
+    private TableColumn tableColSQLType;
+    @FXML
+    private TableColumn tableColSQLValue;
+    @FXML
+    private TextField textFieldParamIdent;
 
     /**
      * Initializes the controller class.
@@ -388,6 +419,11 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         userActive = new ToggleGroup();
         this.rdBtnUserActive.setToggleGroup(userActive);
         this.rdBtnUserInactive.setToggleGroup(userActive);
+        typeParameter = new ToggleGroup();
+        this.radBtnDate.setToggleGroup(typeParameter);
+        this.radBtnInteger.setToggleGroup(typeParameter);
+        this.radBtnString.setToggleGroup(typeParameter);
+
         this.tableColAct.setCellValueFactory(new PropertyValueFactory("UsSState"));
         this.tableColIdentif.setCellValueFactory(new PropertyValueFactory("UsIdentification"));
         this.tableColName.setCellValueFactory(new PropertyValueFactory("UsName"));
@@ -416,13 +452,20 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
         this.tableColEmailReport.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()));
         this.tableViewEmails.setItems(emails);
-        
-        this.tableColReport_Subject.setCellValueFactory(new PropertyValueFactory("psName"));;
-        this.tableColReport_Title.setCellValueFactory(new PropertyValueFactory("psTitule"));;
-        this.tableColReport_Time.setCellValueFactory(new PropertyValueFactory("psTime"));;
-        this.tableColReport_Query.setCellValueFactory(new PropertyValueFactory("psQuery"));;
+
+        this.tableColReport_Subject.setCellValueFactory(new PropertyValueFactory("psName"));
+        this.tableColReport_Title.setCellValueFactory(new PropertyValueFactory("psTitule"));
+        this.tableColReport_Time.setCellValueFactory(new PropertyValueFactory("psTime"));
+        this.tableColReport_Query.setCellValueFactory(new PropertyValueFactory("psQuery"));
+        this.tableColReport_Description.setCellValueFactory(new PropertyValueFactory("psDescription"));
+
+        this.tableColSQLParameter.setCellValueFactory(new PropertyValueFactory("psqlIdent"));
+        this.tableColSQLType.setCellValueFactory(new PropertyValueFactory("psqlType"));
+        this.tableColSQLValue.setCellValueFactory(new PropertyValueFactory("psqlValue"));
+
         loadChoiceIdioms();
         loadChoiceJobs();
+        fillTableReport();
         fillTableUsers();
         fillTableDoctors();
         fillTablePatient();
@@ -1655,9 +1698,12 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         textFieldNameReport.clear();
         textAreaDescripReport.clear();
         textAreaQueryReport.clear();
+        textFieldTitleReport.clear();
         choiceBoxPeriodReport.setValue(null);
-         btnOpen_Parameters.setVisible(false);
+        //btnOpen_Parameters.setVisible(false);
+        datePickerExcelInit.setValue(null);
         textAreaQueryReport.setEditable(true);
+        parametersDto = new ParametersDto();
     }
 
     @FXML
@@ -1751,63 +1797,226 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             }
         }
     }
-    private void fillTableReport(){
-       // ParametersService service = new PatientService();
-        patientList = service.getPatients();
-        if (patientList.isEmpty()) {
+
+    private void fillTableReport() {
+        ParametersService service = new ParametersService();
+        parametersList = service.getParameters();
+        if (parametersList.isEmpty()) {
         } else {
-            patientObservableList = FXCollections.observableArrayList(patientList);
+            parametersObservableList = FXCollections.observableArrayList(parametersList);
         }
 
-        this.tableViewPatient.refresh();
-        this.tableViewPatient.setItems(patientObservableList);
+        this.tableViewReportsExcel.refresh();
+        this.tableViewReportsExcel.setItems(parametersObservableList);
     }
-            
-
 
     @FXML
     private void searchReport_Subject(KeyEvent event) {
+        FilteredList<ParametersDto> filteredParameters = new FilteredList<>(parametersObservableList, f -> true);
+        textFieldSearchReport_Subject.textProperty().addListener((observable, value, newValue) -> {
+            filteredParameters.setPredicate(ParametersDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (ParametersDto.getPsName().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredParameters(filteredParameters);
     }
 
     @FXML
     private void searchReport_Title(KeyEvent event) {
+        FilteredList<ParametersDto> filteredParameters = new FilteredList<>(parametersObservableList, f -> true);
+        textFieldSearchReport_Title.textProperty().addListener((observable, value, newValue) -> {
+            filteredParameters.setPredicate(ParametersDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (ParametersDto.getPsTitule().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredParameters(filteredParameters);
     }
 
     @FXML
     private void searchReport_Time(KeyEvent event) {
+        FilteredList<ParametersDto> filteredParameters = new FilteredList<>(parametersObservableList, f -> true);
+        textFieldSearchReport_Time.textProperty().addListener((observable, value, newValue) -> {
+            filteredParameters.setPredicate(ParametersDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (ParametersDto.getPsTime().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredParameters(filteredParameters);
+
     }
 
     @FXML
     private void searchReport_Query(KeyEvent event) {
+        FilteredList<ParametersDto> filteredParameters = new FilteredList<>(parametersObservableList, f -> true);
+        textFieldSearchReport_Query.textProperty().addListener((observable, value, newValue) -> {
+            filteredParameters.setPredicate(ParametersDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (ParametersDto.getPsQuery().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredParameters(filteredParameters);
     }
-    private void fillReport(){
-        textFieldEmailReport.clear();
-        textFieldNameReport.clear();
-        textAreaDescripReport.clear();
-        textAreaQueryReport.clear();
-        choiceBoxPeriodReport.setValue(null);
-        btnOpen_Parameters.setVisible(false);
-        textAreaQueryReport.setEditable(true);
+
+    private void filteredParameters(FilteredList<ParametersDto> list) {
+        SortedList<ParametersDto> sorted = new SortedList<>(list);
+        sorted.comparatorProperty().bind(tableViewReportsExcel.comparatorProperty());
+        tableViewReportsExcel.setItems(sorted);
+    }
+
+    private void fillReport() {
+        textFieldNameReport.setText(parametersDto.getPsName());
+        textAreaDescripReport.setText(parametersDto.getPsDescription());
+        textAreaQueryReport.setText(parametersDto.getPsQuery());
+        textFieldTitleReport.setText(parametersDto.getPsTitule());
+        datePickerExcelInit.setValue(parametersDto.getPsDateInit());
+        choiceBoxPeriodReport.setValue(parametersDto.getPsTime());
     }
 
     @FXML
     private void reportExcelClicked(MouseEvent event) {
         if (event.getClickCount() == 2) {
             parametersDto = tableViewReportsExcel.getSelectionModel().getSelectedItem();
-            fillUser(userDto);
-            tabPaneMantUsers.getSelectionModel().select(tabMantUsers);
-            System.out.println(userDto.getUsName());
+            fillReport();
+            tabPaneMantReports.getSelectionModel().select(tabMantReportExcel);
+            btnOpen_Parameters.setVisible(true);
+            textAreaQueryReport.setEditable(false);
         }
-          btnOpen_Parameters.setVisible(true);
-        textAreaQueryReport.setEditable(false);
     }
 
     @FXML
     private void searchReport_Description(KeyEvent event) {
+        FilteredList<ParametersDto> filteredParameters = new FilteredList<>(parametersObservableList, f -> true);
+        textFieldSearchReport_Description.textProperty().addListener((observable, value, newValue) -> {
+            filteredParameters.setPredicate(ParametersDto -> {
+                if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
+                    return true;
+                }
+                String search = newValue.toLowerCase();
+                if (ParametersDto.getPsDescription().toLowerCase().contains(search)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+        filteredParameters(filteredParameters);
+    }
+
+    private void fillParametersSQL() {
+        if (parametersDto.getPsId() != null) {
+            ParametersService service = new ParametersService();
+            parametersSQLList = service.getParametersBySql(parametersDto.getPsId());
+            if (parametersList.isEmpty()) {
+            } else {
+                parametersSQLObservableList = FXCollections.observableArrayList(parametersSQLList);
+            }
+
+            this.tableViewParametersSQL.refresh();
+            this.tableViewParametersSQL.setItems(parametersSQLObservableList);
+        }
+
     }
 
     @FXML
     private void loadQuery(ActionEvent event) {
+        OptionsParametersSQLView.toFront();
+        datePickerReportValue.setVisible(false);
+        textFieldParamValue.setVisible(false);
+        fillParametersSQL();
+    }
+
+    @FXML
+    private void saveParameters(ActionEvent event) {
+
+    }
+
+    @FXML
+    private void assignValue(ActionEvent event) {
+        datePickerReportValue.setValue(null);
+        textFieldParamValue.clear();
+        if (typeParameter.getSelectedToggle() == radBtnDate) {
+            datePickerReportValue.setVisible(true);
+            textFieldParamValue.setVisible(false);
+        } else if (typeParameter.getSelectedToggle() == radBtnInteger) {
+            datePickerReportValue.setVisible(false);
+            textFieldParamValue.setVisible(true);
+            textFieldParamValue.setTextFormatter(Formato.getInstance().integerFormat());
+        } else {
+            datePickerReportValue.setVisible(false);
+            textFieldParamValue.setVisible(true);
+            textFieldParamValue.setTextFormatter(Formato.getInstance().maxLengthFormat(50));
+        }
+    }
+
+    private void fillParameterSQL() {
+        textFieldParamIdent.clear();
+        textFieldParamValue.clear();
+        datePickerReportValue.setValue(null);
+        if (parametersSQLDto.getPsqlType().equals("Integer")) {
+            textFieldParamIdent.setText(parametersSQLDto.getPsqlIdent());
+             datePickerReportValue.setVisible(false);
+            textFieldParamValue.setVisible(true);
+            textFieldParamValue.setTextFormatter(Formato.getInstance().integerFormat());
+            textFieldParamValue.setText(parametersSQLDto.getPsqlValue());
+            radBtnInteger.setSelected(true);
+        } else if (parametersSQLDto.getPsqlType().equals("String")) {
+            textFieldParamIdent.setText(parametersSQLDto.getPsqlIdent());
+            datePickerReportValue.setVisible(false);
+            textFieldParamValue.setVisible(true);
+            textFieldParamValue.setTextFormatter(Formato.getInstance().maxLengthFormat(50));
+            textFieldParamValue.setText(parametersSQLDto.getPsqlValue());
+            radBtnString.setSelected(true);
+        } else {
+            textFieldParamIdent.setText(parametersSQLDto.getPsqlIdent());
+            datePickerReportValue.setVisible(true);
+            textFieldParamValue.setVisible(false);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            datePickerReportValue.setValue(LocalDate.parse(parametersSQLDto.getPsqlValue(), formatter));
+            radBtnDate.setSelected(true);
+        }
+    }
+
+    @FXML
+    private void parameterSQLClicked(MouseEvent event) {
+        if (event.getClickCount() == 2) {
+            parametersSQLDto = tableViewParametersSQL.getSelectionModel().getSelectedItem();
+            fillParameterSQL();
+        }
+    }
+
+    @FXML
+    private void backParamQuery(ActionEvent event) {
+        OptionsParametersSQLView.toBack();
     }
 
 }

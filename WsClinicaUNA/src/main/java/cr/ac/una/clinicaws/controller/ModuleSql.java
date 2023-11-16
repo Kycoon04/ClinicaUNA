@@ -93,7 +93,7 @@ public class ModuleSql {
             if (!res.getEstado()) {
                 return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
             }
-            return Response.ok(new GenericEntity<List<DiaryDto>>((List< DiaryDto>) res.getResultado("Parameters")) {
+            return Response.ok(new GenericEntity<List<ParametersDto>>((List< ParametersDto>) res.getResultado("Parameters")) {
             }).build();
         } catch (Exception ex) {
             Logger.getLogger(ModuleSql.class.getName()).log(Level.SEVERE, null, ex);
@@ -130,6 +130,53 @@ public class ModuleSql {
                 return dateUpdate.plusMonths(1);
         }
         return null;
+    }
+    @GET
+    @Path("/sqlEmail/{id}")
+    public Response getEmails(@PathParam("id") Integer id) {
+        try {
+            Respuesta res = serviceemail.getSqlBySql(id);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(new GenericEntity<List<EmailDto>>((List<EmailDto>) res.getResultado("Email")) {
+            }).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleSql.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error obteniendo la agenda").build();
+        }
+    }
+    
+    @POST
+    @Path("/Parameter")
+    public Response saveParameter(ParametersDto parametersDto) {
+
+        try {
+            Respuesta res = serviceParameters.saveParameters(parametersDto);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(res.getResultado("Parameters")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleSql.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error realizando la consulta").build();
+        }
+    }
+    
+    @POST
+    @Path("/ParameterSql")
+    public Response saveParameterSql(ParametersSqlDto parametersDto) {
+
+        try {
+            Respuesta res = serviceParametersSql.saveParametersSql(parametersDto);
+            if (!res.getEstado()) {
+                return Response.status(res.getCodigoRespuesta().getValue()).entity(res.getMensaje()).build();
+            }
+            return Response.ok(res.getResultado("Parameters")).build();
+        } catch (Exception ex) {
+            Logger.getLogger(ModuleSql.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(CodigoRespuesta.ERROR_INTERNO.getValue()).entity("Error realizando la consulta").build();
+        }
     }
 
 }
