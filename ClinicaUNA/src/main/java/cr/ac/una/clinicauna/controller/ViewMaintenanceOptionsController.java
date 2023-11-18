@@ -182,7 +182,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private ObservableList<UserDto> userObservableList;
     List<DoctorDto> doctorList = new ArrayList<>();
     private ObservableList<DoctorDto> doctorObservableList;
-
+    List<ParametersSqlDto> parametersSqlDtoList = new ArrayList<>();
     List<PatientDto> patientList = new ArrayList<>();
     private ObservableList<PatientDto> patientObservableList;
 
@@ -201,7 +201,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     UserDto userDto;
     DoctorDto doctorDto;
     ParametersDto parametersDto = new ParametersDto();
-    ParametersSqlDto parametersSQLDto = new ParametersSqlDto();
+    ParametersSqlDto parametersSQLDto;
     PatientDto patientDto = new PatientDto();
     DiseaseDto diseaseDto = new DiseaseDto();
 
@@ -1728,7 +1728,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         SqlService serviceSql = new SqlService();
         ParametersDto parametersDto = new ParametersDto();
         List<EmailDto> emailDto = new ArrayList<>();
-        List<ParametersSqlDto> parametersSqlDto = new ArrayList<>();
 
         parametersDto.setPsId(0);
         parametersDto.setPsName(textFieldNameReport.getText());
@@ -1758,24 +1757,10 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             emailDto.add(emailsDto);
 
         }
-        /*ParametersSqlDto parametroSql = new ParametersSqlDto();
-        parametroSql.setPsqlId(0);
-        parametroSql.setPsqlIdparam(parametersDto);
-        parametroSql.setPsqlType("Integer");
-        parametroSql.setPsqlIdent(":Param23");
-        parametroSql.setPsqlValue("2");
-        parametersSqlDto.add(parametroSql);           // ESTO SE OMITE, ES ESTE CASO SE ENVIARIA LA LISTA QUE ES RESULTADO DEL TABLE COMO LA DE EMAIL     
-        parametroSql = new ParametersSqlDto();         //COMO NO TENGO ESO LO HAGO A PATA  
-        parametroSql.setPsqlId(0);
-        parametroSql.setPsqlIdparam(parametersDto);
-        parametroSql.setPsqlType("String");
-        parametroSql.setPsqlIdent(":Param22");
-        parametroSql.setPsqlValue("8:00");
-        parametersSqlDto.add(parametroSql);*/
-        //ESTA ES LA LISTA QUE CONTIENE LOS PARAMETROS DE LA CONSULTA,
-        ExcelDto excelDto = new ExcelDto(parametersDto, emailDto, parametersSqlDto);
+        ExcelDto excelDto = new ExcelDto(parametersDto, emailDto, parametersSqlDtoList);
         Respuesta res = serviceSql.getExcel(excelDto);
         if (res.getEstado()) {
+            parametersSqlDtoList.clear();
             if (usrIdiom.getUsLenguage().equals("Spanish")) {
                 new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reportes de Excel", getStage(), "Reporte generado.");
             } else if (usrIdiom.getUsLenguage().equals("English")) {
@@ -1982,33 +1967,49 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         if (parametersSQLDto != null) {
             r = service.saveParametersSql(bindParametersSql());
             fillParametersSQL();
-            parametersSQLDto = new ParametersSqlDto();
-        }
+            if (r.getEstado()) {
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar parámetro SQL", getStage(), "Parámetro Guardado");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save SQL parameter", getStage(), "Saved Parameter");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer le paramètre SQL", getStage(), "Paramètre enregistré");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "パラメータの保存", getStage(), "保存したパマテロ");
+                }
+                cleanParametersSQL();
 
-        if (r.getEstado()) {
-            if (usrIdiom.getUsLenguage().equals("Spanish")) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar parámetro SQL", getStage(), "Parámetro Guardado");
-            } else if (usrIdiom.getUsLenguage().equals("English")) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save SQL parameter", getStage(), "Saved Parameter");
-            } else if (usrIdiom.getUsLenguage().equals("French")) {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer le paramètre SQL", getStage(), "Paramètre enregistré");
             } else {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "パラメータの保存", getStage(), "保存したパマテロ");
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar parámetro SQL", getStage(), "Error al guardar");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Save SQL parameter", getStage(), "Error when saving");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Enregistrer le paramètre SQL", getStage(), "Erreur lors de l'enregistrement");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "パラメータの保存", getStage(), "保存時のエラー");
+                }
             }
-            cleanParametersSQL();
-
         } else {
-            if (usrIdiom.getUsLenguage().equals("Spanish")) {
-                new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar parámetro SQL", getStage(), "Error al guardar");
-            } else if (usrIdiom.getUsLenguage().equals("English")) {
-                new Mensaje().showModal(Alert.AlertType.ERROR, "Save SQL parameter", getStage(), "Error when saving");
-            } else if (usrIdiom.getUsLenguage().equals("French")) {
-                new Mensaje().showModal(Alert.AlertType.ERROR, "Enregistrer le paramètre SQL", getStage(), "Erreur lors de l'enregistrement");
+            ParametersSqlDto parametroSql = new ParametersSqlDto();
+            parametroSql.setPsqlId(0);
+            parametroSql.setPsqlIdparam(parametersDto);
+            parametroSql.setPsqlIdent(textFieldParamIdent.getText());
+            if (typeParameter.getSelectedToggle() == radBtnDate) {
+                parametroSql.setPsqlType("Date");
+                parametroSql.setPsqlValue(datePickerReportValue.getValue().toString());
+            } else if (typeParameter.getSelectedToggle() == radBtnInteger) {
+                parametroSql.setPsqlType("Integer");
+                parametroSql.setPsqlValue(textFieldParamValue.getText());
             } else {
-                new Mensaje().showModal(Alert.AlertType.ERROR, "パラメータの保存", getStage(), "保存時のエラー");
+                parametroSql.setPsqlType("String");
+                parametroSql.setPsqlValue(textFieldParamValue.getText());
             }
+            parametersSqlDtoList.add(parametroSql);
+            parametersSQLObservableList = FXCollections.observableArrayList(parametersSqlDtoList);
+            this.tableViewParametersSQL.refresh();
+            this.tableViewParametersSQL.setItems(parametersSQLObservableList);
         }
-
     }
 
     @FXML
@@ -2080,7 +2081,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private void cleanUpParamertersSQL(ActionEvent event) {
 
-                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
             if (new Mensaje().showConfirmation("Limpiar Parámetro", getStage(), "¿Está seguro que desea limpiar el registro?")) {
                 cleanReportExcel();
             }

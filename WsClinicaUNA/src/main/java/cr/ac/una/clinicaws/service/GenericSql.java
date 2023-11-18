@@ -213,7 +213,8 @@ public class GenericSql {
             }else if(identifier.equals("Integer")){
             value = param.getPsqlValue();
             } else if(identifier.equals("Date")){
-            value = "TO_DATE('"+param.getPsqlValue()+"', 'DD-MM-YYYY')";
+            value = "TO_DATE('"+param.getPsqlValue()+"', 'YYYY-MM-DD')";
+            LOG.info(param.getPsqlValue());
             }
             sql = sql.replace(param.getPsqlIdent(), value);
         }
