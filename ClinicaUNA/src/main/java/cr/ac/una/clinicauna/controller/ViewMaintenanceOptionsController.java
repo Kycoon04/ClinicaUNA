@@ -518,7 +518,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         identMainField.setTextFormatter(Formato.getInstance().integerFormat());
         psurnameMainField.setTextFormatter(Formato.getInstance().letrasFormat(18));
         ssurnameMainField.setTextFormatter(Formato.getInstance().letrasFormat(18));
-        usernameMainField.setTextFormatter(Formato.getInstance().letrasFormat(20));
+        usernameMainField.setTextFormatter(Formato.getInstance().maxLengthFormat(20));
         emailMainField.setTextFormatter(Formato.getInstance().maxLengthFormat(80));
 
         namePatMainField.setTextFormatter(Formato.getInstance().letrasFormat(18));
@@ -870,7 +870,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         psurnameMainField.setText(user.getUsPlastname());
         ssurnameMainField.setText(user.getUsSlastname());
         usernameMainField.setText(user.getUsUsername());
-        emailMainField.setText(user.getUsUsername());
+        emailMainField.setText(user.getUsEmail());
         identMainField.setText(user.getUsIdentification());
         choiceBoxJobsTypes.setValue(user.getUsType());
         choiceBoxIdioms.setValue(user.getUsLenguage());
@@ -946,27 +946,39 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         } else {
             if (doctorDto != null) {
                 DoctorService serviceD = new DoctorService();
-                response = serviceD.saveDoctor(bindNewDoctor());
-                fillTableDoctors();
 
                 if (respaldo != doctorDto.drSpaces || respaldoFechaInit != doctorDto.getDrIniworking() || respaldoFechaFinal != doctorDto.getDrFinisworking()) {
                     HistoryService serviceHistorial = new HistoryService();
                     List<HistoryDto> lista = serviceHistorial.getHistorysByDoctor(doctorDto.getDrId());
                     HistoryDto ultimo = lista.stream().filter(x -> x.getHtDateFinal() == null).findAny().get();
-                    LocalDate today = LocalDate.now();
-                    ultimo.setHtDateFinal(today);
-                    response = serviceHistorial.saveHistory(ultimo);
+                    if (!ultimo.getHtDate().equals(LocalDate.now())) {
+                        LocalDate today = LocalDate.now();
+                        ultimo.setHtDateFinal(today);
+                        response = serviceHistorial.saveHistory(ultimo);
 
-                    HistoryDto actual = new HistoryDto();
-                    actual.setHtDate(today);
-                    actual.setHtDoctor(doctorDto);
-                    actual.setHtIniworking(doctorDto.getDrIniworking());
-                    actual.setHtFinisworking(doctorDto.getDrFinisworking());
-                    actual.setHtSpaces(doctorDto.drSpaces);
-                    actual.setHtId(0);
-                    response = serviceHistorial.saveHistory(actual);
+                        HistoryDto actual = new HistoryDto();
+                        actual.setHtDate(today);
+                        actual.setHtDoctor(doctorDto);
+                        actual.setHtIniworking(doctorDto.getDrIniworking());
+                        actual.setHtFinisworking(doctorDto.getDrFinisworking());
+                        actual.setHtSpaces(doctorDto.drSpaces);
+                        actual.setHtId(0);
+                        response = serviceHistorial.saveHistory(actual);
+                    } else {
+                        doctorDto.setDrSpaces(ultimo.getHtSpaces());
+                        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                            new Mensaje().showModal(Alert.AlertType.ERROR, "Historial", getStage(), "Solo se puede modificar el horario 1 vez al dia");
+                        } else if (usrIdiom.getUsLenguage().equals("English")) {
+                            new Mensaje().showModal(Alert.AlertType.ERROR, "Save Doctor", getStage(), "You can only modify the schedule once a day.");
+                        } else if (usrIdiom.getUsLenguage().equals("French")) {
+                            new Mensaje().showModal(Alert.AlertType.ERROR, "Sauver le docteur", getStage(), "Vous ne pouvez modifier l'horaire qu'une fois par jour.");
+                        } else {
+                            new Mensaje().showModal(Alert.AlertType.ERROR, "医者を救う", getStage(), "保存時のエラー");
+                        }
+                    }
                 }
-
+                response = serviceD.saveDoctor(bindNewDoctor());
+                fillTableDoctors();
                 doctorDto = new DoctorDto();
             }
         }

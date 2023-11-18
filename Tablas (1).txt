@@ -1012,3 +1012,14 @@ declare
 begin
   SELECT SecuenciaClinica.nextval INTO :new.DR_ID FROM dual;
 end TriggerDoctor;
+/
+create or replace noneditionable trigger TriggerHistory
+  before insert
+  on CL_HISTORYTIME 
+  for each row
+declare
+  -- local variables here
+begin
+  SELECT SecuenciaClinica.nextval INTO :new.HT_ID FROM dual;
+end TriggerHistory;
+

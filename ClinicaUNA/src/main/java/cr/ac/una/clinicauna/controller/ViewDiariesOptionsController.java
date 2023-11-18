@@ -865,7 +865,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void searchDoctor_Pusername(KeyEvent event) {
-         FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
         textFieldSearchDoc_Pusername11.textProperty().addListener((observable, value, newValue) -> {
             filteredDoctor.setPredicate(DoctorDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -884,7 +884,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void searchDoctor_code(KeyEvent event) {
-          FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
         textFieldSearchDoc_Code11.textProperty().addListener((observable, value, newValue) -> {
             filteredDoctor.setPredicate(DoctorDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -905,7 +905,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void searchDoctor_Folio(KeyEvent event) {
-         FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
         textFieldSearchDoc_Folio11.textProperty().addListener((observable, value, newValue) -> {
             filteredDoctor.setPredicate(DoctorDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -926,7 +926,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void searchDoctor_License(KeyEvent event) {
-          FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
+        FilteredList<DoctorDto> filteredDoctor = new FilteredList<>(doctorObservableList, f -> true);
         textFieldSearchDoc_License11.textProperty().addListener((observable, value, newValue) -> {
             filteredDoctor.setPredicate(DoctorDto -> {
                 if (newValue.isEmpty() || newValue.isBlank() || newValue == null) {
@@ -944,12 +944,12 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         });
         filteredDoctors(filteredDoctor);
     }
+
     private void filteredDoctors(FilteredList<DoctorDto> list) {
         SortedList<DoctorDto> sorted = new SortedList<>(list);
         sorted.comparatorProperty().bind(tableViewDoctorsDiary1.comparatorProperty());
         tableViewDoctorsDiary1.setItems(sorted);
     }
-
 
     @FXML
     private void doctorDiaryClicked(MouseEvent event) {
@@ -1104,6 +1104,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                     actualizados = actualizados.stream().filter(x -> x.getSeAppointment().getAtId() == referente.getDySpace().getSeAppointment().getAtId()).toList();
                     int k = 0;
                     DatePickerAppointment.setVisible(true);
+                    btnChangeAppointment.setVisible(true);
                     btnAttentionControl.setVisible(true);
                     for (SpaceDto p : actualizados) {
                         spacesDto = p;
@@ -1192,6 +1193,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 } else {
                     new Mensaje().showModal(Alert.AlertType.INFORMATION, "リマインダー", getStage(), "その日付は無効です、その時医者はクリニックで働いていませんでした。");
                 }
+                return new GridPane();
             }
 
         } else {
@@ -1558,13 +1560,14 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         HistoryDto filteredList;
 
         if (listadiario.isEmpty()) {
-            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(DayPicker.getValue().toString(), doctorDto.getDrId()).getResultado("history");
-
-            String horaInicio = filteredList.getHtIniworking();
-            String horaFin = filteredList.getHtFinisworking();
-            String[] partesInicio = horaInicio.split(":");
-            String[] partesFin = horaFin.split(":");
-
+            Respuesta respuesta = serviceHistorial.getHistorysByDate(DayPicker.getValue().toString(), doctorDto.getDrId());
+            if (respuesta != null) {
+                filteredList = (HistoryDto) respuesta.getResultado("history");
+                String horaInicio = filteredList.getHtIniworking();
+                String horaFin = filteredList.getHtFinisworking();
+                String[] partesInicio = horaInicio.split(":");
+                String[] partesFin = horaFin.split(":");
+            }
         } else {
             AppointmentService prueba = new AppointmentService();
             AppointmentDto as = (AppointmentDto) prueba.getAppointmentId(listadiario.get(0).getDySpace().getSeAppointment().getAtId()).getResultado("Appointments");
@@ -1711,7 +1714,8 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             reason.setText(appointmentDtoModi.getAtReason());
             btnAttentionControl.setVisible(true);
             DatePickerAppointment.setVisible(true);
-            patientDto=appointmentDtoModi.getAtPatient();
+            btnChangeAppointment.setVisible(true);
+            patientDto = appointmentDtoModi.getAtPatient();
             Respuesta res = serviceRepor.getReportByIdAppoinment(appointmentDtoModi.getAtId());
             reportDto = (ReportDto) res.getResultado("Report");
             if (reportDto != null) {
@@ -1776,6 +1780,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         modificarCita = false;
         btnAttentionControl.setVisible(false);
         DatePickerAppointment.setVisible(false);
+        btnChangeAppointment.setVisible(false);
         OptionsAppoinmentInfo.toFront();
     }
 
@@ -1965,7 +1970,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         reportDto.setRtFisicExamen(textAreaRep_PhysicalExam.getText());
         reportDto.setRtTreatmentExamen(textAreaRep_Treatments.getText());
         reportDto.setRtObservations(textAreaRep_Notes.getText());
-        if (datePickerConsultDate.getValue() != null&&timePickerConsultTime.getValue()!=null) {
+        if (datePickerConsultDate.getValue() != null && timePickerConsultTime.getValue() != null) {
             LocalDate localDate = datePickerConsultDate.getValue();
             //Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
             LocalDateTime localDateTime = LocalDateTime.of(localDate, timePickerConsultTime.getValue());
@@ -1982,17 +1987,17 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     private void updateReportAp(ActionEvent event) {
 
         if (textFieldRep_Pressure.getText().isEmpty() || textFieldRep_HeartRate.getText().isEmpty() || textFieldRep_Height.getText().isEmpty() || textFieldRep_Height.getText().isEmpty() || textFieldRep_Weight.getText().isEmpty() || textFieldRep_Temperature.getText().isEmpty() || textFieldRep_BodyMass.getText().isEmpty()) {
-               if (usrIdiom.getUsLenguage().equals("Spanish")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Te quedan espacios de completar");
-                } else if (usrIdiom.getUsLenguage().equals("English")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Attention Control", getStage(), "You have spaces left to complete");
-                } else if (usrIdiom.getUsLenguage().equals("French")) {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer le contrôle de l'attention", getStage(), "Il vous reste des places à compléter");
-                } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "アテンションコントロールの保存", getStage(), "完了するスペースが残っています");
-                }
-            
-        }else{
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Control de Atención", getStage(), "Te quedan espacios de completar");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save Attention Control", getStage(), "You have spaces left to complete");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer le contrôle de l'attention", getStage(), "Il vous reste des places à compléter");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "アテンションコントロールの保存", getStage(), "完了するスペースが残っています");
+            }
+
+        } else {
             ReportService service = new ReportService();
             Respuesta response = null;
 
@@ -2108,12 +2113,14 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         HistoryDto filteredList;
 
         if (listadiario.isEmpty()) {
-            filteredList = (HistoryDto) serviceHistorial.getHistorysByDate(DayPicker.getValue().toString(), doctorDto.getDrId()).getResultado("history");
-
-            String horaInicio = filteredList.getHtIniworking();
-            String horaFin = filteredList.getHtFinisworking();
-            String[] partesInicio = horaInicio.split(":");
-            String[] partesFin = horaFin.split(":");
+            Respuesta respuesta = serviceHistorial.getHistorysByDate(DayPicker.getValue().toString(), doctorDto.getDrId());
+            if (respuesta != null) {
+                filteredList = (HistoryDto) respuesta.getResultado("history");
+                String horaInicio = filteredList.getHtIniworking();
+                String horaFin = filteredList.getHtFinisworking();
+                String[] partesInicio = horaInicio.split(":");
+                String[] partesFin = horaFin.split(":");
+            }
 
         } else {
             AppointmentService prueba = new AppointmentService();
@@ -2381,14 +2388,14 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     @FXML
     private void sendControll(MouseEvent event) {
         Respuesta response = new Respuesta();
-        ReportService report= new ReportService();
-        ReportDto rd=bindNewReport();
-        if(rd!=null){
-        response= report.sendReport(rd); 
-        if(response.getEstado()){
-            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enviar Control de Atención", getStage(), "Control de Atención enviado ");
-        }
-        }else{
+        ReportService report = new ReportService();
+        ReportDto rd = bindNewReport();
+        if (rd != null) {
+            response = report.sendReport(rd);
+            if (response.getEstado()) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enviar Control de Atención", getStage(), "Control de Atención enviado ");
+            }
+        } else {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Enviar Control de Atención", getStage(), "Debe llenar el contron de atencion ");
         }
     }
