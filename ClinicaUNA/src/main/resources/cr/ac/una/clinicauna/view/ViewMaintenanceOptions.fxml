@@ -30,78 +30,6 @@
 
 <StackPane stylesheets="@StyleClinica.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cr.ac.una.clinicauna.controller.ViewMaintenanceOptionsController">
    <children>
-      <BorderPane fx:id="OptionsReportsView" prefHeight="600.0" prefWidth="1000.0">
-         <center>
-            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
-               <children>
-                  <AnchorPane prefHeight="600.0" prefWidth="1002.0">
-                     <children>
-                        <Button layoutX="631.0" layoutY="472.0" mnemonicParsing="false" onMouseClicked="#createReportBlankSpaces" prefHeight="38.0" prefWidth="286.0" text="%ReporteEspaciosVacios" />
-                        <Button layoutX="156.0" layoutY="471.0" mnemonicParsing="false" onMouseClicked="#createReportAppoinments" prefHeight="39.0" prefWidth="282.0" text="%ReporteDeCitas" />
-                        <JFXDatePicker fx:id="datePickerInitialReport" defaultColor="#666cd4" layoutX="195.0" layoutY="365.0" />
-                        <JFXDatePicker fx:id="datePickerFinalReport" defaultColor="#666cd4" layoutX="672.0" layoutY="365.0" />
-                        <Text id="Text" fill="#000359" layoutX="360.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%GenerarReportesDoctor" textAlignment="CENTER" wrappingWidth="346.73670768737793">
-                           <font>
-                              <Font name="Tw Cen MT" size="28.0" />
-                           </font>
-                        </Text>
-                        <GridPane layoutX="130.0" layoutY="105.0" prefHeight="126.0" prefWidth="806.0">
-                          <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="286.5999755859375" minWidth="10.0" prefWidth="232.00001220703126" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="329.59998779296876" minWidth="10.0" prefWidth="329.59998779296876" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="244.5999755859375" minWidth="10.0" prefWidth="244.5999755859375" />
-                          </columnConstraints>
-                          <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <TextField fx:id="textReportNameDoctor" editable="false" GridPane.columnIndex="1" />
-                              <TextField fx:id="textReportIDDoctor" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Medico" textAlignment="CENTER" wrappingWidth="233.93678092956543">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                              <Text id="Text" fill="#000359" layoutX="10.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Cedula" textAlignment="CENTER" wrappingWidth="233.13679313659668" GridPane.rowIndex="2">
-                                 <font>
-                                    <Font name="Tw Cen MT" size="28.0" />
-                                 </font>
-                              </Text>
-                           </children>
-                        </GridPane>
-                        <Text id="Text" fill="#000359" layoutX="205.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%FechaInicio" textAlignment="CENTER" wrappingWidth="184.3367748260498">
-                           <font>
-                              <Font name="Tw Cen MT" size="28.0" />
-                           </font>
-                        </Text>
-                        <Text id="Text" fill="#000359" layoutX="669.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%FechaFinal" textAlignment="CENTER" wrappingWidth="184.3367748260498">
-                           <font>
-                              <Font name="Tw Cen MT" size="28.0" />
-                           </font>
-                        </Text>
-                        <Text id="Text" fill="#000359" layoutX="441.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%RangoFechas" textAlignment="CENTER" wrappingWidth="184.3367748260498">
-                           <font>
-                              <Font name="Tw Cen MT" size="28.0" />
-                           </font>
-                        </Text>
-                        <Button layoutX="16.0" layoutY="21.0" mnemonicParsing="false" onAction="#backReport" prefHeight="24.0" prefWidth="113.0" style="-fx-background-color: transparent;">
-                           <graphic>
-                              <ImageView fitHeight="59.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../resources/IconBack.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                     </children>
-                  </AnchorPane>
-               </children>
-            </HBox>
-         </center>
-      </BorderPane>
       <BorderPane fx:id="MenuView" prefHeight="600.0" prefWidth="1000.0">
          <left>
             <VBox focusTraversable="true" prefHeight="600.0" prefWidth="206.0" style="-fx-background-color: #000359;" BorderPane.alignment="CENTER">
@@ -1239,6 +1167,78 @@
                </children></HBox>
          </center>
       </BorderPane>
+      <BorderPane fx:id="OptionsReportsView" prefHeight="600.0" prefWidth="1000.0">
+         <center>
+            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+               <children>
+                  <AnchorPane prefHeight="600.0" prefWidth="1002.0">
+                     <children>
+                        <Button layoutX="631.0" layoutY="472.0" mnemonicParsing="false" onMouseClicked="#createReportBlankSpaces" prefHeight="38.0" prefWidth="286.0" text="%ReporteEspaciosVacios" />
+                        <Button layoutX="156.0" layoutY="471.0" mnemonicParsing="false" onMouseClicked="#createReportAppoinments" prefHeight="39.0" prefWidth="282.0" text="%ReporteDeCitas" />
+                        <JFXDatePicker fx:id="datePickerInitialReport" defaultColor="#666cd4" layoutX="195.0" layoutY="365.0" />
+                        <JFXDatePicker fx:id="datePickerFinalReport" defaultColor="#666cd4" layoutX="672.0" layoutY="365.0" />
+                        <Text id="Text" fill="#000359" layoutX="360.0" layoutY="65.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%GenerarReportesDoctor" textAlignment="CENTER" wrappingWidth="346.73670768737793">
+                           <font>
+                              <Font name="Tw Cen MT" size="28.0" />
+                           </font>
+                        </Text>
+                        <GridPane layoutX="130.0" layoutY="105.0" prefHeight="126.0" prefWidth="806.0">
+                          <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="286.5999755859375" minWidth="10.0" prefWidth="232.00001220703126" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="329.59998779296876" minWidth="10.0" prefWidth="329.59998779296876" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="244.5999755859375" minWidth="10.0" prefWidth="244.5999755859375" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <TextField fx:id="textReportNameDoctor" editable="false" GridPane.columnIndex="1" />
+                              <TextField fx:id="textReportIDDoctor" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Text id="Text" fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%Medico" textAlignment="CENTER" wrappingWidth="233.93678092956543">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                              <Text id="Text" fill="#000359" layoutX="10.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Cedula" textAlignment="CENTER" wrappingWidth="233.13679313659668" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font name="Tw Cen MT" size="28.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </GridPane>
+                        <Text id="Text" fill="#000359" layoutX="205.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%FechaInicio" textAlignment="CENTER" wrappingWidth="184.3367748260498">
+                           <font>
+                              <Font name="Tw Cen MT" size="28.0" />
+                           </font>
+                        </Text>
+                        <Text id="Text" fill="#000359" layoutX="669.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%FechaFinal" textAlignment="CENTER" wrappingWidth="184.3367748260498">
+                           <font>
+                              <Font name="Tw Cen MT" size="28.0" />
+                           </font>
+                        </Text>
+                        <Text id="Text" fill="#000359" layoutX="441.0" layoutY="282.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%RangoFechas" textAlignment="CENTER" wrappingWidth="184.3367748260498">
+                           <font>
+                              <Font name="Tw Cen MT" size="28.0" />
+                           </font>
+                        </Text>
+                        <Button layoutX="16.0" layoutY="21.0" mnemonicParsing="false" onAction="#backReport" prefHeight="24.0" prefWidth="113.0" style="-fx-background-color: transparent;">
+                           <graphic>
+                              <ImageView fitHeight="59.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/IconBack.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
+         </center>
+      </BorderPane>
       <BorderPane fx:id="OptionsParametersSQLView" layoutX="10.0" layoutY="10.0" prefHeight="600.0" prefWidth="1000.0">
          <center>
             <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
@@ -1305,6 +1305,15 @@
                               </AnchorPane>
                            </content>
                         </ScrollPane>
+                        <Button layoutX="886.0" layoutY="23.0" mnemonicParsing="false" onAction="#cleanUpParamertersSQL" prefHeight="65.0" prefWidth="71.0" style="-fx-background-color: transparent;">
+                           <graphic>
+                              <ImageView fitHeight="60.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../resources/IconClean.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
                      </children>
                   </AnchorPane>
                </children>

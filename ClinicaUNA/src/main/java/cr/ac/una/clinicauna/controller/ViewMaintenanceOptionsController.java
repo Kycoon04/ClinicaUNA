@@ -1758,7 +1758,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             emailDto.add(emailsDto);
 
         }
-        ParametersSqlDto parametroSql = new ParametersSqlDto();
+        /*ParametersSqlDto parametroSql = new ParametersSqlDto();
         parametroSql.setPsqlId(0);
         parametroSql.setPsqlIdparam(parametersDto);
         parametroSql.setPsqlType("Integer");
@@ -1771,7 +1771,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         parametroSql.setPsqlType("String");
         parametroSql.setPsqlIdent(":Param22");
         parametroSql.setPsqlValue("8:00");
-        parametersSqlDto.add(parametroSql);
+        parametersSqlDto.add(parametroSql);*/
         //ESTA ES LA LISTA QUE CONTIENE LOS PARAMETROS DE LA CONSULTA,
         ExcelDto excelDto = new ExcelDto(parametersDto, emailDto, parametersSqlDto);
         Respuesta res = serviceSql.getExcel(excelDto);
@@ -1955,8 +1955,59 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         fillParametersSQL();
     }
 
+    ParametersSqlDto bindParametersSql() {
+
+        parametersSQLDto.setPsqlIdparam(parametersDto);
+        parametersSQLDto.setPsqlId(parametersSQLDto.getPsqlId());
+        parametersSQLDto.setPsqlIdent(textFieldParamIdent.getText());
+        if (typeParameter.getSelectedToggle() == radBtnDate) {
+            parametersSQLDto.setPsqlType("Date");
+            parametersSQLDto.setPsqlValue(datePickerReportValue.getValue().toString());
+        } else if (typeParameter.getSelectedToggle() == radBtnInteger) {
+            parametersSQLDto.setPsqlType("Integer");
+            parametersSQLDto.setPsqlValue(textFieldParamValue.getText());
+        } else {
+            parametersSQLDto.setPsqlType("String");
+            parametersSQLDto.setPsqlValue(textFieldParamValue.getText());
+        }
+
+        return parametersSQLDto;
+    }
+
     @FXML
     private void saveParameters(ActionEvent event) {
+
+        ParametersService service = new ParametersService();
+        Respuesta r = null;
+        if (parametersSQLDto != null) {
+            r = service.saveParametersSql(bindParametersSql());
+            fillParametersSQL();
+            parametersSQLDto = new ParametersSqlDto();
+        }
+
+        if (r.getEstado()) {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar parámetro SQL", getStage(), "Parámetro Guardado");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save SQL parameter", getStage(), "Saved Parameter");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer le paramètre SQL", getStage(), "Paramètre enregistré");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.INFORMATION, "パラメータの保存", getStage(), "保存したパマテロ");
+            }
+            cleanParametersSQL();
+
+        } else {
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar parámetro SQL", getStage(), "Error al guardar");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Save SQL parameter", getStage(), "Error when saving");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Enregistrer le paramètre SQL", getStage(), "Erreur lors de l'enregistrement");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "パラメータの保存", getStage(), "保存時のエラー");
+            }
+        }
 
     }
 
@@ -1984,7 +2035,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         datePickerReportValue.setValue(null);
         if (parametersSQLDto.getPsqlType().equals("Integer")) {
             textFieldParamIdent.setText(parametersSQLDto.getPsqlIdent());
-             datePickerReportValue.setVisible(false);
+            datePickerReportValue.setVisible(false);
             textFieldParamValue.setVisible(true);
             textFieldParamValue.setTextFormatter(Formato.getInstance().integerFormat());
             textFieldParamValue.setText(parametersSQLDto.getPsqlValue());
@@ -2017,6 +2068,35 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private void backParamQuery(ActionEvent event) {
         OptionsParametersSQLView.toBack();
+    }
+
+    private void cleanParametersSQL() {
+        textFieldParamIdent.clear();
+        textFieldParamValue.clear();
+        datePickerReportValue.setValue(null);
+        typeParameter.selectToggle(null);
+    }
+
+    @FXML
+    private void cleanUpParamertersSQL(ActionEvent event) {
+
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            if (new Mensaje().showConfirmation("Limpiar Parámetro", getStage(), "¿Está seguro que desea limpiar el registro?")) {
+                cleanReportExcel();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            if (new Mensaje().showConfirmation("Clear Parameter", getStage(), "Are you sure you want to clear the record?")) {
+                cleanReportExcel();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            if (new Mensaje().showConfirmation("Effacer le paramètre", getStage(), "Êtes-vous sûr de vouloir effacer l'enregistrement ?")) {
+                cleanReportExcel();
+            }
+        } else {
+            if (new Mensaje().showConfirmation("パラメータのクリア", getStage(), "レコードをクリアしてもよろしいですか？")) {
+                cleanReportExcel();
+            }
+        }
     }
 
 }
