@@ -1,8 +1,144 @@
 -- Create sequence 
-create sequence SECUENCIACLINICA
+create sequence SECUENCIAEMAIL
 minvalue 1
 maxvalue 99999
-start with 281
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAPARAMSQL
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAPARAMS
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAEXAM
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAREPORT
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAFPROCEEDINGS
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAFB
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIADISEASE
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAFPB
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAPROCEEDINGS
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAPB
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIADIARY
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIASPACE
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAAPPOINTMENT
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAPATIENT
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIADOCTOR
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAUSER
+minvalue 1
+maxvalue 99999
+start with 1
+increment by 1
+cache 20;
+
+-- Create sequence 
+create sequence SECUENCIAHISTORY
+minvalue 1
+maxvalue 99999
+start with 1
 increment by 1
 cache 20;
 
@@ -839,8 +975,9 @@ create or replace noneditionable trigger TriggerEMAIL
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.EL_ID FROM dual;
+  SELECT SECUENCIAEMAIL.nextval INTO :new.EL_ID FROM dual;
 end TriggerEMAIL;
+
 /
 create or replace trigger TriggerPARAMSQL
   before insert
@@ -849,8 +986,9 @@ create or replace trigger TriggerPARAMSQL
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.PSQL_ID FROM dual;
+  SELECT SECUENCIAPARAMSQL.nextval INTO :new.PSQL_ID FROM dual;
 end TriggerPARAMSQL;
+
 /
 create or replace noneditionable trigger TriggerParams
   before insert
@@ -859,8 +997,9 @@ create or replace noneditionable trigger TriggerParams
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.PS_ID FROM dual;
+  SELECT SECUENCIAPARAMS.nextval INTO :new.PS_ID FROM dual;
 end TriggerParams;
+
 /
 create or replace trigger TriggerExam
   before insert
@@ -869,8 +1008,9 @@ create or replace trigger TriggerExam
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.EM_ID FROM dual;
+  SELECT SECUENCIAEXAM.nextval INTO :new.EM_ID FROM dual;
 end TriggerExam;
+
 /
 create or replace trigger TriggerReport
   before insert
@@ -879,8 +1019,9 @@ create or replace trigger TriggerReport
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.RT_ID FROM dual;
+  SELECT SECUENCIAREPORT.nextval INTO :new.RT_ID FROM dual;
 end TriggerReport;
+
 /
 create or replace trigger TriggerF_Proceedings
   before insert
@@ -889,8 +1030,9 @@ create or replace trigger TriggerF_Proceedings
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.FP_ID FROM dual;
+  SELECT SECUENCIAFPROCEEDINGS.nextval INTO :new.FP_ID FROM dual;
 end TriggerF_Proceedings;
+
 /
 create or replace trigger TriggerFB
   before insert
@@ -899,8 +1041,9 @@ create or replace trigger TriggerFB
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.FB_ID FROM dual;
+  SELECT SECUENCIAFB.nextval INTO :new.FB_ID FROM dual;
 end TriggerFB;
+
 /
 create or replace trigger TriggerDisease
   before insert
@@ -909,8 +1052,9 @@ create or replace trigger TriggerDisease
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.DS_ID FROM dual;
+  SELECT SECUENCIADISEASE.nextval INTO :new.DS_ID FROM dual;
 end TriggerDisease;
+
 /
 create or replace trigger TriggerP_Proceedings
   before insert
@@ -919,8 +1063,9 @@ create or replace trigger TriggerP_Proceedings
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.PP_ID FROM dual;
+  SELECT SECUENCIAFPB.nextval INTO :new.PP_ID FROM dual;
 end TriggerP_Proceedings;
+
 /
 create or replace trigger TriggerProceedings
   before insert
@@ -929,8 +1074,9 @@ create or replace trigger TriggerProceedings
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.PS_ID FROM dual;
+  SELECT SECUENCIAPROCEEDINGS.nextval INTO :new.PS_ID FROM dual;
 end TriggerProceedings;
+
 /
 create or replace trigger TriggerPersonalBack
   before insert
@@ -939,8 +1085,9 @@ create or replace trigger TriggerPersonalBack
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.PB_ID FROM dual;
+  SELECT SECUENCIAPB.nextval INTO :new.PB_ID FROM dual;
 end TriggerPersonalBack;
+
 /
 create or replace trigger TriggerDiary
   before insert
@@ -949,8 +1096,9 @@ create or replace trigger TriggerDiary
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.DY_ID FROM dual;
+  SELECT SECUENCIADIARY.nextval INTO :new.DY_ID FROM dual;
 end TriggerDiary;
+
 /
 create or replace trigger TriggerSpace
   before insert
@@ -959,8 +1107,9 @@ create or replace trigger TriggerSpace
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.SE_ID FROM dual;
+  SELECT SECUENCIASPACE.nextval INTO :new.SE_ID FROM dual;
 end TriggerSpace;
+
 /
 create or replace noneditionable trigger TriggerAppointment
   before insert
@@ -969,7 +1118,7 @@ create or replace noneditionable trigger TriggerAppointment
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.AT_ID FROM dual;
+  SELECT SECUENCIAAPPOINTMENT.nextval INTO :new.AT_ID FROM dual;
 end TriggerAppointment;
 
 /
@@ -980,8 +1129,9 @@ create or replace noneditionable trigger TriggerPatient
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.PT_ID FROM dual;
+  SELECT SECUENCIAPATIENT.nextval INTO :new.PT_ID FROM dual;
 end TriggerPatient;
+
 /
 create or replace trigger TriggerDoctor
   before insert
@@ -990,8 +1140,9 @@ create or replace trigger TriggerDoctor
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.DR_ID FROM dual;
+  SELECT SECUENCIADOCTOR.nextval INTO :new.DR_ID FROM dual;
 end TriggerDoctor;
+
 /
 create or replace noneditionable trigger TriggerUser
   before insert
@@ -1000,18 +1151,8 @@ create or replace noneditionable trigger TriggerUser
 declare
   -- local variables here
 begin
- SELECT SecuenciaClinica.nextval INTO :new.US_ID FROM dual;
+ SELECT SECUENCIAUSER.nextval INTO :new.US_ID FROM dual;
 end TriggerUser;
-/
-create or replace noneditionable trigger TriggerDoctor
-  before insert
-  on CL_DOCTOR
-  for each row
-declare
-  -- local variables here
-begin
-  SELECT SecuenciaClinica.nextval INTO :new.DR_ID FROM dual;
-end TriggerDoctor;
 /
 create or replace noneditionable trigger TriggerHistory
   before insert
@@ -1020,6 +1161,7 @@ create or replace noneditionable trigger TriggerHistory
 declare
   -- local variables here
 begin
-  SELECT SecuenciaClinica.nextval INTO :new.HT_ID FROM dual;
+  SELECT SECUENCIAHISTORY.nextval INTO :new.HT_ID FROM dual;
 end TriggerHistory;
+
 
