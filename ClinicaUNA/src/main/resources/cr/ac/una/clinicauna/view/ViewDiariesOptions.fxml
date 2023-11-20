@@ -333,128 +333,6 @@
                               </HBox>
                            </top>
                         </BorderPane>
-                        <BorderPane fx:id="CreateAppointment" prefHeight="600.0" prefWidth="1000.0">
-                           <center>
-                              <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
-                                 <children>
-                                    <TabPane fx:id="tabPaneMantWorkers112" prefHeight="0.0" prefWidth="986.0" tabClosingPolicy="UNAVAILABLE">
-                                       <tabs>
-                                          <Tab fx:id="tabDoc1" text="%ListaDoctores">
-                                             <content>
-                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="590.0" prefWidth="794.0">
-                                                   <children>
-                                                      <VBox alignment="CENTER" layoutX="8.0" layoutY="8.0" prefHeight="575.0" prefWidth="786.0">
-                                                         <children>
-                                                            <Separator prefHeight="30.0" prefWidth="920.0" visible="false" />
-                                                            <GridPane prefHeight="120.0" prefWidth="868.0">
-                                                               <columnConstraints>
-                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="142.39995880126952" />
-                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="200.0000244140625" />
-                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="0.0" prefWidth="40.79997558593749" />
-                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="207.99999999999994" />
-                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="188.0" />
-                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="29.399999999999977" />
-                                                               </columnConstraints>
-                                                               <rowConstraints>
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                               </rowConstraints>
-                                                               <children>
-                                                                  <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListNombre" textAlignment="CENTER" wrappingWidth="138.7367000579834">
-                                                                     <font>
-                                                                        <Font name="Tw Cen MT" size="25.0" />
-                                                                     </font>
-                                                                  </Text>
-                                                                  <TextField fx:id="textFieldSearchDoc_Name11" onKeyPressed="#searchDoctor_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
-                                                                     <font>
-                                                                        <Font name="Tw Cen MT" size="23.0" />
-                                                                     </font>
-                                                                  </TextField>
-                                                                  <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListPApellido" wrappingWidth="187.5366725921631" GridPane.columnIndex="3">
-                                                                     <font>
-                                                                        <Font name="Tw Cen MT" size="25.0" />
-                                                                     </font>
-                                                                  </Text>
-                                                                  <TextField fx:id="textFieldSearchDoc_Pusername11" onKeyPressed="#searchDoctor_Pusername" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="4">
-                                                                     <font>
-                                                                        <Font name="Tw Cen MT" size="23.0" />
-                                                                     </font>
-                                                                  </TextField>
-                                                                  <Text fill="#000359" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListCodigo" textAlignment="RIGHT" wrappingWidth="133.1367244720459" GridPane.rowIndex="2">
-                                                                     <font>
-                                                                        <Font name="Tw Cen MT" size="25.0" />
-                                                                     </font>
-                                                                  </Text>
-                                                                  <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListFolio" textAlignment="RIGHT" wrappingWidth="133.53671073913574" GridPane.rowIndex="4">
-                                                                     <font>
-                                                                        <Font name="Tw Cen MT" size="25.0" />
-                                                                     </font>
-                                                                  </Text>
-                                                                  <TextField fx:id="textFieldSearchDoc_Code11" onKeyPressed="#searchDoctor_code" prefHeight="27.0" prefWidth="194.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                                                     <font>
-                                                                        <Font name="Tw Cen MT" size="23.0" />
-                                                                     </font>
-                                                                  </TextField>
-                                                                  <TextField fx:id="textFieldSearchDoc_Folio11" onKeyPressed="#searchDoctor_Folio" prefHeight="27.0" prefWidth="194.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                                                                     <font>
-                                                                        <Font name="Tw Cen MT" size="23.0" />
-                                                                     </font>
-                                                                  </TextField>
-                                                                  <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListLicense" wrappingWidth="202.7366237640381" GridPane.columnIndex="3" GridPane.rowIndex="2">
-                                                                     <font>
-                                                                        <Font name="Tw Cen MT" size="25.0" />
-                                                                     </font>
-                                                                  </Text>
-                                                                  <TextField fx:id="textFieldSearchDoc_License11" onKeyPressed="#searchDoctor_License" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="4" GridPane.rowIndex="2">
-                                                                     <font>
-                                                                        <Font name="Tw Cen MT" size="23.0" />
-                                                                     </font>
-                                                                  </TextField>
-                                                               </children>
-                                                            </GridPane>
-                                                            <Separator prefHeight="32.0" prefWidth="920.0" />
-                                                            <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" hvalue="2.0" prefHeight="331.0" prefWidth="803.0" vbarPolicy="ALWAYS" vmax="2.0">
-                                                               <content>
-                                                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="356.0" prefWidth="835.0">
-                                                                     <children>
-                                                                        <TableView fx:id="tableViewDoctorsDiary1" layoutY="-7.0" onMouseClicked="#doctorDiaryClicked" prefHeight="370.0" prefWidth="922.0">
-                                                                           <columns>
-                                                                              <TableColumn fx:id="tableColDocCode11" prefWidth="77.60000991821289" text="%TableCode" />
-                                                                              <TableColumn fx:id="tableColDocFolio11" minWidth="0.0" prefWidth="74.39999389648438" text="%TableFolio" />
-                                                                              <TableColumn fx:id="tableColDocName11" prefWidth="90.40000915527344" text="%TableNombre" />
-                                                                              <TableColumn fx:id="tableColDocId11" prefWidth="132.00001525878906" text="%TablePApellido" />
-                                                                              <TableColumn fx:id="tableColDocLicense11" prefWidth="124.7999267578125" text="%TableLicense" />
-                                                                              <TableColumn fx:id="tableColDocIniWork11" prefWidth="111.20004272460938" text="%TableIniWorking" />
-                                                                              <TableColumn fx:id="tableColDocFinishWork11" prefWidth="103.199951171875" text="%TableFinishWorking" />
-                                                                              <TableColumn fx:id="tableColDocBreaks11" prefWidth="127.199951171875" text="%TableBreak" />
-                                                                              <TableColumn fx:id="tableColDocSpaces11" prefWidth="90.40000915527344" text="%TableNombre" />
-                                                                           </columns>
-                                                                        </TableView>
-                                                                     </children>
-                                                                  </AnchorPane>
-                                                               </content>
-                                                            </ScrollPane>
-                                                         </children>
-                                                      </VBox>
-                                                      <Text id="Text" fill="#000359" layoutX="20.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%BusquedaDoctores" wrappingWidth="346.73670768737793">
-                                                         <font>
-                                                            <Font name="Tw Cen MT" size="28.0" />
-                                                         </font>
-                                                      </Text>
-                                                   </children>
-                                                </AnchorPane>
-                                             </content>
-                                          </Tab>
-                                       </tabs>
-                                    </TabPane>
-                                 </children>
-                              </HBox>
-                           </center>
-                        </BorderPane>
                         <BorderPane fx:id="OptionsViewDiary" prefHeight="567.0" prefWidth="793.0">
                            <center>
                               <HBox prefHeight="445.0" prefWidth="793.0" style="-fx-background-color: white;">
@@ -782,7 +660,7 @@
                                                 <Font name="Tw Cen MT" size="29.0" />
                                              </font>
                                           </Text>
-                                          <Button layoutX="641.0" layoutY="537.0" mnemonicParsing="false" onAction="#ContinueDetail" prefHeight="35.0" prefWidth="123.0" text="%continue">
+                                          <Button layoutX="636.0" layoutY="537.0" mnemonicParsing="false" onAction="#ContinueDetail" prefHeight="35.0" prefWidth="128.0" text="%continue">
                                              <font>
                                                 <Font name="Tw Cen MT" size="16.0" />
                                              </font>
@@ -820,7 +698,7 @@
                                                 <Font name="Tw Cen MT" size="29.0" />
                                              </font>
                                           </Text>
-                                          <Text id="Text" fill="#000359" layoutX="250.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Email" wrappingWidth="136.92812204360962">
+                                          <Text id="Text" fill="#000359" layoutX="236.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%Email" wrappingWidth="236.12813425064087">
                                              <font>
                                                 <Font name="Tw Cen MT" size="29.0" />
                                              </font>
@@ -830,7 +708,7 @@
                                           <TextField fx:id="userLog" layoutX="244.0" layoutY="131.0" />
                                           <TextField fx:id="nameP" editable="false" layoutX="38.0" layoutY="129.0" onMouseClicked="#selectPatient" promptText="%Seleccionar" />
                                           <TextField fx:id="code" layoutX="244.0" layoutY="220.0" />
-                                          <Text id="Text" fill="#000359" layoutX="241.0" layoutY="214.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%CodeDetails" wrappingWidth="190.92812204360962">
+                                          <Text id="Text" fill="#000359" layoutX="233.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%CodeDetails" wrappingWidth="243.72810983657837">
                                              <font>
                                                 <Font name="Tw Cen MT" size="29.0" />
                                              </font>
@@ -869,7 +747,7 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
-                                          <Button fx:id="btnAttentionControl" layoutX="449.0" layoutY="537.0" mnemonicParsing="false" onAction="#openAttentionControl" prefHeight="35.0" prefWidth="155.0" text="%AttentionControl">
+                                          <Button fx:id="btnAttentionControl" layoutX="401.0" layoutY="537.0" mnemonicParsing="false" onAction="#openAttentionControl" prefHeight="35.0" prefWidth="203.0" text="%AttentionControl">
                                              <font>
                                                 <Font name="Tw Cen MT" size="16.0" />
                                              </font>
@@ -886,9 +764,131 @@
                                                 <Cursor fx:constant="HAND" />
                                              </cursor>
                                           </Button>
-                                          <Button layoutX="269.0" layoutY="537.0" mnemonicParsing="false" onMouseClicked="#sendControll" prefHeight="35.0" prefWidth="139.0" text="%EmailContr" />
+                                          <Button layoutX="187.0" layoutY="537.0" mnemonicParsing="false" onMouseClicked="#sendControll" prefHeight="35.0" prefWidth="177.0" text="%EmailContr" />
                                        </children>
                                     </AnchorPane>
+                                 </children>
+                              </HBox>
+                           </center>
+                        </BorderPane>
+                        <BorderPane fx:id="CreateAppointment" prefHeight="600.0" prefWidth="1000.0">
+                           <center>
+                              <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <TabPane fx:id="tabPaneMantWorkers112" prefHeight="0.0" prefWidth="986.0" tabClosingPolicy="UNAVAILABLE">
+                                       <tabs>
+                                          <Tab fx:id="tabDoc1" text="%ListaDoctores">
+                                             <content>
+                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="590.0" prefWidth="794.0">
+                                                   <children>
+                                                      <VBox alignment="CENTER" layoutX="8.0" layoutY="8.0" prefHeight="575.0" prefWidth="786.0">
+                                                         <children>
+                                                            <Separator prefHeight="30.0" prefWidth="920.0" visible="false" />
+                                                            <GridPane prefHeight="120.0" prefWidth="868.0">
+                                                               <columnConstraints>
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="343.4000244140625" minWidth="10.0" prefWidth="142.39995880126952" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="538.6000213623047" minWidth="10.0" prefWidth="200.0000244140625" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="0.0" prefWidth="40.79997558593749" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="207.99999999999994" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="188.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="588.39990234375" minWidth="10.0" prefWidth="29.399999999999977" />
+                                                               </columnConstraints>
+                                                               <rowConstraints>
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                               </rowConstraints>
+                                                               <children>
+                                                                  <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListNombre" textAlignment="CENTER" wrappingWidth="138.7367000579834">
+                                                                     <font>
+                                                                        <Font name="Tw Cen MT" size="25.0" />
+                                                                     </font>
+                                                                  </Text>
+                                                                  <TextField fx:id="textFieldSearchDoc_Name11" onKeyPressed="#searchDoctor_Name" prefHeight="30.0" prefWidth="180.0" style="-fx-text-fill: black;" GridPane.columnIndex="1">
+                                                                     <font>
+                                                                        <Font name="Tw Cen MT" size="23.0" />
+                                                                     </font>
+                                                                  </TextField>
+                                                                  <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListPApellido" wrappingWidth="187.5366725921631" GridPane.columnIndex="3">
+                                                                     <font>
+                                                                        <Font name="Tw Cen MT" size="25.0" />
+                                                                     </font>
+                                                                  </Text>
+                                                                  <TextField fx:id="textFieldSearchDoc_Pusername11" onKeyPressed="#searchDoctor_Pusername" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="4">
+                                                                     <font>
+                                                                        <Font name="Tw Cen MT" size="23.0" />
+                                                                     </font>
+                                                                  </TextField>
+                                                                  <Text fill="#000359" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListCodigo" textAlignment="RIGHT" wrappingWidth="133.1367244720459" GridPane.rowIndex="2">
+                                                                     <font>
+                                                                        <Font name="Tw Cen MT" size="25.0" />
+                                                                     </font>
+                                                                  </Text>
+                                                                  <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListFolio" textAlignment="RIGHT" wrappingWidth="133.53671073913574" GridPane.rowIndex="4">
+                                                                     <font>
+                                                                        <Font name="Tw Cen MT" size="25.0" />
+                                                                     </font>
+                                                                  </Text>
+                                                                  <TextField fx:id="textFieldSearchDoc_Code11" onKeyPressed="#searchDoctor_code" prefHeight="27.0" prefWidth="194.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                     <font>
+                                                                        <Font name="Tw Cen MT" size="23.0" />
+                                                                     </font>
+                                                                  </TextField>
+                                                                  <TextField fx:id="textFieldSearchDoc_Folio11" onKeyPressed="#searchDoctor_Folio" prefHeight="27.0" prefWidth="194.0" style="-fx-text-fill: black;" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                                     <font>
+                                                                        <Font name="Tw Cen MT" size="23.0" />
+                                                                     </font>
+                                                                  </TextField>
+                                                                  <Text fill="#000359" strokeType="OUTSIDE" strokeWidth="0.0" text="%ListLicense" wrappingWidth="202.7366237640381" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                                     <font>
+                                                                        <Font name="Tw Cen MT" size="25.0" />
+                                                                     </font>
+                                                                  </Text>
+                                                                  <TextField fx:id="textFieldSearchDoc_License11" onKeyPressed="#searchDoctor_License" prefHeight="27.0" prefWidth="284.0" style="-fx-text-fill: black;" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                                                                     <font>
+                                                                        <Font name="Tw Cen MT" size="23.0" />
+                                                                     </font>
+                                                                  </TextField>
+                                                               </children>
+                                                            </GridPane>
+                                                            <Separator prefHeight="32.0" prefWidth="920.0" />
+                                                            <ScrollPane hbarPolicy="ALWAYS" hmax="2.0" prefHeight="331.0" prefWidth="803.0" vbarPolicy="ALWAYS" vmax="2.0">
+                                                               <content>
+                                                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="356.0" prefWidth="835.0">
+                                                                     <children>
+                                                                        <TableView fx:id="tableViewDoctorsDiary1" layoutY="-7.0" onMouseClicked="#doctorDiaryClicked" prefHeight="370.0" prefWidth="922.0">
+                                                                           <columns>
+                                                                              <TableColumn fx:id="tableColDocCode11" prefWidth="77.60000991821289" text="%TableCode" />
+                                                                              <TableColumn fx:id="tableColDocFolio11" minWidth="0.0" prefWidth="74.39999389648438" text="%TableFolio" />
+                                                                              <TableColumn fx:id="tableColDocName11" prefWidth="90.40000915527344" text="%TableNombre" />
+                                                                              <TableColumn fx:id="tableColDocId11" prefWidth="132.00001525878906" text="%TablePApellido" />
+                                                                              <TableColumn fx:id="tableColDocLicense11" prefWidth="124.7999267578125" text="%TableLicense" />
+                                                                              <TableColumn fx:id="tableColDocIniWork11" prefWidth="111.20004272460938" text="%TableIniWorking" />
+                                                                              <TableColumn fx:id="tableColDocFinishWork11" prefWidth="103.199951171875" text="%TableFinishWorking" />
+                                                                              <TableColumn fx:id="tableColDocBreaks11" prefWidth="127.199951171875" text="%TableBreak" />
+                                                                              <TableColumn fx:id="tableColDocSpaces11" prefWidth="90.40000915527344" text="%TableNombre" />
+                                                                           </columns>
+                                                                        </TableView>
+                                                                     </children>
+                                                                  </AnchorPane>
+                                                               </content>
+                                                            </ScrollPane>
+                                                         </children>
+                                                      </VBox>
+                                                      <Text id="Text" fill="#000359" layoutX="20.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%BusquedaDoctores" wrappingWidth="346.73670768737793">
+                                                         <font>
+                                                            <Font name="Tw Cen MT" size="28.0" />
+                                                         </font>
+                                                      </Text>
+                                                   </children>
+                                                </AnchorPane>
+                                             </content>
+                                          </Tab>
+                                       </tabs>
+                                    </TabPane>
                                  </children>
                               </HBox>
                            </center>

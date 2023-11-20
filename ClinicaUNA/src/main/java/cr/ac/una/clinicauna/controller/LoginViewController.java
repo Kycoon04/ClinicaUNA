@@ -109,7 +109,9 @@ public class LoginViewController extends Controller implements Initializable {
     List<Node> required1 = new ArrayList<>();
     List<Node> required2 = new ArrayList<>();
     private boolean pass = false;
-    
+
+    String idiomInterface="Spanish";
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         loginView.toFront();
@@ -124,6 +126,7 @@ public class LoginViewController extends Controller implements Initializable {
         AceptRecoverField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));
         passwordRegisField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));
         password2RegisField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));
+         System.out.println(""+FlowController.getInstance().getIdioma());
         IndicateRequired();
     }
 
@@ -175,14 +178,30 @@ public class LoginViewController extends Controller implements Initializable {
             if (userDtop != null) {
                 if (userDto.getUsLenguage() != "") {
                     multiLenguage("ユーザーが正常に保存されました。", "Usuario guardado correctamente.", "User saved successfully.", "Utilisateur enregistré avec succès.");
-            //email
+                    //email
                 } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Usuario", getStage(), "Usuario guardado correctamente.");
+                    if (idiomInterface.equals("Spanish")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Guardar Usuario", getStage(), "Usuario guardado");
+                    } else if (idiomInterface.equals("English")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Save User", getStage(), "Saved user");
+                    } else if (idiomInterface.equals("French")) {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "Enregistrer l'utilisateur", getStage(), "Utilisateur enregistré");
+                    } else {
+                        new Mensaje().showModal(Alert.AlertType.INFORMATION, "ユーザーを保存する", getStage(), "保存されたユーザー");
+                    }
                 }
             }
         } catch (Exception ex) {
             Logger.getLogger(LoginViewController.class.getName()).log(Level.SEVERE, "Error guardando el usuario.", ex);
-            new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Usuario", getStage(), "Ocurrió un error al guardar el usuario.");
+            if (idiomInterface.equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Guardar Usuario", getStage(), "Error al guardar");
+            } else if (idiomInterface.equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Save User", getStage(), "Error when saving");
+            } else if (idiomInterface.equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Enregistrer l'utilisateur", getStage(), "Erreur lors de l'enregistrement");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "ユーザーを保存する", getStage(), "保存時のエラー");
+            }
         }
     }
 
@@ -290,7 +309,7 @@ public class LoginViewController extends Controller implements Initializable {
         passwordField.setText("");
         userRegisField.setText("");
         choiceBoxIdioms.setValue(null);
-        
+
     }
 
     @FXML
@@ -304,14 +323,13 @@ public class LoginViewController extends Controller implements Initializable {
         if (!validateRequired(required)) {
             new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "campos inccompletos");
         } else {
-
             saveUser(bindNewUser());
 
         }
     }
 
     private void ChoiceIdiom(String idiom, String l1, String l2, String l3, String l4) {
-       
+
         if (idiom != "") {
             if (idiom == "French") {
                 new Mensaje().showModal(Alert.AlertType.ERROR, "v", getStage(), l1);
@@ -343,24 +361,27 @@ public class LoginViewController extends Controller implements Initializable {
         user.setUsState("I");
         user.setUsType("Default");
         user.setUsRecover("N");
-        
-        
+
         String code = CodeRamdon();
         user.setUsCode(code);
         if (choiceBoxIdioms.getValue().equals("Espagnol") || choiceBoxIdioms.getValue().equals("Spanish") || choiceBoxIdioms.getValue().equals("Español") || choiceBoxIdioms.getValue().equals("スペイン語")) {
             idiom = "Spanish";
+            idiomInterface = "Spanish";
             user.setUsLenguage(idiom);
         }
         if (choiceBoxIdioms.getValue().equals("Anglais") || choiceBoxIdioms.getValue().equals("English") || choiceBoxIdioms.getValue().equals("Inglés") || choiceBoxIdioms.getValue().equals("英語")) {
             idiom = "English";
+            idiomInterface = "English";
             user.setUsLenguage(idiom);
         }
         if (choiceBoxIdioms.getValue().equals("Francais") || choiceBoxIdioms.getValue().equals("France") || choiceBoxIdioms.getValue().equals("Francés") || choiceBoxIdioms.getValue().equals("フランス語")) {
             idiom = "French";
+            idiomInterface = "French";
             user.setUsLenguage(idiom);
         }
         if (choiceBoxIdioms.getValue().equals("Japonais") || choiceBoxIdioms.getValue().equals("Japanese") || choiceBoxIdioms.getValue().equals("Japonés") || choiceBoxIdioms.getValue().equals("日本語")) {
             idiom = "Japanese";
+            idiomInterface = "Japanese";
             user.setUsLenguage(idiom);
         }
         user.setUsIdentification(idRegisField.getText());
@@ -381,7 +402,8 @@ public class LoginViewController extends Controller implements Initializable {
         FlowController.getInstance().goMain("LoginView");
         choiceBoxIdioms.getItems().clear();
         choiceBoxIdioms.getItems().addAll(Spanish);
-
+        idiomInterface = "Spanish";
+        FlowController.getInstance().setIdioma(idiomInterface);
         TranslateTransition slide = new TranslateTransition();
         slide.setDuration(Duration.seconds(0.4));
         slide.setNode(VboxChangeIdioms);
@@ -400,7 +422,8 @@ public class LoginViewController extends Controller implements Initializable {
         FlowController.getInstance().goMain("LoginView");
         choiceBoxIdioms.getItems().clear();
         choiceBoxIdioms.getItems().addAll(English);
-
+        idiomInterface = "English";
+        FlowController.getInstance().setIdioma(idiomInterface);
         TranslateTransition slide = new TranslateTransition();
         slide.setDuration(Duration.seconds(0.4));
         slide.setNode(VboxChangeIdioms);
@@ -418,7 +441,7 @@ public class LoginViewController extends Controller implements Initializable {
         FlowController.getInstance().goMain("LoginView");
         choiceBoxIdioms.getItems().clear();
         choiceBoxIdioms.getItems().addAll(French);
-
+        FlowController.getInstance().setIdioma(idiomInterface);
         TranslateTransition slide = new TranslateTransition();
         slide.setDuration(Duration.seconds(0.4));
         slide.setNode(VboxChangeIdioms);
@@ -436,6 +459,7 @@ public class LoginViewController extends Controller implements Initializable {
         FlowController.getInstance().goMain("LoginView");
         choiceBoxIdioms.getItems().clear();
         choiceBoxIdioms.getItems().addAll(Japanesse);
+       FlowController.getInstance().setIdioma(idiomInterface);
         TranslateTransition slide = new TranslateTransition();
         slide.setDuration(Duration.seconds(0.4));
         slide.setNode(VboxChangeIdioms);
@@ -478,9 +502,39 @@ public class LoginViewController extends Controller implements Initializable {
         UserService service = new UserService();
         String pass = PasswordRamdon();
         if (!validateRequired(required2)) {
-            new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "campos incompletos");
+           if (idiomInterface.equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "Campos incompletos");
+            } else if (idiomInterface.equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Validate Fields", getStage(), "Incomplete Fields");
+            } else if (idiomInterface.equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Valider les champs", getStage(), "Champs incomplets");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "フィールドを検証する", getStage(), "不完全なフィールド");
+            }
         } else {
-            service.ResetTemp(emailRecoverField.getText(), pass);
+            Respuesta resp=new Respuesta();
+            resp=service.ResetTemp(emailRecoverField.getText(), pass);
+            if(resp.getEstado()){
+                 if (idiomInterface.equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Contraseña temporal", getStage(), "Contraseña enviada a su correo. Volver al loguearse.");
+                } else if (idiomInterface.equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Temporal password", getStage(), "Password sent to your email. Return to login.");
+                } else if (idiomInterface.equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Mot de passe temporaire", getStage(), "Mot de passe envoyé à votre email. Revenez à la connexion.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "仮パスワード", getStage(), "パスワードがメールに送信されました。ログインに戻ります。");
+                }
+            }else{
+                 if (idiomInterface.equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Contraseña temporal", getStage(), "Error al enviar contraseña temporal.");
+                } else if (idiomInterface.equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Temporal password", getStage(), "Error sending temporary password.");
+                } else if (idiomInterface.equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Mot de passe temporaire", getStage(), "Erreur lors de l'envoi du mot de passe temporaire.");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "仮パスワード", getStage(), "一時パスワードの送信中にエラーが発生しました。");
+                }
+            }
 
         }
     }
@@ -490,13 +544,39 @@ public class LoginViewController extends Controller implements Initializable {
         UserService service = new UserService();
 
         if (!validateRequired(required1)) {
-            new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "campos incompletos");
+            if (idiomInterface.equals("Spanish")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Validar campos", getStage(), "Campos incompletos");
+            } else if (idiomInterface.equals("English")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Validate Fields", getStage(), "Incomplete Fields");
+            } else if (idiomInterface.equals("French")) {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "Valider les champs", getStage(), "Champs incomplets");
+            } else {
+                new Mensaje().showModal(Alert.AlertType.ERROR, "フィールドを検証する", getStage(), "不完全なフィールド");
+            }
         } else {
             if (getUserName(usernameField.getText()) == "") {
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reseteo", getStage(), "Sin exito");
+
+                if (idiomInterface.equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Cambio de contraseña", getStage(), "Undone");
+                } else if (idiomInterface.equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Change of password", getStage(), "Incomplete Fields");
+                } else if (idiomInterface.equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "Changement de mot de passe", getStage(), "Défait");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.ERROR, "パスワードの変更", getStage(), "元に戻す");
+                }
             } else {
                 service.resetAccontPassword(getUserName(usernameField.getText()), AceptRecoverField.getText());
-                new Mensaje().showModal(Alert.AlertType.INFORMATION, "Reseteo", getStage(), "Con exito");
+
+                if (idiomInterface.equals("Spanish")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Cambio de contraseña", getStage(), "Realizado");
+                } else if (idiomInterface.equals("English")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Change of password", getStage(), "Completed");
+                } else if (idiomInterface.equals("French")) {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Changement de mot de passe", getStage(), "Fait");
+                } else {
+                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "パスワードの変更", getStage(), "終わり");
+                }
             }
         }
     }

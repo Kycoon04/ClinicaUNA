@@ -397,6 +397,10 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private TableColumn tableColSQLValue;
     @FXML
     private TextField textFieldParamIdent;
+    @FXML
+    private Button btnMantReportE;
+    @FXML
+    private Button btnOpenAppointment;
 
     /**
      * Initializes the controller class.
@@ -412,6 +416,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             btnMantUsers.setDisable(true);
             btnMantDoctors.setDisable(true);
         }
+        validateAccess();
         //choiceBoxIdioms.getItems().addAll(jobsEnglish);
         gender = new ToggleGroup();
         this.radioBtnMale.setToggleGroup(gender);
@@ -469,6 +474,19 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         fillTableUsers();
         fillTableDoctors();
         fillTablePatient();
+
+    }
+
+    private void validateAccess() {
+        if (usrIdiom.getUsType().equals("Doctor")) {
+            this.btnMantDoctors.setVisible(false);
+            this.btnMantUsers.setVisible(false);
+        } else if (usrIdiom.getUsType().equals("Receptionist")) {
+            this.btnMantReportE.setVisible(false);
+            this.btnMantDoctors.setVisible(false);
+            this.btnMantUsers.setVisible(false);
+            this.btnOpenAppointment.setVisible(false);
+        }
 
     }
 
@@ -608,7 +626,13 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private void UpdateUser(ActionEvent event) {
         Respuesta response;
-        if (userDto != null && !choiceBoxJobsTypes.getValue().equals("Doctor")) {
+        Respuesta resp=new Respuesta();
+        resp.setEstado(true);
+        if(choiceBoxJobsTypes.getValue().equals("Doctor")&&!userDto.getUsName().isEmpty()){
+            DoctorService serviceDoc=new DoctorService();
+            resp=serviceDoc.getDoctorUser(userDto.getUsId());
+        }
+        if (userDto != null && resp.getEstado()) {
             UserDto us = new UserDto();
             UserService service = new UserService();
             response = service.saveUser(bindNewUser());
@@ -649,8 +673,9 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             }
             textMainDoctor.setText(userMainField.getText() + " " + psurnameMainField.getText() + " " + ssurnameMainField.getText());
             OptionsMainDoctorsView.toFront();
-        }
+            }
         fillTableUsers();
+        
     }
 
     UserDto bindNewUser() {

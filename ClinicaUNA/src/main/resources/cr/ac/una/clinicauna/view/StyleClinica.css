@@ -10,7 +10,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 .button{
     -fx-font-family: "Rockwell";
     -fx-text-fill: white;
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
     -fx-border-radius: 10;
     -fx-background-radius: 35px;
     -fx-background-color: #CC9900;
@@ -39,7 +39,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-border-width:  0 0 1 0;
     -fx-border-color: #CC9900;
     -fx-border-radius: 4px;
-   -fx-font-size: 14px;
+   -fx-font-size: 16px;
     -fx-text-fill: #000033;
     
 }
@@ -49,7 +49,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 #Text{
     -fx-font-family: "Rockwell";
-   -fx-font-size: 25px;
+   -fx-font-size: 22px;
     -fx-text-fill: #000359; 
 }
 .label{

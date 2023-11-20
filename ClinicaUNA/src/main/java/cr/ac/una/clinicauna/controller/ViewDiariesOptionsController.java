@@ -1235,7 +1235,16 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             gridPane.add(dayLabel, i + 1, 0);
         }
 
-        Label dayLabel = new Label("Agenda");
+        Label dayLabel;
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            dayLabel = new Label("Agenda");
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            dayLabel = new Label("Diary");
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            dayLabel = new Label("l'agenda");
+        } else {
+            dayLabel = new Label("日記");
+        }
         dayLabel.setAlignment(Pos.CENTER);
         dayLabel.setStyle("-fx-font-weight: bold; "
                 + "-fx-background-color: #CC9900; ");
@@ -1377,7 +1386,16 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         rowIndex = GridPane.getRowIndex(cellLabel);
 
         while (citasAgregadas < maxCitas) {
-            Label label = new Label("Reservar campos");
+            Label label;
+            if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                label = new Label("Reservar campos");
+            } else if (usrIdiom.getUsLenguage().equals("English")) {
+                label = new Label("Reserve fields");
+            } else if (usrIdiom.getUsLenguage().equals("French")) {
+                label = new Label("Champs de réserve");
+            } else {
+                label = new Label("予約フィールド");
+            }
             label.setAlignment(Pos.CENTER);
             label.setStyle("-fx-font-size: 15;"
                     + "-fx-background-color: #073763;"
@@ -1786,7 +1804,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void backAppointment(ActionEvent event) {
-        cleanUpAppointment(event);
+        cleanAppointment();
         cleanAttentionControl();
         modificarCita = false;
         nameP.setDisable(false);
@@ -1795,8 +1813,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         OptionsViewDiary.toFront();
     }
 
-    @FXML
-    private void cleanUpAppointment(ActionEvent event) {
+    private void cleanAppointment() {
         nameP.clear();
         numberP.clear();
         userLog.clear();
@@ -1804,6 +1821,27 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         code.clear();
         reason.clear();
         Tou.selectToggle(null);
+    }
+
+    @FXML
+    private void cleanUpAppointment(ActionEvent event) {
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            if (new Mensaje().showConfirmation("Limpiar Parámetro", getStage(), "¿Está seguro que desea limpiar el registro?")) {
+                cleanAppointment();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            if (new Mensaje().showConfirmation("Clear Parameter", getStage(), "Are you sure you want to clear the record?")) {
+                cleanAppointment();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            if (new Mensaje().showConfirmation("Effacer le paramètre", getStage(), "Êtes-vous sûr de vouloir effacer l'enregistrement ?")) {
+                cleanAppointment();
+            }
+        } else {
+            if (new Mensaje().showConfirmation("パラメータのクリア", getStage(), "レコードをクリアしてもよろしいですか？")) {
+                cleanAppointment();
+            }
+        }
     }
 
     @FXML
@@ -2145,7 +2183,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 fila = findFila(DiaryPaneModi, AgendaCompleta.get(i), iniHora, finHora);
                 columna = findColumna(DiaryPaneModi, AgendaCompleta.get(i));
 
-                Label label = new Label("Cita / " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
+               Label label = new Label("Cita / " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                 CargarColor(label, AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                 label.setUserData(AgendaCompleta.get(i));
                 label.setAlignment(Pos.CENTER);
@@ -2208,6 +2246,44 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
         }
     }
 
+    public void CargarDatos(Label label, String estado) {
+        switch (estado) {
+            case "Programada":
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    label = new Label("Cita / " + "Programada");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    label = new Label("Appointment/ " + "Scheduled");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    label = new Label("Rendez-vous / " + "Programmé");
+                } else {
+                    label = new Label("予定 / " + "予定されている");
+                }
+                break;
+            case "Atendida":
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    label = new Label("Cita / " + "Atendida");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    label = new Label("Appointment/ " + "Attended");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    label = new Label("Rendez-vous / " + "Participé");
+                } else {
+                    label = new Label("予定 / " + "出席した");
+                }
+                break;
+            case "Ausente":
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    label = new Label("Cita / " + "Ausente");
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    label = new Label("Appointment/ " + "Absent");
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    label = new Label("Rendez-vous / " + "Absent");
+                } else {
+                    label = new Label("予定 / " + "不在");
+                }
+                break;
+        }
+    }
+
     @FXML
     private void backCreateAppointment(MouseEvent event) {
         btnAttentionControl.setVisible(true);
@@ -2221,7 +2297,23 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
     @FXML
     private void cleanUpAttentionControl(ActionEvent event) {
-        cleanAttentionControl();
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            if (new Mensaje().showConfirmation("Limpiar Control de Atención", getStage(), "¿Está seguro que desea limpiar el registro?")) {
+                cleanAttentionControl();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            if (new Mensaje().showConfirmation("Clear attention control", getStage(), "Are you sure you want to clear the record?")) {
+                cleanAttentionControl();
+            }
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            if (new Mensaje().showConfirmation("Contrôle clair de l'attention", getStage(), "Êtes-vous sûr de vouloir effacer l'enregistrement ?")) {
+                cleanAttentionControl();
+            }
+        } else {
+            if (new Mensaje().showConfirmation("明確な注意制御", getStage(), "レコードをクリアしてもよろしいですか？")) {
+                cleanAttentionControl();
+            }
+        }
     }
 
     private void cleanAttentionControl() {
@@ -2289,10 +2381,13 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             mint = new String[filteredList.getHtSpaces()];
         }
         spacesfree = filteredList.getHtSpaces();
-        if (filteredList.getHtSpaces() == 2) {
+
+        if (filteredList.getHtSpaces()
+                == 2) {
             mint[0] = "00";
             mint[1] = "30";
-        } else if (filteredList.getHtSpaces() == 3) {
+        } else if (filteredList.getHtSpaces()
+                == 3) {
             mint[0] = "00";
             mint[1] = "20";
             mint[2] = "40";
@@ -2302,7 +2397,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             mint[2] = "30";
             mint[3] = "45";
         }
-        for (int i = 0; i < mint.length; i++) {
+        for (int i = 0;
+                i < mint.length;
+                i++) {
             Label dayLabel = new Label(mint[i]);
             dayLabel.setAlignment(Pos.CENTER);
             dayLabel.setStyle("-fx-font-weight: bold; "
@@ -2315,18 +2412,38 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             gridPane.add(dayLabel, i + 1, 0);
         }
 
-        Label dayLabel = new Label("Agenda");
+        Label dayLabel;
+
+        if (usrIdiom.getUsLenguage().equals("Spanish")) {
+            dayLabel = new Label("Agenda");
+        } else if (usrIdiom.getUsLenguage().equals("English")) {
+            dayLabel = new Label("Diary");
+        } else if (usrIdiom.getUsLenguage().equals("French")) {
+            dayLabel = new Label("l'agenda");
+        } else {
+            dayLabel = new Label("日記");
+        }
+
         dayLabel.setAlignment(Pos.CENTER);
-        dayLabel.setStyle("-fx-font-weight: bold; "
+
+        dayLabel.setStyle(
+                "-fx-font-weight: bold; "
                 + "-fx-background-color: #CC9900; ");
 
         dayLabel.setMaxWidth(Double.MAX_VALUE);
-        dayLabel.setMaxHeight(Double.MAX_VALUE);
-        GridPane.setFillWidth(dayLabel, true);
-        GridPane.setFillHeight(dayLabel, true);
-        gridPane.add(dayLabel, 0, 0);
 
-        for (int i = iniHora; i <= finHora; i++) {
+        dayLabel.setMaxHeight(Double.MAX_VALUE);
+
+        GridPane.setFillWidth(dayLabel,
+                true);
+        GridPane.setFillHeight(dayLabel,
+                true);
+        gridPane.add(dayLabel,
+                0, 0);
+
+        for (int i = iniHora;
+                i <= finHora;
+                i++) {
             Label hourLabel = new Label(String.format("%02d:00", i));
             hourLabel.setAlignment(Pos.CENTER);
             hourLabel.setStyle("-fx-font-weight: bold; "
@@ -2340,7 +2457,9 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             gridPane.add(hourLabel, 0, i - iniHora + 1);
         }
 
-        for (int day = 1; day <= mint.length; day++) {
+        for (int day = 1;
+                day <= mint.length;
+                day++) {
             for (int hour = iniHora; hour <= finHora; hour++) {
                 Label cellLabel = new Label();
                 cellLabel.setStyle("-fx-font-size: 10");
@@ -2369,14 +2488,18 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
             }
         }
 
-        for (int col = 0; col <= mint.length; col++) {
+        for (int col = 0;
+                col <= mint.length;
+                col++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setPercentWidth(80.0 / (mint.length + 1));
             gridPane.getColumnConstraints().add(columnConstraints);
         }
 
         int totalRows = finHora - iniHora + 2;
-        for (int row = 0; row < totalRows; row++) {
+        for (int row = 0;
+                row < totalRows;
+                row++) {
             RowConstraints rowConstraints = new RowConstraints();
             rowConstraints.setPercentHeight(80.0 / totalRows);
             gridPane.getRowConstraints().add(rowConstraints);

@@ -29,6 +29,7 @@ public class FlowController {
     private static ResourceBundle idioma;
     private static HashMap<String, FXMLLoader> loaders = new HashMap<>();
     private static Controller controller;
+    private static String idiomI="";
 
     private FlowController() {
     }
@@ -196,5 +197,12 @@ public class FlowController {
     public void salir() {
         this.mainStage.close();
     }
+    public String getIdioma(){
+        return idiomI;
+    }
+   public void setIdioma(String idiom){
+        this.idiomI=idiom;
+    }
+
 
 }
