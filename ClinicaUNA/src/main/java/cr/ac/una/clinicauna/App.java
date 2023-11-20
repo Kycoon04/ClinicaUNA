@@ -4,6 +4,7 @@ import cr.ac.una.clinicauna.util.FlowController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +19,18 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FlowController.getInstance().InitializeFlow(stage,ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Spanish"));
+        String idiom=Locale.getDefault().getLanguage();
+        System.out.println(""+idiom);
+        if(idiom.equals("es")){
+            FlowController.getInstance().InitializeFlow(stage,ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Spanish"));
+        }else if(idiom.equals("fr")){
+            FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/French"));
+        }else if(idiom.equals("en")){
+            FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/English"));
+        }else{
+           FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Japanese"));
+        }
+        
         stage.getIcons().add(new Image(App.class.getResourceAsStream("/cr/ac/una/clinicauna/resources/LogoMedicalClinic.png")));
         FlowController.getInstance().goMain("LoginView");
         /*FXMLLoader loader = new FXMLLoader();

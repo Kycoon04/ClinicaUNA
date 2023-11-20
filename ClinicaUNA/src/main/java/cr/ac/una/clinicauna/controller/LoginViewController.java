@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -110,7 +111,8 @@ public class LoginViewController extends Controller implements Initializable {
     List<Node> required2 = new ArrayList<>();
     private boolean pass = false;
 
-    String idiomInterface="Spanish";
+    String idiomInterface="";
+    String detectar="";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -126,13 +128,25 @@ public class LoginViewController extends Controller implements Initializable {
         AceptRecoverField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));
         passwordRegisField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));
         password2RegisField.setTextFormatter(Formato.getInstance().maxLengthFormat(15));
-         System.out.println(""+FlowController.getInstance().getIdioma());
+        validIdiom();
         IndicateRequired();
     }
 
     @Override
     public void initialize() {
 
+    }
+    public void validIdiom(){
+        detectar=Locale.getDefault().getLanguage();
+        if(detectar.equals("es")){
+            idiomInterface="Spanish";
+        }else if(detectar.equals("fr")){
+            idiomInterface="French";
+        }else if(detectar.equals("en")){
+            idiomInterface="English";
+        }else{
+            idiomInterface="Japonese";
+        }
     }
 
     public boolean validateRequired(List<Node> re) {
