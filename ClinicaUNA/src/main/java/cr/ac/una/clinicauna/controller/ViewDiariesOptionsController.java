@@ -1555,6 +1555,60 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
     Predicate<DiaryDto> pDoctor = x -> x.getDyDoctor().getDoctorName().equals(doctorDto.getDoctorName());
     Predicate<DiaryDto> pCancelada = x -> !x.getDySpace().getSeAppointment().getAtState().equals("Cancelada");
 
+    public String Cambiartexto(String estado) {
+
+        String texto = "";
+
+        switch (estado) {
+            case "Programada":
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    texto = "Cita / Programada";
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    texto = "Appointment / Scheduled";
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    texto = "Rendez-vous / Programmé";
+                } else {
+                    texto = "予定 / 予定されている";
+                }
+                break;
+            case "Atendida":
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    texto = "Cita / Atendida";
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    texto = "Appointment / Attended";
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    texto = "Rendez-vous / Participé";
+                } else {
+                    texto = "予定 / 出席した";
+                }
+                break;
+            case "Cancelada":
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    texto = "Cita / Cancelada";
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    texto = "Appointment / Cancelled";
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    texto = "Rendez-vous / Annulé";
+                } else {
+                    texto = "予定 / キャンセル";
+                }
+                break;
+            case "Ausente":
+                if (usrIdiom.getUsLenguage().equals("Spanish")) {
+                    texto = "Cita / Ausente";
+                } else if (usrIdiom.getUsLenguage().equals("English")) {
+                    texto = "Appointment / Absent";
+                } else if (usrIdiom.getUsLenguage().equals("French")) {
+                    texto = "Rendez-vous / Absent";
+                } else {
+                    texto = "予定 / オーセンテ";
+                }
+                break;
+
+        }
+        return texto;
+    }
+
     @FXML
     private void lookday(ActionEvent event) {
         DiaryPane = null;
@@ -1618,7 +1672,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
 
                     fila = findFila(DiaryPane, AgendaCompleta.get(i), iniHora, finHora);
                     columna = findColumna(DiaryPane, AgendaCompleta.get(i));
-                    Label label = new Label("Cita / " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
+                    Label label = new Label(Cambiartexto(AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState()));
                     CargarColor(label, AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                     label.setUserData(AgendaCompleta.get(i));
                     label.setAlignment(Pos.CENTER);
@@ -2183,7 +2237,7 @@ public class ViewDiariesOptionsController extends Controller implements Initiali
                 fila = findFila(DiaryPaneModi, AgendaCompleta.get(i), iniHora, finHora);
                 columna = findColumna(DiaryPaneModi, AgendaCompleta.get(i));
 
-               Label label = new Label("Cita / " + AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
+                Label label = new Label(Cambiartexto(AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState()));
                 CargarColor(label, AgendaCompleta.get(i).getDySpace().getSeAppointment().getAtState());
                 label.setUserData(AgendaCompleta.get(i));
                 label.setAlignment(Pos.CENTER);
