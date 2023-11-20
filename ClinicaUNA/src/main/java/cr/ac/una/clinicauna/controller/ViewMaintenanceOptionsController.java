@@ -127,8 +127,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     @FXML
     private TableColumn<UserDto, String> tableColAdmi;
     @FXML
-    private Button BtndeleteWorker;
-    @FXML
     private Tab tabMantUsers;
     @FXML
     private Tab tabManDoctors;
@@ -170,8 +168,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private TableColumn<DoctorDto, String> tableColDocFinishWork;
     @FXML
     private TableColumn<DoctorDto, String> tableColDocBreaks;
-    @FXML
-    private Button BtndeleteDoctor;
     @FXML
     private JFXTimePicker timepickerFinWork;
     @FXML
@@ -613,7 +609,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
     private void UpdateWorkerEnter(KeyEvent event) {
     }
 
-    @FXML
     private void deleteClicked(MouseEvent event) {
         deleteUser = true;
     }
@@ -862,13 +857,10 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                     doc = serviceD.getDoctorUser(userDto.getUsId());
                     this.doctorDto = (DoctorDto) doc.getResultado("Doctor");
                     if (doctorDto != null) {
-                        doc = serviceD.deleteDoctor(doctorDto.getDrId());
-                        us = serviceU.deleteUser(userDto.getUsId());
+                       /* doc = serviceD.deleteDoctor(doctorDto.getDrId());
+                        us = serviceU.deleteUser(userDto.getUsId());*/
                         deleteUser = false;
                         userDto = new UserDto();
-                        if (doc.getEstado() && us.getEstado()) {
-                            new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar ", getStage(), "Usuario y Doctor eliminado");
-                        }
                     }
                 } else {
                     serviceU.deleteUser(userDto.getUsId());
@@ -1031,7 +1023,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
         }
     }
 
-    @FXML
     private void deleteDoctorClicked(MouseEvent event) {
         deleteDoctor = true;
 
@@ -1178,7 +1169,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 userDto = doctorDto.getDrUser();
                 userDto.setUsType("Default");
                 serviceU.saveUser(userDto);
-                Respuesta r = serviceD.deleteDoctor(doctorDto.getDrId());
+               // Respuesta r = serviceD.deleteDoctor(doctorDto.getDrId());
                 deleteDoctor = false;
                 doctorList.clear();
                 doctorObservableList.clear();
@@ -1188,12 +1179,12 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 fillTableUsers();
                 doctorDto = new DoctorDto();
                 userDto = new UserDto();
-                if (r.getEstado()) {
-
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Usuario eliminado");
-                } else {
-                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Error aleliminar usuario");
-                }
+//                if (r.getEstado()) {
+//
+//                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Usuario eliminado");
+//                } else {
+//                    new Mensaje().showModal(Alert.AlertType.INFORMATION, "Eliminar Doctor", getStage(), "Error aleliminar usuario");
+//                }
             }
         } else if (event.getClickCount() == 2) {
             doctorDto = new DoctorDto();
@@ -1758,6 +1749,16 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
 
     @FXML
     private void emailClicked(MouseEvent event) throws FileNotFoundException {
+        
+        if (event.getClickCount()==2){
+            String eliEmil= tableViewEmails.getSelectionModel().getSelectedItem();
+            if(eliEmil!=""){
+           listEmails.remove(eliEmil);
+            emails.remove(eliEmil);
+           this.tableViewEmails.refresh();
+            this.tableViewEmails.setItems(emails);
+            }
+        }
     }
 
     @FXML
@@ -2136,5 +2137,6 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
             }
         }
     }
+
 
 }
