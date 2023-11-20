@@ -1546,6 +1546,7 @@ public class ViewMaintenanceOptionsController extends Controller implements Init
                 cleanUpPatient();
             }
         }
+        patientDto=  new PatientDto();
     }
 
     private void cleanUpPatient() {
