@@ -24,11 +24,11 @@ public class App extends Application {
         if(idiom.equals("es")){
             FlowController.getInstance().InitializeFlow(stage,ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Spanish"));
         }else if(idiom.equals("fr")){
-            FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/French"));
+            FlowController.getInstance().InitializeFlow(stage,ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/French"));
         }else if(idiom.equals("en")){
-            FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/English"));
+            FlowController.getInstance().InitializeFlow(stage,ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/English"));
         }else{
-           FlowController.setIdioma(ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Japanese"));
+            FlowController.getInstance().InitializeFlow(stage,ResourceBundle.getBundle("cr/ac/una/clinicauna/idioms/Japanese"));
         }
         
         stage.getIcons().add(new Image(App.class.getResourceAsStream("/cr/ac/una/clinicauna/resources/LogoMedicalClinic.png")));
